@@ -1,0 +1,12 @@
+{
+  "name": "sas-presentation",
+  "description": "Create polished SAS-AM branded Reveal.js presentations with light/dark mode, narrative structure, and professional layouts.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "homepage": "https://github.com/scrivo21/claudeCodeSkills",
+  "repository": "https://github.com/scrivo21/claudeCodeSkills",
+  "license": "MIT",
+  "keywords": ["sas", "presentation", "reveal.js", "slides", "asset-management", "dark-mode"]
+}

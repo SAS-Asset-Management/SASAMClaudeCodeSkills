@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    {
+      "name": "sas-presentation",
+      "path": "sas-presentation/1.0.0"
+    }
+  ]
+}
