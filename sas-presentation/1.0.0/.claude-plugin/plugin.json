@@ -1,0 +1,10 @@
+{
+  "name": "sas-presentation",
+  "description": "Create polished SAS-AM branded Reveal.js presentations with light/dark mode, narrative structure, and professional layouts. Implements SAS brand guidelines with discovery-driven content creation workflow.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "license": "MIT",
+  "keywords": ["sas", "presentation", "reveal.js", "slides", "asset-management", "dark-mode"]
+}
