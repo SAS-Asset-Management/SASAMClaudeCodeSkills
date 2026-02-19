@@ -1,8 +1,21 @@
 {
+  "name": "claudeCodeSkills",
+  "owner": {
+    "name": "SAS-AM"
+  },
+  "metadata": {
+    "description": "Collection of custom Claude Code skills for professional workflows"
+  },
   "plugins": [
     {
       "name": "sas-presentation",
-      "path": "sas-presentation/1.0.0"
+      "source": "./sas-presentation/1.0.0",
+      "description": "Create polished SAS-AM branded Reveal.js presentations with light/dark mode, narrative structure, and professional layouts.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["sas", "presentation", "reveal.js", "slides", "asset-management"],
+      "category": "productivity",
+      "tags": ["presentations", "slides", "reveal.js", "sas"]
     }
   ]
 }
