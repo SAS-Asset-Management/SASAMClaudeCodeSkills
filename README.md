@@ -26,6 +26,18 @@ Analyse raw data quality using the ABS Data Quality Framework (Catalogue No. 152
 - **Structured Report**: Markdown report with executive summary, dimension assessments, and prioritised recommendations
 - **Framework Reference**: Based on ABS 1520.0 (May 2009), derived from Statistics Canada QAF and European Statistics Code of Practice
 
+### b2b-research-agent
+
+Research and identify B2B engagement opportunities with:
+
+- **Prospect Research**: Deep-dive into target companies — financials, tech stack, org structure, news
+- **Decision-Maker Mapping**: Find and profile key stakeholders and buying-committee members
+- **Engagement Trigger Detection**: Surface pain points, initiatives, and events signalling buying intent
+- **Outreach Strategy**: Personalised email templates, call scripts, and LinkedIn outreach sequences
+- **Pipeline Building**: Structured prospect lists ranked by fit score and timing score
+- **Event Prep Briefs**: Pre-conference engagement planning with target attendees
+- **Competitive Intelligence**: Map current vendors and identify displacement opportunities
+
 ## Installation
 
 ### Global Installation (Recommended)
@@ -57,6 +69,10 @@ Or reference the skill directly:
 
 ```
 /sas-presentation Create a presentation about edge computing in asset management
+```
+
+```
+/b2b-research-agent Research potential clients in Australian mining for our asset management platform
 ```
 
 ## Skill Structure

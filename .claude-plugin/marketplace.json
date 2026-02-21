@@ -26,6 +26,16 @@
       "keywords": ["data-quality", "abs", "quality-framework", "data-analysis", "data-profiling"],
       "category": "data-analysis",
       "tags": ["data-quality", "abs-framework", "reporting", "data-profiling"]
+    },
+    {
+      "name": "b2b-research-agent",
+      "source": "./b2b-research-agent/1.0.0",
+      "description": "Research and identify B2B engagement opportunities. Conducts structured web research to build prospect intelligence dossiers, map decision-makers, surface buying signals, and produce actionable outreach strategies.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["b2b", "research", "sales", "prospecting", "outreach", "business-development", "pipeline"],
+      "category": "business-development",
+      "tags": ["b2b", "research", "prospecting", "outreach", "sales"]
     }
   ]
 }

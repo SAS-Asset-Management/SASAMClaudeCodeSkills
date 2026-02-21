@@ -1,0 +1,12 @@
+{
+  "name": "b2b-research-agent",
+  "description": "Research and identify B2B engagement opportunities. Conducts structured web research to build prospect intelligence dossiers, map decision-makers, surface buying signals, and produce actionable outreach strategies.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "homepage": "https://github.com/scrivo21/SASAMClaudeCodeSkills",
+  "repository": "https://github.com/scrivo21/SASAMClaudeCodeSkills",
+  "license": "MIT",
+  "keywords": ["b2b", "research", "sales", "prospecting", "outreach", "business-development", "pipeline"]
+}
