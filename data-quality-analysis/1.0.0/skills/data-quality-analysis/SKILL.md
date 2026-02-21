@@ -549,20 +549,31 @@ Assess the following:
 
 ## Report Generation
 
-After completing the assessment, generate a structured markdown report using the template in `references/report-template.md`.
+After completing the assessment, generate a **standalone HTML report** using the template in `references/report-template.html`. The report uses SAS-AM branding with light/dark mode, colour-coded scorecard cells, a sidebar navigation, and a print-friendly layout.
+
+### Output Format
+
+The primary output is a **single HTML file** (`data-quality-report.html`) that:
+- Can be opened directly in any browser
+- Uses CDN fonts (Source Sans Pro, Source Code Pro) and icons (Font Awesome) — no build step
+- Includes light/dark mode toggle with localStorage persistence
+- Has a print button for PDF export via browser print dialog
+- Uses the SAS-AM colour system (SAS Blue #002244 / SAS Green #69BE28)
+- Colour-codes scorecard cells: green (HIGH), amber (ADEQUATE), red (LOW)
 
 ### Report Structure
 
-The report MUST follow this structure:
+The HTML report follows this layout:
 
-1. **Header** — Report title, date, analyst, data source
-2. **Executive Summary** — Overall quality assessment with dimension summary table
-3. **Data Profile** — Schema, record counts, descriptive statistics
-4. **Column-Level Quality Scorecard** — Per-column metrics (completeness, validity, consistency, uniqueness, timeliness, accuracy) with summary scores
-5. **Dimension Assessments** (x7) — Each with narrative, evidence, rating, risks, recommendations
-6. **Overall Quality Rating** — Aggregated assessment
-7. **Recommendations** — Prioritised list of actions to improve data quality
-8. **Appendix** — Detailed statistical tables, charts, or code used
+1. **Fixed Header** — Report title, theme toggle, print button
+2. **Sidebar Navigation** — Jump links to all sections and dimensions
+3. **Report Title Section** — Title, subtitle, metadata (dataset, source, date, intended use)
+4. **Executive Summary** — Overall score ring, rating badge, dimension summary table
+5. **Data Profile** — Stat cards (records, columns, duplicates, etc.) and schema table
+6. **Column-Level Quality Scorecard** — Per-column metrics table with colour-coded cells, column summary scores, overall dataset score
+7. **Dimension Assessments** (x7) — Cards with assessment, evidence, risks, recommendations
+8. **Recommendations** — Grouped as Critical / Important / Minor with numbered items
+9. **Appendix** — Profiling code block and ABS framework reference
 
 ### Overall Quality Rating
 
@@ -575,22 +586,29 @@ Derive an overall quality rating based on the seven dimension ratings:
 | **LOW** | Two or more dimensions rated LOW |
 | **CONDITIONAL** | Quality is acceptable for some uses but not others — specify conditions |
 
-### Rating Summary Table
+### HTML Rating Classes
 
-Always include this summary table in the executive summary:
+Use these CSS classes for rating badges and scorecard cells:
 
-```markdown
-| Dimension | Rating | Key Finding |
+| Rating | Badge Class | Cell Class |
 |---|---|---|
-| 1. Institutional Environment | [RATING] | [One-line summary] |
-| 2. Relevance | [RATING] | [One-line summary] |
-| 3. Timeliness | [RATING] | [One-line summary] |
-| 4. Accuracy | [RATING] | [One-line summary] |
-| 5. Coherence | [RATING] | [One-line summary] |
-| 6. Interpretability | [RATING] | [One-line summary] |
-| 7. Accessibility | [RATING] | [One-line summary] |
-| **Overall** | **[RATING]** | **[One-line summary]** |
+| HIGH | `rating rating-high` | `cell-high` |
+| ADEQUATE | `rating rating-adequate` | `cell-adequate` |
+| LOW | `rating rating-low` | `cell-low` |
+| UNABLE TO ASSESS | `rating rating-unable` | `cell-na` |
+
+### Score Ring Calculation
+
+The overall score ring in the executive summary uses an SVG circle with `stroke-dashoffset`:
+
 ```
+circumference = 2 * π * 42 = 264
+offset = circumference * (1 - score / 100)
+```
+
+For example, a score of 96.4% → offset = 264 * (1 - 0.964) = 9.5
+
+Set `stroke` colour based on rating: `var(--rating-high)` for HIGH, `var(--rating-adequate)` for ADEQUATE, etc.
 
 ---
 
@@ -627,12 +645,14 @@ Work through each of the seven dimensions systematically:
 
 ### Step 4: Report Generation
 
-Generate the markdown report:
-1. Copy the report template from `references/report-template.md`
-2. Populate all sections with findings
-3. Include the rating summary table
-4. Add specific, actionable recommendations
-5. Save as `data-quality-report.md` (or a user-specified filename)
+Generate the HTML report:
+1. Copy the report template from `references/report-template.html`
+2. Replace all `{{PLACEHOLDER}}` values with findings
+3. Populate scorecard table rows with colour-coded CSS classes (`cell-high`, `cell-adequate`, `cell-low`)
+4. Populate dimension cards with assessment, evidence, risks, and recommendations
+5. Populate recommendation items grouped by severity
+6. Calculate the score ring offset: `264 * (1 - score / 100)`
+7. Save as `data-quality-report.html` (or a user-specified filename)
 
 ### Step 5: Review & Handover
 
@@ -755,5 +775,10 @@ Before delivering the report, verify:
 - [ ] Rating summary table included in executive summary
 - [ ] Overall quality rating derived and justified
 - [ ] Australian English spelling used throughout
-- [ ] Report saved as markdown file
+- [ ] Report saved as standalone HTML file
+- [ ] Light/dark mode toggle works correctly
+- [ ] Scorecard cells are colour-coded (green/amber/red)
+- [ ] Score ring displays correct percentage and offset
+- [ ] Sidebar navigation links to all sections
+- [ ] Print layout renders cleanly (test with Ctrl+P)
 - [ ] Any analysis code saved for reproducibility
