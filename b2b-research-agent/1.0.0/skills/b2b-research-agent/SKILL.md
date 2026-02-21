@@ -1,6 +1,6 @@
 ---
 name: b2b-research-agent
-description: Research and identify B2B engagement opportunities. Use when the user asks to find potential clients, partners, or business opportunities, research a target market or industry, prepare for business development outreach, or build a prospect pipeline. Conducts structured web research, compiles intelligence dossiers, and produces actionable engagement strategies with outreach templates.
+description: Research and identify B2B engagement opportunities for a target company. Use when the user provides a company name to research as a potential client, partner, or engagement opportunity. Also supports broad pipeline building when no specific target is given. Conducts structured web research, compiles intelligence dossiers, maps decision-makers, and produces actionable engagement strategies with branded HTML reports and outreach templates.
 ---
 
 # B2B Research Agent Skill
@@ -19,11 +19,50 @@ This skill helps you:
 - **Competitive Intelligence**: Understand what solutions prospects currently use and where gaps exist
 - **Pipeline Building**: Produce structured prospect lists ranked by fit and timing
 
+## Input
+
+This skill accepts a **target company name** as its primary input. The user provides the company they want to research, and the skill produces a full engagement dossier and HTML report for that company.
+
+### Invocation Examples
+
+```
+/b2b-research-agent GeelongPort
+/b2b-research-agent Research BHP for asset management consulting opportunities
+/b2b-research-agent Analyse Yarra Trams as a potential client for edge AI
+```
+
+When a target company is provided, **skip straight to the focused discovery questions below** — do not ask broad questions about target market, ICP, or how many prospects they need. The target is already known.
+
+---
+
 ## Discovery Process (CRITICAL)
 
-**Before conducting any research, you MUST conduct a discovery interview to understand the engagement context.**
+**Before conducting any research, you MUST conduct a brief discovery interview to understand the engagement context.** Adapt the questions based on what was provided in the invocation.
 
-### Questions to Ask
+### When a Target Company Is Provided (Most Common)
+
+Ask only what you need to know about the **user's side** of the engagement. Skip target market and ICP questions — the target is already identified.
+
+1. **Your Business & Offering**
+   - What does your company do? (elevator pitch)
+   - What product or service are you looking to offer this company?
+   - What is your unique value proposition for this type of engagement?
+
+2. **Engagement Context**
+   - What is the goal? (advisory engagement, product sale, partnership, tender response)
+   - Is there an upcoming event, deadline, or trigger driving this?
+   - Have you engaged with this company before? What happened?
+   - Are there any warm introductions or mutual connections?
+
+3. **Output Preferences**
+   - Any specific focus areas? (e.g., focus on their technology landscape, or on decision-makers)
+   - Do you need outreach templates included?
+
+Then proceed directly to **Phase 3: Deep-Dive Intelligence** for that specific company.
+
+### When No Target Company Is Provided (Pipeline Mode)
+
+If the user asks for broad prospect identification (e.g., "find companies in mining for us"), conduct the full discovery:
 
 1. **Your Business**
    - What does your company do? (elevator pitch)
@@ -55,7 +94,7 @@ This skill helps you:
    - Are there any warm introductions or mutual connections you know of?
 
 6. **Output Preferences**
-   - What format do you need? (Markdown report, CSV prospect list, outreach email drafts, presentation brief)
+   - What format do you need? (HTML report, Markdown, CSV prospect list, outreach email drafts)
    - How detailed should each prospect profile be?
    - Do you need outreach templates customised per prospect?
 
@@ -526,28 +565,56 @@ When conducting research, prioritise these source types:
 
 ## Workflow
 
-### Step 1: Discovery Interview
+### Path A: Target Company Provided (Single-Company Dossier)
 
-Conduct the discovery interview to understand:
-- Your business, offering, and value proposition
-- Target market and ICP criteria
-- Engagement goals and timeline
-- Output format requirements
+Use this path when the user provides a specific company name (the most common invocation).
 
-### Step 2: Research Planning
+**Step 1: Focused Discovery**
+- Ask the 3 focused discovery questions (your offering, engagement context, output preferences)
+- Confirm the target company name and any specific angles to focus on
 
+**Step 2: Deep-Dive Research**
+- Use web search to research the target company comprehensively
+- Compile the company snapshot (overview, revenue, employees, HQ, industry)
+- Map strategic priorities from annual reports, CEO statements, and investor materials
+- Identify pain points and challenges relevant to your offering
+- Map the technology landscape (ERP, EAM, CRM, other systems)
+- Identify decision-makers and buying committee members
+- Surface buying signals (recent hires, RFPs, budget announcements, project launches)
+- Assess competitive landscape (current vendors, contract status, vulnerabilities)
+
+**Step 3: Strategy Development**
+- Score fit and timing (1–5 each)
+- Develop the personalised engagement strategy
+- Draft talking points linking your value prop to their specific situation
+- Anticipate objections and prepare responses
+- Design a multi-touch outreach sequence
+
+**Step 4: Delivery**
+- Build the branded HTML report from the template
+- Lead with the Executive Opportunity Summary (🎯 ⏰ 💡 🔑 📊)
+- Include the full dossier, strategy, and outreach plan
+- Provide recommended next steps with dates
+
+### Path B: No Target Company (Pipeline Mode)
+
+Use this path when the user asks for broad prospect identification across a market.
+
+**Step 1: Full Discovery**
+- Conduct the complete 6-section discovery interview
+- Confirm ICP criteria, target vertical, geography, and scope
+
+**Step 2: Research Planning**
 1. Define the research scope (number of prospects, depth, geography)
 2. Establish the scoring rubric (confirm or adjust default criteria)
 3. Identify primary research sources for the target vertical
 
-### Step 3: Prospect Identification
-
+**Step 3: Prospect Identification**
 1. Use web search to identify candidate companies
 2. Apply ICP filters to create a shortlist
 3. Validate each candidate against qualifying criteria
 
-### Step 4: Deep-Dive Research
-
+**Step 4: Deep-Dive Research**
 For each shortlisted prospect:
 1. Compile the company snapshot
 2. Map decision-makers and buying committee
@@ -555,8 +622,7 @@ For each shortlisted prospect:
 4. Assess competitive landscape
 5. Score fit and timing
 
-### Step 5: Strategy Development
-
+**Step 5: Strategy Development**
 1. Rank prospects into tiers (High / Medium / Monitor)
 2. Develop personalised engagement strategies per prospect
 3. Draft outreach templates and talking points
