@@ -60,6 +60,37 @@
 
 ---
 
+## Column-Level Quality Scorecard
+
+Per-column quality metrics quantified across six dimensions. Thresholds: **HIGH** >= 95% | **ADEQUATE** 80–94% | **LOW** < 80% (validity: 98/90; accuracy: 95/85).
+
+### Scorecard
+
+| Column | Completeness | Validity | Consistency | Uniqueness | Timeliness | Accuracy | Issues |
+|---|---|---|---|---|---|---|---|
+| {{COLUMN_NAME}} | {{COMPLETENESS}} | {{VALIDITY}} | {{CONSISTENCY}} | {{UNIQUENESS}} | {{TIMELINESS}} | {{ACCURACY}} | {{ISSUES}} |
+
+### Column Summary Scores
+
+| Column | Summary Score | Rating |
+|---|---|---|
+| {{COLUMN_NAME}} | {{SUMMARY_SCORE}} | {{COL_RATING}} |
+
+**Overall Dataset Quality Score**: {{DATASET_SCORE}} ({{DATASET_SCORE_RATING}})
+
+### Metric Definitions
+
+| Metric | Definition |
+|---|---|
+| **Completeness** | % of non-null, non-blank values |
+| **Validity** | % of values conforming to expected type, range, and format |
+| **Consistency** | % of values matching the dominant format/pattern within the column |
+| **Uniqueness** | % of distinct values relative to non-null total |
+| **Timeliness** | Recency score for date columns (100% = within 30 days); N/A for non-date columns |
+| **Accuracy** | % of values that are plausible (excluding impossible values and statistical outliers) |
+
+---
+
 ## Dimension Assessments
 
 ### 1. Institutional Environment

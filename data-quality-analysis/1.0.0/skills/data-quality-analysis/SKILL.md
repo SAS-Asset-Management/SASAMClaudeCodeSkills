@@ -77,6 +77,261 @@ Load and inspect the data to establish a foundational understanding:
 6. **Missing data analysis** — Null/blank counts and percentages per column
 7. **Sample records** — Display first few rows and any anomalous rows
 
+### Phase 1b: Column-Level Quality Scorecard
+
+After initial profiling, compute a per-column quality scorecard. This quantifies six quality metrics for every column, producing a single table that gives the user an immediate, measurable view of data quality before the narrative dimension assessments.
+
+#### The Six Column Metrics
+
+| Metric | Definition | How to Calculate | Scale |
+|---|---|---|---|
+| **Completeness** | Proportion of non-null, non-blank values | `(total - nulls - blanks) / total * 100` | 0–100% |
+| **Validity** | Proportion of values that conform to the expected domain (type, range, format) | `valid_values / non_null_values * 100` | 0–100% |
+| **Consistency** | Proportion of values that match the dominant format/pattern within the column | `values_matching_dominant_pattern / non_null_values * 100` | 0–100% |
+| **Uniqueness** | Proportion of distinct values relative to total non-null values | `unique_values / non_null_values * 100` | 0–100% |
+| **Timeliness** | For date/time columns: recency score based on how current the most recent value is. For non-date columns: mark as N/A | See timeliness calculation below | 0–100% or N/A |
+| **Accuracy** | Proportion of values that are plausible (not impossible, not extreme outliers) | `(non_null - impossible - outliers) / non_null * 100` | 0–100% |
+
+#### Metric Calculation Details
+
+**Completeness:**
+```python
+completeness = (len(df) - df[col].isna().sum() - (df[col] == '').sum()) / len(df) * 100
+```
+- Count both `NaN`/`None` AND empty strings/whitespace-only values as incomplete
+- For numeric columns, also count sentinel values (e.g., -999, 9999) if identified as placeholders
+
+**Validity:**
+Assess whether values conform to the expected domain for the column type:
+- **Numeric columns**: values within a plausible range (not negative where impossible, within min/max bounds if known)
+- **Date columns**: valid date format, not in the future (unless expected), not before a reasonable minimum
+- **Categorical columns**: values belong to the expected set of categories (if known), or are not obviously erroneous
+- **String columns**: values match expected format (e.g., email regex, phone pattern, postcode format)
+- **Identifier columns**: values match the expected pattern (e.g., `WO-YYYY-NNNNN`)
+
+```python
+# Example for a numeric column that should be positive
+valid = df[col].dropna().between(0, upper_bound).sum()
+validity = valid / df[col].notna().sum() * 100
+```
+
+**Consistency:**
+Detect the dominant format/pattern and measure adherence:
+- **Date columns**: what percentage use the same date format? (e.g., YYYY-MM-DD vs DD/MM/YYYY vs mixed)
+- **Categorical columns**: case consistency (e.g., "Active" vs "active" vs "ACTIVE"), trailing spaces, encoding issues
+- **Numeric columns**: consistent precision/decimal places, consistent units
+- **String columns**: consistent casing convention, consistent delimiters
+
+```python
+# Example: check case consistency for a categorical column
+values = df[col].dropna()
+dominant_case = values.apply(str.title)  # or str.lower, str.upper
+consistency = (values == dominant_case).sum() / len(values) * 100
+```
+
+**Uniqueness:**
+```python
+uniqueness = df[col].nunique() / df[col].notna().sum() * 100
+```
+- For identifier/key columns, uniqueness should be 100% — flag if not
+- For categorical columns, low uniqueness is expected and normal — interpret in context
+- This metric is informational; low uniqueness is not inherently bad
+
+**Timeliness:**
+Only applicable to date/datetime columns. Calculate as a recency score:
+```python
+# For date columns: how recent is the most recent value?
+if col is date type:
+    max_date = df[col].max()
+    days_since = (assessment_date - max_date).days
+    # Score: 100% if within 30 days, decaying linearly to 0% at 365+ days
+    timeliness = max(0, 100 - (days_since / 365 * 100))
+else:
+    timeliness = "N/A"
+```
+
+**Accuracy:**
+Combine impossible value detection and outlier detection:
+```python
+non_null = df[col].notna().sum()
+impossible = count_impossible_values(df[col])  # domain-specific rules
+outliers = count_outliers_iqr(df[col])          # IQR method for numeric
+accuracy = (non_null - impossible - outliers) / non_null * 100
+```
+
+Impossible value rules (apply based on column semantics):
+- Ages: negative or > 150
+- Dates: before 1900 or after assessment date (unless future dates are valid)
+- Percentages: < 0 or > 100
+- Costs/prices: negative (unless refunds are valid)
+- Hours: negative or exceeding plausible maximums
+- Counts: negative or non-integer
+
+#### Column Quality Scorecard Table
+
+Present the results in this format:
+
+```markdown
+| Column | Completeness | Validity | Consistency | Uniqueness | Timeliness | Accuracy | Issues |
+|---|---|---|---|---|---|---|---|
+| column_name | 98.5% | 99.2% | 100.0% | 45.3% | N/A | 97.8% | 23 outliers |
+```
+
+- Use colour-coded indicators in the Issues column to highlight problems
+- Bold any metric below the thresholds defined below
+
+#### Quality Thresholds
+
+| Metric | HIGH (Green) | ADEQUATE (Amber) | LOW (Red) |
+|---|---|---|---|
+| Completeness | >= 95% | 80–94% | < 80% |
+| Validity | >= 98% | 90–97% | < 90% |
+| Consistency | >= 95% | 80–94% | < 80% |
+| Uniqueness | Context-dependent | Context-dependent | Context-dependent |
+| Timeliness | >= 80% | 50–79% | < 50% |
+| Accuracy | >= 95% | 85–94% | < 85% |
+
+**Note on Uniqueness**: Uniqueness thresholds depend on the column's role:
+- **Primary key / identifier**: should be 100% — anything less indicates duplicates
+- **Categorical / classification**: low uniqueness is expected (e.g., 5 asset classes across 12,000 rows = 0.04%)
+- **Free text / measurement**: moderate to high uniqueness is normal
+
+#### Column Quality Summary Score
+
+After computing all six metrics per column, derive a summary score for each column:
+
+```
+Column Score = weighted average of applicable metrics
+```
+
+Default weights (adjustable based on user priorities):
+- Completeness: 30%
+- Validity: 25%
+- Accuracy: 25%
+- Consistency: 15%
+- Uniqueness: 5% (only for identifier columns, otherwise 0% and redistribute)
+- Timeliness: 0% for non-date columns (redistribute to others)
+
+Present an overall dataset quality score as the average of all column scores.
+
+#### Python Code for Column Scorecard
+
+```python
+import pandas as pd
+import numpy as np
+
+def column_quality_scorecard(df, date_cols=None, id_cols=None, assessment_date=None):
+    """Compute per-column quality metrics for a DataFrame."""
+    if assessment_date is None:
+        assessment_date = pd.Timestamp.now()
+    if date_cols is None:
+        date_cols = []
+    if id_cols is None:
+        id_cols = []
+
+    results = []
+
+    for col in df.columns:
+        n = len(df)
+        non_null = df[col].notna().sum()
+        nulls = df[col].isna().sum()
+
+        # Completeness
+        blanks = 0
+        if df[col].dtype == 'object':
+            blanks = df[col].fillna('').apply(lambda x: str(x).strip() == '').sum() - nulls
+            blanks = max(blanks, 0)
+        completeness = (n - nulls - blanks) / n * 100 if n > 0 else 0
+
+        # Uniqueness
+        uniqueness = df[col].nunique() / non_null * 100 if non_null > 0 else 0
+
+        # Validity, Consistency, Accuracy — compute per data type
+        validity = np.nan
+        consistency = np.nan
+        accuracy = np.nan
+        timeliness = "N/A"
+        issues = []
+
+        if pd.api.types.is_numeric_dtype(df[col]):
+            vals = df[col].dropna()
+            # Validity: check for negative values in columns that should be positive
+            # (apply domain-specific rules as needed)
+            validity = 100.0  # default; override with domain rules
+
+            # Consistency: check precision consistency
+            if len(vals) > 0:
+                decimals = vals.apply(lambda x: len(str(x).split('.')[-1]) if '.' in str(x) else 0)
+                dominant = decimals.mode().iloc[0] if len(decimals.mode()) > 0 else 0
+                consistency = (decimals == dominant).sum() / len(vals) * 100
+
+            # Accuracy: IQR outlier detection
+            if len(vals) > 0:
+                q1, q3 = vals.quantile(0.25), vals.quantile(0.75)
+                iqr = q3 - q1
+                outlier_count = ((vals < q1 - 1.5 * iqr) | (vals > q3 + 1.5 * iqr)).sum()
+                negative_count = (vals < 0).sum()
+                accuracy = (len(vals) - outlier_count) / len(vals) * 100
+                if outlier_count > 0:
+                    issues.append(f"{outlier_count} outliers")
+                if negative_count > 0:
+                    issues.append(f"{negative_count} negatives")
+
+        elif col in date_cols or pd.api.types.is_datetime64_any_dtype(df[col]):
+            vals = pd.to_datetime(df[col], errors='coerce').dropna()
+            valid_dates = len(vals)
+            attempted = df[col].notna().sum()
+            validity = valid_dates / attempted * 100 if attempted > 0 else 0
+            consistency = 100.0  # after parsing; pre-parse format consistency requires string analysis
+
+            # Timeliness
+            if len(vals) > 0:
+                days_since = (assessment_date - vals.max()).days
+                timeliness = f"{max(0, 100 - (days_since / 365 * 100)):.0f}%"
+
+            # Accuracy: future dates, implausible past dates
+            future = (vals > assessment_date).sum()
+            accuracy = (len(vals) - future) / len(vals) * 100 if len(vals) > 0 else 0
+            if future > 0:
+                issues.append(f"{future} future dates")
+
+        elif df[col].dtype == 'object':
+            vals = df[col].dropna()
+            if len(vals) > 0:
+                # Validity: non-empty strings
+                valid = vals.apply(lambda x: str(x).strip() != '').sum()
+                validity = valid / len(vals) * 100
+
+                # Consistency: case consistency check
+                title_match = (vals == vals.str.title()).sum()
+                lower_match = (vals == vals.str.lower()).sum()
+                upper_match = (vals == vals.str.upper()).sum()
+                best_match = max(title_match, lower_match, upper_match)
+                consistency = best_match / len(vals) * 100
+
+                accuracy = 100.0  # default for strings; override with domain rules
+
+        # Identifier uniqueness check
+        if col in id_cols and uniqueness < 100:
+            issues.append(f"Duplicate IDs ({100 - uniqueness:.1f}%)")
+
+        if nulls > 0:
+            issues.append(f"{nulls} nulls ({nulls/n*100:.1f}%)")
+
+        results.append({
+            'Column': col,
+            'Completeness': f"{completeness:.1f}%",
+            'Validity': f"{validity:.1f}%" if not np.isnan(validity) else "—",
+            'Consistency': f"{consistency:.1f}%" if not np.isnan(consistency) else "—",
+            'Uniqueness': f"{uniqueness:.1f}%",
+            'Timeliness': timeliness,
+            'Accuracy': f"{accuracy:.1f}%" if not np.isnan(accuracy) else "—",
+            'Issues': "; ".join(issues) if issues else "—"
+        })
+
+    return pd.DataFrame(results)
+```
+
 ### Phase 2: Dimension-by-Dimension Assessment
 
 Assess each of the seven ABS DQF dimensions systematically. For each dimension, provide:
@@ -303,10 +558,11 @@ The report MUST follow this structure:
 1. **Header** — Report title, date, analyst, data source
 2. **Executive Summary** — Overall quality assessment with dimension summary table
 3. **Data Profile** — Schema, record counts, descriptive statistics
-4. **Dimension Assessments** (x7) — Each with narrative, evidence, rating, risks, recommendations
-5. **Overall Quality Rating** — Aggregated assessment
-6. **Recommendations** — Prioritised list of actions to improve data quality
-7. **Appendix** — Detailed statistical tables, charts, or code used
+4. **Column-Level Quality Scorecard** — Per-column metrics (completeness, validity, consistency, uniqueness, timeliness, accuracy) with summary scores
+5. **Dimension Assessments** (x7) — Each with narrative, evidence, rating, risks, recommendations
+6. **Overall Quality Rating** — Aggregated assessment
+7. **Recommendations** — Prioritised list of actions to improve data quality
+8. **Appendix** — Detailed statistical tables, charts, or code used
 
 ### Overall Quality Rating
 
@@ -348,7 +604,7 @@ Conduct the discovery interview to understand:
 - What quality concerns exist
 - What documentation is available
 
-### Step 2: Data Profiling
+### Step 2: Data Profiling & Column Scorecard
 
 Load and profile the data:
 1. Inspect schema and data types
@@ -357,6 +613,8 @@ Load and profile the data:
 4. Detect outliers and anomalies
 5. Check for duplicates
 6. Validate data types and formats
+7. **Compute the column-level quality scorecard** (completeness, validity, consistency, uniqueness, timeliness, accuracy per column)
+8. Calculate column summary scores and overall dataset quality score
 
 Use Python (pandas, numpy) or the appropriate tool for the data format. Write analysis code in a script file or notebook for reproducibility.
 
@@ -488,6 +746,8 @@ Before delivering the report, verify:
 
 - [ ] Discovery interview completed (or assumptions clearly documented)
 - [ ] Data successfully loaded and profiled
+- [ ] Column-level quality scorecard computed with all six metrics
+- [ ] Column summary scores and overall dataset quality score calculated
 - [ ] All seven dimensions assessed with ratings
 - [ ] Evidence provided for each assessment
 - [ ] Risks identified for each dimension

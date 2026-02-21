@@ -82,6 +82,65 @@ Key concerns are a 22% missing rate in the `failure_mode` column (critical for t
 
 ---
 
+## Column-Level Quality Scorecard
+
+Per-column quality metrics quantified across six dimensions. Thresholds: **HIGH** >= 95% | **ADEQUATE** 80–94% | **LOW** < 80% (validity: 98/90; accuracy: 95/85).
+
+### Scorecard
+
+| Column | Completeness | Validity | Consistency | Uniqueness | Timeliness | Accuracy | Issues |
+|---|---|---|---|---|---|---|---|
+| work_order_id | 100.0% | 100.0% | 100.0% | 97.6% | N/A | 100.0% | Duplicate IDs (2.4%) |
+| asset_id | 100.0% | 100.0% | 100.0% | 3.8% | N/A | 100.0% | — |
+| asset_class | 100.0% | 100.0% | 100.0% | 0.04% | N/A | 100.0% | — |
+| event_date | 99.9% | 99.9% | 100.0% | 10.0% | 95% | 99.9% | 16 nulls (0.1%) |
+| completion_date | 94.2% | 99.7% | 100.0% | 9.0% | 92% | **99.4%** | 743 nulls (5.8%); 34 before event_date |
+| maintenance_type | 100.0% | 100.0% | 100.0% | 0.02% | N/A | 100.0% | — |
+| failure_mode | **78.0%** | 95.2% | **72.4%** | 0.5% | N/A | 95.2% | 2,826 nulls (22.0%); inconsistent casing |
+| priority | 100.0% | 100.0% | 100.0% | 0.03% | N/A | 100.0% | — |
+| operating_hours | 92.7% | **98.1%** | **88.3%** | 65.5% | N/A | **87.6%** | 944 nulls (7.3%); 23 negatives; 124 extreme values |
+| cost_aud | 97.4% | 99.5% | 96.8% | 38.1% | N/A | **93.2%** | 335 nulls (2.6%); 6 implausible outliers |
+| technician_code | 100.0% | 100.0% | 100.0% | 0.3% | N/A | 100.0% | — |
+| location_code | 99.6% | 100.0% | 100.0% | 0.09% | N/A | 100.0% | 46 nulls (0.4%); all from T17 |
+| parts_used | **72.0%** | 98.7% | **76.3%** | 6.9% | N/A | 98.7% | 3,602 nulls (28.0%); inconsistent delimiters |
+
+### Column Summary Scores
+
+Weighted: Completeness 30% | Validity 25% | Accuracy 25% | Consistency 15% | Uniqueness 5%.
+
+| Column | Summary Score | Rating |
+|---|---|---|
+| work_order_id | 99.9% | HIGH |
+| asset_id | 100.0% | HIGH |
+| asset_class | 100.0% | HIGH |
+| event_date | 99.9% | HIGH |
+| completion_date | 97.3% | HIGH |
+| maintenance_type | 100.0% | HIGH |
+| failure_mode | 84.7% | ADEQUATE |
+| priority | 100.0% | HIGH |
+| operating_hours | 91.6% | ADEQUATE |
+| cost_aud | 96.3% | HIGH |
+| technician_code | 100.0% | HIGH |
+| location_code | 99.9% | HIGH |
+| parts_used | 83.4% | ADEQUATE |
+
+**Overall Dataset Quality Score**: 96.4% (HIGH)
+
+*Note: The overall dataset score is high because the majority of columns are clean. However, the three ADEQUATE columns (`failure_mode`, `operating_hours`, `parts_used`) are critical for the intended predictive modelling use case — the overall score should be interpreted alongside the intended use.*
+
+### Metric Definitions
+
+| Metric | Definition |
+|---|---|
+| **Completeness** | % of non-null, non-blank values |
+| **Validity** | % of values conforming to expected type, range, and format |
+| **Consistency** | % of values matching the dominant format/pattern within the column |
+| **Uniqueness** | % of distinct values relative to non-null total |
+| **Timeliness** | Recency score for date columns (100% = within 30 days); N/A for non-date columns |
+| **Accuracy** | % of values that are plausible (excluding impossible values and statistical outliers) |
+
+---
+
 ## Dimension Assessments
 
 ### 1. Institutional Environment
