@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{REPORT_TITLE}} | SAS-AM B2B Research</title>
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="report-wrapper">
+
+    <!-- ======================== HEADER ======================== -->
+    <header class="report-header">
+      <div class="header-brand">
+        <img src="assets/sas-logo-light.png" alt="SAS Logo" class="logo logo-light">
+        <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="logo logo-dark">
+        <span class="brand-text">B2B Research</span>
+      </div>
+      <div class="header-title">
+        <h1>{{REPORT_TITLE}}</h1>
+        <div class="report-date">{{REPORT_DATE}}</div>
+      </div>
+      <div class="header-controls">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode">
+          <i class="fas fa-sun light-icon"></i>
+          <i class="fas fa-moon dark-icon"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ======================== BODY ======================== -->
+    <div class="report-body">
+
+      <!-- Sidebar Navigation -->
+      <nav class="report-nav" id="reportNav">
+        <a href="#executive-summary">Executive Summary</a>
+        <a href="#company-snapshot">Company Snapshot</a>
+        <a href="#strategic-priorities">Strategic Priorities</a>
+        <div class="nav-divider"></div>
+        <a href="#pain-points">Pain Points</a>
+        <a href="#technology">Technology Landscape</a>
+        <a href="#decision-makers">Decision-Makers</a>
+        <div class="nav-divider"></div>
+        <a href="#buying-signals">Buying Signals</a>
+        <a href="#competitive-intel">Competitive Intelligence</a>
+        <a href="#engagement-strategy">Engagement Strategy</a>
+        <div class="nav-divider"></div>
+        <a href="#outreach">Outreach Plan</a>
+        <a href="#actions">Next Steps</a>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="report-content">
+
+        <!-- ======== EXECUTIVE SUMMARY ======== -->
+        <section class="report-section" id="executive-summary">
+          <span class="section-label">Key Findings</span>
+          <h2>{{COMPANY_NAME}} — Engagement Opportunity</h2>
+
+          <div class="key-findings">
+            <div class="finding-card">
+              <div class="card-icon">🎯</div>
+              <h4>Prime Opportunity</h4>
+              <ul>
+                <li>{{OPPORTUNITY_POINT_1}}</li>
+                <li>{{OPPORTUNITY_POINT_2}}</li>
+                <li>{{OPPORTUNITY_POINT_3}}</li>
+              </ul>
+            </div>
+
+            <div class="finding-card">
+              <div class="card-icon">⏰</div>
+              <h4>Optimal Timing: {{TIMING_WINDOW}}</h4>
+              <ul>
+                <li>{{TIMING_POINT_1}}</li>
+                <li>{{TIMING_POINT_2}}</li>
+                <li>{{TIMING_POINT_3}}</li>
+              </ul>
+            </div>
+
+            <div class="finding-card">
+              <div class="card-icon">💡</div>
+              <h4>Strategic Positioning</h4>
+              <ul>
+                <li>{{POSITIONING_POINT_1}}</li>
+                <li>{{POSITIONING_POINT_2}}</li>
+                <li>{{POSITIONING_POINT_3}}</li>
+              </ul>
+            </div>
+
+            <div class="finding-card">
+              <div class="card-icon">🔑</div>
+              <h4>Key Decision-Makers</h4>
+              <ul>
+                <li>{{DM_SUMMARY_1}}</li>
+                <li>{{DM_SUMMARY_2}}</li>
+                <li>{{DM_SUMMARY_3}}</li>
+              </ul>
+            </div>
+
+            <div class="finding-card">
+              <div class="card-icon">📊</div>
+              <h4>Value Proposition Alignment</h4>
+              <ul>
+                <li>{{VALUE_POINT_1}}</li>
+                <li>{{VALUE_POINT_2}}</li>
+                <li>{{VALUE_POINT_3}}</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="summary-callout">
+            <p>{{EXECUTIVE_SUMMARY_CONCLUSION}}</p>
+          </div>
+        </section>
+
+        <!-- ======== COMPANY SNAPSHOT ======== -->
+        <section class="report-section" id="company-snapshot">
+          <span class="section-label">Company Profile</span>
+          <h2>Company Snapshot</h2>
+
+          <table class="snapshot-table">
+            <tr><th>Company</th><td>{{COMPANY_NAME}}</td></tr>
+            <tr><th>Website</th><td><a href="{{WEBSITE_URL}}">{{WEBSITE_URL}}</a></td></tr>
+            <tr><th>Headquarters</th><td>{{HQ_LOCATION}}</td></tr>
+            <tr><th>Industry</th><td>{{PRIMARY_VERTICAL}}</td></tr>
+            <tr><th>Revenue</th><td>{{ANNUAL_REVENUE}}</td></tr>
+            <tr><th>Employees</th><td>{{HEADCOUNT}}</td></tr>
+            <tr><th>Ownership</th><td>{{OWNERSHIP_TYPE}}</td></tr>
+          </table>
+
+          <h3>Business Overview</h3>
+          <p>{{BUSINESS_OVERVIEW}}</p>
+        </section>
+
+        <!-- ======== STRATEGIC PRIORITIES ======== -->
+        <section class="report-section" id="strategic-priorities">
+          <span class="section-label">Intelligence</span>
+          <h2>Strategic Priorities</h2>
+
+          <div class="strategy-card">
+            <ul class="talking-points">
+              <li>{{PRIORITY_1}}</li>
+              <li>{{PRIORITY_2}}</li>
+              <li>{{PRIORITY_3}}</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ======== PAIN POINTS ======== -->
+        <section class="report-section" id="pain-points">
+          <span class="section-label">Challenges</span>
+          <h2>Pain Points &amp; Challenges</h2>
+
+          <div class="strategy-card">
+            <ul class="talking-points">
+              <li>{{PAIN_POINT_1}}</li>
+              <li>{{PAIN_POINT_2}}</li>
+              <li>{{PAIN_POINT_3}}</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ======== TECHNOLOGY LANDSCAPE ======== -->
+        <section class="report-section" id="technology">
+          <span class="section-label">Tech Stack</span>
+          <h2>Technology Landscape</h2>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>System</th>
+                <th>Vendor / Product</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>ERP</td><td>{{ERP_VENDOR}}</td><td>{{ERP_NOTES}}</td></tr>
+              <tr><td>EAM</td><td>{{EAM_VENDOR}}</td><td>{{EAM_NOTES}}</td></tr>
+              <tr><td>CRM</td><td>{{CRM_VENDOR}}</td><td>{{CRM_NOTES}}</td></tr>
+              <tr><td>Other</td><td>{{OTHER_SYSTEM}}</td><td>{{OTHER_NOTES}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ======== DECISION-MAKERS ======== -->
+        <section class="report-section" id="decision-makers">
+          <span class="section-label">Stakeholders</span>
+          <h2>Decision-Makers</h2>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Title</th>
+                <th>Department</th>
+                <th>Relevance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{DM_NAME_1}}</td>
+                <td>{{DM_TITLE_1}}</td>
+                <td>{{DM_DEPT_1}}</td>
+                <td>{{DM_RELEVANCE_1}}</td>
+              </tr>
+              <tr>
+                <td>{{DM_NAME_2}}</td>
+                <td>{{DM_TITLE_2}}</td>
+                <td>{{DM_DEPT_2}}</td>
+                <td>{{DM_RELEVANCE_2}}</td>
+              </tr>
+              <tr>
+                <td>{{DM_NAME_3}}</td>
+                <td>{{DM_TITLE_3}}</td>
+                <td>{{DM_DEPT_3}}</td>
+                <td>{{DM_RELEVANCE_3}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ======== BUYING SIGNALS ======== -->
+        <section class="report-section" id="buying-signals">
+          <span class="section-label">Intent Signals</span>
+          <h2>Buying Signals</h2>
+
+          <div class="strategy-card">
+            <ul class="talking-points">
+              <li>{{SIGNAL_1}}</li>
+              <li>{{SIGNAL_2}}</li>
+              <li>{{SIGNAL_3}}</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- ======== COMPETITIVE INTELLIGENCE ======== -->
+        <section class="report-section" id="competitive-intel">
+          <span class="section-label">Competition</span>
+          <h2>Competitive Intelligence</h2>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Competitor</th>
+                <th>Product / Service</th>
+                <th>Status</th>
+                <th>Vulnerability</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{COMP_VENDOR_1}}</td>
+                <td>{{COMP_PRODUCT_1}}</td>
+                <td>{{COMP_STATUS_1}}</td>
+                <td>{{COMP_VULN_1}}</td>
+              </tr>
+              <tr>
+                <td>{{COMP_VENDOR_2}}</td>
+                <td>{{COMP_PRODUCT_2}}</td>
+                <td>{{COMP_STATUS_2}}</td>
+                <td>{{COMP_VULN_2}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ======== ENGAGEMENT STRATEGY ======== -->
+        <section class="report-section" id="engagement-strategy">
+          <span class="section-label">Strategy</span>
+          <h2>Engagement Strategy</h2>
+
+          <div class="strategy-card">
+            <div class="card-header">
+              <h4>Recommended Approach</h4>
+              <div class="scores">
+                <span class="score-label">Fit</span>
+                <span class="score-badge score-{{FIT_SCORE}}">{{FIT_SCORE}}</span>
+                <span class="score-label">Timing</span>
+                <span class="score-badge score-{{TIMING_SCORE}}">{{TIMING_SCORE}}</span>
+                <span class="priority-badge priority-{{PRIORITY_CLASS}}">{{PRIORITY_LEVEL}}</span>
+              </div>
+            </div>
+
+            <p>{{RECOMMENDED_APPROACH}}</p>
+
+            <h3>Personalised Talking Points</h3>
+            <ol class="talking-points">
+              <li>{{TALKING_POINT_1}}</li>
+              <li>{{TALKING_POINT_2}}</li>
+              <li>{{TALKING_POINT_3}}</li>
+              <li>{{TALKING_POINT_4}}</li>
+            </ol>
+          </div>
+
+          <h3>Potential Objections &amp; Responses</h3>
+          <table class="data-table">
+            <thead>
+              <tr><th>Objection</th><th>Response</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>{{OBJECTION_1}}</td><td>{{RESPONSE_1}}</td></tr>
+              <tr><td>{{OBJECTION_2}}</td><td>{{RESPONSE_2}}</td></tr>
+              <tr><td>{{OBJECTION_3}}</td><td>{{RESPONSE_3}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ======== OUTREACH PLAN ======== -->
+        <section class="report-section" id="outreach">
+          <span class="section-label">Outreach</span>
+          <h2>Outreach Sequence</h2>
+
+          <div class="outreach-timeline">
+            <div class="timeline-step">
+              <div class="step-meta">
+                <span class="step-day">Day 1</span>
+                <span class="step-channel">Email</span>
+              </div>
+              <div class="step-action">{{OUTREACH_STEP_1}}</div>
+            </div>
+
+            <div class="timeline-step">
+              <div class="step-meta">
+                <span class="step-day">Day 3</span>
+                <span class="step-channel">LinkedIn</span>
+              </div>
+              <div class="step-action">{{OUTREACH_STEP_2}}</div>
+            </div>
+
+            <div class="timeline-step">
+              <div class="step-meta">
+                <span class="step-day">Day 7</span>
+                <span class="step-channel">Email</span>
+              </div>
+              <div class="step-action">{{OUTREACH_STEP_3}}</div>
+            </div>
+
+            <div class="timeline-step">
+              <div class="step-meta">
+                <span class="step-day">Day 10</span>
+                <span class="step-channel">Phone</span>
+              </div>
+              <div class="step-action">{{OUTREACH_STEP_4}}</div>
+            </div>
+
+            <div class="timeline-step">
+              <div class="step-meta">
+                <span class="step-day">Day 14</span>
+                <span class="step-channel">Email</span>
+              </div>
+              <div class="step-action">{{OUTREACH_STEP_5}}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ======== NEXT STEPS ======== -->
+        <section class="report-section" id="actions">
+          <span class="section-label">Action Plan</span>
+          <h2>Recommended Next Steps</h2>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Action</th>
+                <th>Owner</th>
+                <th>Target Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>{{ACTION_1}}</td><td>{{OWNER_1}}</td><td>{{DATE_1}}</td></tr>
+              <tr><td>2</td><td>{{ACTION_2}}</td><td>{{OWNER_2}}</td><td>{{DATE_2}}</td></tr>
+              <tr><td>3</td><td>{{ACTION_3}}</td><td>{{OWNER_3}}</td><td>{{DATE_3}}</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- ======================== FOOTER ======================== -->
+    <footer class="report-footer">
+      <div>Research compiled {{REPORT_DATE}} — SAS-AM B2B Research Agent</div>
+      <div class="sources">Sources: {{SOURCES}}</div>
+    </footer>
+
+  </div>
+
+  <!-- ======================== SCRIPTS ======================== -->
+  <script>
+    // Theme management
+    const STORAGE_KEY = 'sas-report-theme';
+
+    function getSystemTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function setTheme(theme) {
+      const resolved = theme === 'system' ? getSystemTheme() : theme;
+      document.documentElement.setAttribute('data-theme', resolved);
+      localStorage.setItem(STORAGE_KEY, theme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    }
+
+    // Initialize theme
+    setTheme(localStorage.getItem(STORAGE_KEY) || 'light');
+
+    // Active nav tracking on scroll
+    const sections = document.querySelectorAll('.report-section');
+    const navLinks = document.querySelectorAll('.report-nav a');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        }
+      });
+    }, { rootMargin: '-100px 0px -60% 0px' });
+
+    sections.forEach(section => observer.observe(section));
+  </script>
+</body>
+</html>
