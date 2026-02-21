@@ -663,6 +663,45 @@ body {
 }
 
 /* ============================
+   LINKEDIN & SOURCE NOTES
+   ============================ */
+.source-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  font-style: italic;
+}
+
+.source-note code {
+  background: var(--bg-tertiary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-style: normal;
+}
+
+.source-note i {
+  margin-right: 4px;
+  color: var(--accent);
+}
+
+.data-table a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.data-table a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.data-table a i {
+  margin-right: 4px;
+}
+
+/* ============================
    FOOTER
    ============================ */
 .report-footer {

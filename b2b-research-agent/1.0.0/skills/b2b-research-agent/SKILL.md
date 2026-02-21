@@ -133,11 +133,60 @@ For each shortlisted prospect, compile:
 | **Strategic Priorities** | Annual report themes, CEO statements, investor presentations |
 | **Pain Points** | Known challenges, inefficiencies, regulatory pressures |
 | **Technology Landscape** | Current systems (ERP, EAM, CRM), recent tech investments |
-| **Decision-Makers** | Key contacts — name, title, department, LinkedIn URL |
+| **Decision-Makers** | Key contacts — name, title, department, LinkedIn profile URL (found via `site:linkedin.com/in` search) |
 | **Buying Signals** | Recent hires, RFPs, budget announcements, project launches |
 | **Competitive Landscape** | Current vendors, contract renewals, known dissatisfaction |
 | **Engagement History** | Any prior touchpoints, proposals, or conversations |
 | **Trigger Events** | Mergers, leadership changes, regulatory deadlines, incidents |
+
+#### Decision-Maker Identification via LinkedIn (CRITICAL)
+
+**You MUST use web search with `site:linkedin.com/in` to find and identify key decision-makers.** This is a core part of every dossier.
+
+**Search strategy — run these searches for each target company:**
+
+1. **C-Suite and senior leadership:**
+   ```
+   site:linkedin.com/in "[Company Name]" CEO OR "Managing Director" OR "General Manager"
+   ```
+
+2. **Operational / technical leaders (adapt titles to the offering):**
+   ```
+   site:linkedin.com/in "[Company Name]" "Head of" OR "Director" OR "VP" operations OR technology OR engineering OR "asset management"
+   ```
+
+3. **Financial decision-makers:**
+   ```
+   site:linkedin.com/in "[Company Name]" CFO OR "Chief Financial" OR "Finance Director" OR "Head of Finance"
+   ```
+
+4. **Procurement / buying roles:**
+   ```
+   site:linkedin.com/in "[Company Name]" procurement OR purchasing OR "vendor management" OR "strategic sourcing"
+   ```
+
+5. **Domain-specific roles (tailor to what you're selling):**
+   ```
+   site:linkedin.com/in "[Company Name]" "digital transformation" OR "innovation" OR "data" OR "analytics"
+   ```
+
+**For each decision-maker found, capture:**
+
+| Field | What to Record |
+|-------|---------------|
+| **Full Name** | As shown on their LinkedIn profile |
+| **Title** | Current job title |
+| **Department** | Inferred from title (e.g., Operations, IT, Finance, Strategy) |
+| **LinkedIn URL** | Direct link to their profile (e.g., `https://linkedin.com/in/firstname-lastname`) |
+| **Relevance** | Why this person matters for the engagement (budget authority, technical evaluator, operational sponsor, etc.) |
+| **Background Notes** | Career history, prior companies, education, shared connections — anything useful for personalisation |
+| **Engagement Angle** | How to approach this person specifically (what to reference, what pain point to lead with) |
+
+**Prioritise the buying committee** — identify at minimum:
+- **Economic Buyer**: Who controls the budget? (usually C-suite or VP)
+- **Technical Evaluator**: Who assesses the solution fit? (Head of IT, Engineering, Operations)
+- **Champion / Sponsor**: Who would internally advocate for your solution? (often a director-level person feeling the pain)
+- **Gatekeeper**: Who controls access to decision-makers? (EA, procurement, project office)
 
 ### Phase 4: Engagement Strategy
 
@@ -239,9 +288,14 @@ The full detailed output for deep research on a single prospect.
 
 ## Decision-Makers
 
-| Name | Title | Department | Relevance | LinkedIn |
-|------|-------|------------|-----------|----------|
-| [Name] | [Title] | [Dept] | [Why they matter] | [URL] |
+*Found via `site:linkedin.com/in` web search*
+
+| Name | Title | Department | Buying Role | Relevance | LinkedIn |
+|------|-------|------------|-------------|-----------|----------|
+| [Name] | [Title] | [Dept] | Economic Buyer | [Why they matter] | [linkedin.com/in/...] |
+| [Name] | [Title] | [Dept] | Technical Evaluator | [Why they matter] | [linkedin.com/in/...] |
+| [Name] | [Title] | [Dept] | Champion / Sponsor | [Why they matter] | [linkedin.com/in/...] |
+| [Name] | [Title] | [Dept] | Gatekeeper | [Why they matter] | [linkedin.com/in/...] |
 
 ## Buying Signals
 
@@ -547,9 +601,14 @@ When conducting research, prioritise these source types:
 - Government procurement portals and tender notices
 - Official press releases
 
+### LinkedIn Sources (Decision-Maker Identification — REQUIRED)
+- **`site:linkedin.com/in "[Company]" [title]`** — find specific people by company and role
+- **`site:linkedin.com/company "[Company]"`** — company page for employee count, industry, and overview
+- **`site:linkedin.com/in "[Company]" "joined" OR "started"`** — recent hires signalling investment areas
+- **`site:linkedin.com/posts "[Company]" [topic]`** — stakeholder posts revealing priorities and opinions
+
 ### Secondary Sources (Cross-Reference)
 - Industry publications and trade journals
-- LinkedIn company pages and employee profiles
 - Conference programmes and speaker lists
 - Industry association member directories
 - News aggregators and business media
@@ -579,7 +638,13 @@ Use this path when the user provides a specific company name (the most common in
 - Map strategic priorities from annual reports, CEO statements, and investor materials
 - Identify pain points and challenges relevant to your offering
 - Map the technology landscape (ERP, EAM, CRM, other systems)
-- Identify decision-makers and buying committee members
+- **Search LinkedIn for decision-makers** using `site:linkedin.com/in "[Company]" [title]` queries:
+  - Search for C-suite / senior leadership (CEO, MD, GM)
+  - Search for operational / technical leaders (Head of Ops, CTO, Engineering Director)
+  - Search for financial decision-makers (CFO, Finance Director)
+  - Search for domain-specific roles relevant to your offering
+  - For each person found: capture name, title, LinkedIn URL, relevance, and engagement angle
+  - Identify the buying committee: economic buyer, technical evaluator, champion, gatekeeper
 - Surface buying signals (recent hires, RFPs, budget announcements, project launches)
 - Assess competitive landscape (current vendors, contract status, vulnerabilities)
 

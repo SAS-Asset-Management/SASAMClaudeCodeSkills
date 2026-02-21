@@ -39,11 +39,13 @@
 
 ## Decision-Makers
 
-| Name | Title | Department | Relevance | LinkedIn |
-|------|-------|------------|-----------|----------|
-| {{DM_NAME_1}} | {{DM_TITLE_1}} | {{DM_DEPT_1}} | {{DM_RELEVANCE_1}} | {{DM_LINKEDIN_1}} |
-| {{DM_NAME_2}} | {{DM_TITLE_2}} | {{DM_DEPT_2}} | {{DM_RELEVANCE_2}} | {{DM_LINKEDIN_2}} |
-| {{DM_NAME_3}} | {{DM_TITLE_3}} | {{DM_DEPT_3}} | {{DM_RELEVANCE_3}} | {{DM_LINKEDIN_3}} |
+*Found via `site:linkedin.com/in` web search*
+
+| Name | Title | Department | Buying Role | Relevance | LinkedIn |
+|------|-------|------------|-------------|-----------|----------|
+| {{DM_NAME_1}} | {{DM_TITLE_1}} | {{DM_DEPT_1}} | {{DM_ROLE_1}} | {{DM_RELEVANCE_1}} | [Profile]({{DM_LINKEDIN_1}}) |
+| {{DM_NAME_2}} | {{DM_TITLE_2}} | {{DM_DEPT_2}} | {{DM_ROLE_2}} | {{DM_RELEVANCE_2}} | [Profile]({{DM_LINKEDIN_2}}) |
+| {{DM_NAME_3}} | {{DM_TITLE_3}} | {{DM_DEPT_3}} | {{DM_ROLE_3}} | {{DM_RELEVANCE_3}} | [Profile]({{DM_LINKEDIN_3}}) |
 
 ## Buying Signals
 
