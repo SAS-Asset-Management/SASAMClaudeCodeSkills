@@ -1,0 +1,12 @@
+{
+  "name": "data-quality-analysis",
+  "description": "Analyse raw data quality using the ABS Data Quality Framework. Assesses seven dimensions and produces a structured markdown report.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "homepage": "https://github.com/scrivo21/SASAMClaudeCodeSkills",
+  "repository": "https://github.com/scrivo21/SASAMClaudeCodeSkills",
+  "license": "MIT",
+  "keywords": ["data-quality", "abs", "quality-framework", "data-analysis", "data-profiling", "quality-assessment", "reporting"]
+}

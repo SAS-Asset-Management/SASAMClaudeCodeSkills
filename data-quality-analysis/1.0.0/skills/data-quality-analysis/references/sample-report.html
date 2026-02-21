@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fleet Maintenance Records | Data Quality Report</title>
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================
+       LIGHT MODE (Default)
+       ============================ */
+    :root,
+    :root[data-theme="light"] {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(0, 34, 68, 0.15);
+      --shadow-sm: 0 2px 8px rgba(0, 34, 68, 0.08);
+      --shadow-md: 0 4px 16px rgba(0, 34, 68, 0.12);
+      --shadow-lg: 0 8px 24px rgba(0, 34, 68, 0.15);
+      --rating-high: #16a34a;
+      --rating-high-bg: #f0fdf4;
+      --rating-adequate: #d97706;
+      --rating-adequate-bg: #fffbeb;
+      --rating-low: #dc2626;
+      --rating-low-bg: #fef2f2;
+      --rating-unable: #6b7280;
+      --rating-unable-bg: #f3f4f6;
+      --table-header-bg: #f1f5f9;
+      --table-row-hover: #f8fafc;
+      --table-border: #e2e8f0;
+      --sidebar-bg: #f8fafc;
+      --sidebar-border: #e2e8f0;
+      --sidebar-active-bg: rgba(105, 190, 40, 0.1);
+    }
+
+    /* ============================
+       DARK MODE
+       ============================ */
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --accent: #69BE28;
+      --accent-hover: #7AD33B;
+      --card-bg: rgba(20, 29, 43, 0.9);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --shadow-sm: 0 2px 8px rgba(0, 10, 28, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 10, 28, 0.4);
+      --shadow-lg: 0 14px 30px rgba(0, 10, 28, 0.5);
+      --rating-high: #4ade80;
+      --rating-high-bg: rgba(22, 163, 74, 0.15);
+      --rating-adequate: #fbbf24;
+      --rating-adequate-bg: rgba(217, 119, 6, 0.15);
+      --rating-low: #f87171;
+      --rating-low-bg: rgba(220, 38, 38, 0.15);
+      --rating-unable: #8ba3b5;
+      --rating-unable-bg: rgba(107, 114, 128, 0.15);
+      --table-header-bg: #1e2a3d;
+      --table-row-hover: #1a2436;
+      --table-border: #2a3a50;
+      --sidebar-bg: #111827;
+      --sidebar-border: #1e2a3d;
+      --sidebar-active-bg: rgba(105, 190, 40, 0.15);
+    }
+
+    /* ============================
+       BASE
+       ============================ */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      font-family: "Source Sans Pro", Helvetica, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================
+       HEADER
+       ============================ */
+    .report-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-logo {
+      width: 36px;
+      height: 36px;
+      background: var(--sas-blue);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    :root[data-theme="dark"] .header-logo {
+      background: var(--accent);
+      color: #002244;
+    }
+
+    .header-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .header-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle, .print-btn {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      font-size: 14px;
+    }
+
+    .theme-toggle:hover, .print-btn:hover {
+      background: var(--bg-tertiary);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    :root[data-theme="light"] .theme-toggle .light-icon { display: none; }
+    :root[data-theme="light"] .theme-toggle .dark-icon { display: block; }
+    :root[data-theme="dark"] .theme-toggle .light-icon { display: block; }
+    :root[data-theme="dark"] .theme-toggle .dark-icon { display: none; }
+
+    /* ============================
+       SIDEBAR NAVIGATION
+       ============================ */
+    .sidebar {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      bottom: 0;
+      width: 260px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--sidebar-border);
+      padding: 24px 0;
+      overflow-y: auto;
+      z-index: 90;
+    }
+
+    .sidebar-section {
+      margin-bottom: 24px;
+    }
+
+    .sidebar-heading {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 20px 8px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      transition: all 0.15s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar a:hover {
+      background: var(--table-row-hover);
+      color: var(--text-primary);
+    }
+
+    .sidebar a.active {
+      background: var(--sidebar-active-bg);
+      color: var(--accent);
+      border-left-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .sidebar a i {
+      width: 16px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    /* ============================
+       MAIN CONTENT
+       ============================ */
+    .main-content {
+      margin-left: 260px;
+      margin-top: 64px;
+      padding: 40px 48px 80px;
+      max-width: 1200px;
+    }
+
+    /* ============================
+       REPORT TITLE SECTION
+       ============================ */
+    .report-title-section {
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .report-title-section h1 {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .report-title-section .subtitle {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+
+    .report-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .meta-value {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    /* ============================
+       SECTIONS
+       ============================ */
+    .section {
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .section-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(105, 190, 40, 0.1);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .section p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      max-width: 800px;
+    }
+
+    /* ============================
+       RATING BADGES
+       ============================ */
+    .rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .rating-high { color: var(--rating-high); background: var(--rating-high-bg); }
+    .rating-adequate { color: var(--rating-adequate); background: var(--rating-adequate-bg); }
+    .rating-low { color: var(--rating-low); background: var(--rating-low-bg); }
+    .rating-unable { color: var(--rating-unable); background: var(--rating-unable-bg); }
+
+    /* ============================
+       OVERALL SCORE CARD
+       ============================ */
+    .overall-score-card {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      padding: 28px 32px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      margin-bottom: 32px;
+    }
+
+    .score-ring {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      flex-shrink: 0;
+    }
+
+    .score-ring svg { transform: rotate(-90deg); }
+    .score-ring .ring-bg { fill: none; stroke: var(--bg-tertiary); stroke-width: 8; }
+    .score-ring .ring-fill { fill: none; stroke-width: 8; stroke-linecap: round; }
+
+    .score-ring .score-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .score-details h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .score-details p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* ============================
+       TABLES
+       ============================ */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+
+    .summary-table th {
+      background: var(--table-header-bg);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 2px solid var(--table-border);
+    }
+
+    .summary-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--table-border);
+      color: var(--text-secondary);
+    }
+
+    .summary-table tr:hover td { background: var(--table-row-hover); }
+
+    .summary-table .dim-number {
+      color: var(--text-muted);
+      font-weight: 600;
+      width: 30px;
+    }
+
+    .summary-table .dim-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .scorecard-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+
+    .scorecard-table th {
+      background: var(--table-header-bg);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 10px 12px;
+      text-align: center;
+      border-bottom: 2px solid var(--table-border);
+      white-space: nowrap;
+    }
+
+    .scorecard-table th:first-child { text-align: left; }
+
+    .scorecard-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--table-border);
+      text-align: center;
+      font-family: "Source Code Pro", monospace;
+      font-size: 13px;
+    }
+
+    .scorecard-table td:first-child {
+      text-align: left;
+      font-family: "Source Code Pro", monospace;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .scorecard-table td:last-child {
+      text-align: left;
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: 12px;
+      color: var(--text-muted);
+      max-width: 200px;
+    }
+
+    .scorecard-table tr:hover td { background: var(--table-row-hover); }
+
+    .cell-high { color: var(--rating-high) !important; font-weight: 600; }
+    .cell-adequate { color: var(--rating-adequate) !important; font-weight: 600; }
+    .cell-low { color: var(--rating-low) !important; font-weight: 700; }
+    .cell-na { color: var(--text-muted) !important; font-style: italic; }
+
+    /* ============================
+       DIMENSION CARDS
+       ============================ */
+    .dimension-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+    }
+
+    .dimension-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .dimension-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .dimension-number {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      color: #002244;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .dimension-title h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .dimension-body h4 {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 20px 0 10px;
+    }
+
+    .dimension-body h4:first-child { margin-top: 0; }
+
+    .dimension-body p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+
+    .dimension-body ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px;
+    }
+
+    .dimension-body ul li {
+      font-size: 14px;
+      color: var(--text-secondary);
+      padding: 4px 0 4px 20px;
+      position: relative;
+      line-height: 1.6;
+    }
+
+    .dimension-body ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    /* ============================
+       RECOMMENDATIONS
+       ============================ */
+    .recommendation-group { margin-bottom: 24px; }
+
+    .recommendation-group h3 {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .recommendation-group h3.critical { color: var(--rating-low); }
+    .recommendation-group h3.important { color: var(--rating-adequate); }
+    .recommendation-group h3.minor { color: var(--text-muted); }
+
+    .recommendation-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      align-items: flex-start;
+    }
+
+    .recommendation-item .rec-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .critical .rec-number { background: var(--rating-low-bg); color: var(--rating-low); }
+    .important .rec-number { background: var(--rating-adequate-bg); color: var(--rating-adequate); }
+    .minor .rec-number { background: var(--rating-unable-bg); color: var(--rating-unable); }
+
+    .recommendation-item .rec-text {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .recommendation-item .rec-text strong { color: var(--text-primary); }
+
+    /* ============================
+       DATA PROFILE
+       ============================ */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .profile-stat {
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .profile-stat .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .profile-stat .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: "Source Code Pro", monospace;
+    }
+
+    .profile-stat .stat-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ============================
+       CODE / FRAMEWORK REF
+       ============================ */
+    pre {
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 20px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+    }
+
+    code {
+      font-family: "Source Code Pro", monospace;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .framework-ref {
+      background: var(--bg-secondary);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 20px 24px;
+      margin-top: 32px;
+    }
+
+    .framework-ref p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .framework-ref a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .framework-ref a:hover { text-decoration: underline; }
+
+    /* ============================
+       PRINT / RESPONSIVE
+       ============================ */
+    @media print {
+      .report-header { position: static; border: none; }
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; margin-top: 0; padding: 20px; max-width: 100%; }
+      .theme-toggle, .print-btn { display: none; }
+      .dimension-card { break-inside: avoid; }
+      .scorecard-table { font-size: 11px; }
+      body { font-size: 12px; }
+    }
+
+    @media screen and (max-width: 1024px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; padding: 24px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ============ HEADER ============ -->
+  <header class="report-header">
+    <div class="header-left">
+      <div class="header-logo">DQ</div>
+      <div>
+        <div class="header-title">Data Quality Report</div>
+        <div class="header-subtitle">ABS Data Quality Framework Assessment</div>
+      </div>
+    </div>
+    <div class="header-controls">
+      <button class="print-btn" onclick="window.print()" aria-label="Print report">
+        <i class="fas fa-print"></i>
+      </button>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode">
+        <i class="fas fa-sun light-icon"></i>
+        <i class="fas fa-moon dark-icon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============ SIDEBAR ============ -->
+  <nav class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Overview</div>
+      <a href="#executive-summary"><i class="fas fa-chart-pie"></i> Executive Summary</a>
+      <a href="#data-profile"><i class="fas fa-database"></i> Data Profile</a>
+      <a href="#column-scorecard"><i class="fas fa-table-cells"></i> Column Scorecard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Dimensions</div>
+      <a href="#dim-1"><i class="fas fa-building"></i> 1. Institutional Env.</a>
+      <a href="#dim-2"><i class="fas fa-bullseye"></i> 2. Relevance</a>
+      <a href="#dim-3"><i class="fas fa-clock"></i> 3. Timeliness</a>
+      <a href="#dim-4"><i class="fas fa-crosshairs"></i> 4. Accuracy</a>
+      <a href="#dim-5"><i class="fas fa-link"></i> 5. Coherence</a>
+      <a href="#dim-6"><i class="fas fa-book-open"></i> 6. Interpretability</a>
+      <a href="#dim-7"><i class="fas fa-unlock"></i> 7. Accessibility</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-heading">Actions</div>
+      <a href="#recommendations"><i class="fas fa-list-check"></i> Recommendations</a>
+      <a href="#appendix"><i class="fas fa-code"></i> Appendix</a>
+    </div>
+  </nav>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="main-content">
+
+    <!-- REPORT TITLE -->
+    <div class="report-title-section">
+      <h1>Data Quality Assessment</h1>
+      <div class="subtitle">Fleet Maintenance Records — Predictive Maintenance Readiness</div>
+      <div class="report-meta">
+        <div class="meta-item">
+          <span class="meta-label">Dataset</span>
+          <span class="meta-value">fleet_maintenance_records.csv</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Source</span>
+          <span class="meta-value">SAS-AM Asset Management Platform (EAM export)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Assessment Date</span>
+          <span class="meta-value">21 February 2026</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Intended Use</span>
+          <span class="meta-value">Predictive maintenance modelling for heavy vehicle fleet</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ EXECUTIVE SUMMARY ============ -->
+    <section class="section" id="executive-summary">
+      <div class="section-header">
+        <span class="section-tag">Overview</span>
+        <h2>Executive Summary</h2>
+      </div>
+
+      <div class="overall-score-card">
+        <div class="score-ring">
+          <svg width="100" height="100" viewBox="0 0 100 100">
+            <circle class="ring-bg" cx="50" cy="50" r="42"/>
+            <circle class="ring-fill" cx="50" cy="50" r="42"
+              stroke="var(--rating-adequate)"
+              stroke-dasharray="264"
+              stroke-dashoffset="9.5"/>
+          </svg>
+          <span class="score-text">96.4%</span>
+        </div>
+        <div class="score-details">
+          <h3>Overall: <span class="rating rating-adequate">CONDITIONAL</span></h3>
+          <p>Suitable for exploratory analysis; requires cleaning before predictive modelling. The overall dataset score of 96.4% is high because the majority of columns are clean, but the three columns critical to the modelling use case (failure_mode, operating_hours, parts_used) have notable quality issues.</p>
+        </div>
+      </div>
+
+      <p>The fleet maintenance records dataset contains 12,847 records across 23 columns covering maintenance events for a heavy vehicle fleet from January 2022 to December 2025. Key concerns are a 22% missing rate in the <code>failure_mode</code> column (critical for the intended predictive model), inconsistent units in the <code>operating_hours</code> field, and several coded fields without a data dictionary.</p>
+
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Dimension</th>
+            <th>Rating</th>
+            <th>Key Finding</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="dim-number">1</td>
+            <td class="dim-name">Institutional Environment</td>
+            <td><span class="rating rating-adequate">ADEQUATE</span></td>
+            <td>Known source (EAM system), but no documented data governance process</td>
+          </tr>
+          <tr>
+            <td class="dim-number">2</td>
+            <td class="dim-name">Relevance</td>
+            <td><span class="rating rating-high">HIGH</span></td>
+            <td>Data directly covers the target fleet and maintenance concepts needed</td>
+          </tr>
+          <tr>
+            <td class="dim-number">3</td>
+            <td class="dim-name">Timeliness</td>
+            <td><span class="rating rating-high">HIGH</span></td>
+            <td>Data is current to December 2025, extracted January 2026</td>
+          </tr>
+          <tr>
+            <td class="dim-number">4</td>
+            <td class="dim-name">Accuracy</td>
+            <td><span class="rating rating-low">LOW</span></td>
+            <td>22% missing in key field, 147 impossible values, 312 duplicates</td>
+          </tr>
+          <tr>
+            <td class="dim-number">5</td>
+            <td class="dim-name">Coherence</td>
+            <td><span class="rating rating-adequate">ADEQUATE</span></td>
+            <td>Mostly internally consistent but cost totals don't reconcile</td>
+          </tr>
+          <tr>
+            <td class="dim-number">6</td>
+            <td class="dim-name">Interpretability</td>
+            <td><span class="rating rating-low">LOW</span></td>
+            <td>6 coded columns with no data dictionary, cryptic column names</td>
+          </tr>
+          <tr>
+            <td class="dim-number">7</td>
+            <td class="dim-name">Accessibility</td>
+            <td><span class="rating rating-high">HIGH</span></td>
+            <td>Standard CSV format, UTF-8 encoded, 4.2 MB file size</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============ DATA PROFILE ============ -->
+    <section class="section" id="data-profile">
+      <div class="section-header">
+        <span class="section-tag">Profile</span>
+        <h2>Data Profile</h2>
+      </div>
+
+      <div class="profile-grid">
+        <div class="profile-stat">
+          <div class="stat-label">Total Records</div>
+          <div class="stat-value">12,847</div>
+        </div>
+        <div class="profile-stat">
+          <div class="stat-label">Total Columns</div>
+          <div class="stat-value">23</div>
+        </div>
+        <div class="profile-stat">
+          <div class="stat-label">Duplicate Rows</div>
+          <div class="stat-value">312</div>
+          <div class="stat-note">2.4% of total</div>
+        </div>
+        <div class="profile-stat">
+          <div class="stat-label">File Size</div>
+          <div class="stat-value">4.2 MB</div>
+          <div class="stat-note">CSV, UTF-8</div>
+        </div>
+        <div class="profile-stat">
+          <div class="stat-label">Date Range</div>
+          <div class="stat-value">4 yrs</div>
+          <div class="stat-note">2022-01-03 to 2025-12-18</div>
+        </div>
+        <div class="profile-stat">
+          <div class="stat-label">Fleet Assets</div>
+          <div class="stat-value">487</div>
+          <div class="stat-note">5 asset classes</div>
+        </div>
+      </div>
+
+      <h3 style="font-size:16px; margin-bottom:12px; color:var(--text-primary)">Schema (Key Columns)</h3>
+      <table class="scorecard-table">
+        <thead>
+          <tr>
+            <th style="text-align:left">Column</th>
+            <th>Data Type</th>
+            <th>Non-null</th>
+            <th>Null %</th>
+            <th>Unique</th>
+            <th style="text-align:left">Sample Values</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>work_order_id</td><td>string</td><td>12,847</td><td class="cell-high">0.0%</td><td>12,535</td><td>WO-2024-00142, WO-2024-00143</td></tr>
+          <tr><td>asset_id</td><td>string</td><td>12,847</td><td class="cell-high">0.0%</td><td>487</td><td>HV-001, HV-002, HV-489</td></tr>
+          <tr><td>asset_class</td><td>string</td><td>12,847</td><td class="cell-high">0.0%</td><td>5</td><td>Truck, Excavator, Loader, Grader, Roller</td></tr>
+          <tr><td>event_date</td><td>date</td><td>12,831</td><td class="cell-high">0.1%</td><td>1,289</td><td>2024-06-15, 2024-07-22</td></tr>
+          <tr><td>completion_date</td><td>date</td><td>12,104</td><td class="cell-adequate">5.8%</td><td>1,156</td><td>2024-06-17, 2024-07-25</td></tr>
+          <tr><td>maintenance_type</td><td>string</td><td>12,847</td><td class="cell-high">0.0%</td><td>3</td><td>Preventive, Corrective, Emergency</td></tr>
+          <tr><td>failure_mode</td><td>string</td><td>10,021</td><td class="cell-low">22.0%</td><td>48</td><td>Engine overheating, Hydraulic leak</td></tr>
+          <tr><td>priority</td><td>int</td><td>12,847</td><td class="cell-high">0.0%</td><td>4</td><td>1, 2, 3, 4</td></tr>
+          <tr><td>operating_hours</td><td>float</td><td>11,903</td><td class="cell-adequate">7.3%</td><td>8,421</td><td>1250.5, 3400.0, 87200.0</td></tr>
+          <tr><td>cost_aud</td><td>float</td><td>12,512</td><td class="cell-high">2.6%</td><td>4,891</td><td>450.00, 12350.75, 0.00</td></tr>
+          <tr><td>technician_code</td><td>string</td><td>12,847</td><td class="cell-high">0.0%</td><td>34</td><td>T01, T02, T34</td></tr>
+          <tr><td>location_code</td><td>string</td><td>12,801</td><td class="cell-high">0.4%</td><td>12</td><td>LOC-A, LOC-B, LOC-M</td></tr>
+          <tr><td>parts_used</td><td>string</td><td>9,245</td><td class="cell-low">28.0%</td><td>892</td><td>"Filter, Oil; Belt, Drive"</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============ COLUMN SCORECARD ============ -->
+    <section class="section" id="column-scorecard">
+      <div class="section-header">
+        <span class="section-tag">Metrics</span>
+        <h2>Column-Level Quality Scorecard</h2>
+      </div>
+
+      <p>Per-column quality metrics. Cells are colour-coded: <span class="cell-high">HIGH (&ge;95%)</span> | <span class="cell-adequate">ADEQUATE (80&ndash;94%)</span> | <span class="cell-low">LOW (&lt;80%)</span>. Validity thresholds: 98/90. Accuracy thresholds: 95/85.</p>
+
+      <table class="scorecard-table">
+        <thead>
+          <tr>
+            <th style="text-align:left">Column</th>
+            <th>Completeness</th>
+            <th>Validity</th>
+            <th>Consistency</th>
+            <th>Uniqueness</th>
+            <th>Timeliness</th>
+            <th>Accuracy</th>
+            <th style="text-align:left">Issues</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>work_order_id</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">97.6%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-high">100.0%</td>
+            <td>Duplicate IDs (2.4%)</td>
+          </tr>
+          <tr>
+            <td>asset_id</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td>3.8%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-high">100.0%</td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td>asset_class</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td>0.04%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-high">100.0%</td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td>event_date</td>
+            <td class="cell-high">99.9%</td>
+            <td class="cell-high">99.9%</td>
+            <td class="cell-high">100.0%</td>
+            <td>10.0%</td>
+            <td class="cell-high">95%</td>
+            <td class="cell-high">99.9%</td>
+            <td>16 nulls (0.1%)</td>
+          </tr>
+          <tr>
+            <td>completion_date</td>
+            <td class="cell-adequate">94.2%</td>
+            <td class="cell-high">99.7%</td>
+            <td class="cell-high">100.0%</td>
+            <td>9.0%</td>
+            <td class="cell-adequate">92%</td>
+            <td class="cell-high">99.4%</td>
+            <td>743 nulls (5.8%); 34 before event_date</td>
+          </tr>
+          <tr>
+            <td>maintenance_type</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td>0.02%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-high">100.0%</td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td>failure_mode</td>
+            <td class="cell-low">78.0%</td>
+            <td class="cell-adequate">95.2%</td>
+            <td class="cell-low">72.4%</td>
+            <td>0.5%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-adequate">95.2%</td>
+            <td>2,826 nulls (22.0%); inconsistent casing</td>
+          </tr>
+          <tr>
+            <td>priority</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td>0.03%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-high">100.0%</td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td>operating_hours</td>
+            <td class="cell-adequate">92.7%</td>
+            <td class="cell-high">98.1%</td>
+            <td class="cell-adequate">88.3%</td>
+            <td>65.5%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-adequate">87.6%</td>
+            <td>944 nulls (7.3%); 23 negatives; 124 extreme</td>
+          </tr>
+          <tr>
+            <td>cost_aud</td>
+            <td class="cell-high">97.4%</td>
+            <td class="cell-high">99.5%</td>
+            <td class="cell-high">96.8%</td>
+            <td>38.1%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-adequate">93.2%</td>
+            <td>335 nulls (2.6%); 6 implausible outliers</td>
+          </tr>
+          <tr>
+            <td>technician_code</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td>0.3%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-high">100.0%</td>
+            <td>&mdash;</td>
+          </tr>
+          <tr>
+            <td>location_code</td>
+            <td class="cell-high">99.6%</td>
+            <td class="cell-high">100.0%</td>
+            <td class="cell-high">100.0%</td>
+            <td>0.09%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-high">100.0%</td>
+            <td>46 nulls (0.4%); all from T17</td>
+          </tr>
+          <tr>
+            <td>parts_used</td>
+            <td class="cell-low">72.0%</td>
+            <td class="cell-high">98.7%</td>
+            <td class="cell-low">76.3%</td>
+            <td>6.9%</td>
+            <td class="cell-na">N/A</td>
+            <td class="cell-high">98.7%</td>
+            <td>3,602 nulls (28.0%); inconsistent delimiters</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 style="font-size:16px; margin: 24px 0 12px; color:var(--text-primary)">Column Summary Scores</h3>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px">Weighted: Completeness 30% | Validity 25% | Accuracy 25% | Consistency 15% | Uniqueness 5%</p>
+
+      <table class="scorecard-table">
+        <thead>
+          <tr>
+            <th style="text-align:left">Column</th>
+            <th>Summary Score</th>
+            <th>Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>work_order_id</td><td class="cell-high">99.9%</td><td><span class="rating rating-high">HIGH</span></td></tr>
+          <tr><td>asset_id</td><td class="cell-high">100.0%</td><td><span class="rating rating-high">HIGH</span></td></tr>
+          <tr><td>asset_class</td><td class="cell-high">100.0%</td><td><span class="rating rating-high">HIGH</span></td></tr>
+          <tr><td>event_date</td><td class="cell-high">99.9%</td><td><span class="rating rating-high">HIGH</span></td></tr>
+          <tr><td>completion_date</td><td class="cell-high">97.3%</td><td><span class="rating rating-high">HIGH</span></td></tr>
+          <tr><td>maintenance_type</td><td class="cell-high">100.0%</td><td><span class="rating rating-high">HIGH</span></td></tr>
+          <tr><td>failure_mode</td><td class="cell-adequate">84.7%</td><td><span class="rating rating-adequate">ADEQUATE</span></td></tr>
+          <tr><td>priority</td><td class="cell-high">100.0%</td><td><span class="rating rating-high">HIGH</span></td></tr>
+          <tr><td>operating_hours</td><td class="cell-adequate">91.6%</td><td><span class="rating rating-adequate">ADEQUATE</span></td></tr>
+          <tr><td>cost_aud</td><td class="cell-high">96.3%</td><td><span class="rating rating-high">HIGH</span></td></tr>
+          <tr><td>technician_code</td><td class="cell-high">100.0%</td><td><span class="rating rating-high">HIGH</span></td></tr>
+          <tr><td>location_code</td><td class="cell-high">99.9%</td><td><span class="rating rating-high">HIGH</span></td></tr>
+          <tr><td>parts_used</td><td class="cell-adequate">83.4%</td><td><span class="rating rating-adequate">ADEQUATE</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============ DIMENSION 1 ============ -->
+    <section class="section" id="dim-1">
+      <div class="dimension-card">
+        <div class="dimension-header">
+          <div class="dimension-title"><span class="dimension-number">1</span><h3>Institutional Environment</h3></div>
+          <span class="rating rating-adequate">ADEQUATE</span>
+        </div>
+        <div class="dimension-body">
+          <h4>Assessment</h4>
+          <p>The data originates from the organisation's enterprise asset management (EAM) system, which is the authoritative source for maintenance records. The EAM platform enforces some data validation at entry (mandatory fields for work order ID, asset ID, maintenance type). However, there is no documented data governance framework, no evidence of periodic data quality audits, and no formal data steward assigned to this dataset.</p>
+          <h4>Evidence</h4>
+          <ul>
+            <li>Source system is identified (EAM platform export)</li>
+            <li>Mandatory fields (work_order_id, asset_id, maintenance_type) have zero nulls, indicating system-enforced constraints</li>
+            <li>No metadata header or version information in the file</li>
+            <li>No PII detected in the dataset</li>
+          </ul>
+          <h4>Risks</h4>
+          <ul>
+            <li>Without documented governance, data quality may degrade over time as staff change</li>
+            <li>No audit trail for corrections or amendments to records</li>
+          </ul>
+          <h4>Recommendations</h4>
+          <ul>
+            <li>Document the data governance process for EAM exports</li>
+            <li>Assign a data steward responsible for maintenance data quality</li>
+            <li>Add export metadata (extraction date, system version, filters applied) to future exports</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DIMENSION 2 ============ -->
+    <section class="section" id="dim-2">
+      <div class="dimension-card">
+        <div class="dimension-header">
+          <div class="dimension-title"><span class="dimension-number">2</span><h3>Relevance</h3></div>
+          <span class="rating rating-high">HIGH</span>
+        </div>
+        <div class="dimension-body">
+          <h4>Assessment</h4>
+          <p>The dataset directly covers the target population (the organisation's heavy vehicle fleet) and the key concepts needed for predictive maintenance modelling: asset identification, maintenance events, failure modes, operating hours, and costs. The reference period (2022&ndash;2025) provides four years of history, which is sufficient for model training.</p>
+          <h4>Evidence</h4>
+          <ul>
+            <li>All 487 fleet assets are represented in the data</li>
+            <li>Five asset classes align with the fleet register</li>
+            <li>Maintenance types cover the three categories required (preventive, corrective, emergency)</li>
+            <li>48 distinct failure modes captured</li>
+          </ul>
+          <h4>Risks</h4>
+          <ul>
+            <li>The 22% missing rate in failure_mode reduces the effective dataset for supervised learning</li>
+            <li>parts_used is a free-text field that will require parsing/standardisation</li>
+          </ul>
+          <h4>Recommendations</h4>
+          <ul>
+            <li>Investigate whether missing failure_mode values can be retrospectively populated from technician notes</li>
+            <li>Standardise the parts_used field using the organisation's parts catalogue codes</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DIMENSION 3 ============ -->
+    <section class="section" id="dim-3">
+      <div class="dimension-card">
+        <div class="dimension-header">
+          <div class="dimension-title"><span class="dimension-number">3</span><h3>Timeliness</h3></div>
+          <span class="rating rating-high">HIGH</span>
+        </div>
+        <div class="dimension-body">
+          <h4>Assessment</h4>
+          <p>The data covers the reference period January 2022 to December 2025 and was extracted in January 2026, representing a lag of approximately three weeks. This is acceptable for the intended predictive modelling use case, which does not require real-time data.</p>
+          <h4>Evidence</h4>
+          <ul>
+            <li>Most recent event_date: 2025-12-18</li>
+            <li>File creation date: 2026-01-08</li>
+            <li>Extraction lag: ~3 weeks</li>
+            <li>No gaps in the monthly distribution of records</li>
+          </ul>
+          <h4>Risks</h4>
+          <ul>
+            <li>If the model is deployed for real-time predictions, a more frequent data pipeline will be needed</li>
+          </ul>
+          <h4>Recommendations</h4>
+          <ul>
+            <li>For production deployment, establish an automated daily or weekly export pipeline</li>
+            <li>Document the expected refresh frequency in the data catalogue</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DIMENSION 4 ============ -->
+    <section class="section" id="dim-4">
+      <div class="dimension-card">
+        <div class="dimension-header">
+          <div class="dimension-title"><span class="dimension-number">4</span><h3>Accuracy</h3></div>
+          <span class="rating rating-low">LOW</span>
+        </div>
+        <div class="dimension-body">
+          <h4>Assessment</h4>
+          <p>Several accuracy issues were identified that require remediation before the data can be used for predictive modelling. There are impossible values in operating_hours (negative values and implausibly high values), 312 duplicate records, and systematic missingness in the failure_mode field that introduces bias.</p>
+          <h4>Evidence</h4>
+          <ul>
+            <li><strong>Impossible values:</strong> 23 records have negative operating_hours (min: -12.0); 124 records exceed 50,000 hours</li>
+            <li><strong>Duplicates:</strong> 312 exact duplicate rows (2.4%) &mdash; likely a data extraction issue</li>
+            <li><strong>Systematic missingness:</strong> failure_mode missing for 82% of "Preventive" records</li>
+            <li><strong>Outliers in cost:</strong> 18 records with cost_aud &gt; $100,000; 6 appear to be data entry errors</li>
+            <li><strong>Date inconsistencies:</strong> 34 records where completion_date is before event_date</li>
+          </ul>
+          <h4>Risks</h4>
+          <ul>
+            <li>Negative operating hours will cause errors in feature engineering</li>
+            <li>Duplicate records will inflate maintenance frequency calculations</li>
+            <li>Biased missingness in failure_mode will produce a biased predictive model</li>
+            <li>Cost outliers will skew financial analysis</li>
+          </ul>
+          <h4>Recommendations</h4>
+          <ul>
+            <li>Remove or correct 312 duplicate rows</li>
+            <li>Investigate and correct 23 negative operating_hours values</li>
+            <li>Cap or investigate 124 records with operating_hours &gt; 50,000</li>
+            <li>Fix 34 records where completion date precedes event date</li>
+            <li>Investigate 6 cost outliers on routine maintenance work orders</li>
+            <li>Explicitly code preventive maintenance records as "N/A &mdash; Planned" rather than null</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DIMENSION 5 ============ -->
+    <section class="section" id="dim-5">
+      <div class="dimension-card">
+        <div class="dimension-header">
+          <div class="dimension-title"><span class="dimension-number">5</span><h3>Coherence</h3></div>
+          <span class="rating rating-adequate">ADEQUATE</span>
+        </div>
+        <div class="dimension-body">
+          <h4>Assessment</h4>
+          <p>The data is mostly internally coherent with some notable exceptions. Asset class values are consistent throughout, and maintenance type distributions are plausible. However, cost totals for some work orders do not reconcile, and there is an inconsistency in operating_hours units between older and newer records.</p>
+          <h4>Evidence</h4>
+          <ul>
+            <li>Asset classes are consistent across all records (5 distinct values matching fleet register)</li>
+            <li>Maintenance type distribution is plausible: Preventive 45%, Corrective 42%, Emergency 13%</li>
+            <li>operating_hours appears to use different units for pre-2023 records (some in minutes)</li>
+            <li>89 records have cost_aud = 0.00 for corrective maintenance &mdash; inconsistent with parts listed</li>
+          </ul>
+          <h4>Risks</h4>
+          <ul>
+            <li>Mixed units in operating_hours will produce incorrect model features</li>
+            <li>Zero-cost corrective records may indicate incomplete cost capture</li>
+          </ul>
+          <h4>Recommendations</h4>
+          <ul>
+            <li>Investigate the operating_hours unit inconsistency for pre-2023 records and normalise</li>
+            <li>Review zero-cost corrective maintenance records to determine if costs were not captured</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DIMENSION 6 ============ -->
+    <section class="section" id="dim-6">
+      <div class="dimension-card">
+        <div class="dimension-header">
+          <div class="dimension-title"><span class="dimension-number">6</span><h3>Interpretability</h3></div>
+          <span class="rating rating-low">LOW</span>
+        </div>
+        <div class="dimension-body">
+          <h4>Assessment</h4>
+          <p>The dataset lacks a data dictionary and several columns use coded values without documentation. While some column names are self-explanatory (event_date, cost_aud), others require domain knowledge or documentation to interpret correctly (priority codes, technician_code, location_code).</p>
+          <h4>Evidence</h4>
+          <ul>
+            <li>No data dictionary provided with the export</li>
+            <li>priority uses codes 1&ndash;4 with no label (is 1 highest or lowest priority?)</li>
+            <li>technician_code (T01&ndash;T34) has no mapping to names or roles</li>
+            <li>location_code (LOC-A through LOC-M) has no mapping to physical locations</li>
+            <li>failure_mode values have inconsistent capitalisation</li>
+            <li>Units for operating_hours not specified</li>
+          </ul>
+          <h4>Risks</h4>
+          <ul>
+            <li>Without knowing the priority scale direction, any priority-based analysis could be inverted</li>
+            <li>Coded fields cannot be used meaningfully without lookup tables</li>
+            <li>Inconsistent failure_mode text will inflate the number of categories</li>
+          </ul>
+          <h4>Recommendations</h4>
+          <ul>
+            <li>Create and maintain a data dictionary for all EAM exports</li>
+            <li>Provide lookup tables for priority, technician_code, and location_code</li>
+            <li>Standardise failure_mode values (consistent casing, controlled vocabulary)</li>
+            <li>Include units of measurement in column names or a metadata header</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DIMENSION 7 ============ -->
+    <section class="section" id="dim-7">
+      <div class="dimension-card">
+        <div class="dimension-header">
+          <div class="dimension-title"><span class="dimension-number">7</span><h3>Accessibility</h3></div>
+          <span class="rating rating-high">HIGH</span>
+        </div>
+        <div class="dimension-body">
+          <h4>Assessment</h4>
+          <p>The data is provided as a standard CSV file with UTF-8 encoding, readily loadable in all common data analysis tools. File size is manageable (4.2 MB) and the structure is clean tabular data with a header row.</p>
+          <h4>Evidence</h4>
+          <ul>
+            <li>Format: CSV with comma delimiter and standard quoting</li>
+            <li>Encoding: UTF-8 (verified, no encoding errors on load)</li>
+            <li>File size: 4.2 MB (loads in under 1 second in pandas)</li>
+            <li>Structure: single header row, consistent number of columns per row</li>
+            <li>No merged cells, embedded images, or complex formatting</li>
+          </ul>
+          <h4>Risks</h4>
+          <ul>
+            <li>The parts_used column contains embedded semicolons within quoted strings, which could cause parsing issues with naive CSV readers</li>
+          </ul>
+          <h4>Recommendations</h4>
+          <ul>
+            <li>Retain CSV as the export format &mdash; it is widely accessible</li>
+            <li>Consider also providing a Parquet export for large-scale analytical use</li>
+            <li>Co-locate the data dictionary with the data file in future exports</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ RECOMMENDATIONS ============ -->
+    <section class="section" id="recommendations">
+      <div class="section-header">
+        <span class="section-tag">Actions</span>
+        <h2>Recommendations</h2>
+      </div>
+
+      <div class="recommendation-group critical">
+        <h3 class="critical"><i class="fas fa-circle-exclamation"></i> Critical &mdash; Address Before Use</h3>
+        <div class="recommendation-item">
+          <span class="rec-number">1</span>
+          <span class="rec-text"><strong>Remove 312 duplicate rows</strong> &mdash; Deduplicate on work_order_id or full row match</span>
+        </div>
+        <div class="recommendation-item">
+          <span class="rec-number">2</span>
+          <span class="rec-text"><strong>Correct impossible operating_hours values</strong> &mdash; Fix 23 negative values and investigate 124 values exceeding 50,000</span>
+        </div>
+        <div class="recommendation-item">
+          <span class="rec-number">3</span>
+          <span class="rec-text"><strong>Fix 34 date inconsistencies</strong> &mdash; Where completion_date precedes event_date</span>
+        </div>
+        <div class="recommendation-item">
+          <span class="rec-number">4</span>
+          <span class="rec-text"><strong>Create a data dictionary</strong> &mdash; Document all columns, codes, and units</span>
+        </div>
+      </div>
+
+      <div class="recommendation-group important">
+        <h3 class="important"><i class="fas fa-triangle-exclamation"></i> Important &mdash; Address to Improve Quality</h3>
+        <div class="recommendation-item">
+          <span class="rec-number">5</span>
+          <span class="rec-text"><strong>Standardise failure_mode values</strong> &mdash; Normalise casing, consolidate synonyms, apply a controlled vocabulary</span>
+        </div>
+        <div class="recommendation-item">
+          <span class="rec-number">6</span>
+          <span class="rec-text"><strong>Investigate operating_hours unit inconsistency</strong> &mdash; Pre-2023 records may use different units</span>
+        </div>
+        <div class="recommendation-item">
+          <span class="rec-number">7</span>
+          <span class="rec-text"><strong>Investigate 6 cost outliers</strong> &mdash; Verify $100k+ costs on routine work orders</span>
+        </div>
+        <div class="recommendation-item">
+          <span class="rec-number">8</span>
+          <span class="rec-text"><strong>Populate missing failure_mode</strong> &mdash; Explicitly code preventive maintenance as "N/A &mdash; Planned"</span>
+        </div>
+      </div>
+
+      <div class="recommendation-group minor">
+        <h3 class="minor"><i class="fas fa-circle-info"></i> Minor &mdash; Desirable Improvements</h3>
+        <div class="recommendation-item">
+          <span class="rec-number">9</span>
+          <span class="rec-text"><strong>Add export metadata</strong> &mdash; Include extraction date, system version, and filters in future exports</span>
+        </div>
+        <div class="recommendation-item">
+          <span class="rec-number">10</span>
+          <span class="rec-text"><strong>Provide lookup tables</strong> &mdash; For technician_code, location_code, and priority</span>
+        </div>
+        <div class="recommendation-item">
+          <span class="rec-number">11</span>
+          <span class="rec-text"><strong>Automate the export pipeline</strong> &mdash; For production model deployment</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ APPENDIX ============ -->
+    <section class="section" id="appendix">
+      <div class="section-header">
+        <span class="section-tag">Reference</span>
+        <h2>Appendix</h2>
+      </div>
+
+      <h3 style="font-size:16px; margin-bottom:12px; color:var(--text-primary)">Profiling Code</h3>
+      <pre><code>import pandas as pd
+import numpy as np
+
+df = pd.read_csv("fleet_maintenance_records.csv")
+
+# Schema and shape
+print(f"Shape: {df.shape}")
+print(df.dtypes)
+print(df.describe(include='all'))
+
+# Missing data
+missing = df.isnull().sum()
+missing_pct = (missing / len(df) * 100).round(2)
+print(pd.DataFrame({'missing_count': missing, 'missing_pct': missing_pct})
+      .sort_values('missing_pct', ascending=False))
+
+# Duplicates
+print(f"Duplicate rows: {df.duplicated().sum()}")
+
+# Date validation
+df['event_date'] = pd.to_datetime(df['event_date'])
+df['completion_date'] = pd.to_datetime(df['completion_date'])
+date_issues = df[df['completion_date'] &lt; df['event_date']]
+print(f"Completion before event: {len(date_issues)}")
+
+# Operating hours validation
+print(f"Negative operating_hours: {(df['operating_hours'] &lt; 0).sum()}")
+print(f"Operating_hours &gt; 50000: {(df['operating_hours'] &gt; 50000).sum()}")
+
+# Cost outliers (IQR method)
+q1 = df['cost_aud'].quantile(0.25)
+q3 = df['cost_aud'].quantile(0.75)
+iqr = q3 - q1
+outliers = df[(df['cost_aud'] &gt; q3 + 1.5 * iqr)]
+print(f"Cost outliers: {len(outliers)}")</code></pre>
+
+      <div class="framework-ref">
+        <p><strong>Framework Reference</strong></p>
+        <p>This assessment was conducted using the Australian Bureau of Statistics Data Quality Framework (ABS Catalogue No. 1520.0, May 2009).</p>
+        <p>The framework comprises seven dimensions of quality: institutional environment, relevance, timeliness, accuracy, coherence, interpretability, and accessibility.</p>
+        <p><a href="https://www.abs.gov.au/websitedbs/D3310114.nsf/home/Quality:+The+ABS+data+quality+framework" target="_blank" rel="noopener">ABS Data Quality Framework <i class="fas fa-external-link-alt" style="font-size:11px"></i></a></p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ SCRIPTS ============ -->
+  <script>
+    const STORAGE_KEY = 'dq-report-theme';
+
+    function setTheme(theme) {
+      const resolved = theme === 'system'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : theme;
+      document.documentElement.setAttribute('data-theme', resolved);
+      localStorage.setItem(STORAGE_KEY, theme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    }
+
+    setTheme(localStorage.getItem(STORAGE_KEY) || 'light');
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (localStorage.getItem(STORAGE_KEY) === 'system') setTheme('system');
+    });
+
+    // Active sidebar link tracking
+    const navLinks = document.querySelectorAll('.sidebar a');
+
+    function updateActiveNav() {
+      let current = '';
+      const scrollY = window.scrollY + 120;
+
+      document.querySelectorAll('section[id]').forEach(section => {
+        if (section.offsetTop <= scrollY) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
+    updateActiveNav();
+  </script>
+</body>
+</html>

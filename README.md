@@ -16,6 +16,16 @@ Create polished SAS-AM branded Reveal.js presentations with:
 - **Dual-Theme Assets**: Support for light/dark image variants
 - **Animations**: Binary background, animated SVG diagrams
 
+### data-quality-analysis
+
+Analyse raw data quality using the ABS Data Quality Framework (Catalogue No. 1520.0):
+
+- **Seven Dimensions**: Institutional environment, relevance, timeliness, accuracy, coherence, interpretability, accessibility
+- **Data Profiling**: Schema inspection, descriptive statistics, missing data analysis, outlier detection, duplicate detection
+- **Evidence-Based Ratings**: HIGH / ADEQUATE / LOW / UNABLE TO ASSESS for each dimension
+- **Structured Report**: Markdown report with executive summary, dimension assessments, and prioritised recommendations
+- **Framework Reference**: Based on ABS 1520.0 (May 2009), derived from Statistics Canada QAF and European Statistics Code of Practice
+
 ## Installation
 
 ### Global Installation (Recommended)

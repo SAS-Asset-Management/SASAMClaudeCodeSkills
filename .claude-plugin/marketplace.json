@@ -16,6 +16,16 @@
       "keywords": ["sas", "presentation", "reveal.js", "slides", "asset-management"],
       "category": "productivity",
       "tags": ["presentations", "slides", "reveal.js", "sas"]
+    },
+    {
+      "name": "data-quality-analysis",
+      "source": "./data-quality-analysis/1.0.0",
+      "description": "Analyse raw data quality using the ABS Data Quality Framework. Assesses seven dimensions (institutional environment, relevance, timeliness, accuracy, coherence, interpretability, accessibility) and produces a structured markdown report with ratings and recommendations.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["data-quality", "abs", "quality-framework", "data-analysis", "data-profiling"],
+      "category": "data-analysis",
+      "tags": ["data-quality", "abs-framework", "reporting", "data-profiling"]
     }
   ]
 }
