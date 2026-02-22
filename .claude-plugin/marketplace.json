@@ -36,6 +36,16 @@
       "keywords": ["b2b", "research", "sales", "prospecting", "outreach", "business-development", "pipeline"],
       "category": "business-development",
       "tags": ["b2b", "research", "prospecting", "outreach", "sales"]
+    },
+    {
+      "name": "beam-selling",
+      "source": "./beam-selling/1.0.0",
+      "description": "Guide sales engagements through the marcov.BEAM evidence-gated lifecycle. Integrates with b2b-research-agent output to form scope, build SPIN-based engagement strategy, and advance deals stage by stage with local progress saving and session-to-session resumption.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["sales", "beam", "spin-selling", "pipeline", "b2b", "engagement", "proposal", "markov", "bayesian"],
+      "category": "business-development",
+      "tags": ["sales", "beam", "spin-selling", "pipeline", "engagement"]
     }
   ]
 }

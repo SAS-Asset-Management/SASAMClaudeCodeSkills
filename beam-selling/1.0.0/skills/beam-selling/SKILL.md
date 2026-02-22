@@ -1,0 +1,772 @@
+---
+name: beam-selling
+description: Guide a sales engagement through the marcov.BEAM evidence-gated sales lifecycle. Use when the user wants to develop, progress, or review a sales opportunity using the BEAM framework (Bayesian Evidence-Advancing Markov). Integrates with b2b-research-agent output to form scope, build engagement strategy, and advance deals stage by stage. Supports saving and resuming progress across sessions.
+---
+
+# marcov.BEAM Selling Skill
+
+Guide sales engagements through a structured, evidence-gated lifecycle. This skill implements the **marcov.BEAM** (Bayesian Evidence-Advancing Markov) framework — a 6-stage sales pipeline where advancement requires earning the right through demonstrated evidence at each gate.
+
+## Overview
+
+This skill helps you:
+
+- **beamUP a sales pitch**: Take B2B research and transform it into a structured sales engagement
+- **Follow the bouncing ball**: Progress through 6 evidence-gated stages with clear criteria at each gate
+- **Save and resume**: Persist engagement state locally so you can clear context and pick up later
+- **SPIN-integrated selling**: Apply Situation, Problem, Implication, and Need-payoff questioning at every stage
+- **Evidence-gated progression**: No stage-skipping — earn the gate or exit
+- **Build proposals**: Generate tailored proposals from diagnostic findings
+
+## BEAM Acronym
+
+| Letter | Meaning | Application |
+|--------|---------|-------------|
+| **B** | Bayesian | Update your probability of winning as new evidence arrives |
+| **E** | Evidence | Every stage advancement requires concrete evidence, not gut feel |
+| **A** | Advancing | Forward momentum only when evidence earns it |
+| **M** | Markov | Current state determines next actions — history informs but doesn't constrain |
+
+---
+
+## Input
+
+This skill accepts a **company name** or **deal name** as its primary input. It builds on the output from the `b2b-research-agent` skill, but can also start from scratch.
+
+### Invocation Examples
+
+```
+/beam-selling Acme Corp
+/beam-selling Resume Acme Corp engagement
+/beam-selling Advance BHP to Stage 3
+/beam-selling Review gate criteria for GeelongPort
+/beam-selling Show all active engagements
+```
+
+### Integration with b2b-research-agent
+
+If a b2b-research-agent dossier exists for the target company, **automatically ingest it** as the foundation for Stage 1 (Qualify). Look for:
+
+1. A `.beam/` directory in the current working directory
+2. Any HTML reports or Markdown dossiers matching the company name in the current directory tree
+3. Ask the user to point to the research if not found automatically
+
+---
+
+## The 6-Stage Pipeline
+
+```
+[1. Qualify] → [2. Diagnose] → [3. Align] → [4. Propose] → [5. Commit] → [6. Deliver]
+```
+
+### Design Principles
+
+1. **No stage-skipping** — earn the gate or exit
+2. **Each gate requires mutual agreement** — both seller and buyer confirm readiness
+3. **SPIN intensity peaks in Stages 2–3** — deep diagnostic questioning is where deals are won or lost
+4. **"No" is a legitimate outcome** — qualifying out is a success, not a failure
+5. **Evidence over opinion** — every advancement decision is backed by documented evidence
+
+---
+
+## Stage Definitions
+
+### Stage 1: Qualify
+
+**Purpose**: Establish whether a conversation is worth having.
+
+**SPIN Focus**: Situation
+
+**Activities**:
+- Review b2b-research-agent dossier (if available)
+- Confirm the prospect fits the Ideal Customer Profile (ICP)
+- Identify the problem domain you can address
+- Confirm access to authority or influence
+- Assess willingness to have a diagnostic conversation
+
+**Gate Criteria** (all must be met):
+- [ ] Problem domain identified
+- [ ] Access to authority or influence confirmed
+- [ ] Prospect willing to have a diagnostic conversation
+
+**Right to Advance**: Prospect has agreed to a discovery conversation.
+
+**Key Questions to Ask the User**:
+1. What b2b-research exists for this prospect? (dossier, report, notes)
+2. What is your offering for this specific engagement?
+3. Has there been any prior contact or engagement?
+4. What triggered this opportunity? (event, referral, cold outreach, tender)
+5. Who is your initial point of contact?
+
+**Evidence to Document**:
+- Source of the opportunity (how did this prospect surface?)
+- ICP alignment score (from b2b-research-agent or assessed here)
+- Initial contact details and relationship status
+- Problem hypothesis (what do you believe their pain is?)
+
+---
+
+### Stage 2: Diagnose
+
+**Purpose**: Uncover whether real pain exists and what's driving it.
+
+**SPIN Focus**: Problem → Implication
+
+**Activities**:
+- Conduct discovery conversation(s) using SPIN questioning
+- Uncover specific problems the prospect is experiencing
+- Quantify the implications of those problems (cost, risk, time, reputation)
+- Establish the cost of inaction — what happens if they do nothing?
+- Map the organisational impact of the problem
+
+**Gate Criteria** (all must be met):
+- [ ] Specific problems articulated by the prospect (not assumed by you)
+- [ ] Implications quantified (in dollars, time, risk, or other metrics)
+- [ ] Cost of inaction acknowledged by the prospect
+
+**Right to Advance**: The prospect says "This is a problem we need to address."
+
+**SPIN Questions to Prepare**:
+
+*Problem Questions* (uncover difficulties):
+- "What challenges are you facing with [area]?"
+- "How satisfied are you with your current approach to [area]?"
+- "What happens when [current process] fails?"
+- "Where do you see the biggest gaps in [area]?"
+
+*Implication Questions* (develop the severity):
+- "What impact does that have on [downstream process]?"
+- "How does that affect your ability to [strategic goal]?"
+- "What does that cost you annually — in direct costs and lost opportunity?"
+- "If this continues for another 12 months, what's the likely outcome?"
+- "How does this compare to what your board/leadership expects?"
+
+**Evidence to Document**:
+- Specific problems stated by the prospect (direct quotes preferred)
+- Quantified implications (dollar values, time delays, risk exposure)
+- Stakeholders affected and how
+- Prospect's own words acknowledging the cost of inaction
+
+---
+
+### Stage 3: Align
+
+**Purpose**: Confirm shared understanding of the problem and what success looks like.
+
+**SPIN Focus**: Implication → Need-payoff
+
+**Activities**:
+- Validate the problem definition with the prospect — do they agree on the diagnosis?
+- Define success criteria together — what does "fixed" look like?
+- Map the stakeholder landscape — who else needs to agree?
+- Understand the decision-making process — who, when, how
+- Transition from problems to solutions in the prospect's mind
+
+**Gate Criteria** (all must be met):
+- [ ] Problem definition agreed by both parties
+- [ ] Success criteria defined and measurable
+- [ ] Stakeholder landscape mapped (economic buyer, technical evaluator, champion, gatekeeper)
+- [ ] Decision-making process understood (timeline, approvals, procurement)
+
+**Right to Advance**: The prospect asks "What would you recommend?"
+
+**SPIN Questions to Prepare**:
+
+*Implication Questions* (reinforce urgency):
+- "You mentioned [problem] — how is that affecting [broader goal]?"
+- "If we could eliminate [problem], what would that free up for your team?"
+
+*Need-payoff Questions* (let them sell themselves):
+- "How would it help if you could [desired outcome]?"
+- "What would it mean for your team if [problem] were resolved?"
+- "If you had [capability], how would that change your approach to [area]?"
+- "What value would you place on being able to [outcome]?"
+
+**Evidence to Document**:
+- Agreed problem statement (signed off by prospect)
+- Success criteria with measurable targets
+- Stakeholder map with buying roles identified
+- Decision process timeline and milestones
+- Budget indicators or investment appetite
+
+---
+
+### Stage 4: Propose
+
+**Purpose**: Present a tailored recommendation built from diagnostic findings.
+
+**SPIN Focus**: Need-payoff
+
+**Activities**:
+- Build a proposal that directly addresses the diagnosed problems
+- Link every recommendation to evidence gathered in Stages 2–3
+- Present commercial terms clearly
+- Confirm the decision process and timeline
+- Address anticipated objections proactively
+
+**Gate Criteria** (all must be met):
+- [ ] Proposal addresses all stated needs (no scope creep, no gaps)
+- [ ] Commercial terms clear and understood
+- [ ] Decision process and timeline confirmed
+- [ ] Key objections addressed
+
+**Right to Advance**: Prospect confirms intent to decide (not necessarily "yes" — but committed to making a decision).
+
+**Proposal Structure** (use the proposal-template.md reference):
+1. Executive Summary — the problem, the cost of inaction, the recommended path
+2. Diagnostic Findings — evidence from Stages 2–3
+3. Recommended Solution — what you propose and why
+4. Success Metrics — tied to the agreed success criteria from Stage 3
+5. Investment — pricing, terms, timeline
+6. Next Steps — what happens if they say yes
+
+**Evidence to Document**:
+- Proposal delivered (date, to whom)
+- Prospect feedback on the proposal
+- Objections raised and responses given
+- Decision timeline confirmed
+- Competitors or alternatives being considered
+
+---
+
+### Stage 5: Commit
+
+**Purpose**: Secure formal agreement and transition to delivery.
+
+**SPIN Focus**: Validation
+
+**Activities**:
+- Navigate final objections and negotiate terms
+- Secure formal commitment (verbal or written)
+- Agree on commercial terms (contract, SOW, PO)
+- Initiate delivery handover — introduce delivery team
+- Set expectations for the engagement
+
+**Gate Criteria** (all must be met):
+- [ ] Commitment received (verbal agreement or letter of intent)
+- [ ] Commercial terms accepted (pricing, scope, timeline)
+- [ ] Delivery handover initiated (introduction to delivery team)
+
+**Right to Advance**: Contract signed.
+
+**Evidence to Document**:
+- Signed agreement or PO number
+- Final commercial terms
+- Delivery team introduced
+- Kick-off date confirmed
+- Success criteria reconfirmed for delivery
+
+---
+
+### Stage 6: Deliver & Renew
+
+**Purpose**: Execute, demonstrate value, and earn the right to the next engagement.
+
+**SPIN Focus**: Continuous Discovery
+
+**Activities**:
+- Deliver on commitments — meet or exceed the agreed success criteria
+- Maintain the relationship — regular check-ins, progress updates
+- Surface new needs — use ongoing SPIN discovery during delivery
+- Document outcomes and build case studies
+- Identify expansion or renewal opportunities
+
+**Gate Criteria** (ongoing):
+- [ ] Outcomes delivered against success criteria
+- [ ] Relationship health maintained (regular contact, satisfaction checks)
+- [ ] Future needs surfaced through continuous discovery
+- [ ] Case study or reference potential identified
+
+**Right to Advance**: New opportunity surfaces → cycle back to Stage 1.
+
+**Evidence to Document**:
+- Outcomes delivered vs. success criteria
+- Client satisfaction indicators
+- New opportunities identified
+- Lessons learned
+- Reference or case study material
+
+---
+
+## Saving and Resuming Progress
+
+Sales engagements take weeks or months. This skill persists state locally so you can clear context and resume later.
+
+### State File Location
+
+All engagement state is saved to a `.beam/` hidden directory in the current working directory:
+
+```
+.beam/
+├── engagements/
+│   ├── acme-corp.json          # One file per engagement
+│   ├── bhp-mining.json
+│   └── geelong-port.json
+├── sessions/
+│   ├── acme-corp-2026-02-22.md # Session log per interaction
+│   └── acme-corp-2026-02-25.md
+└── config.json                  # User's company info (cached)
+```
+
+### Auto-Dump Behaviour (CRITICAL)
+
+**At the end of EVERY interaction — no exceptions — automatically dump the following to `.beam/`:**
+
+1. **Update the engagement JSON** (`.beam/engagements/<company>.json`) with:
+   - All new evidence collected
+   - Gate criteria status changes
+   - Stakeholder updates
+   - Win probability recalculation
+   - Updated `activity_log` with timestamped entry for this session
+
+2. **Write a session log** (`.beam/sessions/<company>-<date>.md`) containing:
+
+```markdown
+# Session Log — [Company Name] — [Date]
+
+## What We Covered
+- [Summary of what was discussed/worked on this session]
+
+## Key Learnings
+- [Learning 1 — what was discovered or confirmed]
+- [Learning 2]
+- [Learning 3]
+
+## Evidence Collected
+- [Evidence item with source and date]
+
+## Gate Progress
+- Stage [N]: [Gate criterion] — [MET/UNMET] — [evidence summary]
+
+## Decisions Made
+- [Decision 1]
+- [Decision 2]
+
+## Next Steps (Pick Up Here)
+1. [Specific action — what to do first in the next session]
+2. [Second priority action]
+3. [Third priority action]
+
+## Open Questions
+- [Question that needs answering before progressing]
+
+## Current State
+- Stage: [N] — [Name]
+- Win Probability: [X%]
+- Gates Met: [X/Y]
+- Days in Stage: [N]
+```
+
+3. **Print a resume hint** to the user:
+
+```
+--- Session saved to .beam/ ---
+To resume next time, run: /beam-selling [Company Name]
+```
+
+**This auto-dump happens regardless of whether the user asks to save.** It is the skill's responsibility to ensure no work is lost between sessions.
+
+### Save Behaviour
+
+**Automatically save state** after every meaningful interaction:
+- When gate criteria are checked or updated
+- When evidence is documented
+- When stage transitions occur
+- When the user explicitly asks to save
+- **At the end of every conversation turn where work was done**
+
+**To save manually**: The user says "save" or "save progress" at any time.
+
+### State File Structure
+
+Each engagement is saved as a JSON file (see `references/beam-state-template.json`). The state includes:
+
+- **Metadata**: Company name, deal name, created/updated dates, current stage
+- **User context**: The seller's company, offering, and value proposition
+- **Stage progress**: For each stage — status, gate criteria checklist, evidence collected, SPIN notes, key dates
+- **Stakeholder map**: Buying committee members and their roles
+- **Win probability**: Bayesian estimate updated at each stage
+- **Activity log**: Timestamped history of all key actions and decisions
+- **Session logs**: Separate Markdown files per session for easy human reading
+
+### Resume Behaviour
+
+When the user invokes the skill:
+
+1. **Check for existing state**: Look in `.beam/engagements/` for a matching file
+2. **If found**: Load the engagement JSON AND the most recent session log from `.beam/sessions/`
+3. **Display the resume summary** (see format below)
+4. **Read the "Next Steps" from the last session log** — these are the first things to work on
+5. **Ask the user for updates** (CRITICAL — see below)
+6. **If not found**: Start a new engagement from Stage 1
+7. **If multiple found**: List all active engagements and ask which to resume
+
+### Resume Check-In (CRITICAL)
+
+**After displaying the resume summary, you MUST ask the user for updates before proceeding.** Sales engagements happen in the real world between sessions — meetings occur, emails are exchanged, decisions are made. The skill needs to capture what happened offline.
+
+Ask the following:
+
+```
+--- Since Last Session ([Date]) ---
+
+Before we continue, let me check in on what's happened since we last worked on this:
+
+1. Have you had any meetings or calls with [Company] since [last session date]?
+   - If yes: Who did you meet? What was discussed? Any key takeaways?
+
+2. Have any of the next steps from last session been completed?
+   [List the next steps from the last session]
+
+3. Has anything changed?
+   - New contacts or stakeholders?
+   - Timeline shifts?
+   - Budget changes?
+   - Competitor activity?
+   - Internal changes at the prospect?
+
+4. Any new evidence or insights to capture?
+   - Quotes from the prospect
+   - Documents shared (proposals, RFPs, specs)
+   - Decisions made
+
+Take your time — the more I know, the better I can help you advance this deal.
+```
+
+**After the user responds**, update the engagement state with any new information before continuing with the planned work. This ensures the `.beam/` state file always reflects reality, not just what happened in Claude sessions.
+
+### Resume Summary Format
+
+When resuming, display this summary:
+
+```
+=== marcov.BEAM — Resuming Engagement ===
+
+Company:        [Name]
+Deal:           [Deal name]
+Current Stage:  [Stage number and name]
+Win Probability: [X%]
+Last Session:   [Date — N days ago]
+Days in Stage:  [N days]
+Days Active:    [N days total]
+
+--- Stage Progress ---
+[1] Qualify    ████████████ COMPLETE
+[2] Diagnose   ████████░░░░ IN PROGRESS (2/3 gates met)
+[3] Align      ░░░░░░░░░░░░ NOT STARTED
+[4] Propose    ░░░░░░░░░░░░ NOT STARTED
+[5] Commit     ░░░░░░░░░░░░ NOT STARTED
+[6] Deliver    ░░░░░░░░░░░░ NOT STARTED
+
+--- Outstanding Gates (Stage 2: Diagnose) ---
+[x] Specific problems articulated
+[x] Implications quantified
+[ ] Cost of inaction acknowledged
+
+--- Last Session Learnings ---
+- [Key learning from previous session]
+- [Key learning from previous session]
+
+--- Next Steps (from last session) ---
+1. [Action item carried forward]
+2. [Suggested next action based on current stage]
+
+--- Open Questions ---
+- [Unresolved question from last session]
+
+--- Since Last Session Check-In ---
+[Asks the user about updates — see Resume Check-In above]
+```
+
+---
+
+## Workflow: "Follow the Bouncing Ball"
+
+This is the core interactive workflow. The skill guides the user through each stage sequentially, never skipping ahead.
+
+### Step 1: Initialise
+
+1. Check `.beam/engagements/` for existing state
+2. If resuming: load state, display summary, ask where to pick up
+3. If new: ask the user for the target company name
+4. Check for b2b-research-agent output (HTML report or Markdown dossier)
+5. If found: ingest the research as the Stage 1 foundation
+6. If not found: offer to run b2b-research-agent first, or proceed with manual input
+
+### Step 2: Gather Seller Context (First Time Only)
+
+If `.beam/config.json` doesn't exist, ask:
+
+1. **Your Company**: Name, what you do (elevator pitch)
+2. **Your Offering**: Product or service for this engagement
+3. **Your Value Proposition**: Why should prospects choose you?
+4. **Your Contact Details**: Name, title, email, phone (for outreach templates)
+
+Save to `.beam/config.json` so this is only asked once.
+
+### Step 3: Work the Current Stage
+
+For each stage, the skill:
+
+1. **Presents the stage overview** — purpose, SPIN focus, gate criteria
+2. **Guides the user through activities** — asks SPIN questions, prompts for evidence
+3. **Checks gate criteria** — marks each criterion as met or unmet
+4. **Documents evidence** — captures what was learned, with dates
+5. **Updates win probability** — Bayesian estimate based on evidence strength
+
+### Step 4: Gate Review
+
+Before advancing to the next stage:
+
+1. **Display all gate criteria** with their status (met/unmet)
+2. **Review the evidence** supporting each criterion
+3. **Ask the user to confirm** — "Do you have the right to advance?"
+4. **If all gates met**: advance to the next stage, update state
+5. **If gates unmet**: identify what's missing, suggest actions to close the gaps
+6. **If the deal is dead**: mark as "Closed — Lost" or "Closed — Disqualified" with reasons
+
+### Step 5: Stage Transition
+
+When advancing:
+
+1. Update the engagement state file
+2. Recalculate win probability
+3. Present the next stage overview
+4. Generate preparation materials (SPIN questions, templates, checklists)
+
+### Step 6: Output Generation
+
+At key milestones, generate deliverables:
+
+| Stage | Deliverable |
+|-------|-------------|
+| After Stage 1 | Qualification summary and discovery call agenda |
+| After Stage 2 | Diagnostic findings report |
+| After Stage 3 | Alignment memo (shared problem definition and success criteria) |
+| After Stage 4 | Formal proposal (from proposal-template.md) |
+| After Stage 5 | Engagement kickoff brief |
+| After Stage 6 | Outcomes report and case study draft |
+
+---
+
+## Win Probability (Bayesian Estimate)
+
+Update the win probability at each stage transition. This is a rough Bayesian prior, not a precise calculation.
+
+### Base Rates
+
+| Stage | Base Win Probability | Reasoning |
+|-------|---------------------|-----------|
+| Stage 1: Qualify | 10% | Most qualified leads don't convert |
+| Stage 2: Diagnose | 25% | Real pain confirmed increases odds |
+| Stage 3: Align | 45% | Shared understanding is a strong signal |
+| Stage 4: Propose | 60% | Proposal requested = serious interest |
+| Stage 5: Commit | 80% | Intent to decide = high confidence |
+| Stage 6: Deliver | 95% | Contract signed, execution underway |
+
+### Modifiers
+
+Adjust the base rate up or down based on evidence:
+
+| Signal | Modifier |
+|--------|----------|
+| Champion identified and active | +10% |
+| Economic buyer engaged directly | +10% |
+| Competitor incumbent with long contract | -15% |
+| Budget confirmed and allocated | +15% |
+| Multiple stakeholders aligned | +10% |
+| No clear decision timeline | -10% |
+| Prospect initiated contact (inbound) | +10% |
+| Procurement process required | -5% |
+| Strong prior relationship | +10% |
+| Political or organisational change underway | -10% |
+
+---
+
+## SPIN Selling Integration
+
+SPIN (Situation, Problem, Implication, Need-payoff) is woven into every stage.
+
+### SPIN by Stage
+
+| Stage | Primary SPIN | Secondary SPIN | Intensity |
+|-------|-------------|---------------|-----------|
+| 1. Qualify | Situation | — | Low |
+| 2. Diagnose | Problem | Implication | **High** |
+| 3. Align | Implication | Need-payoff | **High** |
+| 4. Propose | Need-payoff | — | Medium |
+| 5. Commit | Validation | — | Low |
+| 6. Deliver | Continuous Discovery | All types | Medium |
+
+### SPIN Question Reference
+
+See `references/spin-question-bank.md` for a comprehensive bank of SPIN questions organised by stage and topic area.
+
+---
+
+## Stakeholder Mapping
+
+Track the buying committee throughout the engagement:
+
+| Role | Description | Typical Titles |
+|------|-------------|---------------|
+| **Economic Buyer** | Controls the budget; makes the final financial decision | CEO, CFO, VP, GM |
+| **Technical Evaluator** | Assesses solution fit and technical feasibility | CTO, Head of IT, Engineering Director |
+| **Champion / Sponsor** | Internally advocates for your solution; feels the pain most | Director, Senior Manager, Program Lead |
+| **Gatekeeper** | Controls access to decision-makers and process | EA, Procurement Manager, PMO |
+| **End User** | Will use the solution day-to-day; influences adoption | Team leads, operators, analysts |
+
+For each stakeholder, track:
+- Name, title, and contact details
+- Their role in the buying committee
+- Their attitude (Supporter / Neutral / Sceptic / Blocker)
+- What they care about most (priorities, KPIs, fears)
+- Engagement history (meetings, emails, calls)
+
+---
+
+## Engagement Timeline
+
+Because engagements run over weeks or months with many sessions in between, the skill maintains a comprehensive timeline in the engagement state file.
+
+### Timeline Data Captured
+
+Every session and every significant event is timestamped and logged:
+
+- **Engagement start date**: When the opportunity was first created
+- **Target close date**: When you aim to close (set during qualification, updated as needed)
+- **Stage transitions**: Date of every stage change, with days spent in each stage
+- **Key dates**: First contact, discovery call, diagnostic complete, alignment, proposal, contract, delivery start
+- **Milestones**: Custom milestones added during the engagement (e.g., "Met CFO", "Presented to board")
+- **Session history**: Every session date with a summary of what was covered
+
+### Timeline Display
+
+When the user asks for `status` or `timeline`, display:
+
+```
+=== marcov.BEAM — Engagement Timeline ===
+
+Company:          [Name]
+Engagement Start: [Date]
+Target Close:     [Date]
+Days Active:      [N days]
+Deal Value:       [Value]
+
+--- Timeline ---
+[Date]  Stage 1 — Qualify
+        ├── [Date] Created engagement from b2b-research dossier
+        ├── [Date] Session: Confirmed ICP alignment, identified problem domain
+        ├── [Date] Discovery call scheduled with [Name]
+        └── [Date] GATE PASSED — Agreed to diagnostic conversation
+
+[Date]  Stage 2 — Diagnose (current — [N days])
+        ├── [Date] Session: Ran SPIN discovery, uncovered 3 problems
+        ├── [Date] Session: Quantified implications — $X annual impact
+        └── [Date] Session: [Most recent activity]
+
+--- Upcoming ---
+[ ] Cost of inaction acknowledged (Stage 2 gate)
+[ ] Problem definition agreed (Stage 3 gate)
+[ ] Target close: [Date]
+```
+
+### Overview Timeline File
+
+In addition to the JSON state, the skill maintains a human-readable timeline file at `.beam/sessions/<company>-timeline.md`:
+
+```markdown
+# [Company Name] — Engagement Timeline
+
+## Overview
+| Field | Detail |
+|-------|--------|
+| **Started** | [Date] |
+| **Current Stage** | [Stage N — Name] |
+| **Days Active** | [N] |
+| **Win Probability** | [X%] |
+| **Target Close** | [Date] |
+| **Deal Value** | [Value] |
+
+## Stage History
+
+### Stage 1: Qualify ([Start Date] → [End Date] — [N days])
+- [Date]: [What happened]
+- [Date]: [What happened]
+- **Gate passed**: [Date] — [Evidence summary]
+
+### Stage 2: Diagnose ([Start Date] → present — [N days])
+- [Date]: [What happened]
+- [Date]: [What happened]
+
+## Key Milestones
+| Date | Milestone | Notes |
+|------|-----------|-------|
+| [Date] | [Milestone] | [Notes] |
+
+## Session Log
+| # | Date | Stage | Summary | Next Steps |
+|---|------|-------|---------|------------|
+| 1 | [Date] | Qualify | [Summary] | [Next steps] |
+| 2 | [Date] | Qualify | [Summary] | [Next steps] |
+| 3 | [Date] | Diagnose | [Summary] | [Next steps] |
+```
+
+This timeline file is updated at the end of every session alongside the JSON state and individual session logs. It serves as the "master narrative" of the engagement.
+
+---
+
+## Commands
+
+The skill responds to these commands within a session:
+
+| Command | Action |
+|---------|--------|
+| `save` | Save current engagement state to `.beam/` |
+| `status` | Display current stage, gate progress, and win probability |
+| `timeline` | Show the full engagement timeline with dates and milestones |
+| `gates` | Show gate criteria for the current stage |
+| `evidence` | Show all evidence collected for the current stage |
+| `stakeholders` | Show the stakeholder map |
+| `history` | Show the activity log |
+| `probability` | Show and recalculate win probability |
+| `next` | Suggest what to do next based on current state |
+| `advance` | Attempt to advance to the next stage (triggers gate review) |
+| `back` | Review a previous stage (does not reverse progress) |
+| `close` | Close the engagement (won, lost, or disqualified) |
+| `list` | List all active engagements in `.beam/` |
+| `export` | Export engagement as Markdown summary |
+
+---
+
+## Content Writing Guidelines
+
+### Tone
+- **Consultative and strategic** — you are a trusted advisor, not a pushy salesperson
+- **Evidence-based** — cite specific findings, quotes, and data points
+- **Action-oriented** — every output should lead to a clear next step
+- **Honest** — if the deal is weak, say so; qualifying out is a good outcome
+
+### Australian English
+- Use Australian spelling throughout (organisation, behaviour, colour, prioritise, analyse)
+
+### Formatting
+- Use progress bars and status indicators for visual clarity
+- Use tables for structured data (gate criteria, stakeholder maps, evidence logs)
+- Use direct quotes from prospects where available
+- Include dates on all evidence and activities
+
+---
+
+## Checklist
+
+Before saving or advancing, verify:
+
+- [ ] Current stage activities completed
+- [ ] All gate criteria assessed (met or explicitly unmet)
+- [ ] Evidence documented with dates and sources
+- [ ] Stakeholder map updated
+- [ ] Win probability recalculated
+- [ ] Next steps identified
+- [ ] State file saved to `.beam/engagements/`
+- [ ] Activity log updated

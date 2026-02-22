@@ -1,0 +1,264 @@
+{
+  "schema_version": "1.0.0",
+  "engagement": {
+    "id": "{{ENGAGEMENT_ID}}",
+    "company_name": "{{COMPANY_NAME}}",
+    "deal_name": "{{DEAL_NAME}}",
+    "created_at": "{{ISO_DATE}}",
+    "updated_at": "{{ISO_DATE}}",
+    "status": "active",
+    "current_stage": 1,
+    "win_probability": 10,
+    "source": "{{OPPORTUNITY_SOURCE}}"
+  },
+  "seller": {
+    "company": "{{SELLER_COMPANY}}",
+    "offering": "{{SELLER_OFFERING}}",
+    "value_proposition": "{{SELLER_VALUE_PROP}}",
+    "contact": {
+      "name": "{{SELLER_NAME}}",
+      "title": "{{SELLER_TITLE}}",
+      "email": "{{SELLER_EMAIL}}",
+      "phone": "{{SELLER_PHONE}}"
+    }
+  },
+  "b2b_research": {
+    "dossier_path": null,
+    "fit_score": null,
+    "timing_score": null,
+    "priority": null,
+    "ingested_at": null
+  },
+  "stages": {
+    "1_qualify": {
+      "status": "in_progress",
+      "entered_at": "{{ISO_DATE}}",
+      "completed_at": null,
+      "days_in_stage": 0,
+      "gate_criteria": {
+        "problem_domain_identified": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "access_to_authority": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "willing_to_diagnose": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        }
+      },
+      "spin_notes": {
+        "situation": []
+      },
+      "evidence": [],
+      "next_steps": []
+    },
+    "2_diagnose": {
+      "status": "not_started",
+      "entered_at": null,
+      "completed_at": null,
+      "days_in_stage": 0,
+      "gate_criteria": {
+        "problems_articulated": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "implications_quantified": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "cost_of_inaction_acknowledged": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        }
+      },
+      "spin_notes": {
+        "problem": [],
+        "implication": []
+      },
+      "evidence": [],
+      "next_steps": []
+    },
+    "3_align": {
+      "status": "not_started",
+      "entered_at": null,
+      "completed_at": null,
+      "days_in_stage": 0,
+      "gate_criteria": {
+        "problem_definition_agreed": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "success_criteria_defined": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "stakeholder_landscape_mapped": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "decision_process_understood": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        }
+      },
+      "spin_notes": {
+        "implication": [],
+        "need_payoff": []
+      },
+      "evidence": [],
+      "next_steps": []
+    },
+    "4_propose": {
+      "status": "not_started",
+      "entered_at": null,
+      "completed_at": null,
+      "days_in_stage": 0,
+      "gate_criteria": {
+        "proposal_addresses_needs": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "commercial_terms_clear": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "decision_process_confirmed": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "objections_addressed": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        }
+      },
+      "spin_notes": {
+        "need_payoff": []
+      },
+      "evidence": [],
+      "next_steps": [],
+      "proposal": {
+        "delivered_at": null,
+        "delivered_to": null,
+        "feedback": null,
+        "objections": [],
+        "competitors": []
+      }
+    },
+    "5_commit": {
+      "status": "not_started",
+      "entered_at": null,
+      "completed_at": null,
+      "days_in_stage": 0,
+      "gate_criteria": {
+        "commitment_received": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "commercial_terms_accepted": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "delivery_handover_initiated": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        }
+      },
+      "spin_notes": {
+        "validation": []
+      },
+      "evidence": [],
+      "next_steps": []
+    },
+    "6_deliver": {
+      "status": "not_started",
+      "entered_at": null,
+      "completed_at": null,
+      "days_in_stage": 0,
+      "gate_criteria": {
+        "outcomes_delivered": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "relationship_maintained": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "future_needs_surfaced": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        },
+        "case_study_identified": {
+          "met": false,
+          "evidence": null,
+          "date": null
+        }
+      },
+      "spin_notes": {
+        "continuous_discovery": []
+      },
+      "evidence": [],
+      "next_steps": []
+    }
+  },
+  "stakeholders": [],
+  "probability_modifiers": [],
+  "timeline": {
+    "engagement_start": "{{ISO_DATE}}",
+    "target_close_date": null,
+    "estimated_deal_value": null,
+    "milestones": [
+      {
+        "event": "Engagement created",
+        "date": "{{ISO_DATE}}",
+        "stage": 1,
+        "notes": null
+      }
+    ],
+    "stage_transitions": [
+      {
+        "from_stage": null,
+        "to_stage": 1,
+        "date": "{{ISO_DATE}}",
+        "days_in_previous": null,
+        "evidence_summary": "New engagement initiated"
+      }
+    ],
+    "key_dates": {
+      "first_contact": null,
+      "discovery_call": null,
+      "diagnostic_complete": null,
+      "alignment_confirmed": null,
+      "proposal_delivered": null,
+      "proposal_response": null,
+      "contract_signed": null,
+      "delivery_started": null,
+      "first_milestone_delivered": null,
+      "engagement_closed": null
+    },
+    "session_history": []
+  },
+  "activity_log": []
+}
