@@ -43,24 +43,96 @@
 
       <!-- Sidebar Navigation -->
       <nav class="report-nav" id="reportNav">
+        <a href="#beam-qualification">BEAM Qualification</a>
         <a href="#executive-summary">Executive Summary</a>
+        <div class="nav-divider"></div>
         <a href="#company-snapshot">Company Snapshot</a>
-        <a href="#strategic-priorities">Strategic Priorities</a>
+        <a href="#problem-evidence">Problem Evidence</a>
+        <a href="#buying-committee">Buying Committee</a>
         <div class="nav-divider"></div>
-        <a href="#pain-points">Pain Points</a>
         <a href="#technology">Technology Landscape</a>
-        <a href="#decision-makers">Decision-Makers</a>
-        <div class="nav-divider"></div>
         <a href="#buying-signals">Buying Signals</a>
         <a href="#competitive-intel">Competitive Intelligence</a>
-        <a href="#engagement-strategy">Engagement Strategy</a>
         <div class="nav-divider"></div>
+        <a href="#honest-assessment">Honest Assessment</a>
+        <a href="#engagement-strategy">Engagement Strategy</a>
         <a href="#outreach">Outreach Plan</a>
         <a href="#actions">Next Steps</a>
       </nav>
 
       <!-- Main Content -->
       <main class="report-content">
+
+        <!-- ======== BEAM QUALIFICATION ======== -->
+        <section class="report-section" id="beam-qualification">
+          <span class="section-label">BEAM Stage 1 Readiness</span>
+          <h2>Qualification Assessment</h2>
+
+          <div class="qualification-verdict verdict-{{VERDICT_CLASS}}">
+            <div class="verdict-badge">{{QUALIFICATION_VERDICT}}</div>
+            <div class="verdict-rationale">{{VERDICT_RATIONALE}}</div>
+          </div>
+
+          <table class="gate-assessment">
+            <thead>
+              <tr>
+                <th>Gate</th>
+                <th>Status</th>
+                <th>Evidence</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="gate-{{GATE1_STATUS_CLASS}}">
+                <td><strong>Problem Domain</strong></td>
+                <td><span class="gate-badge gate-{{GATE1_STATUS_CLASS}}">{{GATE1_STATUS}}</span></td>
+                <td>{{GATE1_EVIDENCE}}</td>
+                <td>{{GATE1_CONFIDENCE}}</td>
+              </tr>
+              <tr class="gate-{{GATE2_STATUS_CLASS}}">
+                <td><strong>Access to Authority</strong></td>
+                <td><span class="gate-badge gate-{{GATE2_STATUS_CLASS}}">{{GATE2_STATUS}}</span></td>
+                <td>{{GATE2_EVIDENCE}}</td>
+                <td>{{GATE2_CONFIDENCE}}</td>
+              </tr>
+              <tr class="gate-{{GATE3_STATUS_CLASS}}">
+                <td><strong>Willingness to Diagnose</strong></td>
+                <td><span class="gate-badge gate-{{GATE3_STATUS_CLASS}}">{{GATE3_STATUS}}</span></td>
+                <td>{{GATE3_EVIDENCE}}</td>
+                <td>{{GATE3_CONFIDENCE}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="scores-critical">
+            <div class="score-card">
+              <div class="score-header">Fit Score</div>
+              <div class="score-value score-{{FIT_SCORE}}">{{FIT_SCORE}}<span class="score-max">/5</span></div>
+              <div class="score-evidence">{{FIT_EVIDENCE}}</div>
+              <div class="score-tier">Evidence Tier: {{FIT_TIER}}</div>
+              <div class="score-doubt"><strong>Honest Doubt:</strong> {{FIT_DOUBT}}</div>
+            </div>
+            <div class="score-card">
+              <div class="score-header">Timing Score</div>
+              <div class="score-value score-{{TIMING_SCORE}}">{{TIMING_SCORE}}<span class="score-max">/5</span></div>
+              <div class="score-evidence">{{TIMING_EVIDENCE}}</div>
+              <div class="score-tier">Evidence Tier: {{TIMING_TIER}}</div>
+              <div class="score-doubt"><strong>Honest Doubt:</strong> {{TIMING_DOUBT}}</div>
+            </div>
+            <div class="score-card">
+              <div class="score-header">Priority</div>
+              <div class="priority-badge priority-{{PRIORITY_CLASS}}">{{PRIORITY_LEVEL}}</div>
+              <div class="score-evidence">{{PRIORITY_RATIONALE}}</div>
+              <div class="score-doubt"><strong>If Wrong:</strong> {{WRONG_COST}}</div>
+            </div>
+          </div>
+
+          <div class="first-contact-goal">
+            <h4>🎯 First Contact Goal</h4>
+            <p><strong>Earn the right to a diagnostic conversation</strong> — validate problem hypothesis, not pitch solution.</p>
+            <p class="goal-detail">{{FIRST_CONTACT_APPROACH}}</p>
+          </div>
+        </section>
 
         <!-- ======== EXECUTIVE SUMMARY ======== -->
         <section class="report-section" id="executive-summary">
@@ -70,17 +142,17 @@
           <div class="key-findings">
             <div class="finding-card">
               <div class="card-icon">🎯</div>
-              <h4>Prime Opportunity</h4>
+              <h4>Problem We Can Solve</h4>
               <ul>
-                <li>{{OPPORTUNITY_POINT_1}}</li>
-                <li>{{OPPORTUNITY_POINT_2}}</li>
-                <li>{{OPPORTUNITY_POINT_3}}</li>
+                <li>{{PROBLEM_POINT_1}}</li>
+                <li>{{PROBLEM_POINT_2}}</li>
+                <li>{{PROBLEM_POINT_3}}</li>
               </ul>
             </div>
 
             <div class="finding-card">
               <div class="card-icon">⏰</div>
-              <h4>Optimal Timing: {{TIMING_WINDOW}}</h4>
+              <h4>Timing Signals</h4>
               <ul>
                 <li>{{TIMING_POINT_1}}</li>
                 <li>{{TIMING_POINT_2}}</li>
@@ -89,32 +161,32 @@
             </div>
 
             <div class="finding-card">
-              <div class="card-icon">💡</div>
-              <h4>Strategic Positioning</h4>
-              <ul>
-                <li>{{POSITIONING_POINT_1}}</li>
-                <li>{{POSITIONING_POINT_2}}</li>
-                <li>{{POSITIONING_POINT_3}}</li>
-              </ul>
-            </div>
-
-            <div class="finding-card">
               <div class="card-icon">🔑</div>
-              <h4>Key Decision-Makers</h4>
+              <h4>Buying Committee</h4>
               <ul>
-                <li>{{DM_SUMMARY_1}}</li>
-                <li>{{DM_SUMMARY_2}}</li>
-                <li>{{DM_SUMMARY_3}}</li>
+                <li><strong>Economic Buyer:</strong> {{ECON_BUYER_SUMMARY}}</li>
+                <li><strong>Champion:</strong> {{CHAMPION_SUMMARY}}</li>
+                <li><strong>Tech Evaluator:</strong> {{TECH_EVAL_SUMMARY}}</li>
               </ul>
             </div>
 
             <div class="finding-card">
-              <div class="card-icon">📊</div>
-              <h4>Value Proposition Alignment</h4>
+              <div class="card-icon">💡</div>
+              <h4>Access Path</h4>
               <ul>
-                <li>{{VALUE_POINT_1}}</li>
-                <li>{{VALUE_POINT_2}}</li>
-                <li>{{VALUE_POINT_3}}</li>
+                <li>{{ACCESS_POINT_1}}</li>
+                <li>{{ACCESS_POINT_2}}</li>
+                <li>{{ACCESS_POINT_3}}</li>
+              </ul>
+            </div>
+
+            <div class="finding-card">
+              <div class="card-icon">⚠️</div>
+              <h4>Barriers &amp; Risks</h4>
+              <ul>
+                <li>{{BARRIER_1}}</li>
+                <li>{{BARRIER_2}}</li>
+                <li>{{BARRIER_3}}</li>
               </ul>
             </div>
           </div>
@@ -157,17 +229,51 @@
           </div>
         </section>
 
-        <!-- ======== PAIN POINTS ======== -->
-        <section class="report-section" id="pain-points">
-          <span class="section-label">Challenges</span>
-          <h2>Pain Points &amp; Challenges</h2>
+        <!-- ======== PROBLEM EVIDENCE ======== -->
+        <section class="report-section" id="problem-evidence">
+          <span class="section-label">Problem Domain</span>
+          <h2>Problem Evidence Assessment</h2>
 
-          <div class="strategy-card">
-            <ul class="talking-points">
-              <li>{{PAIN_POINT_1}}</li>
-              <li>{{PAIN_POINT_2}}</li>
-              <li>{{PAIN_POINT_3}}</li>
-            </ul>
+          <div class="evidence-header">
+            <p class="evidence-philosophy">Evidence must be <strong>specific to this company</strong>, not industry assumptions. Tier 3-4 evidence caps scores at 3.</p>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Problem Identified</th>
+                <th>Evidence Source</th>
+                <th>Evidence Tier</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{PROBLEM_1}}</td>
+                <td>{{EVIDENCE_SOURCE_1}}</td>
+                <td><span class="tier-badge tier-{{TIER_1}}">{{TIER_1}}</span></td>
+                <td>{{EVIDENCE_DATE_1}}</td>
+              </tr>
+              <tr>
+                <td>{{PROBLEM_2}}</td>
+                <td>{{EVIDENCE_SOURCE_2}}</td>
+                <td><span class="tier-badge tier-{{TIER_2}}">{{TIER_2}}</span></td>
+                <td>{{EVIDENCE_DATE_2}}</td>
+              </tr>
+              <tr>
+                <td>{{PROBLEM_3}}</td>
+                <td>{{EVIDENCE_SOURCE_3}}</td>
+                <td><span class="tier-badge tier-{{TIER_3}}">{{TIER_3}}</span></td>
+                <td>{{EVIDENCE_DATE_3}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="problem-assessment">
+            <h4>Problem Domain Verdict</h4>
+            <p><strong>Status:</strong> <span class="gate-badge gate-{{PROBLEM_STATUS_CLASS}}">{{PROBLEM_STATUS}}</span></p>
+            <p><strong>Confidence Killer:</strong> {{PROBLEM_CONFIDENCE_KILLER}}</p>
+            <p><strong>What We Don't Know:</strong> {{PROBLEM_UNKNOWN}}</p>
           </div>
         </section>
 
@@ -193,46 +299,60 @@
           </table>
         </section>
 
-        <!-- ======== DECISION-MAKERS ======== -->
-        <section class="report-section" id="decision-makers">
-          <span class="section-label">Stakeholders</span>
-          <h2>Decision-Makers</h2>
+        <!-- ======== BUYING COMMITTEE ======== -->
+        <section class="report-section" id="buying-committee">
+          <span class="section-label">BEAM Buying Roles</span>
+          <h2>Buying Committee Map</h2>
           <p class="source-note"><i class="fas fa-search"></i> Identified via <code>site:linkedin.com/in</code> search</p>
 
           <table class="data-table">
             <thead>
               <tr>
+                <th>BEAM Role</th>
                 <th>Name</th>
                 <th>Title</th>
-                <th>Buying Role</th>
-                <th>Relevance</th>
+                <th>Access Status</th>
                 <th>LinkedIn</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>{{DM_NAME_1}}</td>
-                <td>{{DM_TITLE_1}}</td>
-                <td>{{DM_ROLE_1}}</td>
-                <td>{{DM_RELEVANCE_1}}</td>
-                <td><a href="{{DM_LINKEDIN_1}}" target="_blank"><i class="fab fa-linkedin"></i> Profile</a></td>
+                <td><span class="role-badge role-econ">Economic Buyer</span></td>
+                <td>{{ECON_NAME}}</td>
+                <td>{{ECON_TITLE}}</td>
+                <td><span class="access-badge access-{{ECON_ACCESS_CLASS}}">{{ECON_ACCESS}}</span></td>
+                <td><a href="{{ECON_LINKEDIN}}" target="_blank"><i class="fab fa-linkedin"></i></a></td>
               </tr>
               <tr>
-                <td>{{DM_NAME_2}}</td>
-                <td>{{DM_TITLE_2}}</td>
-                <td>{{DM_ROLE_2}}</td>
-                <td>{{DM_RELEVANCE_2}}</td>
-                <td><a href="{{DM_LINKEDIN_2}}" target="_blank"><i class="fab fa-linkedin"></i> Profile</a></td>
+                <td><span class="role-badge role-champion">Champion</span></td>
+                <td>{{CHAMP_NAME}}</td>
+                <td>{{CHAMP_TITLE}}</td>
+                <td><span class="access-badge access-{{CHAMP_ACCESS_CLASS}}">{{CHAMP_ACCESS}}</span></td>
+                <td><a href="{{CHAMP_LINKEDIN}}" target="_blank"><i class="fab fa-linkedin"></i></a></td>
               </tr>
               <tr>
-                <td>{{DM_NAME_3}}</td>
-                <td>{{DM_TITLE_3}}</td>
-                <td>{{DM_ROLE_3}}</td>
-                <td>{{DM_RELEVANCE_3}}</td>
-                <td><a href="{{DM_LINKEDIN_3}}" target="_blank"><i class="fab fa-linkedin"></i> Profile</a></td>
+                <td><span class="role-badge role-tech">Technical Evaluator</span></td>
+                <td>{{TECH_NAME}}</td>
+                <td>{{TECH_TITLE}}</td>
+                <td><span class="access-badge access-{{TECH_ACCESS_CLASS}}">{{TECH_ACCESS}}</span></td>
+                <td><a href="{{TECH_LINKEDIN}}" target="_blank"><i class="fab fa-linkedin"></i></a></td>
+              </tr>
+              <tr>
+                <td><span class="role-badge role-gate">Gatekeeper</span></td>
+                <td>{{GATE_NAME}}</td>
+                <td>{{GATE_TITLE}}</td>
+                <td><span class="access-badge access-{{GATE_ACCESS_CLASS}}">{{GATE_ACCESS}}</span></td>
+                <td><a href="{{GATE_LINKEDIN}}" target="_blank"><i class="fab fa-linkedin"></i></a></td>
               </tr>
             </tbody>
           </table>
+
+          <div class="access-assessment">
+            <h4>Access to Authority Assessment</h4>
+            <p><strong>Best Path:</strong> {{BEST_ACCESS_PATH}}</p>
+            <p><strong>Barriers:</strong> {{ACCESS_BARRIERS}}</p>
+            <p><strong>Verdict:</strong> <span class="gate-badge gate-{{ACCESS_STATUS_CLASS}}">{{ACCESS_STATUS}}</span></p>
+          </div>
         </section>
 
         <!-- ======== BUYING SIGNALS ======== -->
@@ -280,6 +400,53 @@
           </table>
         </section>
 
+        <!-- ======== HONEST ASSESSMENT ======== -->
+        <section class="report-section" id="honest-assessment">
+          <span class="section-label">Critical Review</span>
+          <h2>Honest Assessment</h2>
+
+          <div class="honest-questions">
+            <div class="question-card">
+              <h4>❓ What We Don't Know</h4>
+              <ul>
+                <li>{{UNKNOWN_1}}</li>
+                <li>{{UNKNOWN_2}}</li>
+                <li>{{UNKNOWN_3}}</li>
+              </ul>
+            </div>
+
+            <div class="question-card">
+              <h4>⚠️ What Could Go Wrong</h4>
+              <ul>
+                <li>{{RISK_1}}</li>
+                <li>{{RISK_2}}</li>
+                <li>{{RISK_3}}</li>
+              </ul>
+            </div>
+
+            <div class="question-card">
+              <h4>🚫 Reasons to Walk Away</h4>
+              <ul>
+                <li>{{WALKAWAY_1}}</li>
+                <li>{{WALKAWAY_2}}</li>
+              </ul>
+            </div>
+
+            <div class="question-card">
+              <h4>✅ Why Proceed Despite Doubts</h4>
+              <ul>
+                <li>{{PROCEED_REASON_1}}</li>
+                <li>{{PROCEED_REASON_2}}</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="cost-of-wrong">
+            <h4>💰 Cost of Being Wrong</h4>
+            <p>{{COST_OF_WRONG}}</p>
+          </div>
+        </section>
+
         <!-- ======== ENGAGEMENT STRATEGY ======== -->
         <section class="report-section" id="engagement-strategy">
           <span class="section-label">Strategy</span>
@@ -288,24 +455,49 @@
           <div class="strategy-card">
             <div class="card-header">
               <h4>Recommended Approach</h4>
-              <div class="scores">
-                <span class="score-label">Fit</span>
-                <span class="score-badge score-{{FIT_SCORE}}">{{FIT_SCORE}}</span>
-                <span class="score-label">Timing</span>
-                <span class="score-badge score-{{TIMING_SCORE}}">{{TIMING_SCORE}}</span>
-                <span class="priority-badge priority-{{PRIORITY_CLASS}}">{{PRIORITY_LEVEL}}</span>
-              </div>
             </div>
+
+            <p class="approach-note"><strong>Goal:</strong> Earn the right to a diagnostic conversation — validate problem, not pitch.</p>
 
             <p>{{RECOMMENDED_APPROACH}}</p>
 
-            <h3>Personalised Talking Points</h3>
+            <h3>Problem-Led Talking Points</h3>
+            <p class="talking-note">Lead with their pain, not your features. These points are designed to open a diagnostic conversation.</p>
             <ol class="talking-points">
               <li>{{TALKING_POINT_1}}</li>
               <li>{{TALKING_POINT_2}}</li>
               <li>{{TALKING_POINT_3}}</li>
               <li>{{TALKING_POINT_4}}</li>
             </ol>
+
+            <h3>SPIN Discovery Questions</h3>
+            <p class="talking-note">Use these in your first conversation to validate the problem hypothesis.</p>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>SPIN Type</th>
+                  <th>Question</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="spin-badge spin-s">Situation</span></td>
+                  <td>{{SPIN_S_QUESTION}}</td>
+                </tr>
+                <tr>
+                  <td><span class="spin-badge spin-p">Problem</span></td>
+                  <td>{{SPIN_P_QUESTION}}</td>
+                </tr>
+                <tr>
+                  <td><span class="spin-badge spin-i">Implication</span></td>
+                  <td>{{SPIN_I_QUESTION}}</td>
+                </tr>
+                <tr>
+                  <td><span class="spin-badge spin-n">Need-Payoff</span></td>
+                  <td>{{SPIN_N_QUESTION}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <h3>Potential Objections &amp; Responses</h3>

@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Git post-merge hook: Auto-register slash commands after pull
+#
+# This hook runs after a successful git pull/merge and syncs
+# skill files to ~/.claude/commands with absolute paths.
+
+REPO_DIR="$(git rev-parse --show-toplevel)"
+REGISTER_SCRIPT="${REPO_DIR}/register-commands.sh"
+
+if [ -x "${REGISTER_SCRIPT}" ]; then
+    echo ""
+    echo "=== Auto-registering Claude Code commands ==="
+    "${REGISTER_SCRIPT}"
+    echo "=============================================="
+    echo ""
+fi

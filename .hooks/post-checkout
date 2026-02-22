@@ -1,0 +1,27 @@
+#!/bin/bash
+#
+# Git post-checkout hook: Auto-register slash commands after checkout
+#
+# This hook runs after git checkout and syncs skill files to
+# ~/.claude/commands with absolute paths.
+#
+# Arguments from git:
+#   $1 = previous HEAD
+#   $2 = new HEAD
+#   $3 = 1 if branch checkout, 0 if file checkout
+
+# Only run on branch checkout
+if [ "$3" != "1" ]; then
+    exit 0
+fi
+
+REPO_DIR="$(git rev-parse --show-toplevel)"
+REGISTER_SCRIPT="${REPO_DIR}/register-commands.sh"
+
+if [ -x "${REGISTER_SCRIPT}" ]; then
+    echo ""
+    echo "=== Auto-registering Claude Code commands ==="
+    "${REGISTER_SCRIPT}"
+    echo "=============================================="
+    echo ""
+fi

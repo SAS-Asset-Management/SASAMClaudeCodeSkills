@@ -749,6 +749,391 @@ body {
 }
 
 /* ============================
+   BEAM QUALIFICATION SECTION
+   ============================ */
+.qualification-verdict {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.qualification-verdict.verdict-qualified {
+  background: rgba(22, 163, 74, 0.1);
+  border: 2px solid var(--score-5);
+}
+
+.qualification-verdict.verdict-exploratory {
+  background: rgba(245, 158, 11, 0.1);
+  border: 2px solid var(--score-3);
+}
+
+.qualification-verdict.verdict-nurture {
+  background: rgba(107, 114, 128, 0.1);
+  border: 2px solid var(--priority-low);
+}
+
+.qualification-verdict.verdict-disqualified {
+  background: rgba(220, 38, 38, 0.1);
+  border: 2px solid var(--score-1);
+}
+
+.verdict-badge {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.verdict-qualified .verdict-badge { background: var(--score-5); color: #fff; }
+.verdict-exploratory .verdict-badge { background: var(--score-3); color: #1a1a1a; }
+.verdict-nurture .verdict-badge { background: var(--priority-low); color: #fff; }
+.verdict-disqualified .verdict-badge { background: var(--score-1); color: #fff; }
+
+.verdict-rationale {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Gate Assessment Table */
+.gate-assessment {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.gate-assessment thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  background: var(--bg-tertiary);
+  border-bottom: 2px solid var(--card-border);
+}
+
+.gate-assessment tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--card-border);
+  color: var(--text-secondary);
+}
+
+.gate-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gate-strong { background: rgba(22, 163, 74, 0.15); color: var(--score-5); }
+.gate-moderate { background: rgba(245, 158, 11, 0.15); color: var(--score-3); }
+.gate-weak { background: rgba(249, 115, 22, 0.15); color: var(--score-2); }
+.gate-none { background: rgba(220, 38, 38, 0.15); color: var(--score-1); }
+
+/* Score Cards with Critical Assessment */
+.scores-critical {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.score-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.score-card .score-header {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.score-card .score-value {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.score-card .score-value.score-5 { color: var(--score-5); }
+.score-card .score-value.score-4 { color: var(--score-4); }
+.score-card .score-value.score-3 { color: var(--score-3); }
+.score-card .score-value.score-2 { color: var(--score-2); }
+.score-card .score-value.score-1 { color: var(--score-1); }
+
+.score-card .score-max {
+  font-size: 20px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.score-card .score-evidence {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.score-card .score-tier {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.score-card .score-doubt {
+  font-size: 12px;
+  color: var(--score-2);
+  padding: 8px 12px;
+  background: rgba(249, 115, 22, 0.08);
+  border-radius: 6px;
+  border-left: 3px solid var(--score-2);
+  line-height: 1.4;
+}
+
+/* Evidence Tier Badges */
+.tier-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.tier-gold { background: #fef3c7; color: #92400e; }
+.tier-silver { background: #e5e7eb; color: #374151; }
+.tier-bronze { background: #fed7aa; color: #9a3412; }
+.tier-lead { background: #fecaca; color: #b91c1c; }
+
+/* Buying Committee Role Badges */
+.role-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.role-econ { background: rgba(147, 51, 234, 0.15); color: #9333ea; }
+.role-champion { background: rgba(22, 163, 74, 0.15); color: var(--score-5); }
+.role-tech { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.role-gate { background: rgba(107, 114, 128, 0.15); color: var(--text-muted); }
+
+/* Access Status Badges */
+.access-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.access-confirmed { background: rgba(22, 163, 74, 0.15); color: var(--score-5); }
+.access-possible { background: rgba(245, 158, 11, 0.15); color: var(--score-3); }
+.access-unknown { background: rgba(107, 114, 128, 0.15); color: var(--text-muted); }
+.access-blocked { background: rgba(220, 38, 38, 0.15); color: var(--score-1); }
+
+/* Problem Assessment Box */
+.problem-assessment,
+.access-assessment {
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+
+.problem-assessment h4,
+.access-assessment h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.problem-assessment p,
+.access-assessment p {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+/* Evidence Header */
+.evidence-header {
+  margin-bottom: 16px;
+}
+
+.evidence-philosophy {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 12px 16px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+
+/* First Contact Goal Box */
+.first-contact-goal {
+  background: var(--accent-subtle);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-top: 24px;
+}
+
+.first-contact-goal h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.first-contact-goal p {
+  font-size: 15px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.first-contact-goal .goal-detail {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Honest Assessment Section */
+.honest-questions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.question-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.question-card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.question-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.question-card li {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 4px 0 4px 16px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.question-card li::before {
+  content: '–';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+
+.cost-of-wrong {
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: 8px;
+  padding: 16px 20px;
+}
+
+.cost-of-wrong h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--score-1);
+  margin-bottom: 8px;
+}
+
+.cost-of-wrong p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* SPIN Badges */
+.spin-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spin-s { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
+.spin-p { background: rgba(220, 38, 38, 0.15); color: var(--score-1); }
+.spin-i { background: rgba(245, 158, 11, 0.15); color: var(--score-3); }
+.spin-n { background: rgba(22, 163, 74, 0.15); color: var(--score-5); }
+
+/* Approach Notes */
+.approach-note {
+  background: var(--accent-subtle);
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.talking-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+/* Responsive adjustments for new elements */
+@media screen and (max-width: 768px) {
+  .scores-critical {
+    grid-template-columns: 1fr;
+  }
+
+  .honest-questions {
+    grid-template-columns: 1fr;
+  }
+
+  .qualification-verdict {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* ============================
    ACCESSIBILITY
    ============================ */
 @media (prefers-reduced-motion: reduce) {

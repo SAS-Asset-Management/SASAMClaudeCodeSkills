@@ -38,6 +38,16 @@ Research and identify B2B engagement opportunities with:
 - **Event Prep Briefs**: Pre-conference engagement planning with target attendees
 - **Competitive Intelligence**: Map current vendors and identify displacement opportunities
 
+### linkedin-post-generator
+
+Generate LinkedIn posts for SAS-AM in brand voice:
+
+- **Post Types**: Pillar promotion (driving traffic to articles) and quick insight (standalone thought leadership)
+- **Brand Voice**: Upbeat, clear, tech-forward, insightful, playful, conversational
+- **Language Standards**: Australian English, active voice, plain language
+- **Hook Craft**: First-line techniques that earn the "see more" click
+- **CTAs**: Drive website traffic, spark discussion, generate leads, build brand awareness
+
 ### beam-selling
 
 Guide sales engagements through the marcov.BEAM evidence-gated lifecycle:
@@ -54,21 +64,40 @@ Guide sales engagements through the marcov.BEAM evidence-gated lifecycle:
 
 ## Installation
 
-### Global Installation (Recommended)
+### Quick Setup (Recommended)
 
-Copy skills to your Claude Code skills directory:
+After cloning the repository, run the setup script:
 
 ```bash
-cp -r sas-presentation ~/.claude/skills/
+git clone https://github.com/scrivo21/SASAMClaudeCodeSkills.git ~/.claude/SASAMClaudeCodeSkills
+cd ~/.claude/SASAMClaudeCodeSkills
+./setup.sh
 ```
 
-### Project-Level Installation
+This will:
+1. Install git hooks for automatic command registration
+2. Register all skills as slash commands in `~/.claude/commands/`
 
-Copy to your project's `.claude/skills/` directory:
+### Automatic Updates
+
+After setup, commands are **automatically re-registered** whenever you:
+- Pull new changes (`git pull`)
+- Switch branches (`git checkout`)
+
+### Manual Registration
+
+To manually re-register commands at any time:
 
 ```bash
-mkdir -p .claude/skills
-cp -r sas-presentation .claude/skills/
+./register-commands.sh
+```
+
+### Plugin Installation (Alternative)
+
+You can also install these skills as Claude Code plugins from the marketplace:
+
+```
+/install-plugin SASAMClaudeCodeSkills
 ```
 
 ## Usage
@@ -92,6 +121,11 @@ Or reference the skill directly:
 ```
 /beam-selling Acme Corp
 /beam-selling Resume BHP engagement
+```
+
+```
+/linkedin-post-generator Write a post about AI readiness for asset managers
+/linkedin-post-generator Promote this article: [paste URL]
 ```
 
 ## Skill Structure

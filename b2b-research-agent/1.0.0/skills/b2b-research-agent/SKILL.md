@@ -1,23 +1,52 @@
 ---
 name: b2b-research-agent
-description: Research and identify B2B engagement opportunities for a target company. Use when the user provides a company name to research as a potential client, partner, or engagement opportunity. Also supports broad pipeline building when no specific target is given. Conducts structured web research, compiles intelligence dossiers, maps decision-makers, and produces actionable engagement strategies with branded HTML reports and outreach templates.
+description: Research and identify B2B engagement opportunities for a target company. Use when the user provides a company name to research as a potential client, partner, or engagement opportunity. Also supports broad pipeline building when no specific target is given. Conducts structured web research, compiles intelligence dossiers, maps decision-makers, and produces actionable engagement strategies with branded HTML reports and outreach templates. Output is designed to feed directly into the BEAM selling framework.
 ---
 
 # B2B Research Agent Skill
 
-Research and identify business-to-business engagement opportunities. This skill conducts structured web research to build prospect intelligence dossiers, map decision-makers, surface engagement triggers, and produce actionable outreach strategies.
+Research and identify business-to-business engagement opportunities with a **problem-first** approach. This skill conducts structured web research to find problems worth solving, validate qualification, map buying committees, and produce intelligence that earns the right to a diagnostic conversation.
+
+## Core Philosophy: Earn the Right
+
+This skill is built on the principle that **progression is earned, not claimed**. Research should honestly assess:
+
+1. **Is there a real problem we can solve?** — Not assumed, but evidenced
+2. **Do we have access to authority?** — Specific people, not vague roles
+3. **Is there willingness to engage?** — Signals of openness, not assumptions
+
+The goal is not to "sell" — it's to **qualify whether a conversation is worth having**, and if so, to earn the right to have it.
+
+## BEAM Integration
+
+This skill produces output designed to feed directly into the **marcov.BEAM** (Bayesian Evidence-Advancing Markov) selling framework. Every dossier includes:
+
+- **BEAM Qualification Readiness**: Pre-assessment of Stage 1 gate criteria
+- **Problem Domain Analysis**: Evidence-based articulation of problems worth solving
+- **Buying Committee Mapping**: Stakeholders by BEAM buying role
+- **Qualification Signals**: Evidence supporting each Stage 1 gate
+
+### BEAM Stage 1 Gates (What Research Must Support)
+
+| Gate | Research Must Provide |
+|------|----------------------|
+| **Problem domain identified** | Specific, evidenced problems — not assumptions or generic categories |
+| **Access to authority** | Named individuals with buying roles — not "someone in IT" |
+| **Willingness to diagnose** | Signals that suggest openness to a conversation — or honest assessment of barriers |
+
+**Qualifying out is a valid outcome.** If research reveals no real problem or no path to authority, that's valuable intelligence — don't force-fit an opportunity that doesn't exist.
 
 ## Overview
 
 This skill helps you:
 
-- **Prospect Research**: Deep-dive into target companies — financials, tech stack, org structure, recent news
-- **Industry Scanning**: Identify companies in a target vertical that match your ideal customer profile (ICP)
-- **Decision-Maker Mapping**: Find and profile key stakeholders and buying-committee members
-- **Engagement Trigger Detection**: Surface pain points, initiatives, job postings, and events that signal buying intent
-- **Outreach Strategy**: Generate personalised talking points, email templates, and call scripts
-- **Competitive Intelligence**: Understand what solutions prospects currently use and where gaps exist
-- **Pipeline Building**: Produce structured prospect lists ranked by fit and timing
+- **Problem Discovery**: Find specific, evidenced problems the prospect is experiencing — the foundation for any engagement
+- **Qualification Assessment**: Honestly evaluate whether this prospect warrants pursuit under BEAM criteria
+- **Buying Committee Mapping**: Identify stakeholders by BEAM buying role (Economic Buyer, Technical Evaluator, Champion, Gatekeeper)
+- **Access Path Analysis**: Map routes to authority — warm introductions, events, content hooks
+- **Engagement Readiness**: Assess signals of willingness to have a diagnostic conversation
+- **Competitive Intelligence**: Understand what solutions prospects currently use and where gaps create problems
+- **Pipeline Building**: Produce qualified prospect lists ranked by fit, timing, and qualification strength
 
 ## Input
 
@@ -37,26 +66,35 @@ When a target company is provided, **skip straight to the focused discovery ques
 
 ## Discovery Process (CRITICAL)
 
-**Before conducting any research, you MUST conduct a brief discovery interview to understand the engagement context.** Adapt the questions based on what was provided in the invocation.
+**Before conducting any research, you MUST conduct a brief discovery interview to understand the engagement context and what problem you're trying to solve for them.** Adapt the questions based on what was provided in the invocation.
 
 ### When a Target Company Is Provided (Most Common)
 
-Ask only what you need to know about the **user's side** of the engagement. Skip target market and ICP questions — the target is already identified.
+Ask only what you need to know about the **user's side** of the engagement. Skip target market and ICP questions — the target is already identified. Focus on understanding what problem your offering solves.
 
-1. **Your Business & Offering**
+1. **Your Business & Problem You Solve**
    - What does your company do? (elevator pitch)
-   - What product or service are you looking to offer this company?
-   - What is your unique value proposition for this type of engagement?
+   - What **problem** does your offering solve? (be specific — not "improve efficiency" but the actual pain)
+   - What does life look like for a prospect *before* they work with you? (the pain state)
+   - What does life look like *after*? (the solved state)
+   - Why should they choose you over doing nothing or using an alternative?
 
 2. **Engagement Context**
    - What is the goal? (advisory engagement, product sale, partnership, tender response)
-   - Is there an upcoming event, deadline, or trigger driving this?
+   - What triggered this interest in [Company]? (event, referral, news, cold opportunity)
    - Have you engaged with this company before? What happened?
-   - Are there any warm introductions or mutual connections?
+   - Do you have any existing relationship or warm introduction path?
+   - Is there an upcoming event, deadline, or trigger driving urgency?
 
-3. **Output Preferences**
+3. **Qualification Criteria**
+   - What signals would tell you this company has the problem you solve?
+   - What would make this company a *bad* fit? (disqualifying criteria)
+   - What level of authority do you typically need to engage? (C-suite, director, manager)
+
+4. **Output Preferences**
    - Any specific focus areas? (e.g., focus on their technology landscape, or on decision-makers)
    - Do you need outreach templates included?
+   - Will this feed into a BEAM engagement? (affects qualification depth)
 
 Then proceed directly to **Phase 3: Deep-Dive Intelligence** for that specific company.
 
@@ -102,42 +140,44 @@ If the user asks for broad prospect identification (e.g., "find companies in min
 
 ## Research Methodology
 
-### Phase 1: Define the Engagement Landscape
+### Phase 1: Define the Problem Domain
 
-Establish the parameters of the research:
+Before researching the company, establish clarity on what you're looking for:
 
-1. **Confirm ICP criteria** — industry, size, geography, tech stack, pain points
-2. **Define scoring rubric** — how to rank prospects by fit and timing
-3. **Set research scope** — number of prospects, depth per prospect, time horizon
+1. **Articulate the problem hypothesis** — what specific problem do you believe this company has?
+2. **Define problem signals** — what evidence would indicate they have this problem? (job postings, news, technology gaps, regulatory pressures)
+3. **Define disqualifying signals** — what would tell you they *don't* have this problem or are a poor fit?
+4. **Set research scope** — depth of research, time allocated
 
-### Phase 2: Prospect Identification
+### Phase 2: Problem Signal Identification
 
-Use web research to build a candidate list:
+Research with a problem-first lens — actively seek evidence that validates or invalidates your problem hypothesis:
 
-1. **Industry directories and associations** — identify member companies
-2. **News and press releases** — companies announcing relevant initiatives
-3. **Job postings** — roles that signal investment in your solution area
-4. **Conference and event attendees** — companies presenting at industry events
-5. **Government tenders and procurement notices** — public opportunities
-6. **Technology partnerships** — companies using complementary tools
-7. **LinkedIn and professional networks** — organisational mapping
+1. **Pain signals in news** — incidents, complaints, regulatory issues, operational challenges
+2. **Job postings** — roles that signal they're trying to solve problems you address
+3. **Technology gaps** — systems that create problems your offering addresses
+4. **Strategic priorities** — initiatives where your problem domain is relevant
+5. **Industry benchmarks** — are they underperforming peers in your problem area?
+6. **Executive commentary** — what are leaders saying about challenges?
+
+**Be honest**: If you don't find evidence of the problem, document that. Qualifying out is valuable.
 
 ### Phase 3: Deep-Dive Intelligence
 
-For each shortlisted prospect, compile:
+For each shortlisted prospect, compile with a **problem-centric focus**:
 
-| Category | Details to Capture |
-|----------|-------------------|
-| **Company Overview** | Name, HQ, revenue, employees, industry, sub-vertical |
-| **Business Model** | What they do, who they serve, how they make money |
-| **Strategic Priorities** | Annual report themes, CEO statements, investor presentations |
-| **Pain Points** | Known challenges, inefficiencies, regulatory pressures |
-| **Technology Landscape** | Current systems (ERP, EAM, CRM), recent tech investments |
-| **Decision-Makers** | Key contacts — name, title, department, LinkedIn profile URL (found via `site:linkedin.com/in` search) |
-| **Buying Signals** | Recent hires, RFPs, budget announcements, project launches |
-| **Competitive Landscape** | Current vendors, contract renewals, known dissatisfaction |
-| **Engagement History** | Any prior touchpoints, proposals, or conversations |
-| **Trigger Events** | Mergers, leadership changes, regulatory deadlines, incidents |
+| Category | Details to Capture | BEAM Relevance |
+|----------|-------------------|----------------|
+| **Company Overview** | Name, HQ, revenue, employees, industry, sub-vertical | Context for fit assessment |
+| **Business Model** | What they do, who they serve, how they make money | Understanding their world |
+| **Problem Evidence** | **Specific evidence** that they have the problem you solve — not assumptions | **Gate 1: Problem domain** |
+| **Pain Quantification** | What is this problem *costing* them? (dollars, time, risk, reputation) | BEAM Stage 2 preparation |
+| **Technology Landscape** | Current systems and their limitations — *problems* created by their tech stack | Problem evidence |
+| **Buying Committee** | Stakeholders mapped to BEAM buying roles (see below) | **Gate 2: Access to authority** |
+| **Access Path** | How can you reach authority? Warm intros, events, content, cold | Gate 2 support |
+| **Willingness Signals** | Evidence they're open to conversation — responding to content, attending events, issuing RFPs | **Gate 3: Willingness** |
+| **Competitive Landscape** | Current vendors — are they *happy* or is there vendor fatigue/dissatisfaction? | Problem/timing signal |
+| **Qualification Assessment** | Honest evaluation: is this a real opportunity or are we forcing it? | BEAM integrity |
 
 #### Decision-Maker Identification via LinkedIn (CRITICAL)
 
@@ -182,22 +222,71 @@ For each shortlisted prospect, compile:
 | **Background Notes** | Career history, prior companies, education, shared connections — anything useful for personalisation |
 | **Engagement Angle** | How to approach this person specifically (what to reference, what pain point to lead with) |
 
-**Prioritise the buying committee** — identify at minimum:
-- **Economic Buyer**: Who controls the budget? (usually C-suite or VP)
-- **Technical Evaluator**: Who assesses the solution fit? (Head of IT, Engineering, Operations)
-- **Champion / Sponsor**: Who would internally advocate for your solution? (often a director-level person feeling the pain)
-- **Gatekeeper**: Who controls access to decision-makers? (EA, procurement, project office)
+**Map the BEAM buying committee** — identify at minimum:
 
-### Phase 4: Engagement Strategy
+| BEAM Role | Description | Typical Titles | What They Care About |
+|-----------|-------------|----------------|---------------------|
+| **Economic Buyer** | Controls the budget; makes the final financial decision | CEO, CFO, VP, GM | ROI, risk, strategic fit |
+| **Technical Evaluator** | Assesses solution fit and technical feasibility | CTO, Head of IT, Engineering Director | Will it work? Integration? |
+| **Champion / Sponsor** | Internally advocates for your solution; *feels the pain most* | Director, Senior Manager, Program Lead | Solving their problem |
+| **Gatekeeper** | Controls access to decision-makers and process | EA, Procurement Manager, PMO | Process, compliance, vendor management |
 
-For each prospect, produce:
+**CRITICAL**: For BEAM Stage 1, you need at least one **named individual** you can access — not just "someone in IT". The skill will challenge vague answers.
 
-1. **Fit Score** (1–5) based on ICP alignment
-2. **Timing Score** (1–5) based on buying signals and urgency
-3. **Recommended Approach** — cold email, warm intro, conference meeting, tender response
-4. **Personalised Talking Points** — 3–5 points linking your value prop to their specific situation
-5. **Potential Objections** — anticipated pushback and how to address it
-6. **Outreach Sequence** — multi-touch plan (email → follow-up → call → LinkedIn)
+### Phase 4: BEAM Qualification Assessment
+
+Before producing engagement strategy, **honestly assess BEAM Stage 1 gate readiness**:
+
+#### Gate 1: Problem Domain Identified
+
+| Assessment | Criteria |
+|------------|----------|
+| **STRONG** | Multiple specific problems evidenced with sources; problems align directly to your offering |
+| **MODERATE** | Some problem signals found but not highly specific; requires validation in discovery |
+| **WEAK** | Assumed problems based on industry norms; no company-specific evidence |
+| **NONE** | No evidence of the problem you solve; consider qualifying out |
+
+#### Gate 2: Access to Authority
+
+| Assessment | Criteria |
+|------------|----------|
+| **STRONG** | Named individual identified; existing relationship or warm introduction path |
+| **MODERATE** | Named individual identified; no relationship but clear outreach path |
+| **WEAK** | Roles identified but no specific names; requires LinkedIn research |
+| **NONE** | No path to authority visible; consider qualifying out |
+
+#### Gate 3: Willingness to Diagnose
+
+| Assessment | Criteria |
+|------------|----------|
+| **STRONG** | Active signals: issued RFP, attending your events, responded to content |
+| **MODERATE** | Passive signals: in relevant industry groups, hiring in your area |
+| **WEAK** | No signals but no negative indicators either |
+| **NONE** | Negative signals: recently bought competitor, stated no interest |
+
+#### Qualification Verdict
+
+Based on the gate assessment, issue a verdict:
+
+| Verdict | Criteria | Recommended Action |
+|---------|----------|-------------------|
+| **QUALIFIED** | 2+ gates STRONG, none NONE | Proceed to engagement strategy |
+| **EXPLORATORY** | Mixed signals; worth pursuing with lower investment | Light-touch outreach; validate problem first |
+| **NURTURE** | Weak signals; not ready now | Add to content nurture; revisit in 6 months |
+| **DISQUALIFIED** | Any gate NONE; fundamental misalignment | Document reasons; do not pursue |
+
+### Phase 5: Engagement Strategy (If Qualified)
+
+For qualified prospects, produce:
+
+1. **BEAM Gate Readiness** — assessment of each Stage 1 gate with supporting evidence
+2. **Fit Score** (1–5) based on ICP alignment and problem evidence strength
+3. **Timing Score** (1–5) based on buying signals and urgency
+4. **Qualification Strength** — STRONG, MODERATE, or EXPLORATORY
+5. **First Contact Goal** — earn the right to a diagnostic conversation (not sell!)
+6. **Problem-Led Talking Points** — 3–5 points leading with their problem, not your solution
+7. **Discovery Questions** — SPIN-aligned questions to validate problem in first conversation
+8. **Outreach Sequence** — multi-touch plan focused on earning the right to a conversation
 
 ---
 
@@ -205,39 +294,56 @@ For each prospect, produce:
 
 ### 1. Executive Opportunity Summary
 
-**Always lead with this summary before presenting the full dossier.** It gives the user an immediate read on whether the prospect is worth pursuing and at what priority.
+**Always lead with this summary before presenting the full dossier.** It gives the user an immediate read on whether the prospect qualifies and at what confidence level.
 
 ```markdown
 # [Company Name] — Engagement Opportunity
 
-## Key Findings:
+## BEAM Qualification Readiness
 
-🎯 **Prime Opportunity: [Opportunity Name]**
-- [Headline metric — investment size, contract value, or project scope]
-- [Why timing is perfect for your offering]
-- [Scale or complexity that demands your expertise]
+| Gate | Status | Evidence Summary |
+|------|--------|-----------------|
+| **Problem Domain** | [STRONG/MODERATE/WEAK/NONE] | [1-line evidence summary] |
+| **Access to Authority** | [STRONG/MODERATE/WEAK/NONE] | [Named contact or access path] |
+| **Willingness to Diagnose** | [STRONG/MODERATE/WEAK/NONE] | [Signal or barrier] |
 
-⏰ **Optimal Timing: [Window — e.g., Q1 2025]**
-- [Upcoming decision point or deadline creating urgency]
-- [Current initiative or strategy being developed]
-- [Pilot or entry-point engagement opportunity]
+**Qualification Verdict: [QUALIFIED / EXPLORATORY / NURTURE / DISQUALIFIED]**
 
-💡 **Strategic Positioning**
-- [Market gap your offering fills]
-- [Competitive landscape advantage — limited competition or vendor fatigue]
-- [Cultural or operational fit indicators]
+---
 
-🔑 **Key Decision-Makers**
-- [Name] ([Title]): [Background and authority]
-- [Name] ([Title]): [Operational focus area]
-- [Name] ([Title]): [Financial/business case authority]
+## Key Findings
 
-📊 **Value Proposition Alignment**
-- [Evidence of innovation culture or technology adoption]
-- [Performance metrics culture — they measure what matters]
-- [Growth trajectory requiring your type of solution]
+🎯 **Problem We Can Solve**
+- [Specific problem identified — evidenced, not assumed]
+- [Impact of this problem on their business]
+- [Why your offering addresses this problem specifically]
 
-**The detailed analysis shows [Company] is ready, willing, and able to invest in [your offering], with multiple engagement pathways from $[low]K pilot projects to $[high]K+ strategic implementation programmes.**
+⏰ **Timing Signals**
+- [Evidence of urgency — deadline, event, initiative]
+- [Window of opportunity]
+- [Risk if timing is missed]
+
+🔑 **Buying Committee**
+- **Economic Buyer**: [Name] ([Title]) — [access status]
+- **Champion**: [Name] ([Title]) — [relationship status]
+- **Technical Evaluator**: [Name] ([Title]) — [relevance]
+- **Gatekeeper**: [Name/role] — [known or unknown]
+
+💡 **Access Path**
+- [Best route to a conversation — warm intro, event, content, cold]
+- [Relationship leverage points]
+- [Barriers to access and mitigation]
+
+📊 **Qualification Confidence**
+- [Fit Score]: [X/5] — [1-line rationale]
+- [Timing Score]: [X/5] — [1-line rationale]
+- [Overall]: [HIGH/MEDIUM/LOW] confidence this warrants pursuit
+
+---
+
+**First Contact Goal**: Earn the right to a diagnostic conversation — validate problem hypothesis, not pitch solution.
+
+**If DISQUALIFIED**: [Reason] — document and move on. Qualifying out is a success.
 ```
 
 ---
@@ -558,35 +664,88 @@ Uses the same SAS-AM brand system as the presentation skill:
 
 ---
 
-## Scoring Rubric
+## Scoring Rubric (CRITICAL — Pessimistic by Default)
 
-### Fit Score (1–5)
+**Philosophy**: Default to skepticism. A prospect must *earn* a high score through concrete evidence, not assumptions or optimism. If you're uncertain, score down. It's better to undersell a qualified opportunity than to overcommit to a dud.
 
-| Score | Criteria |
-|-------|----------|
-| **5 — Perfect Fit** | Matches all ICP criteria; has the exact problem you solve; right size, vertical, and geography |
-| **4 — Strong Fit** | Matches most ICP criteria; high likelihood of need; minor gaps (e.g., slightly outside target size) |
-| **3 — Moderate Fit** | Matches some ICP criteria; potential need but unconfirmed; worth exploring |
-| **2 — Weak Fit** | Few ICP matches; unlikely need in current state; long-shot opportunity |
-| **1 — Poor Fit** | Does not match ICP; no apparent need; disqualifying criteria present |
+### Fit Score (1–5) — Assume Low Until Proven Otherwise
 
-### Timing Score (1–5)
+| Score | Criteria | Evidence Required | Red Flags That Drop Score |
+|-------|----------|-------------------|---------------------------|
+| **5 — Perfect Fit** | Has **documented evidence** of the exact problem you solve; matches ALL ICP criteria with proof | Direct quotes, specific incident reports, job postings explicitly describing the problem, regulatory filings showing the issue | Never assume 5 without multiple independent evidence sources |
+| **4 — Strong Fit** | Has **multiple signals** of the problem; matches most ICP criteria | At least 2 independent evidence sources confirming problem domain | Single evidence source = max score 3 |
+| **3 — Moderate Fit** | Some evidence of potential problem; matches core ICP criteria | At least 1 concrete signal; plausible fit argument | Industry-level assumptions without company-specific evidence |
+| **2 — Weak Fit** | Industry suggests potential fit but **no company-specific evidence** of the problem | ICP match on paper only | Assuming need based on what "companies like them" typically have |
+| **1 — Poor Fit** | No evidence of problem; disqualifying criteria present | N/A — this is the absence of evidence | Evidence of recent competitor purchase; stated no need; misaligned industry |
 
-| Score | Criteria |
-|-------|----------|
-| **5 — Immediate** | Active RFP, budget allocated, leadership mandate, contract expiry within 90 days |
-| **4 — Near-Term** | Recent trigger event (new hire, project launch, incident), likely buying within 6 months |
-| **3 — Medium-Term** | Strategic alignment but no confirmed timeline; worth nurturing over 6–12 months |
-| **2 — Long-Term** | Potential future need; no current signals; keep on radar for 12+ months |
-| **1 — No Signal** | No buying signals detected; purely speculative; revisit if triggers emerge |
+**Default starting point**: Score 2 until evidence moves it up. Optimism doesn't earn points.
 
-### Priority Matrix
+### Timing Score (1–5) — Assume Cold Until Proven Hot
 
-| | Timing 4–5 | Timing 2–3 | Timing 1 |
+| Score | Criteria | Evidence Required | Red Flags That Drop Score |
+|-------|----------|-------------------|---------------------------|
+| **5 — Immediate** | Active RFP mentioning your problem domain; **documented** budget allocation; leadership statement with deadline | Written RFP, board announcement with timeline, regulatory deadline | "They're probably looking" = max score 2 |
+| **4 — Near-Term** | Recent trigger event **specifically** related to your problem domain; decision expected within 6 months | Job posting for role that would use your solution; incident report; leadership change with relevant mandate | Trigger event unrelated to your problem domain = score 3 max |
+| **3 — Medium-Term** | Strategic alignment visible; no confirmed timeline; may be 6–12 months | Strategic plan mentions your problem area; preliminary discussions reported | No timeline visibility = cap at 3 regardless of fit |
+| **2 — Long-Term** | Potential future need based on industry trends; **no company-specific signals** | Industry reports suggesting eventual need | Assuming timing based on "everyone will need this eventually" |
+| **1 — No Signal** | No buying signals detected; no trigger events; no urgency indicators | N/A — this is the absence of evidence | Evidence of recent purchase or "not a priority" statement |
+
+**Default starting point**: Score 2 until a specific, dated trigger event moves it up.
+
+### Qualification Rigour Tests
+
+Before assigning Fit or Timing scores, answer these questions honestly:
+
+| Test | Question | If "No"... |
+|------|----------|-----------|
+| **Specificity** | Is this evidence specific to THIS company, or just industry-level assumptions? | Cap score at 2 |
+| **Recency** | Is this evidence from the last 12 months? | Reduce score by 1 |
+| **Independence** | Do you have 2+ independent sources? | Cap Fit at 3 |
+| **Problem Match** | Does the evidence directly match YOUR problem domain, or just adjacent? | Cap Fit at 3 |
+| **Timeline Clarity** | Is there a specific date, deadline, or decision event? | Cap Timing at 3 |
+| **Access Reality** | Can you actually reach a decision-maker, or are you hoping? | Note barrier in assessment |
+
+### Priority Matrix (Conservative)
+
+**Default to NURTURE unless evidence compels higher priority.** Pursuing a weak opportunity costs more than missing a marginal one.
+
+| | Timing 4–5 (Hot) | Timing 3 (Warm) | Timing 1–2 (Cold) |
 |---|---|---|---|
-| **Fit 4–5** | **HIGH** — Pursue immediately | **MEDIUM** — Nurture actively | **LOW** — Monitor |
-| **Fit 2–3** | **MEDIUM** — Opportunistic | **LOW** — Nurture passively | Skip |
-| **Fit 1** | Skip | Skip | Skip |
+| **Fit 5** | **HIGH** — Pursue immediately; rare — verify twice | **MEDIUM** — Nurture actively; timing may shift | **LOW** — Monitor; great fit but no urgency |
+| **Fit 4** | **HIGH** — Strong case; validate access | **MEDIUM** — Worth light pursuit | **NURTURE** — Build relationship |
+| **Fit 3** | **MEDIUM** — Validate problem first | **NURTURE** — Stay in touch | **SKIP** — Not worth the effort |
+| **Fit 1–2** | **EXPLORATORY** at best — validate fit first | **SKIP** | **SKIP** |
+
+### Evidence Quality Tiers
+
+| Tier | Evidence Type | Score Multiplier |
+|------|--------------|------------------|
+| **Tier 1 (Gold)** | Direct quote from prospect; their written RFP; their public filing mentioning the problem | Full score valid |
+| **Tier 2 (Silver)** | News article about them + the problem; job posting; investor report mentioning challenge | Score - 1 max unless corroborated |
+| **Tier 3 (Bronze)** | Industry analyst report; peer company comparison; your assumption based on typical patterns | Cap at 3 regardless of logic |
+| **Tier 4 (Lead)** | "Companies like them usually..." / "They must have..." / "I assume..." | Cap at 2; flag as unverified |
+
+### Honest Assessment Output
+
+For every Fit and Timing score, document:
+
+```
+Fit Score: X/5
+- Evidence: [What specific evidence supports this?]
+- Evidence Tier: [Gold/Silver/Bronze/Lead]
+- Confidence Killer: [What would disprove this?]
+- Honest Doubt: [What aren't you sure about?]
+
+Timing Score: X/5
+- Evidence: [What specific trigger/signal supports this?]
+- Evidence Tier: [Gold/Silver/Bronze/Lead]
+- Timeline Uncertainty: [What could delay or accelerate?]
+- Honest Doubt: [What aren't you sure about?]
+
+Overall Assessment: [QUALIFIED/EXPLORATORY/NURTURE/DISQUALIFIED]
+Confidence Level: [HIGH/MEDIUM/LOW]
+If Wrong: [What's the cost if this assessment is wrong?]
+```
 
 ---
 
@@ -628,38 +787,53 @@ When conducting research, prioritise these source types:
 
 Use this path when the user provides a specific company name (the most common invocation).
 
-**Step 1: Focused Discovery**
-- Ask the 3 focused discovery questions (your offering, engagement context, output preferences)
-- Confirm the target company name and any specific angles to focus on
+**Step 1: Problem-First Discovery**
+- Ask the focused discovery questions: what problem do you solve? what would evidence of that problem look like?
+- Confirm the target company name and establish a problem hypothesis
+- Clarify: what would make this company a *bad* fit?
 
-**Step 2: Deep-Dive Research**
-- Use web search to research the target company comprehensively
-- Compile the company snapshot (overview, revenue, employees, HQ, industry)
-- Map strategic priorities from annual reports, CEO statements, and investor materials
-- Identify pain points and challenges relevant to your offering
-- Map the technology landscape (ERP, EAM, CRM, other systems)
+**Step 2: Problem Evidence Research**
+- Search for evidence that validates the problem hypothesis:
+  - News articles mentioning challenges, incidents, or pain in your problem domain
+  - Job postings for roles that signal they're trying to solve this problem
+  - Technology limitations that create the problem you address
+  - Executive statements about challenges or priorities
+  - Industry benchmarks showing underperformance
+- **Be honest**: Document both confirming AND disconfirming evidence
+- If no problem evidence found, document that — qualifying out is valid
+
+**Step 3: Buying Committee Mapping**
 - **Search LinkedIn for decision-makers** using `site:linkedin.com/in "[Company]" [title]` queries:
-  - Search for C-suite / senior leadership (CEO, MD, GM)
-  - Search for operational / technical leaders (Head of Ops, CTO, Engineering Director)
-  - Search for financial decision-makers (CFO, Finance Director)
-  - Search for domain-specific roles relevant to your offering
-  - For each person found: capture name, title, LinkedIn URL, relevance, and engagement angle
-  - Identify the buying committee: economic buyer, technical evaluator, champion, gatekeeper
-- Surface buying signals (recent hires, RFPs, budget announcements, project launches)
-- Assess competitive landscape (current vendors, contract status, vulnerabilities)
+  - Search for Economic Buyers (CEO, CFO, GM, VP)
+  - Search for Technical Evaluators (CTO, Head of Engineering, IT Director)
+  - Search for potential Champions (directors and managers in the problem domain)
+  - Search for Gatekeepers (procurement, EA, PMO)
+- For each person found: capture name, title, LinkedIn URL, BEAM buying role, and access assessment
+- Identify the most viable access path — who can you actually reach?
 
-**Step 3: Strategy Development**
+**Step 4: BEAM Qualification Assessment**
+- Assess each Stage 1 gate:
+  - **Problem Domain**: Is there specific, evidenced problem or just assumptions?
+  - **Access to Authority**: Do you have a named individual and a path to reach them?
+  - **Willingness**: What signals suggest they'd engage in a conversation?
+- Issue a qualification verdict: QUALIFIED, EXPLORATORY, NURTURE, or DISQUALIFIED
+- If DISQUALIFIED: Document the reason and stop — this is valuable intelligence, not failure
+
+**Step 5: Engagement Strategy (If Qualified)**
 - Score fit and timing (1–5 each)
-- Develop the personalised engagement strategy
-- Draft talking points linking your value prop to their specific situation
-- Anticipate objections and prepare responses
-- Design a multi-touch outreach sequence
+- Develop problem-led talking points (lead with their pain, not your features)
+- Prepare SPIN discovery questions for the first conversation
+- Design outreach focused on earning the right to a diagnostic conversation
+- Anticipate barriers and prepare to address them
 
-**Step 4: Delivery**
+**Step 6: Delivery**
 - Build the branded HTML report from the template
-- Lead with the Executive Opportunity Summary (🎯 ⏰ 💡 🔑 📊)
-- Include the full dossier, strategy, and outreach plan
+- **Lead with BEAM Qualification Readiness** — gate assessments and verdict
+- Include the Executive Opportunity Summary
+- Include full dossier, strategy, and outreach plan
+- **First Contact Goal**: Earn the right to a diagnostic conversation
 - Provide recommended next steps with dates
+- **If DISQUALIFIED**: Deliver a brief disqualification report explaining why — this is still valuable output
 
 ### Path B: No Target Company (Pipeline Mode)
 
