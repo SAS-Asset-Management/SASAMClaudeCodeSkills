@@ -1,0 +1,10 @@
+{
+  "name": "linkedin-post-generator",
+  "description": "Generate LinkedIn posts for SAS-AM in brand voice. Supports pillar promotion posts (driving traffic to website articles) and quick insight posts (standalone thought leadership). Applies SAS-AM tone, Australian English, and content strategy for asset management professionals.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "license": "MIT",
+  "keywords": ["linkedin", "content", "social-media", "asset-management", "thought-leadership", "copywriting"]
+}

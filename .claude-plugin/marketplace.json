@@ -46,6 +46,16 @@
       "keywords": ["sales", "beam", "spin-selling", "pipeline", "b2b", "engagement", "proposal", "markov", "bayesian"],
       "category": "business-development",
       "tags": ["sales", "beam", "spin-selling", "pipeline", "engagement"]
+    },
+    {
+      "name": "linkedin-post-generator",
+      "source": "./linkedin-post-generator/1.0.0",
+      "description": "Generate LinkedIn posts for SAS-AM in brand voice. Supports pillar promotion posts (driving traffic to website articles) and quick insight posts (standalone thought leadership). Applies SAS-AM tone, Australian English, and content strategy for asset management professionals.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["linkedin", "content", "social-media", "asset-management", "thought-leadership", "copywriting"],
+      "category": "content-marketing",
+      "tags": ["linkedin", "content", "social-media", "thought-leadership"]
     }
   ]
 }
