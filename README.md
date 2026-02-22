@@ -38,6 +38,20 @@ Research and identify B2B engagement opportunities with:
 - **Event Prep Briefs**: Pre-conference engagement planning with target attendees
 - **Competitive Intelligence**: Map current vendors and identify displacement opportunities
 
+### beam-selling
+
+Guide sales engagements through the marcov.BEAM evidence-gated lifecycle:
+
+- **6-Stage Pipeline**: Qualify → Diagnose → Align → Propose → Commit → Deliver & Renew
+- **SPIN Integration**: Situation, Problem, Implication, and Need-payoff questions at every stage
+- **Evidence-Gated Progression**: No stage-skipping — earn the gate or exit
+- **b2b-research-agent Integration**: Ingests prospect dossiers as the foundation for qualification
+- **Save and Resume**: Persists engagement state to `.beam/` hidden directory across sessions
+- **Auto-Dump**: Learnings, next steps, and timeline updated after every interaction
+- **Win Probability**: Bayesian estimate updated at each stage with evidence-based modifiers
+- **Proposal Generation**: Structured proposals built from diagnostic findings
+- **Pipeline Dashboard**: Track all active engagements with stage progress and health metrics
+
 ## Installation
 
 ### Global Installation (Recommended)
@@ -73,6 +87,11 @@ Or reference the skill directly:
 
 ```
 /b2b-research-agent Research potential clients in Australian mining for our asset management platform
+```
+
+```
+/beam-selling Acme Corp
+/beam-selling Resume BHP engagement
 ```
 
 ## Skill Structure
