@@ -39,17 +39,23 @@
         "problem_domain_identified": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "access_to_authority": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "willing_to_diagnose": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         }
       },
       "spin_notes": {
@@ -67,17 +73,23 @@
         "problems_articulated": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "implications_quantified": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "cost_of_inaction_acknowledged": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         }
       },
       "spin_notes": {
@@ -96,22 +108,30 @@
         "problem_definition_agreed": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "success_criteria_defined": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "stakeholder_landscape_mapped": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "decision_process_understood": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         }
       },
       "spin_notes": {
@@ -130,22 +150,30 @@
         "proposal_addresses_needs": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "commercial_terms_clear": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "decision_process_confirmed": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "objections_addressed": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         }
       },
       "spin_notes": {
@@ -170,17 +198,23 @@
         "commitment_received": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "commercial_terms_accepted": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "delivery_handover_initiated": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         }
       },
       "spin_notes": {
@@ -198,22 +232,30 @@
         "outcomes_delivered": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "relationship_maintained": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "future_needs_surfaced": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         },
         "case_study_identified": {
           "met": false,
           "evidence": null,
-          "date": null
+          "date": null,
+          "assessment_verdict": null,
+          "assessment_rationale": null
         }
       },
       "spin_notes": {
