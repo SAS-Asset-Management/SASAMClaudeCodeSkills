@@ -299,13 +299,16 @@ All engagement state is saved to a `.beam/` hidden directory in the current work
 ```
 .beam/
 ├── engagements/
-│   ├── acme-corp.json          # One file per engagement
+│   ├── acme-corp.json              # One file per engagement
+│   ├── acme-corp-kanban.html       # Auto-generated kanban dashboard (open in browser)
 │   ├── bhp-mining.json
-│   └── geelong-port.json
+│   ├── bhp-mining-kanban.html
+│   ├── geelong-port.json
+│   └── geelong-port-kanban.html
 ├── sessions/
-│   ├── acme-corp-2026-02-22.md # Session log per interaction
+│   ├── acme-corp-2026-02-22.md     # Session log per interaction
 │   └── acme-corp-2026-02-25.md
-└── config.json                  # User's company info (cached)
+└── config.json                      # User's company info (cached)
 ```
 
 ### Auto-Dump Behaviour (CRITICAL)
@@ -318,8 +321,16 @@ All engagement state is saved to a `.beam/` hidden directory in the current work
    - Stakeholder updates
    - Win probability recalculation
    - Updated `activity_log` with timestamped entry for this session
+   - Updated `kanban` object with any new, changed, or completed cards
 
-2. **Write a session log** (`.beam/sessions/<company>-<date>.md`) containing:
+2. **Regenerate the kanban dashboard** (`.beam/engagements/<company>-kanban.html`):
+   - Read the `references/kanban-board.html` template
+   - Inject the full engagement JSON as a `BEAM_DATA` JavaScript variable into the HTML
+   - Write the self-contained HTML file to `.beam/engagements/<company>-kanban.html`
+   - This file can be opened directly in a browser — it contains all data inline
+   - **This regeneration happens EVERY session end, not just when the user asks for it**
+
+3. **Write a session log** (`.beam/sessions/<company>-<date>.md`) containing:
 
 ```markdown
 # Session Log — [Company Name] — [Date]
@@ -357,10 +368,11 @@ All engagement state is saved to a `.beam/` hidden directory in the current work
 - Days in Stage: [N]
 ```
 
-3. **Print a resume hint** to the user:
+4. **Print a resume hint** to the user:
 
 ```
 --- Session saved to .beam/ ---
+Kanban board updated: .beam/engagements/<company>-kanban.html
 To resume next time, run: /beam-selling [Company Name]
 ```
 
@@ -387,6 +399,7 @@ Each engagement is saved as a JSON file (see `references/beam-state-template.jso
 - **Stakeholder map**: Buying committee members and their roles
 - **Win probability**: Bayesian estimate updated at each stage
 - **Activity log**: Timestamped history of all key actions and decisions
+- **Kanban board**: Cards for each stage tracking activities, evidence, blockers, and questions
 - **Session logs**: Separate Markdown files per session for easy human reading
 
 ### Resume Behaviour
@@ -724,6 +737,7 @@ The skill responds to these commands within a session:
 |---------|--------|
 | `save` | Save current engagement state to `.beam/` |
 | `status` | Display current stage, gate progress, and win probability |
+| `board` | Regenerate and open the kanban dashboard (`.beam/engagements/<company>-kanban.html`) |
 | `timeline` | Show the full engagement timeline with dates and milestones |
 | `gates` | Show gate criteria for the current stage |
 | `evidence` | Show all evidence collected for the current stage |
@@ -758,6 +772,121 @@ The skill responds to these commands within a session:
 
 ---
 
+## Kanban Board
+
+The skill maintains an interactive kanban dashboard that visualises activities and progress across all 6 BEAM stages. The board is regenerated as a self-contained HTML file at the end of **every session**.
+
+### How It Works
+
+1. **During the session**: As activities happen (research, meetings, evidence captured, stakeholders identified, blockers raised, questions opened), the skill adds **cards** to the `kanban` property in the engagement JSON
+2. **At session end**: The auto-dump reads `references/kanban-board.html`, injects the engagement JSON as `BEAM_DATA`, and writes a standalone HTML file to `.beam/engagements/<company>-kanban.html`
+3. **To view**: Open the HTML file in any browser — no server needed, all data is inline
+
+### Kanban Generation Procedure
+
+When generating the kanban HTML (at session end or on `board` command):
+
+```
+1. Read the engagement JSON from .beam/engagements/<company>.json
+2. Read the template from references/kanban-board.html
+3. Insert a <script> tag before the closing </body>:
+   <script>const BEAM_DATA = { ...engagement JSON... };</script>
+4. Write the combined file to .beam/engagements/<company>-kanban.html
+5. Report the file path to the user
+```
+
+### Card Types
+
+Cards represent different activities within each stage column:
+
+| Icon | Type | Use When |
+|------|------|----------|
+| `[R]` Research | Desk research, web search, dossier review |
+| `[M]` Meeting | Call, meeting, or conversation with prospect |
+| `[E]` Evidence | Evidence captured or documented (quotes, metrics, agreements) |
+| `[D]` Document | Deliverable produced (proposal, memo, agenda, report) |
+| `[S]` Stakeholder | New stakeholder identified or engaged |
+| `[!]` Blocker | Something preventing progress |
+| `[?]` Question | Open question needing an answer |
+
+### Card Statuses
+
+| Status | Meaning |
+|--------|---------|
+| `todo` | Not yet started — planned activity |
+| `doing` | In progress — currently being worked on |
+| `done` | Completed — activity finished |
+| `blocked` | Waiting on external input or action |
+
+### When to Create Cards
+
+Add kanban cards automatically when these events occur during a session:
+
+- **Stage entered** → Add cards for the key activities in that stage (as `todo`)
+- **Research performed** → Add an `[R]` card summarising what was found
+- **Meeting/call discussed** → Add an `[M]` card with attendees and outcomes
+- **Evidence captured** → Add an `[E]` card linking to the gate criterion it supports
+- **Stakeholder identified** → Add an `[S]` card with name, role, and attitude
+- **Blocker discovered** → Add a `[!]` card describing what's stuck and why
+- **Question raised** → Add a `[?]` card with the open question
+- **Document produced** → Add a `[D]` card with the document type and path
+- **Activity completed** → Update existing card status to `done` with completion date
+- **Gate criterion met** → Update the relevant `[E]` card and set its `gate_ref`
+
+### Card JSON Schema
+
+Each card in the `kanban` state follows this structure:
+
+```json
+{
+  "id": "2-003",
+  "type": "evidence",
+  "icon": "E",
+  "title": "Quantified $2.1M annual impact",
+  "status": "done",
+  "created_at": "2026-02-15",
+  "completed_at": "2026-02-15",
+  "due_date": null,
+  "owner": "seller",
+  "notes": "CTO confirmed reactive maintenance costs $2.1M/year in unplanned downtime",
+  "evidence_ref": "implications_quantified",
+  "gate_ref": "implications_quantified"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Stage number prefix + sequential number (e.g., `1-001`, `2-003`) |
+| `type` | enum | `research`, `meeting`, `evidence`, `document`, `stakeholder`, `blocker`, `question` |
+| `icon` | string | Display icon: `R`, `M`, `E`, `D`, `S`, `!`, `?` |
+| `title` | string | Short card title (max 40 chars) |
+| `status` | enum | `todo`, `doing`, `done`, `blocked` |
+| `created_at` | date | When the card was created |
+| `completed_at` | date | When completed (null if not done) |
+| `due_date` | date | Optional due date for `todo` items |
+| `owner` | string | Who owns this: `seller`, `prospect`, or a person's name |
+| `notes` | string | Detailed notes, context, or findings |
+| `evidence_ref` | string | Links to an evidence item in the stage's evidence array |
+| `gate_ref` | string | Which gate criterion this card supports (if any) |
+
+### Board Features
+
+The generated HTML kanban board includes:
+
+- **6 columns** — one per BEAM stage, colour-coded
+- **Stage status badges** — Complete / Active / Pending
+- **Gate progress bars** — visual fill showing gates met vs total
+- **Gate criteria checklists** — individual criteria with met/unmet indicators
+- **Activity cards** — typed, colour-coded cards with status, date, owner, and gate links
+- **Card detail modal** — click any card to see full notes, evidence, and metadata
+- **Add card** — interactive form to add new cards (for visual tracking between sessions)
+- **Header metrics** — win probability, current stage, days active, deal value
+- **Light/dark theme** — toggle with button, persists to localStorage
+- **SPIN focus labels** — each column shows the primary SPIN questioning focus for that stage
+- **Print-friendly** — use browser print for a clean snapshot of the board
+
+---
+
 ## Checklist
 
 Before saving or advancing, verify:
@@ -767,6 +896,8 @@ Before saving or advancing, verify:
 - [ ] Evidence documented with dates and sources
 - [ ] Stakeholder map updated
 - [ ] Win probability recalculated
+- [ ] Kanban cards added/updated for activities this session
 - [ ] Next steps identified
 - [ ] State file saved to `.beam/engagements/`
+- [ ] Kanban dashboard regenerated to `.beam/engagements/<company>-kanban.html`
 - [ ] Activity log updated

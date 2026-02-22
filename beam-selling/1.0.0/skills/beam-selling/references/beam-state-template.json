@@ -260,5 +260,25 @@
     },
     "session_history": []
   },
-  "activity_log": []
+  "activity_log": [],
+  "kanban": {
+    "1_qualify": {
+      "cards": []
+    },
+    "2_diagnose": {
+      "cards": []
+    },
+    "3_align": {
+      "cards": []
+    },
+    "4_propose": {
+      "cards": []
+    },
+    "5_commit": {
+      "cards": []
+    },
+    "6_deliver": {
+      "cards": []
+    }
+  }
 }
