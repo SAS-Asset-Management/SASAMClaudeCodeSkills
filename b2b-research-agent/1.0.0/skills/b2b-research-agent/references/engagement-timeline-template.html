@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{COMPANY_NAME}} — Engagement Timeline | marcov.BEAM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ============================
+       CSS CUSTOM PROPERTIES
+       ============================ */
+    :root,
+    :root[data-theme="light"] {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f8fa;
+      --bg-tertiary: #eef1f5;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --accent-subtle: rgba(105, 190, 40, 0.1);
+      --card-bg: #ffffff;
+      --card-border: rgba(0, 34, 68, 0.12);
+      --shadow-sm: 0 1px 3px rgba(0, 34, 68, 0.06);
+      --shadow-md: 0 4px 12px rgba(0, 34, 68, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 34, 68, 0.12);
+      --header-bg: #002244;
+      --header-text: #ffffff;
+      --timeline-line: #e2e8f0;
+      --timeline-dot: #69BE28;
+      --timeline-dot-border: #ffffff;
+
+      /* Activity type colours */
+      --type-outreach: #3B82F6;
+      --type-meeting: #8B5CF6;
+      --type-document: #F59E0B;
+      --type-evidence: #10B981;
+      --type-decision: #EC4899;
+      --type-milestone: #69BE28;
+      --type-blocker: #EF4444;
+
+      /* Stage colours */
+      --stage-1: #3B82F6;
+      --stage-2: #8B5CF6;
+      --stage-3: #EC4899;
+      --stage-4: #F59E0B;
+      --stage-5: #10B981;
+      --stage-6: #06B6D4;
+    }
+
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --accent: #7AD33B;
+      --accent-hover: #69BE28;
+      --accent-subtle: rgba(122, 211, 59, 0.1);
+      --card-bg: #1e293b;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --header-bg: #0f172a;
+      --header-text: #f4fbff;
+      --timeline-line: #334155;
+      --timeline-dot: #7AD33B;
+      --timeline-dot-border: #1e293b;
+
+      --type-outreach: #60a5fa;
+      --type-meeting: #a78bfa;
+      --type-document: #fbbf24;
+      --type-evidence: #34d399;
+      --type-decision: #f472b6;
+      --type-milestone: #7AD33B;
+      --type-blocker: #f87171;
+
+      --stage-1: #60a5fa;
+      --stage-2: #a78bfa;
+      --stage-3: #f472b6;
+      --stage-4: #fbbf24;
+      --stage-5: #34d399;
+      --stage-6: #22d3ee;
+    }
+
+    /* ============================
+       BASE STYLES
+       ============================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ============================
+       HEADER
+       ============================ */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 16px; }
+
+    .logo {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+
+    .logo-marcov { font-size: 16px; font-weight: 300; opacity: 0.7; }
+    .logo-dot { font-size: 16px; opacity: 0.5; }
+    .logo-beam {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 400;
+      opacity: 0.8;
+      border-left: 1px solid rgba(255,255,255,0.2);
+      padding-left: 16px;
+    }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .theme-toggle {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--header-text);
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .theme-toggle:hover { background: rgba(255,255,255,0.2); }
+
+    /* ============================
+       MAIN CONTENT
+       ============================ */
+    .main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* ============================
+       SUMMARY STATS
+       ============================ */
+    .summary-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .stat-value.stage { color: var(--stage-1); }
+    .stat-value.prob { color: var(--sas-green); }
+
+    /* ============================
+       FILTERS
+       ============================ */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+      padding: 12px 16px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+    }
+
+    .filter-btn {
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+    .filter-btn .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* ============================
+       TIMELINE
+       ============================ */
+    .timeline-section {
+      margin-bottom: 40px;
+    }
+
+    .timeline-section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .timeline-section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .timeline-section-count {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 12px;
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: var(--timeline-line);
+    }
+
+    /* ============================
+       TIMELINE ENTRY
+       ============================ */
+    .timeline-entry {
+      position: relative;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.3s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -25px;
+      top: 12px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--timeline-dot);
+      border: 3px solid var(--timeline-dot-border);
+      box-shadow: 0 0 0 2px var(--timeline-line);
+      z-index: 1;
+    }
+
+    .timeline-entry[data-type="outreach"] .timeline-dot { background: var(--type-outreach); }
+    .timeline-entry[data-type="meeting"] .timeline-dot { background: var(--type-meeting); }
+    .timeline-entry[data-type="document"] .timeline-dot { background: var(--type-document); }
+    .timeline-entry[data-type="evidence"] .timeline-dot { background: var(--type-evidence); }
+    .timeline-entry[data-type="decision"] .timeline-dot { background: var(--type-decision); }
+    .timeline-entry[data-type="milestone"] .timeline-dot { background: var(--type-milestone); }
+    .timeline-entry[data-type="blocker"] .timeline-dot { background: var(--type-blocker); }
+
+    .timeline-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .timeline-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .timeline-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .timeline-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .timeline-date {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .timeline-stage-badge {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: rgba(59, 130, 246, 0.1);
+      color: var(--stage-1);
+    }
+
+    .timeline-stage-badge[data-stage="1"] { background: rgba(59, 130, 246, 0.1); color: var(--stage-1); }
+    .timeline-stage-badge[data-stage="2"] { background: rgba(139, 92, 246, 0.1); color: var(--stage-2); }
+    .timeline-stage-badge[data-stage="3"] { background: rgba(236, 72, 153, 0.1); color: var(--stage-3); }
+    .timeline-stage-badge[data-stage="4"] { background: rgba(245, 158, 11, 0.1); color: var(--stage-4); }
+    .timeline-stage-badge[data-stage="5"] { background: rgba(16, 185, 129, 0.1); color: var(--stage-5); }
+    .timeline-stage-badge[data-stage="6"] { background: rgba(6, 182, 212, 0.1); color: var(--stage-6); }
+
+    .timeline-type-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .timeline-type-badge[data-type="outreach"] { background: rgba(59, 130, 246, 0.1); color: var(--type-outreach); }
+    .timeline-type-badge[data-type="meeting"] { background: rgba(139, 92, 246, 0.1); color: var(--type-meeting); }
+    .timeline-type-badge[data-type="document"] { background: rgba(245, 158, 11, 0.1); color: var(--type-document); }
+    .timeline-type-badge[data-type="evidence"] { background: rgba(16, 185, 129, 0.1); color: var(--type-evidence); }
+    .timeline-type-badge[data-type="decision"] { background: rgba(236, 72, 153, 0.1); color: var(--type-decision); }
+    .timeline-type-badge[data-type="milestone"] { background: rgba(105, 190, 40, 0.1); color: var(--type-milestone); }
+    .timeline-type-badge[data-type="blocker"] { background: rgba(239, 68, 68, 0.1); color: var(--type-blocker); }
+
+    .timeline-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .timeline-description {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .timeline-details {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--bg-secondary);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-top: 10px;
+    }
+
+    .timeline-details strong { color: var(--text-secondary); }
+
+    .timeline-outcome {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .timeline-outcome.success { color: var(--type-evidence); }
+    .timeline-outcome.pending { color: var(--type-document); }
+    .timeline-outcome.blocked { color: var(--type-blocker); }
+
+    /* ============================
+       STAGE TRANSITION
+       ============================ */
+    .stage-transition {
+      background: linear-gradient(135deg, var(--accent-subtle), transparent);
+      border-left: 4px solid var(--accent);
+      margin: 32px 0;
+      padding: 16px 20px;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .stage-transition-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .stage-transition-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .stage-transition-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stage-transition-details {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* ============================
+       EMPTY STATE
+       ============================ */
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+    }
+
+    /* ============================
+       FOOTER
+       ============================ */
+    .footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--card-border);
+      padding: 16px 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ============================
+       PRINT STYLES
+       ============================ */
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .header { position: static; }
+      .theme-toggle, .filters { display: none; }
+      .timeline-card { break-inside: avoid; }
+    }
+
+    /* ============================
+       RESPONSIVE
+       ============================ */
+    @media (max-width: 768px) {
+      .summary-stats { grid-template-columns: repeat(2, 1fr); }
+      .timeline { padding-left: 32px; }
+      .timeline-dot { left: -17px; }
+      .timeline-card { padding: 12px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-marcov">marcov</span>
+        <span class="logo-dot">.</span>
+        <span class="logo-beam">BEAM</span>
+      </div>
+      <span class="header-title">{{COMPANY_NAME}} — Engagement Timeline</span>
+    </div>
+    <div class="header-right">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Summary Stats -->
+    <div class="summary-stats">
+      <div class="stat-card">
+        <div class="stat-value stage">{{CURRENT_STAGE}}</div>
+        <div class="stat-label">Current Stage</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value prob">{{WIN_PROBABILITY}}%</div>
+        <div class="stat-label">Win Probability</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{DAYS_ACTIVE}}</div>
+        <div class="stat-label">Days Active</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ACTIVITY_COUNT}}</div>
+        <div class="stat-label">Activities</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <button class="filter-btn active" data-filter="all">
+        <i class="fa-solid fa-list"></i> All
+      </button>
+      <button class="filter-btn" data-filter="outreach">
+        <span class="dot" style="background: var(--type-outreach)"></span> Outreach
+      </button>
+      <button class="filter-btn" data-filter="meeting">
+        <span class="dot" style="background: var(--type-meeting)"></span> Meetings
+      </button>
+      <button class="filter-btn" data-filter="document">
+        <span class="dot" style="background: var(--type-document)"></span> Documents
+      </button>
+      <button class="filter-btn" data-filter="evidence">
+        <span class="dot" style="background: var(--type-evidence)"></span> Evidence
+      </button>
+      <button class="filter-btn" data-filter="milestone">
+        <span class="dot" style="background: var(--type-milestone)"></span> Milestones
+      </button>
+    </div>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section">
+      <div class="timeline-section-header">
+        <h2 class="timeline-section-title">Activity Timeline</h2>
+        <span class="timeline-section-count">{{ACTIVITY_COUNT}} activities</span>
+      </div>
+
+      <div class="timeline" id="timeline">
+        <!--
+          TEMPLATE: Repeat this block for each activity, ordered by date descending (most recent first)
+          Replace placeholders with actual values from the engagement JSON
+        -->
+
+        <!-- Example: Stage Transition -->
+        <!--
+        <div class="stage-transition">
+          <div class="stage-transition-header">
+            <div class="stage-transition-icon"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="stage-transition-title">Advanced to Stage 2: Diagnose</div>
+          </div>
+          <div class="stage-transition-details">
+            Completed Stage 1 after 5 days. All 3 gates passed with evidence.
+          </div>
+        </div>
+        -->
+
+        <!-- Example: Outreach Activity -->
+        <!--
+        <div class="timeline-entry" data-type="outreach" data-stage="1">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div class="timeline-card-meta">
+                <span class="timeline-date">23 Feb 2026</span>
+                <span class="timeline-stage-badge" data-stage="1">Stage 1</span>
+              </div>
+              <span class="timeline-type-badge" data-type="outreach">
+                <i class="fa-solid fa-paper-plane"></i> Outreach
+              </span>
+            </div>
+            <div class="timeline-title">LinkedIn message sent to James Hicks</div>
+            <div class="timeline-description">
+              Sent personalised connection message referencing AMPEAK2024 conference and requesting coffee catch-up to discuss asset management challenges.
+            </div>
+            <div class="timeline-details">
+              <strong>Channel:</strong> LinkedIn<br>
+              <strong>Recipient:</strong> James Hicks (Group Manager Asset Management)<br>
+              <strong>Message:</strong> "Hi James, Hope you're well! I've been following the Bega consolidation news..."
+            </div>
+            <div class="timeline-outcome pending">
+              <i class="fa-solid fa-clock"></i> Awaiting response
+            </div>
+          </div>
+        </div>
+        -->
+
+        <!-- Example: Document Activity -->
+        <!--
+        <div class="timeline-entry" data-type="document" data-stage="1">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div class="timeline-card-meta">
+                <span class="timeline-date">23 Feb 2026</span>
+                <span class="timeline-stage-badge" data-stage="1">Stage 1</span>
+              </div>
+              <span class="timeline-type-badge" data-type="document">
+                <i class="fa-solid fa-file-lines"></i> Document
+              </span>
+            </div>
+            <div class="timeline-title">Pilot proposal drafted</div>
+            <div class="timeline-description">
+              Created $35K pilot proposal for 2-3 site asset management maturity assessment (Ridge Street + Tatura + optional Strathmerton).
+            </div>
+            <div class="timeline-details">
+              <strong>File:</strong> bega-pilot-proposal.html<br>
+              <strong>Scope:</strong> 5 weeks, ISO 55000 assessment, gap analysis, improvement roadmap
+            </div>
+            <div class="timeline-outcome success">
+              <i class="fa-solid fa-check-circle"></i> Complete
+            </div>
+          </div>
+        </div>
+        -->
+
+        <!-- Example: Meeting Activity -->
+        <!--
+        <div class="timeline-entry" data-type="meeting" data-stage="2">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div class="timeline-card-meta">
+                <span class="timeline-date">28 Feb 2026</span>
+                <span class="timeline-stage-badge" data-stage="2">Stage 2</span>
+              </div>
+              <span class="timeline-type-badge" data-type="meeting">
+                <i class="fa-solid fa-users"></i> Meeting
+              </span>
+            </div>
+            <div class="timeline-title">Discovery call with James Hicks</div>
+            <div class="timeline-description">
+              30-minute Teams call to discuss current asset management challenges and explore fit for pilot engagement.
+            </div>
+            <div class="timeline-details">
+              <strong>Attendees:</strong> James Hicks (Bega), Shane (SAS-AM)<br>
+              <strong>Duration:</strong> 30 minutes<br>
+              <strong>Key topics:</strong> Strathmerton consolidation, Pilz recommendations, AM maturity gaps
+            </div>
+            <div class="timeline-outcome success">
+              <i class="fa-solid fa-check-circle"></i> Meeting held — agreed to follow-up with Nick Williams
+            </div>
+          </div>
+        </div>
+        -->
+
+        <!-- Example: Evidence Activity -->
+        <!--
+        <div class="timeline-entry" data-type="evidence" data-stage="2">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div class="timeline-card-meta">
+                <span class="timeline-date">28 Feb 2026</span>
+                <span class="timeline-stage-badge" data-stage="2">Stage 2</span>
+              </div>
+              <span class="timeline-type-badge" data-type="evidence">
+                <i class="fa-solid fa-clipboard-check"></i> Evidence
+              </span>
+            </div>
+            <div class="timeline-title">Problem articulated: "Thousands of Pilz recommendations with no prioritisation"</div>
+            <div class="timeline-description">
+              James confirmed during discovery call that they have ~3,000 safety recommendations from Pilz with no systematic way to prioritise them by business risk or available capital.
+            </div>
+            <div class="timeline-details">
+              <strong>Source:</strong> Discovery call with James Hicks<br>
+              <strong>Quote:</strong> "We've got thousands of recommendations and no idea where to start. Everything feels urgent."<br>
+              <strong>Gate supported:</strong> problems_articulated
+            </div>
+            <div class="timeline-outcome success">
+              <i class="fa-solid fa-shield-check"></i> Gate evidence captured
+            </div>
+          </div>
+        </div>
+        -->
+
+        <!-- Example: Milestone Activity -->
+        <!--
+        <div class="timeline-entry" data-type="milestone" data-stage="1">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <div class="timeline-card-header">
+              <div class="timeline-card-meta">
+                <span class="timeline-date">23 Feb 2026</span>
+                <span class="timeline-stage-badge" data-stage="1">Stage 1</span>
+              </div>
+              <span class="timeline-type-badge" data-type="milestone">
+                <i class="fa-solid fa-flag"></i> Milestone
+              </span>
+            </div>
+            <div class="timeline-title">Engagement initiated from B2B research dossier</div>
+            <div class="timeline-description">
+              New BEAM engagement created for Bega Group. Research dossier showed Fit: 5/5, Timing: 5/5, Priority: HIGH.
+            </div>
+            <div class="timeline-outcome success">
+              <i class="fa-solid fa-check-circle"></i> Engagement active
+            </div>
+          </div>
+        </div>
+        -->
+
+        <!-- PLACEHOLDER: Add actual activities here -->
+        {{TIMELINE_ENTRIES}}
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="logo" style="display:inline-flex;align-items:baseline;gap:2px;margin-bottom:8px;">
+      <span class="logo-marcov" style="font-size:12px;">marcov</span>
+      <span class="logo-dot" style="font-size:12px;">.</span>
+      <span class="logo-beam" style="font-size:12px;background:linear-gradient(90deg,#60a5fa,#a78bfa,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">BEAM</span>
+    </div>
+    <br>
+    Timeline generated {{GENERATED_DATE}} | Advance only when evidence earns it
+  </footer>
+
+  <script>
+    /* Theme Management */
+    const STORAGE_KEY = 'beam-timeline-theme';
+
+    function getSystemTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function setTheme(theme) {
+      const resolved = theme === 'system' ? getSystemTheme() : theme;
+      document.documentElement.setAttribute('data-theme', resolved);
+      localStorage.setItem(STORAGE_KEY, theme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    }
+
+    setTheme(localStorage.getItem(STORAGE_KEY) || 'light');
+
+    /* Filtering */
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const timelineEntries = document.querySelectorAll('.timeline-entry');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        timelineEntries.forEach(entry => {
+          if (filter === 'all' || entry.dataset.type === filter) {
+            entry.style.display = 'block';
+          } else {
+            entry.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

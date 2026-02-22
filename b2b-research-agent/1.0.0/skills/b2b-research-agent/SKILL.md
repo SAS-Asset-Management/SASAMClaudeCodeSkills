@@ -907,9 +907,375 @@ For each shortlisted prospect:
 
 ---
 
+## Engagement Timeline Generation
+
+The engagement timeline provides a **chronological view of all activities** related to a prospect. It complements the kanban board by showing the full history of engagement in an easy-to-scan format.
+
+### When to Generate Timeline
+
+Generate or update the timeline HTML file:
+- After initial research dossier is complete
+- When major activities occur (outreach, meetings, documents, decisions)
+- At the end of each engagement session
+- When advancing to a new BEAM stage
+
+### Timeline File Structure
+
+Store the timeline in the engagement directory:
+
+```
+.beam/
+└── engagements/
+    ├── {company}-timeline.html    # Visual timeline (HTML)
+    ├── {company}-kanban.html      # Kanban board (HTML)
+    └── {company}.json             # Engagement state (JSON)
+```
+
+### Timeline Entry Requirements
+
+Each timeline entry MUST include:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `date` | Yes | Specific date in DD MMM YYYY format (e.g., "23 Feb 2026") |
+| `type` | Yes | One of: outreach, meeting, document, evidence, decision, milestone, blocker |
+| `stage` | Yes | BEAM stage number (1-6) |
+| `title` | Yes | Specific action title — NOT generic (see specificity guidelines below) |
+| `description` | Yes | 1-2 sentences explaining what happened |
+| `details` | Recommended | Structured key:value pairs with specifics (channel, recipient, file, etc.) |
+| `outcome` | Recommended | success, pending, or blocked with description |
+
+### Timeline Entry Specificity (CRITICAL)
+
+**BAD (too generic):**
+```
+title: "Outreach to James Hicks"
+description: "Sent message requesting catch-up"
+```
+
+**GOOD (specific and actionable):**
+```
+title: "LinkedIn message sent to James Hicks"
+description: "Sent personalised message referencing AMPEAK2024 conference and Bega consolidation news, requesting coffee catch-up to discuss asset management challenges."
+details:
+  Channel: LinkedIn
+  Recipient: James Hicks (Group Manager Asset Management)
+  Message: "Hi James, Hope you're well! I've been following the Bega consolidation news..."
+outcome: pending — Awaiting response
+```
+
+### Timeline Template
+
+Use `references/engagement-timeline-template.html` as the scaffold. Replace placeholders:
+
+| Placeholder | Value |
+|-------------|-------|
+| `{{COMPANY_NAME}}` | Prospect company name |
+| `{{CURRENT_STAGE}}` | BEAM stage number (1-6) |
+| `{{WIN_PROBABILITY}}` | Current win probability percentage |
+| `{{DAYS_ACTIVE}}` | Days since engagement started |
+| `{{ACTIVITY_COUNT}}` | Total number of timeline entries |
+| `{{GENERATED_DATE}}` | Current date |
+| `{{TIMELINE_ENTRIES}}` | HTML for each timeline entry (see template comments) |
+
+---
+
+## Kanban Board Management
+
+The kanban board visualises current activities and BEAM gate progress. It should be **updated immediately** when activities are proposed, started, completed, or blocked.
+
+### Kanban Update Triggers
+
+Update the kanban board when:
+
+| Trigger | Action |
+|---------|--------|
+| **Research completed** | Add card with status "done" |
+| **Outreach sent** | Add card with status "doing", awaiting response |
+| **Meeting scheduled** | Add card with status "todo", include date |
+| **Meeting held** | Move card to "done", add outcome notes |
+| **Document created** | Add card with status "done", reference file |
+| **Evidence captured** | Add card with status "done", link to gate |
+| **Blocker identified** | Add card with status "blocked", describe issue |
+| **Gate criteria met** | Update gate in JSON, add evidence card |
+| **Stage transition** | Move cards to archive, update stage status |
+
+### Kanban Card Specificity (CRITICAL)
+
+Every kanban card MUST be specific enough that someone reading it understands exactly what happened without needing to investigate further.
+
+**BAD EXAMPLES:**
+
+| Card | Problem |
+|------|---------|
+| "Research complete" | What research? What was found? |
+| "Outreach to James" | What channel? What was said? When? |
+| "Meeting scheduled" | With whom? When? What's the agenda? |
+| "Document created" | What document? Where is it? |
+
+**GOOD EXAMPLES:**
+
+| Card | Why It Works |
+|------|-------------|
+| "B2B dossier ingested — Fit: 5/5, Timing: 5/5, 21 manufacturing sites identified" | Specific outcome, quantified |
+| "LinkedIn message sent to James Hicks 23 Feb — referenced AMPEAK2024, requested coffee" | Channel, date, content summary |
+| "Discovery call scheduled: James Hicks, 28 Feb 2pm AEDT, Teams" | All logistics clear |
+| "Pilot proposal drafted: bega-pilot-proposal.html — $35K, 5 weeks, 2-3 sites" | File reference, commercial terms |
+
+### Card Notes Requirements
+
+The `notes` field on each kanban card should include:
+
+1. **What was done** — specific action taken
+2. **Evidence captured** — any quotes, data, or signals gathered
+3. **Outcome/status** — result of the action
+4. **Next step dependency** — what's waiting on this card
+
+Example:
+```json
+{
+  "id": "1-004",
+  "type": "meeting",
+  "title": "LinkedIn message sent to James Hicks 23 Feb",
+  "status": "doing",
+  "notes": "Sent personalised message via LinkedIn referencing AMPEAK2024 and Bega consolidation. Message: 'Hi James, Hope you're well! I've been following the Bega consolidation news...' Awaiting response. Follow up Day 3 (26 Feb) if no reply. Gate: access_to_authority depends on positive response.",
+  "gate_ref": "access_to_authority",
+  "created_at": "2026-02-23"
+}
+```
+
+### Kanban State Consistency
+
+The kanban board and engagement JSON must stay in sync:
+
+1. **activity_log[]** in JSON should match kanban cards
+2. **timeline.milestones[]** should reflect completed kanban cards
+3. **stages.{stage}.evidence[]** should reference evidence-type cards
+4. **kanban.{stage}.cards[]** should have correct status reflecting JSON state
+
+---
+
+## Activity Update Protocol
+
+When ANY of the following activities occur, you MUST update both the **kanban board** and **timeline**:
+
+### Immediate Update Activities
+
+| Activity | Kanban Update | Timeline Update |
+|----------|---------------|-----------------|
+| **Outreach sent** (email, LinkedIn, call) | Add card: type=meeting, status=doing | Add entry: type=outreach |
+| **Response received** | Update card status to done/blocked | Add entry: type=evidence or blocker |
+| **Meeting scheduled** | Add card: type=meeting, status=todo | Add entry: type=meeting (scheduled) |
+| **Meeting held** | Update card status to done | Add entry: type=meeting (held) |
+| **Document created** | Add card: type=document, status=done | Add entry: type=document |
+| **Evidence captured** | Add card: type=evidence, status=done | Add entry: type=evidence |
+| **Gate criteria met** | Update gate in JSON, add evidence card | Add entry: type=milestone |
+| **Stage transition** | Archive previous stage cards | Add stage-transition block |
+| **Blocker identified** | Add card: type=blocker, status=blocked | Add entry: type=blocker |
+| **Decision made** | Add card: type=evidence, status=done | Add entry: type=decision |
+
+### Update Process
+
+1. **Identify activity type** from the list above
+2. **Capture specifics** — date, channel, participants, content summary, outcome
+3. **Update engagement JSON** — add to `activity_log[]`, update relevant stage, add to `timeline.milestones[]`
+4. **Update kanban HTML** — add/update card in appropriate stage column
+5. **Update timeline HTML** — add entry with full details
+6. **Save all files** — JSON, kanban HTML, timeline HTML
+
+### Session Summary Updates
+
+At the END of every session, update the session log:
+
+```markdown
+# Session Log — {{COMPANY}} — {{DATE}}
+
+## What We Covered
+- [List of activities completed this session]
+
+## Evidence Collected
+| ID | Type | Description | Date | Supports |
+|----|------|-------------|------|----------|
+| ev-XXX | ... | ... | ... | ... |
+
+## Gate Progress
+| Gate | Verdict | Evidence |
+|------|---------|----------|
+| ... | ... | ... |
+
+## Next Steps
+1. [Specific next action with date]
+2. ...
+
+## Current State
+- Stage: X
+- Win Probability: X%
+- Gates Met: X/X
+```
+
+---
+
+## Context Orchestration Protocol (CRITICAL)
+
+Long-running engagements span multiple sessions. Use this protocol to **manage context windows** by saving work to files and resuming cleanly.
+
+### The Problem
+
+- Context windows are limited
+- Sales engagements can span weeks or months
+- Without orchestration, context is lost between sessions
+- Duplicate work occurs when previous context isn't loaded
+
+### The Solution: Save → Clear → Resume Pattern
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  SESSION START                                               │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │ Load Context from Files                               │    │
+│  │ • Read {company}.json                                 │    │
+│  │ • Read latest session log                             │    │
+│  │ • Review kanban board state                           │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                           ▼                                  │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │ Work in Session                                       │    │
+│  │ • Perform activities                                  │    │
+│  │ • Capture evidence                                    │    │
+│  │ • Update state incrementally                          │    │
+│  └─────────────────────────────────────────────────────┘    │
+│                           ▼                                  │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │ Save Context to Files (CRITICAL)                      │    │
+│  │ • Update {company}.json with all changes              │    │
+│  │ • Update kanban HTML with new cards                   │    │
+│  │ • Update timeline HTML with new entries               │    │
+│  │ • Write session log with summary                      │    │
+│  └─────────────────────────────────────────────────────┘    │
+│  SESSION END                                                 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Context Files Structure
+
+```
+{research_directory}/
+├── .beam/
+│   ├── config.json                     # Seller context (persists across all engagements)
+│   ├── engagements/
+│   │   ├── {company}.json              # MASTER STATE — all engagement data
+│   │   ├── {company}-kanban.html       # Visual kanban board
+│   │   └── {company}-timeline.html     # Visual timeline
+│   └── sessions/
+│       ├── {company}-{date}.md         # Session log (one per session)
+│       └── ...
+├── {company}-dossier.html              # Initial research dossier
+├── {company}-proposal.html             # Proposal document (when created)
+└── styles.css                          # Shared styles
+```
+
+### Session Start Protocol
+
+When resuming an engagement, ALWAYS:
+
+1. **Read the master JSON file** — `{company}.json` contains full state
+2. **Read the latest session log** — understand where we left off
+3. **Review current kanban state** — what's in progress, blocked, or completed
+4. **Summarise context for user** — "Last session we... Next steps were..."
+
+Example prompt to user:
+```
+📋 **Resuming Bega Group engagement**
+
+**Last session (23 Feb 2026):**
+- LinkedIn message sent to James Hicks
+- Pilot proposal drafted ($35K, 5 weeks)
+- Conversation prep materials created
+
+**Current state:**
+- Stage: 1 — Qualify (1/3 gates passed)
+- Win probability: 10%
+- Pending: Awaiting James Hicks response
+
+**Next steps from last session:**
+1. Wait for James response
+2. Follow up Day 3 (26 Feb) if no reply
+3. Send value-add content Day 7
+
+**What would you like to do?**
+```
+
+### Session End Protocol (CRITICAL)
+
+At the END of every session, ALWAYS:
+
+1. **Update master JSON** — capture ALL changes to engagement state
+2. **Update kanban HTML** — reflect current card states
+3. **Update timeline HTML** — add all activities from this session
+4. **Write session log** — summarise what was done, evidence collected, next steps
+5. **Confirm save** — tell the user files have been updated
+
+Example:
+```
+✅ **Session saved**
+
+Updated files:
+- `.beam/engagements/bega-group.json` — engagement state
+- `.beam/engagements/bega-group-kanban.html` — 2 cards updated
+- `.beam/engagements/bega-group-timeline.html` — 3 entries added
+- `.beam/sessions/bega-group-2026-02-26.md` — session log
+
+**Pick up next session by reading the session log.**
+```
+
+### Activity Checkpoints
+
+Some activities are natural checkpoints where you should save context:
+
+| Activity | Save? | Rationale |
+|----------|-------|-----------|
+| Research dossier complete | **Yes** | Major deliverable, captures all discovery work |
+| Outreach sent | **Yes** | Activity logged, waiting for external response |
+| Meeting completed | **Yes** | Evidence captured, next steps defined |
+| Stage transition | **Yes** | Major milestone, previous stage archived |
+| Document created | **Yes** | Asset saved to file system |
+| Proposal delivered | **Yes** | Critical commercial milestone |
+| User requests pause | **Yes** | Explicit checkpoint requested |
+
+### Loading Previous Context
+
+When loading context, prioritise files in this order:
+
+1. **`{company}.json`** — master state (most authoritative)
+2. **Latest session log** — recent activity summary
+3. **Kanban board** — visual state verification
+4. **Timeline** — chronological activity history
+
+### Minimal Context for Resume
+
+To resume an engagement with minimal context load, read:
+
+```json
+{
+  "current_stage": 1,
+  "win_probability": 10,
+  "last_session": "2026-02-23",
+  "gates_met": ["problem_domain_identified"],
+  "gates_pending": ["access_to_authority", "willing_to_diagnose"],
+  "last_activity": "LinkedIn outreach to James Hicks",
+  "next_steps": ["Await response", "Follow up Day 3"]
+}
+```
+
+This summary can be extracted from the master JSON and presented to the user without loading full context.
+
+---
+
 ## Checklist
 
-Before delivering research, verify:
+### Research Delivery Checklist
+
+Before delivering initial research, verify:
 
 - [ ] Discovery interview completed and ICP confirmed
 - [ ] Research scope and scoring rubric agreed
@@ -929,3 +1295,54 @@ Before delivering research, verify:
 - [ ] HTML report: all placeholder values replaced
 - [ ] HTML report: score badges and priority badges display correctly
 - [ ] Output delivered in requested format (HTML default, Markdown if requested)
+
+### Kanban Board Checklist
+
+When updating the kanban board, verify:
+
+- [ ] All card titles are **specific** (include date, channel, recipient, content summary)
+- [ ] Card notes explain what was done, evidence captured, and outcome
+- [ ] Card status is accurate (todo, doing, done, blocked)
+- [ ] Gate references are linked for evidence-type cards
+- [ ] Stage progress bar reflects current gate criteria state
+- [ ] Activity log in JSON matches kanban cards
+- [ ] No generic card titles like "Outreach sent" or "Meeting held"
+
+### Timeline Checklist
+
+When generating/updating timeline, verify:
+
+- [ ] All entries have specific dates (DD MMM YYYY format)
+- [ ] Entry types are correctly categorised (outreach, meeting, document, evidence, milestone, blocker)
+- [ ] Entry titles are specific (not generic)
+- [ ] Details section includes channel, recipients, content summary
+- [ ] Outcomes are marked (success, pending, blocked)
+- [ ] Stage transitions are highlighted as separate blocks
+- [ ] Filters work correctly
+- [ ] Entry count matches actual activities
+
+### Session End Checklist (CRITICAL)
+
+Before ending ANY session, verify:
+
+- [ ] Master JSON file updated with all engagement changes
+- [ ] Kanban HTML updated with new/modified cards
+- [ ] Timeline HTML updated with all activities from this session
+- [ ] Session log written with:
+  - [ ] What was covered
+  - [ ] Evidence collected (table format)
+  - [ ] Gate progress
+  - [ ] Next steps with dates
+  - [ ] Current state summary
+- [ ] User informed of saved files and how to resume
+
+### Session Start Checklist
+
+When resuming an engagement, verify:
+
+- [ ] Master JSON file read and state understood
+- [ ] Latest session log read for context
+- [ ] User briefed on last session summary
+- [ ] Current state presented (stage, win probability, gates, pending activities)
+- [ ] Next steps from last session reviewed
+- [ ] User asked what they want to do this session
