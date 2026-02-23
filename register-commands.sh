@@ -24,8 +24,8 @@ find "${SCRIPT_DIR}" -name "SKILL.md" -type f | while read -r skill_file; do
     # Extract the skill directory (parent of SKILL.md)
     skill_dir="$(dirname "${skill_file}")"
 
-    # Extract skill name from YAML frontmatter
-    skill_name=$(grep -m1 "^name:" "${skill_file}" | sed 's/^name:[[:space:]]*//')
+    # Extract skill name from YAML frontmatter (strip any carriage returns from CRLF files)
+    skill_name=$(grep -m1 "^name:" "${skill_file}" | sed 's/^name:[[:space:]]*//' | tr -d '\r')
 
     if [ -z "${skill_name}" ]; then
         echo "  SKIP: ${skill_file} (no name in frontmatter)"

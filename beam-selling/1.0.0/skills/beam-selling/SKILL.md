@@ -984,6 +984,17 @@ The skill responds to these commands within a session:
 
 The skill maintains an interactive kanban dashboard that visualises activities and progress across all 6 BEAM stages. The board is regenerated as a self-contained HTML file at the end of **every session**.
 
+### Kanban as Source of Truth (CRITICAL)
+
+The kanban HTML file is the **primary user-facing deliverable** for engagement tracking. It MUST:
+
+1. **Always reflect current state** — Every activity, card, gate status, and evidence must be visible
+2. **Be updated at every session end** — Never leave a session without regenerating the kanban
+3. **Be specific** — Card titles must describe exactly what happened, not generic labels
+4. **Match the JSON** — The kanban HTML and engagement JSON must always be in sync
+
+If the user says "I don't see my changes" — the kanban HTML was not properly updated. Regenerate it immediately.
+
 ### How It Works
 
 1. **During the session**: As activities happen (research, meetings, evidence captured, stakeholders identified, blockers raised, questions opened), the skill adds **cards** to the `kanban` property in the engagement JSON
@@ -997,11 +1008,17 @@ When generating the kanban HTML (at session end or on `board` command):
 ```
 1. Read the engagement JSON from .beam/engagements/<company>.json
 2. Read the template from references/kanban-board.html
-3. Insert a <script> tag before the closing </body>:
-   <script>const BEAM_DATA = { ...engagement JSON... };</script>
+3. Insert a <script> tag BEFORE the main board script (not after):
+   <script>
+   // BEAM engagement data - must be defined before renderBoard()
+   // Using var to make it globally accessible to subsequent script tags
+   var BEAM_DATA = { ...engagement JSON... };
+   </script>
 4. Write the combined file to .beam/engagements/<company>-kanban.html
 5. Report the file path to the user
 ```
+
+**IMPORTANT**: Use `var BEAM_DATA` NOT `const BEAM_DATA`. The `const` keyword creates a script-scoped variable that won't be visible to other script tags. Using `var` ensures the data is globally accessible.
 
 ### Card Types
 
