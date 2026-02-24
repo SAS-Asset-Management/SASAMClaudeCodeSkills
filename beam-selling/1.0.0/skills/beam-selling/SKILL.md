@@ -1083,7 +1083,7 @@ Each card in the `kanban` state follows this structure:
 |-------|------|-------------|
 | `id` | string | Stage number prefix + sequential number (e.g., `1-001`, `2-003`) |
 | `type` | enum | `research`, `meeting`, `evidence`, `document`, `stakeholder`, `blocker`, `question` |
-| `icon` | string | Display icon: `R`, `M`, `E`, `D`, `S`, `!`, `?` |
+| `icon` | string | Display icon: R, M, E, D, S, !, ? |
 | `title` | string | Short card title (max 40 chars) |
 | `status` | enum | `todo`, `doing`, `done`, `blocked` |
 | `created_at` | date | When the card was created |
