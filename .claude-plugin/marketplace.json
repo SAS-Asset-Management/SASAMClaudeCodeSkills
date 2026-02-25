@@ -66,6 +66,16 @@
       "keywords": ["tenders", "procurement", "bid-no-bid", "opportunity-assessment", "government", "victorian-tenders"],
       "category": "business-development",
       "tags": ["tenders", "procurement", "pursuit", "assessment"]
+    },
+    {
+      "name": "push-notifications",
+      "source": "./push-notifications/1.0.0",
+      "description": "Send push notifications via Microsoft Teams webhook and macOS desktop notifications. Use when workflows complete, errors occur, tasks need attention, or other skills finish.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["notifications", "teams", "webhook", "alerts", "desktop", "terminal-notifier", "workflow"],
+      "category": "productivity",
+      "tags": ["notifications", "teams", "desktop", "alerts", "workflow"]
     }
   ]
 }

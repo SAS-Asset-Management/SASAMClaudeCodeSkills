@@ -1,0 +1,12 @@
+{
+  "name": "push-notifications",
+  "description": "Send push notifications via Microsoft Teams webhook and macOS desktop notifications. Use when workflows complete, errors occur, tasks need attention, or other skills finish. Supports integration events and custom alerts.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "homepage": "https://github.com/scrivo21/SASAMClaudeCodeSkills",
+  "repository": "https://github.com/scrivo21/SASAMClaudeCodeSkills",
+  "license": "MIT",
+  "keywords": ["notifications", "teams", "webhook", "alerts", "desktop", "terminal-notifier", "workflow", "integration"]
+}
