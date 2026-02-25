@@ -1,0 +1,205 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Tender Assessment Output",
+  "description": "Comprehensive JSON output from tender assessment skill",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Assessment run metadata",
+      "properties": {
+        "generated_at": { "type": "string", "format": "date-time" },
+        "source": { "type": "string", "default": "tenders.vic.gov.au" },
+        "date_range": {
+          "type": "object",
+          "properties": {
+            "from": { "type": "string" },
+            "to": { "type": "string" }
+          }
+        },
+        "filters_applied": {
+          "type": "object",
+          "properties": {
+            "keywords": { "type": "array", "items": { "type": "string" } },
+            "opened_today": { "type": "boolean" },
+            "tender_state": { "type": "string" }
+          }
+        },
+        "scoring_version": { "type": "string" }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "description": "High-level assessment summary",
+      "properties": {
+        "total_scraped": { "type": "integer" },
+        "total_after_keyword_filter": { "type": "integer" },
+        "shortlisted": { "type": "integer" },
+        "flagged_for_review": { "type": "integer" },
+        "auto_declined": { "type": "integer" },
+        "recommendation": { "type": "string" }
+      }
+    },
+    "tenders": {
+      "type": "array",
+      "description": "All assessed tenders with full details",
+      "items": {
+        "type": "object",
+        "properties": {
+          "raw": {
+            "type": "object",
+            "description": "Raw scraped data",
+            "properties": {
+              "id": { "type": "string" },
+              "rfx_number": { "type": "string" },
+              "title": { "type": "string" },
+              "issuer": { "type": "string" },
+              "tender_type": { "type": "string" },
+              "status": { "type": "string" },
+              "categories": { "type": "array", "items": { "type": "string" } },
+              "date_opened": { "type": "string" },
+              "date_closing": { "type": "string" },
+              "url": { "type": "string" },
+              "scraped_at": { "type": "string", "format": "date-time" },
+              "matched_keywords": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "scoring": {
+            "type": "object",
+            "description": "Detailed scoring breakdown",
+            "properties": {
+              "total_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+              "threshold_met": { "type": "boolean" },
+              "decision": { "type": "string", "enum": ["SHORTLIST", "REVIEW", "DECLINE", "AUTO-DECLINE"] },
+              "dimensions": {
+                "type": "object",
+                "properties": {
+                  "domain_fit": {
+                    "type": "object",
+                    "properties": {
+                      "score": { "type": "integer" },
+                      "max": { "type": "integer", "default": 30 },
+                      "rationale": { "type": "string" }
+                    }
+                  },
+                  "industry_match": {
+                    "type": "object",
+                    "properties": {
+                      "score": { "type": "integer" },
+                      "max": { "type": "integer", "default": 25 },
+                      "rationale": { "type": "string" }
+                    }
+                  },
+                  "service_type": {
+                    "type": "object",
+                    "properties": {
+                      "score": { "type": "integer" },
+                      "max": { "type": "integer", "default": 20 },
+                      "rationale": { "type": "string" }
+                    }
+                  },
+                  "strategic_value": {
+                    "type": "object",
+                    "properties": {
+                      "score": { "type": "integer" },
+                      "max": { "type": "integer", "default": 15 },
+                      "rationale": { "type": "string" }
+                    }
+                  },
+                  "competitive_position": {
+                    "type": "object",
+                    "properties": {
+                      "score": { "type": "integer" },
+                      "max": { "type": "integer", "default": 10 },
+                      "rationale": { "type": "string" }
+                    }
+                  }
+                }
+              },
+              "auto_decline_reason": { "type": "string", "description": "If auto-declined, the triggering pattern" }
+            }
+          },
+          "analysis": {
+            "type": "object",
+            "description": "Synthesized analysis (for shortlisted/review tenders)",
+            "properties": {
+              "fit_summary": { "type": "string" },
+              "key_strengths": { "type": "array", "items": { "type": "string" } },
+              "key_risks": { "type": "array", "items": { "type": "string" } },
+              "recommended_action": { "type": "string" },
+              "days_until_closing": { "type": "integer" },
+              "urgency": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] }
+            }
+          }
+        }
+      }
+    },
+    "shortlist_details": {
+      "type": "array",
+      "description": "Extended details for shortlisted tenders only",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tender_id": { "type": "string" },
+          "pursuit_recommendation": {
+            "type": "object",
+            "properties": {
+              "decision": { "type": "string", "enum": ["PURSUE", "PURSUE_WITH_CAUTION", "REVIEW_FURTHER"] },
+              "win_probability": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"] },
+              "estimated_effort_hours": { "type": "integer" },
+              "strategic_importance": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"] }
+            }
+          },
+          "competitive_positioning": {
+            "type": "object",
+            "properties": {
+              "differentiators": { "type": "array", "items": { "type": "string" } },
+              "win_themes": { "type": "array", "items": { "type": "string" } },
+              "likely_competitors": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "next_steps": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "description": "Aggregate statistics",
+      "properties": {
+        "by_issuer": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        },
+        "by_tender_type": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        },
+        "by_decision": {
+          "type": "object",
+          "properties": {
+            "SHORTLIST": { "type": "integer" },
+            "REVIEW": { "type": "integer" },
+            "DECLINE": { "type": "integer" },
+            "AUTO-DECLINE": { "type": "integer" }
+          }
+        },
+        "auto_decline_reasons": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        },
+        "average_score": { "type": "number" },
+        "score_distribution": {
+          "type": "object",
+          "properties": {
+            "0-19": { "type": "integer" },
+            "20-39": { "type": "integer" },
+            "40-59": { "type": "integer" },
+            "60-79": { "type": "integer" },
+            "80-100": { "type": "integer" }
+          }
+        }
+      }
+    }
+  },
+  "required": ["metadata", "summary", "tenders", "statistics"]
+}

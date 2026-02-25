@@ -1,0 +1,16 @@
+{
+  "name": "tender-assessment",
+  "description": "Scrape Victorian government tenders, score alignment to marcov capabilities, and generate pursuit packages for qualified opportunities",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "license": "MIT",
+  "keywords": [
+    "tenders",
+    "procurement",
+    "bid-no-bid",
+    "opportunity-assessment",
+    "pursuit-strategy"
+  ]
+}

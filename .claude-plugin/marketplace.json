@@ -56,6 +56,16 @@
       "keywords": ["linkedin", "content", "social-media", "asset-management", "thought-leadership", "copywriting"],
       "category": "content-marketing",
       "tags": ["linkedin", "content", "social-media", "thought-leadership"]
+    },
+    {
+      "name": "tender-assessment",
+      "source": "./vicTenders/tender-assessment/1.0.0",
+      "description": "Scrape Victorian government tenders, score alignment to marcov capabilities using weighted matrix, and generate full pursuit packages for opportunities with ≥80% fit.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["tenders", "procurement", "bid-no-bid", "opportunity-assessment", "government", "victorian-tenders"],
+      "category": "business-development",
+      "tags": ["tenders", "procurement", "pursuit", "assessment"]
     }
   ]
 }
