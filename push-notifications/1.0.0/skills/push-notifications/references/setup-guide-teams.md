@@ -46,8 +46,10 @@ If you don't see "Workflows", your organisation may have restricted this feature
 After creation, Teams displays the webhook URL. It looks like:
 
 ```
-https://prod-xx.australiaeast.logic.azure.com:443/workflows/xxxxxxxx/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=XXXXXXXXXX
+https://[tenant-id].ad.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/[workflow-id]/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=[signature]
 ```
+
+The URL format may vary slightly by region, but will typically contain `powerplatform.com` or `logic.azure.com`.
 
 **Important:**
 - Click **Copy** to copy the full URL
