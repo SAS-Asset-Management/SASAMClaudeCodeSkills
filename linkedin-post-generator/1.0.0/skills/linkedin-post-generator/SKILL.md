@@ -1,6 +1,6 @@
 ---
 name: linkedin-post-generator
-description: Generate LinkedIn posts for SAS-AM using brand voice, tone, and content strategy. Use when the user wants to create, draft, or refine a LinkedIn post for SAS-AM's audience of asset management professionals. Supports 7 formats — pillar promotion, quick insight, carousel, SLAY (story-led), confession, this-not-that, and myth vs reality. Interviews the user first to gather real material, then produces all eligible formats in parallel and recommends the strongest.
+description: Generate LinkedIn posts for SAS-AM using brand voice, tone, and content strategy. Use when the user wants to create, draft, or refine a LinkedIn post for SAS-AM's audience of asset management professionals. Supports 8 formats — pillar promotion, quick insight, carousel, SLAY (story-led), confession, this-not-that, myth vs reality, and BABLA (transformation story). Interviews the user first to gather real material, then produces all eligible formats in parallel and recommends the strongest.
 ---
 
 # SAS-AM LinkedIn Post Generator
@@ -12,7 +12,7 @@ Generate LinkedIn posts that sound like a knowledgeable peer — someone who's s
 This skill helps you:
 
 - **Interview first** — gather real stories, confessions, contrasts, and myths before writing a word
-- **Produce all formats in parallel** — SLAY, Confession, This Not That, Myth vs Reality, Pillar Promotion, Quick Insight, and Carousel
+- **Produce all formats in parallel** — SLAY, Confession, This Not That, Myth vs Reality, BABLA (transformation), Pillar Promotion, Quick Insight, and Carousel
 - **Review and recommend** — compare all drafts side by side and pick the strongest for the topic
 - **Nail the hook** — 20-hook library built on 7 psychological triggers and the "I See You" principle
 - **Stay on-brand** — Australian English, no emojis, no hashtags, no corporate waffle, no fabricated stories
@@ -55,6 +55,7 @@ Ask all of the following before any drafting begins:
 6. **Data & evidence**: "Any specific numbers, metrics, or results you can share? These must be real — the skill will not fabricate statistics."
 7. **CTA goal**: "What do you want the reader to do — visit the website, comment, book a call?"
 8. **Related content**: "Is there a website article or resource to link to?"
+9. **Transformation material**: "Have you seen a real before/after transformation — a team, a system, or an organisation that went from a bad state to a measurably better one? What was the before, what was the after, and what made the difference?"
 
 ### Handling Pushback
 
@@ -71,8 +72,9 @@ Catalogue what real material was gathered:
 - Myth identified: yes/no
 - Data/numbers provided: yes/no
 - Article to promote: yes/no
+- Transformation/before-after provided: yes/no
 
-This catalogue determines which formats are eligible for production (see Format Recommendation Engine above).
+This catalogue determines which formats are eligible for production (see Format Recommendation Engine below).
 
 ---
 
@@ -394,6 +396,42 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 
 **Requires from interview**: A specific myth or misconception the user encounters in their work.
 
+### Format 8: BABLA — Transformation Story (Micro Story)
+
+**Origin**: Nathan Baugh's Micro Storytelling framework — a fusion of Before/After/Bridge copywriting and AIDA storytelling principles, used to build millions of impressions on LinkedIn.
+
+**Purpose**: Show a real transformation journey, create aspirational desire, drive saves and comments.
+
+**Length**: 200–400 words.
+
+**Structure**:
+
+```
+[BEFORE — paint the starting state: the pain, the frustration, the status quo before the change]
+
+[AFTER — juxtapose the outcome: what changed, with specific measurable results if possible]
+
+[BRIDGE — how the transformation happened: the decision, the method, the turning point]
+
+[LESSON — the "so what": what you learned, why it matters, the non-obvious insight]
+
+[ACTION — hand the mic: ask the reader if they want the same transformation, or invite them to share their own]
+```
+
+**Rules**:
+- The Before and After MUST come from the user's interview answers — never fabricate outcomes or numbers
+- Start with the Before state to create emotional resonance — the reader should recognise themselves in it ("I see you" principle in action)
+- The After must include at least one specific, concrete outcome: a number, a timeline, or a visible change
+- The Bridge is the most valuable section — it's the "how" that readers save and bookmark. Make it actionable and specific
+- The Lesson should be non-obvious — not just "we improved" but a deeper insight about why the transformation worked
+- Juxtaposition between Before and After creates the tension that keeps readers engaged — put them side by side early
+- The Action ending should make the reader want the same transformation for themselves
+- Keep the Before concise — don't dwell on misery. Get to the After quickly to create the contrast
+
+**Why it works**: Transformation stories tap into aspiration — the reader sees themselves in the Before and wants to reach the After. The Bridge section is highly saveable (bookmarked for reference), which boosts LinkedIn's algorithm distribution. The Before/After contrast creates natural dwell time as readers process the juxtaposition. This format works especially well for SAS-AM because asset management consulting is built on transformation: reactive to predictive, messy data to AI-ready, compliance tick-box to genuine maturity.
+
+**Requires from interview**: A real before/after transformation with measurable outcomes and the steps that made the difference.
+
 ---
 
 ## Format Recommendation Engine
@@ -409,6 +447,7 @@ After the interview, the skill recommends the optimal format based on what mater
 | User identified a myth professionals believe | Myth vs Reality | High shareability, tag-worthy |
 | User has a single focused tip or insight | Quick Insight | Clean, standalone, proven |
 | User has 5+ items to present | Carousel | Visual, one idea per slide |
+| User shared a before/after transformation with measurable outcomes | BABLA (Transformation) | Aspirational, saveable bridge section |
 
 **How the skill uses this table**:
 
@@ -553,6 +592,41 @@ Every post needs a CTA. Match the CTA to the post's goal.
 
 ---
 
+## Output Format: LinkedIn-Ready
+
+When presenting a finished post to the user, format it so it can be copied directly from the terminal and pasted into LinkedIn's post composer with zero reformatting. LinkedIn is a plain-text platform with specific quirks — follow these rules exactly.
+
+### Copy-Paste Rules
+
+1. **No markdown in post output** — do not wrap text in `**bold**`, `_italic_`, `# heading`, or any markdown syntax. LinkedIn renders plain text only. Markdown characters will appear as literal text in the post.
+2. **No code fences** — do not wrap the finished post in triple backticks. Output the post as raw text. Code fence characters (```) will appear as literal text in LinkedIn.
+3. **Use Unicode characters for structure** — use → (U+2192) for arrow lists, and — (U+2014) for em dashes. These render reliably across all devices and operating systems.
+4. **Do not use indentation** — LinkedIn strips leading spaces and tabs. Start every line flush left. Use → at the start of list items instead of spaces or tabs for indentation.
+5. **One blank line between sections** — use a single blank line to separate paragraphs. Do not use multiple consecutive blank lines (LinkedIn collapses them into one).
+6. **Do not use Unicode bold or italic** — do not use Mathematical Alphanumeric Symbol characters (U+1D400–U+1D7FF) for faux bold/italic styling. They break screen readers, are not searchable on LinkedIn, and may not render on older Android devices. Use CAPS sparingly for emphasis instead (one word or short phrase, never whole sentences).
+7. **Hook on its own line** — the first line of the post must stand alone, followed by a blank line. This is what appears before LinkedIn's "see more" truncation.
+8. **Keep the hook under 110 characters** — LinkedIn shows approximately 140 characters on desktop and 110 on mobile before truncating with "see more". Optimise for mobile.
+9. **Present the final post inside a clearly marked copy block** — use visual separators so the user knows exactly what to copy:
+
+```
+--- COPY BELOW THIS LINE ---
+
+[The complete post text goes here — plain text, flush left, ready to paste]
+
+--- END ---
+```
+
+Everything between the markers should paste directly into LinkedIn with zero reformatting needed.
+
+### Why These Rules Matter
+
+- Over 60% of LinkedIn users browse on mobile — formatting must work on small screens
+- LinkedIn's character limit is 3,000 characters. Unicode bold characters consume roughly double the character count of plain text
+- The "see more" click is the single most important conversion point — the hook line determines whether anyone reads the rest
+- Accessibility matters: SAS-AM serves professionals across all demographics, including those using screen readers
+
+---
+
 ## Technical Accuracy
 
 - Always ground claims in reality — if we say AI can do something, it should be genuinely achievable
@@ -580,11 +654,13 @@ ELIGIBLE:
 → Pillar Promotion — article provided
 → SLAY — story about [X] provided
 → This, Not That — contrast between [X] and [Y] provided
+→ BABLA — before/after transformation with outcomes provided
 → Quick Insight — core insight identified
 
 EXCLUDED:
 ✗ Confession — no change-of-mind material provided
 ✗ Myth vs Reality — no specific myth identified
+✗ Carousel — fewer than 5 items to present
 
 RECOMMENDED: SLAY — strongest material for this topic because [reason]
 ```
@@ -768,7 +844,7 @@ Visit sas-am.com
 ### Example 5: SLAY — Story-Led Post
 
 ```
-Last year we ran a maturity assessment for a water utility. Halfway through, their asset manager said something that stopped the room.
+Halfway through a maturity assessment, the asset manager said something that stopped the room.
 
 "We call it predictive maintenance. But if I'm honest, we're just looking at dashboards after things break."
 
@@ -854,6 +930,27 @@ Start small. Pick one critical asset. Clean that data. Build one model. Learn.
 What's the myth about AI in your industry that you wish would go away?
 ```
 
+### Example 9: BABLA — Transformation Story
+
+```
+A water utility was replacing pumps every 7 years — whether they needed it or not.
+
+The result? $2.4M a year on pump maintenance. A third of the replacements were on pumps with years of life left. And the pumps that actually needed attention? They were failing between scheduled replacements, causing service disruptions.
+
+Today, that same utility replaces pumps based on condition. Unplanned pump failures are down 68%. Maintenance spend dropped by $900K in the first year. And their operators trust the system because they helped build it.
+
+Here's what bridged the gap:
+→ They started with their 15 most critical pump stations — not the full fleet
+→ They installed vibration sensors and connected them to their existing SCADA system
+→ A reliability engineer mapped the dominant failure modes for each pump type
+→ They built simple condition-based rules first, then layered in predictive models once the team trusted the data
+→ The maintenance planners were involved from day one — not handed a dashboard after the fact
+
+The lesson most people miss: the technology was the easy part. The hard part was getting the maintenance team to stop doing what they'd always done. That only happened because they were part of the design, not just the rollout.
+
+Has your organisation made a shift like this — from calendar-based to condition-based? What was the hardest part of the transition?
+```
+
 ---
 
 ## Commands
@@ -875,6 +972,7 @@ The skill responds to these in-session commands:
 | `confess` | Rewrite the current topic as a confession post |
 | `contrast` | Rewrite the current topic as a This, Not That comparison |
 | `myth` | Rewrite the current topic as a Myth vs Reality debunking |
+| `bab` | Rewrite the current topic as a BABLA transformation story |
 | `variations` | Generate 2–3 different angles on the same topic |
 | `checklist` | Run the quality checklist against the current draft |
 
