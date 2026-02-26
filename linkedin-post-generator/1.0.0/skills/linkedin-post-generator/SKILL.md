@@ -241,24 +241,74 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 
 The first line is everything on LinkedIn. It determines whether someone taps "see more" or scrolls past.
 
-### Strong Hook Patterns
+### Hook Patterns & Triggers
 
-- **Surprising stat or counterintuitive claim**: Challenge what people assume is true
-- **Direct question**: Make them think before they can scroll
-- **Challenge a common assumption**: Take a position
-- **Promise a specific insight**: Tell them exactly what they'll get
-- **Share a relatable frustration**: Show you understand their world
+Each hook targets a specific psychological trigger that stops the scroll and pulls the reader down the page.
 
-### Strong Hook Examples
+| Pattern | Trigger | Why It Works |
+|---------|---------|--------------|
+| **Uncomfortable truth** | Identity threat | Challenges something the reader does or believes — they HAVE to read to defend or reconsider |
+| **Specific number** | Curiosity gap | A precise figure feels credible and begs "how did they get that?" |
+| **Permission to fail** | Relief | Tells the reader the thing they're struggling with is normal — instant emotional connection |
+| **Confrontation** | Ego engagement | Calls out a common behaviour directly — the reader argues back in their head, then reads on |
+| **Open loop** | Incomplete pattern | Starts a story or claim but withholds the resolution — the brain needs closure |
+| **Status threat** | Fear of being left behind | Implies the reader might be behind their peers — competitive instinct kicks in |
+| **Shared enemy** | Tribal belonging | Names a frustration everyone feels but no one says — creates "finally someone said it" energy |
 
-- "Most AI projects fail before they start. Here's why."
-- "Your risk register is probably useless. Let me explain."
-- "What if I told you the cheapest pump costs three times more?"
-- "The one metric that predicts AI success isn't technical at all."
-- "Every asset manager has asked this question. Few get a straight answer."
-- "We analysed 50 maintenance programmes. Only 3 were actually predictive."
-- "Stop calling it predictive maintenance if you're just running it to failure with a dashboard."
-- "The gap between your CMMS data and reality is bigger than you think."
+### Master Hook Library (20 Hooks)
+
+Use these as-is or adapt them to a specific topic. Each is categorised by trigger type.
+
+**Uncomfortable Truth** — Force a moment of self-reflection
+
+1. "Your maintenance strategy isn't predictive. It's reactive with better reporting."
+2. "That AI pilot your team is proud of? It's never going to production. Here's the pattern."
+3. "Your organisation spent six figures on a CMMS and still runs on spreadsheets. We need to talk about why."
+
+**Specific Number** — Precision creates credibility and curiosity
+
+4. "We reviewed 11 asset management maturity assessments last year. The same 3 gaps appeared in every single one."
+5. "73% of condition data never makes it into a maintenance decision. That's not a technology problem."
+6. "It takes 14 months to go from AI pilot to production in asset management. Most teams quit at month 6."
+
+**Permission to Fail** — Normalise the struggle, earn trust immediately
+
+7. "If your data quality isn't where it needs to be, you're in the majority. And that's actually fine."
+8. "Every asset manager I've worked with has felt this: the backlog grows faster than the team can clear it. You're not failing. The model is."
+9. "Nobody gets ISO 55001 right on the first attempt. Here's what the second attempt usually fixes."
+
+**Confrontation** — Call it out, make them react
+
+10. "Stop blaming the data. The problem is that no one owns data quality — and everyone assumes someone else does."
+11. "Your reliability engineer and your data scientist aren't talking to each other. And it's costing you millions."
+12. "If your asset management strategy fits on one slide, it's a slogan, not a strategy."
+
+**Open Loop** — Start the story, withhold the punchline
+
+13. "We ran one query on a client's CMMS data. What it revealed changed the entire maintenance programme."
+14. "There's a question we ask in every maturity assessment. The answer predicts whether AI will succeed — and it has nothing to do with technology."
+15. "The most expensive asset failure I've seen wasn't caused by a mechanical fault. It was caused by a dropdown menu."
+
+**Status Threat** — Imply the reader might be falling behind
+
+16. "The asset managers who'll thrive in 2027 are building one capability right now. Most haven't started."
+17. "Your peers are already using AI to prioritise maintenance. Not perfectly — but they're learning while you're still debating."
+18. "Three years ago, data quality was a 'nice to have'. Today it's the reason half of asset management AI projects stall before they start."
+
+**Shared Enemy** — Name the frustration everyone feels
+
+19. "Can we agree that most dashboards in asset management exist to make executives feel informed while changing absolutely nothing?"
+20. "The audit is next month. Time to dust off the risk register, update the dates, and pretend it's been a living document all year."
+
+### How to Pick the Right Hook
+
+| If the goal is... | Use this trigger | Because... |
+|-------------------|-----------------|------------|
+| Drive comments and debate | Confrontation, Uncomfortable Truth | People argue back — comments boost reach |
+| Build trust and connection | Permission to Fail, Shared Enemy | Readers feel seen — they share with peers |
+| Drive clicks to an article | Open Loop, Specific Number | Curiosity needs resolution — they'll click |
+| Position as thought leader | Status Threat, Uncomfortable Truth | Shows you see what others miss |
+| Maximise shares and saves | Specific Number, Permission to Fail | Data gets saved; reassurance gets shared |
 
 ### Weak Hooks — Never Use
 
