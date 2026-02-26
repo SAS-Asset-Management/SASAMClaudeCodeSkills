@@ -1,6 +1,6 @@
 ---
 name: linkedin-post-generator
-description: Generate LinkedIn posts for SAS-AM using brand voice, tone, and content strategy. Use when the user wants to create, draft, or refine a LinkedIn post for SAS-AM's audience of asset management professionals. Supports pillar promotion posts, quick insight posts, and carousel/infographic text.
+description: Generate LinkedIn posts for SAS-AM using brand voice, tone, and content strategy. Use when the user wants to create, draft, or refine a LinkedIn post for SAS-AM's audience of asset management professionals. Supports 7 formats — pillar promotion, quick insight, carousel, SLAY (story-led), confession, this-not-that, and myth vs reality. Interviews the user first to gather real material, then produces all eligible formats in parallel and recommends the strongest.
 ---
 
 # SAS-AM LinkedIn Post Generator
@@ -11,11 +11,11 @@ Generate LinkedIn posts that sound like a knowledgeable peer — someone who's s
 
 This skill helps you:
 
-- **Draft LinkedIn posts** in the SAS-AM brand voice — upbeat, clear, tech-forward, and conversational
-- **Choose the right format** — pillar promotion, quick insight, or carousel text
-- **Nail the hook** — first-line craft that earns the "see more" click
-- **Write CTAs that work** — drive traffic, spark discussion, or prompt action
-- **Stay on-brand** — Australian English, no banned words, no corporate waffle
+- **Interview first** — gather real stories, confessions, contrasts, and myths before writing a word
+- **Produce all formats in parallel** — SLAY, Confession, This Not That, Myth vs Reality, Pillar Promotion, Quick Insight, and Carousel
+- **Review and recommend** — compare all drafts side by side and pick the strongest for the topic
+- **Nail the hook** — 20-hook library built on 7 psychological triggers and the "I See You" principle
+- **Stay on-brand** — Australian English, no emojis, no hashtags, no corporate waffle, no fabricated stories
 
 ---
 
@@ -35,17 +35,44 @@ This skill accepts a **topic, theme, or brief** as its primary input. It can als
 
 ---
 
-## Discovery
+## Interview (MANDATORY — No Drafting Without It)
 
-Before drafting, ask the user:
+The skill MUST interview the user before drafting any post. This is non-negotiable.
 
-1. **What's the topic or key message?** — What insight, tip, or argument should the post convey?
-2. **What format?** — Pillar promotion (driving traffic to an article), quick insight (standalone thought leadership), or carousel text?
-3. **What's the CTA goal?** — Drive website traffic, spark discussion, generate leads, or build brand awareness?
-4. **Any specific data points, quotes, or examples to include?**
-5. **Is there a related website article or resource to link to?**
+### Why This Matters
 
-If the user provides enough context in their initial prompt, skip redundant questions and draft directly.
+**The skill never invents stories, quotes, anecdotes, data points, or client experiences.** Every narrative element in a post must come directly from the user's interview answers. If the user hasn't provided a story, the skill does not write a story-led post. If the user hasn't provided a number, the skill does not fabricate one. Authenticity is the brand — and fabrication destroys it.
+
+### Interview Questions
+
+Ask all of the following before any drafting begins:
+
+1. **Topic & message**: "What's the core insight or argument for this post?"
+2. **Story material**: "Do you have a real story, project anecdote, or client experience related to this? What happened, to whom, and what was the outcome?"
+3. **Confession material**: "Is there anything about this topic that you (or the industry) used to get wrong? What changed your thinking?"
+4. **Contrast material**: "What's the common practice you see that doesn't work? What's the better approach and why?"
+5. **Myth material**: "Any myths or misconceptions about this topic that frustrate you? What's the reality?"
+6. **Data & evidence**: "Any specific numbers, metrics, or results you can share? These must be real — the skill will not fabricate statistics."
+7. **CTA goal**: "What do you want the reader to do — visit the website, comment, book a call?"
+8. **Related content**: "Is there a website article or resource to link to?"
+
+### Handling Pushback
+
+If the user says "just draft something" or tries to skip the interview:
+
+> "I need real material to work with — the best posts come from real experiences, not invented ones. Let me ask you a few quick questions to surface the good stuff. This takes 2 minutes and makes the difference between a post that sounds like everyone else's and one that sounds like yours."
+
+### After the Interview
+
+Catalogue what real material was gathered:
+- Stories provided: yes/no
+- Confession/change-of-mind provided: yes/no
+- Contrast (common practice vs better way) provided: yes/no
+- Myth identified: yes/no
+- Data/numbers provided: yes/no
+- Article to promote: yes/no
+
+This catalogue determines which formats are eligible for production (see Format Recommendation Engine above).
 
 ---
 
@@ -235,6 +262,161 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 - Write the text only; visual design is handled separately
 - Final slide should prompt action (follow, visit website, comment)
 
+### Format 4: SLAY — Story-Led Post
+
+**Origin**: Adapted from Lara Acosta's SLAY framework (tens of millions of impressions on LinkedIn).
+
+**Purpose**: Build trust through shared experience, maximise dwell time, earn comments.
+
+**Length**: 200–400 words.
+
+**Structure**:
+
+```
+[STORY — open with a real moment: a project, a conversation, a failure, a surprise]
+
+[LESSON — what you learned from it, stated plainly]
+
+[ACTIONABLE — one thing the reader can do or think about differently]
+
+[YOU — hand the mic to the reader: ask for their experience]
+```
+
+**Rules**:
+- The story MUST come from the user's interview answers — never fabricate
+- Start in the middle of the action, not with background context
+- The lesson should feel earned, not preachy
+- The "You" ending must be a genuine question, not a throwaway "thoughts?"
+- Keep the story to 40% of the post, the lesson and action to 40%, the "You" to 20%
+
+**Why it works**: Story-driven posts maximise dwell time — the #1 algorithm signal in 2026. The "You" ending drives comments, which are weighted 8x more than likes by LinkedIn's algorithm.
+
+**Requires from interview**: A real story, anecdote, or project experience.
+
+### Format 5: Confession — "I Was Wrong About..."
+
+**Origin**: Adapted from the PAS (Problem–Agitate–Solution) copywriting framework for LinkedIn.
+
+**Purpose**: Build trust through vulnerability, position against vendor-speak, drive comments.
+
+**Length**: 200–400 words.
+
+**Structure**:
+
+```
+[ADMISSION — state what you were wrong about, plainly and specifically]
+
+[WHAT I USED TO BELIEVE — describe the old thinking and why it seemed reasonable]
+
+[WHAT CHANGED MY MIND — the experience, data, or moment that shifted your view]
+
+[THE REAL LESSON — what you now understand to be true]
+
+[WHAT ABOUT YOU — ask the reader what they've changed their mind about]
+```
+
+**Rules**:
+- The confession MUST be genuine — sourced from the user's interview answers
+- The "what I used to believe" must be something the reader might also believe right now — that's the hook
+- The pivot moment should be specific: a project, a conversation, a data point
+- Don't be self-deprecating — be matter-of-fact. "I was wrong" is stronger than "I feel so silly"
+- End with a real question that invites the reader to share their own confession
+
+**Why it works**: Admitting mistakes is the opposite of vendor-speak. Vulnerability builds trust instantly. The format naturally drives comments because everyone has something they were wrong about.
+
+**Requires from interview**: A genuine change of mind or lesson learned from experience.
+
+### Format 6: This, Not That — Contrarian Comparison
+
+**Origin**: Adapted from Justin Welsh's "relatable enemy" technique and contrarian framework.
+
+**Purpose**: Challenge a common practice with a better alternative, drive agree/disagree engagement.
+
+**Length**: 150–350 words.
+
+**Structure**:
+
+```
+[BOLD CLAIM — state the better approach in one line]
+
+[THE COMMON APPROACH — describe what most people do and why it seems reasonable]
+
+[WHY IT FAILS — specific evidence or experience showing the problem]
+
+[THE BETTER APPROACH — describe what works instead, with evidence]
+
+[WHY THE DIFFERENCE MATTERS — connect to real outcomes]
+
+[QUICK TEST — one question the reader can ask themselves to check which side they're on]
+```
+
+**Rules**:
+- Name the "common approach" specifically — not a straw man
+- Acknowledge why the common approach exists (it's not stupid, it's just incomplete)
+- The "better approach" must be backed by real evidence from the interview
+- The quick test at the end drives comments: readers will answer it
+- Keep the contrast scannable — this format works well with arrow points (→)
+
+**Why it works**: Side-by-side contrast is highly scannable on mobile (72% of LinkedIn users). Contrarian content creates instant "agree or disagree" reactions. The quick test at the end is a low-friction comment prompt.
+
+**Requires from interview**: A common practice the user sees failing, and a better alternative with evidence.
+
+### Format 7: Myth vs Reality — Debunking Post
+
+**Origin**: Documented across multiple LinkedIn content studies as a high-engagement format.
+
+**Purpose**: Debunk a misconception, drive shares and tags, build authority.
+
+**Length**: 150–350 words.
+
+**Structure**:
+
+```
+[NAME THE MYTH — state it plainly, as the reader would have heard it]
+
+[WHY PEOPLE BELIEVE IT — empathise with the reasoning, don't mock it]
+
+[THE REALITY — present the truth with specific evidence]
+
+[WHAT TO DO INSTEAD — actionable alternative]
+
+[CHALLENGE TO READER — ask which myths they've encountered]
+```
+
+**Rules**:
+- The myth must be something professionals genuinely believe — not a straw man
+- Empathise with WHY they believe it before correcting it (this is the "I see you" principle in action)
+- Evidence must be specific: a number, a project result, a standard reference
+- The "what to do instead" should be actionable this week
+- End with a challenge that invites the reader to name their own myth
+
+**Why it works**: Strong save/share behaviour — people tag colleagues who "need to see this". Works across all SAS-AM themes (AI myths, ISO myths, reliability myths, data myths).
+
+**Requires from interview**: A specific myth or misconception the user encounters in their work.
+
+---
+
+## Format Recommendation Engine
+
+After the interview, the skill recommends the optimal format based on what material was gathered. Use this decision table:
+
+| Interview Signal | Recommended Format | Why |
+|-----------------|-------------------|-----|
+| User has a website article to promote | Pillar Promotion | Purpose-built for traffic |
+| User shared a real story or project experience | SLAY | Story-driven, maximises dwell time |
+| User described something they used to believe differently | Confession | Vulnerability builds trust |
+| User named a common practice that doesn't work | This, Not That | Contrast is scannable and drives debate |
+| User identified a myth professionals believe | Myth vs Reality | High shareability, tag-worthy |
+| User has a single focused tip or insight | Quick Insight | Clean, standalone, proven |
+| User has 5+ items to present | Carousel | Visual, one idea per slide |
+
+**How the skill uses this table**:
+
+1. After the interview, map the user's answers to the signals above
+2. List which formats are ELIGIBLE (have enough real material) and which are EXCLUDED (with reason)
+3. Recommend the strongest format with a one-line rationale
+4. Then produce ALL eligible formats in parallel (see Workflow Step 3)
+
 ---
 
 ## Opening Hooks
@@ -383,35 +565,82 @@ Every post needs a CTA. Match the CTA to the post's goal.
 
 ## Workflow
 
-### Step 1: Understand the Brief
+### Step 1: Interview (MANDATORY)
 
-Gather the topic, format, CTA goal, and any supporting material. If the user's prompt is detailed enough, proceed directly.
+Run the full interview (see Interview section above). Do not proceed until the user has answered. Catalogue what real material was gathered.
 
-### Step 2: Draft the Post
+### Step 2: Assess Available Formats
 
-1. Write 2–3 hook options for the user to choose from
-2. Draft the full post using the chosen hook
-3. Apply all voice, tone, and formatting rules
-4. Verify Australian English spelling throughout
-5. Check against banned words and phrases
-6. Confirm no emojis or hashtags are present
+Based on interview answers, determine which formats have enough genuine material:
 
-### Step 3: Review & Refine
+```
+=== Format Eligibility ===
 
-Present the draft and ask:
+ELIGIBLE:
+→ Pillar Promotion — article provided
+→ SLAY — story about [X] provided
+→ This, Not That — contrast between [X] and [Y] provided
+→ Quick Insight — core insight identified
 
-- "Does this capture the message you wanted?"
-- "Any specific data points or examples to swap in?"
-- "Want me to adjust the tone — more provocative, more measured, or more playful?"
-- "Happy with the CTA, or should we try a different angle?"
+EXCLUDED:
+✗ Confession — no change-of-mind material provided
+✗ Myth vs Reality — no specific myth identified
 
-### Step 4: Deliver Variations (Optional)
+RECOMMENDED: SLAY — strongest material for this topic because [reason]
+```
 
-If requested, provide:
+Present this assessment to the user before proceeding.
 
-- **A/B hook variants**: Two different opening lines to test
-- **Long vs short versions**: A concise version and an expanded version
-- **Different angles**: Same topic, different framing (e.g., myth-busting vs. how-to vs. opinion)
+### Step 3: Produce All Eligible Drafts (IN PARALLEL)
+
+Launch a separate subagent for each eligible format using the Task tool. All subagents run simultaneously.
+
+**Each subagent receives**:
+- The full interview answers (all questions and responses)
+- The specific format template (structure, rules, length constraints)
+- The brand voice rules (tone characteristics, Australian English, banned words/phrases, no emojis, no hashtags)
+- The hook library with instruction to select the most appropriate hook trigger for this format
+- The "I See You" principle
+
+**Each subagent independently**:
+1. Selects the best hook trigger for this format and topic
+2. Writes the complete post following the format template
+3. Applies all voice, tone, and formatting rules
+4. Runs the quality checklist
+5. Returns the finished draft
+
+**Every narrative element must trace back to something the user said in the interview.** No fabricated stories, quotes, numbers, or anecdotes.
+
+### Step 4: Review & Rank
+
+When all subagent drafts are complete, present a comparison table:
+
+```
+=== Draft Comparison ===
+
+| # | Format | Hook Used | Strengths | Weaknesses | Rating |
+|---|--------|-----------|-----------|------------|--------|
+| 1 | SLAY | [first line] | Dwell time, emotional connection | Longer, less scannable | A |
+| 2 | This, Not That | [first line] | Scannable, drives debate | Less emotional depth | A- |
+| 3 | Quick Insight | [first line] | Clean, focused | Less distinctive | B+ |
+| 4 | Pillar Promotion | [first line] | Drives traffic | Lower organic engagement | B |
+
+RECOMMENDED: Draft #1 (SLAY)
+→ Reason: [specific rationale for why this draft is strongest for this topic and material]
+```
+
+Then present the recommended draft in full.
+
+### Step 5: Refine the Winner
+
+Present the recommended draft and ask:
+
+- "Does this capture what you wanted to say?"
+- "Anything to adjust — tone, specific details, the CTA?"
+- "Want me to switch to one of the other formats instead?"
+- "Ready to ship, or want me to tighten it up?"
+
+If the user prefers a different draft from Step 4, switch to that one and refine it instead.
 
 ---
 
@@ -432,6 +661,8 @@ Before presenting the final post, verify every item:
 - [ ] Tone is conversational, not corporate
 - [ ] Formatting uses line breaks for readability
 - [ ] Post length matches the chosen format (150–300 for pillar, 150–400 for insight)
+- [ ] Every story, anecdote, and statistic traces back to the user's interview answers — nothing fabricated
+- [ ] Format matches the material available (no story-led post without a real story)
 - [ ] Would a senior asset management professional find this valuable and credible?
 
 ---
@@ -534,6 +765,95 @@ Want the full AI readiness checklist?
 Visit sas-am.com
 ```
 
+### Example 5: SLAY — Story-Led Post
+
+```
+Last year we ran a maturity assessment for a water utility. Halfway through, their asset manager said something that stopped the room.
+
+"We call it predictive maintenance. But if I'm honest, we're just looking at dashboards after things break."
+
+That one sentence changed the entire programme. Because the moment they named it honestly, they could actually fix it.
+
+The lesson: you can't improve what you won't accurately describe. Most organisations have a gap between what they call their maintenance strategy and what actually happens on the ground. Closing that gap starts with one honest conversation.
+
+In practice, the fix wasn't complicated:
+→ They mapped what they were actually doing (mostly reactive with some condition monitoring)
+→ They stopped pretending the dashboards were predictive
+→ They picked 3 critical failure modes and built genuine predictive models around those
+
+Six months later, unplanned downtime on those assets dropped by 31%.
+
+Has your team ever had that moment — where naming the real situation unlocked the fix?
+```
+
+### Example 6: Confession — "I Was Wrong About..."
+
+```
+I used to think data quality was a technical problem.
+
+Bad data? Fix the database. Inconsistent records? Tighten the validation rules. Missing fields? Make them mandatory.
+
+For years, that was my approach. And it worked — for about three months each time.
+
+What changed my mind was a project where we did everything right technically. Clean schema, validation rules, automated checks. Six months later, the data was just as messy as before.
+
+The real lesson: data quality is a people problem that shows up in technical systems.
+
+The maintenance crew didn't trust the CMMS, so they kept their own spreadsheets. The planners didn't understand why certain fields mattered, so they left them blank. Nobody owned data quality as an ongoing discipline — it was everyone's job, which meant it was nobody's job.
+
+The honest answer is that the fix wasn't technical. It was giving one person clear ownership and making data quality part of the daily workflow, not a quarterly cleanup.
+
+What's something you used to believe about asset management that experience changed?
+```
+
+### Example 7: This, Not That — Contrarian Comparison
+
+```
+Don't start with the model. Start with the failure mode.
+
+Most organisations launching AI in asset management begin with the data and the algorithm: "What model should we use? What data do we need?"
+
+That sounds logical. But it fails more often than it works.
+
+Here's why: if you start with the model, you build something technically impressive that nobody uses — because it doesn't connect to how the maintenance team actually makes decisions.
+
+Start with the failure mode instead:
+→ Pick the failure mode that costs you the most (unplanned downtime, safety risk, repair cost)
+→ Understand how it develops — what signals appear before failure?
+→ Ask the maintenance team: "If I could tell you this was about to fail, what would you do differently?"
+→ THEN build the model around that decision
+
+The difference matters. One approach gives you a proof of concept that lives in a notebook. The other gives you a tool the maintenance planner actually opens on Monday morning.
+
+Quick test: does your AI project start with "what model should we use?" or "what failure are we trying to prevent?"
+
+If it's the first one, it might be time to flip the script.
+```
+
+### Example 8: Myth vs Reality — Debunking Post
+
+```
+Myth: You need perfect data before AI can help with asset management.
+
+It's one of the most common reasons organisations delay AI initiatives. "Our data isn't ready." "We need to fix the CMMS first." "Maybe in two years."
+
+And it sounds responsible. Why would you build models on bad data?
+
+Here's the reality: no organisation has perfect data. Not one. The organisations successfully using AI in asset management didn't wait for perfection — they started with what they had and improved the data as part of the AI project, not before it.
+
+What we've found is:
+→ You need good data on your critical assets — not all assets
+→ You need consistent failure coding on target failure modes — not the entire CMMS
+→ You need 2-3 years of history — not decades
+→ You need one person who owns data quality — not a transformation programme
+
+The "we're not ready" story feels safe. But it's often a way to avoid the harder conversation: "we don't know where to start."
+
+Start small. Pick one critical asset. Clean that data. Build one model. Learn.
+
+What's the myth about AI in your industry that you wish would go away?
+```
+
 ---
 
 ## Commands
@@ -542,13 +862,19 @@ The skill responds to these in-session commands:
 
 | Command | Action |
 |---------|--------|
-| `draft` | Generate a new post from the current brief |
+| `interview` | Run the mandatory interview to gather real material |
+| `produce-all` | Generate all eligible formats in parallel, review, and recommend the best |
+| `draft` | Generate a single post from the current brief in a specific format |
 | `hooks` | Generate 3–5 alternative hook options for the current topic |
 | `shorter` | Rewrite the current draft in fewer words |
 | `longer` | Expand the current draft with more detail |
 | `spicier` | Make the current draft more provocative or opinionated |
 | `softer` | Tone down the current draft — less confrontational |
 | `carousel` | Convert the current topic into carousel slide text |
+| `slay` | Rewrite the current topic as a SLAY story-led post |
+| `confess` | Rewrite the current topic as a confession post |
+| `contrast` | Rewrite the current topic as a This, Not That comparison |
+| `myth` | Rewrite the current topic as a Myth vs Reality debunking |
 | `variations` | Generate 2–3 different angles on the same topic |
 | `checklist` | Run the quality checklist against the current draft |
 
