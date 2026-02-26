@@ -257,48 +257,48 @@ Each hook targets a specific psychological trigger that stops the scroll and pul
 
 ### Master Hook Library (20 Hooks)
 
-Use these as-is or adapt them to a specific topic. Each is categorised by trigger type.
+Use these as-is or adapt them to a specific topic. Each is categorised by trigger type. The underlying thread across all hooks: cut through the comfortable narratives and name the hard decisions people are avoiding.
 
 **Uncomfortable Truth** — Force a moment of self-reflection
 
-1. "Your maintenance strategy isn't predictive. It's reactive with better reporting."
-2. "That AI pilot your team is proud of? It's never going to production. Here's the pattern."
-3. "Your organisation spent six figures on a CMMS and still runs on spreadsheets. We need to talk about why."
+1. "Your maintenance strategy isn't strategic. It's a list of things you've always done, dressed up in a new template."
+2. "That AI pilot your team is proud of? It's never going to production. Not because the tech failed — because no one made the hard call to change the process around it."
+3. "Your organisation spent six figures on a CMMS and still runs on spreadsheets. That's not a technology problem. That's a leadership problem no one wants to name."
 
 **Specific Number** — Precision creates credibility and curiosity
 
-4. "We reviewed 11 asset management maturity assessments last year. The same 3 gaps appeared in every single one."
-5. "73% of condition data never makes it into a maintenance decision. That's not a technology problem."
-6. "It takes 14 months to go from AI pilot to production in asset management. Most teams quit at month 6."
+4. "We reviewed 11 asset management maturity assessments last year. The same 3 gaps appeared in every one — and none of them were technical."
+5. "73% of condition data never makes it into a maintenance decision. Not because the data is bad. Because no one decided who's responsible for acting on it."
+6. "It takes 14 months to go from AI pilot to production in asset management. Most teams quit at month 6 — not because it stopped working, but because no one fought for it internally."
 
 **Permission to Fail** — Normalise the struggle, earn trust immediately
 
-7. "If your data quality isn't where it needs to be, you're in the majority. And that's actually fine."
-8. "Every asset manager I've worked with has felt this: the backlog grows faster than the team can clear it. You're not failing. The model is."
-9. "Nobody gets ISO 55001 right on the first attempt. Here's what the second attempt usually fixes."
+7. "If your asset management plan is mostly about keeping things the same with slightly better reporting, that's not a failure. That's where most organisations are. But let's call it what it is."
+8. "Every asset manager I've worked with has felt this: you know what needs to change, but the organisation isn't ready to hear it. You're not failing. You're being blocked by comfort."
+9. "Nobody gets ISO 55001 right on the first attempt. The real question is whether you had the guts to be honest about what your first attempt revealed."
 
 **Confrontation** — Call it out, make them react
 
-10. "Stop blaming the data. The problem is that no one owns data quality — and everyone assumes someone else does."
-11. "Your reliability engineer and your data scientist aren't talking to each other. And it's costing you millions."
-12. "If your asset management strategy fits on one slide, it's a slogan, not a strategy."
+10. "Stop calling it a strategy. If your asset management plan doesn't force you to say no to something, it's just a to-do list with a logo on it."
+11. "Your reliability engineer and your data scientist aren't talking to each other. Everyone knows it. No one's fixing it. Because fixing it means someone has to own it."
+12. "You don't have a data quality problem. You have a decision-avoidance problem that shows up in your data."
 
 **Open Loop** — Start the story, withhold the punchline
 
-13. "We ran one query on a client's CMMS data. What it revealed changed the entire maintenance programme."
-14. "There's a question we ask in every maturity assessment. The answer predicts whether AI will succeed — and it has nothing to do with technology."
-15. "The most expensive asset failure I've seen wasn't caused by a mechanical fault. It was caused by a dropdown menu."
+13. "We asked one question in a maturity assessment last year. The room went quiet. Then the GM said something that changed the entire programme."
+14. "The most expensive asset failure I've seen wasn't caused by a mechanical fault. It was caused by a decision someone didn't want to make three years earlier."
+15. "There's a line item buried in most maintenance budgets that tells you everything about how an organisation actually makes decisions. It's not where you'd expect."
 
 **Status Threat** — Imply the reader might be falling behind
 
-16. "The asset managers who'll thrive in 2027 are building one capability right now. Most haven't started."
-17. "Your peers are already using AI to prioritise maintenance. Not perfectly — but they're learning while you're still debating."
-18. "Three years ago, data quality was a 'nice to have'. Today it's the reason half of asset management AI projects stall before they start."
+16. "The asset managers who'll thrive in 2027 aren't the most technical. They're the ones willing to have the uncomfortable conversations their peers keep deferring."
+17. "Your peers are already using AI to prioritise maintenance. Not because they had better data — because someone in the room made the call to start before it was perfect."
+18. "Three years from now, the gap between organisations that made hard asset decisions in 2026 and those that delayed will be measured in hundreds of millions."
 
 **Shared Enemy** — Name the frustration everyone feels
 
-19. "Can we agree that most dashboards in asset management exist to make executives feel informed while changing absolutely nothing?"
-20. "The audit is next month. Time to dust off the risk register, update the dates, and pretend it's been a living document all year."
+19. "Can we agree that most asset management strategies exist to make executives feel informed while giving everyone permission to avoid the hard trade-offs?"
+20. "The audit is next month. Time to dust off the risk register, update the dates, and pretend it's been a living document all year. Everyone knows. No one says it."
 
 ### How to Pick the Right Hook
 
