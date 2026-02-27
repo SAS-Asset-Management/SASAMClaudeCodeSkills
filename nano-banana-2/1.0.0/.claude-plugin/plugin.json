@@ -1,0 +1,8 @@
+{
+  "name": "nano-banana-2",
+  "description": "Generate images using Google's Nano Banana 2 model with web search grounding",
+  "version": "1.0.0",
+  "author": { "name": "SAS-AM" },
+  "license": "MIT",
+  "keywords": ["image-generation", "gemini", "nano-banana", "google-ai", "text-to-image"]
+}

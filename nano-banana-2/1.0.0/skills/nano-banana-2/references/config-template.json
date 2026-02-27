@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": null,
+  "updated_at": null,
+  "api_key": null,
+  "verified_at": null,
+  "preferences": {
+    "default_aspect_ratio": "16:9",
+    "default_image_size": "2K",
+    "web_search_enabled": true,
+    "output_directory": "./generated-images",
+    "post_processing": {
+      "enabled": true,
+      "target_width": 1000,
+      "max_file_size_kb": 200,
+      "format": "png",
+      "quality": 85
+    }
+  },
+  "statistics": {
+    "total_generated": 0,
+    "last_generated_at": null
+  }
+}
