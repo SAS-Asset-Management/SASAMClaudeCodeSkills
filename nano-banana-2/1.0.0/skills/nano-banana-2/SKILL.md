@@ -377,56 +377,65 @@ compressImage(
 
 ```javascript
 const sharp = require('sharp');
-const path = require('path');
 
-async function postProcess(inputPath, outputPath, watermarkPath) {
-  // Resize watermark to 120px
+async function postProcess(inputPath, outputPath) {
+  const WATERMARK_DARK = './1.0.0/skills/nano-banana-2/assets/sas-logo-dark.png';
+  const WATERMARK_LIGHT = './1.0.0/skills/nano-banana-2/assets/sas-logo-light.png';
+
+  // First resize the image
+  const resized = await sharp(inputPath)
+    .resize(1000, 1000, { fit: 'inside' })
+    .toBuffer({ resolveWithObject: true });
+
+  const { width, height } = resized.info;
+
+  // Analyze bottom-right corner brightness (where watermark will go)
+  const cornerSize = 150;
+  const corner = await sharp(resized.data)
+    .extract({
+      left: width - cornerSize,
+      top: height - cornerSize,
+      width: cornerSize,
+      height: cornerSize
+    })
+    .stats();
+
+  // Calculate average brightness from RGB channels
+  const avgBrightness = (corner.channels[0].mean + corner.channels[1].mean + corner.channels[2].mean) / 3;
+
+  // Choose watermark: light logo for dark backgrounds, dark logo for light backgrounds
+  const isDark = avgBrightness < 128;
+  const watermarkPath = isDark ? WATERMARK_LIGHT : WATERMARK_DARK;
+
+  // Resize watermark preserving transparency
   const watermark = await sharp(watermarkPath)
     .resize(120, 120, { fit: 'inside' })
+    .png()
     .toBuffer();
 
-  // Resize, add watermark, compress to JPG
-  await sharp(inputPath)
-    .resize(1000, 1000, { fit: 'inside' })
-    .composite([{
-      input: watermark,
-      gravity: 'southeast'  // bottom-right corner
-    }])
+  // Composite and output as JPG
+  await sharp(resized.data)
+    .composite([{ input: watermark, gravity: 'southeast' }])
     .jpeg({ quality: 85, mozjpeg: true })
     .toFile(outputPath);
 }
 ```
 
-### One-Liner for Bash Integration
+### Adaptive Watermark Assets
 
-```bash
-node -e "
-const sharp = require('sharp');
-async function run() {
-  const watermark = await sharp('./1.0.0/skills/nano-banana-2/assets/sas-watermark.png')
-    .resize(120, 120, { fit: 'inside' })
-    .toBuffer();
-  await sharp('./generated-images/\${FILENAME}.png')
-    .resize(1000, 1000, { fit: 'inside' })
-    .composite([{ input: watermark, gravity: 'southeast' }])
-    .jpeg({ quality: 85, mozjpeg: true })
-    .toFile('./generated-images/\${FILENAME}.jpg');
-  console.log('Compressed with watermark');
-}
-run();
-"
+Two watermark variants for optimal visibility:
+
+```
+./1.0.0/skills/nano-banana-2/assets/
+├── sas-logo-dark.png   # Dark logo for light backgrounds
+└── sas-logo-light.png  # Light logo for dark backgrounds
 ```
 
-### Watermark Asset
-
-The SAS-AM logo watermark is stored at:
-```
-./1.0.0/skills/nano-banana-2/assets/sas-watermark.png
-```
-
-- Automatically resized to 120x120px during compositing
-- Positioned at bottom-right corner (southeast gravity)
-- Preserves transparency for clean overlay
+**Automatic Selection:**
+- Analyzes brightness of bottom-right corner (150x150px)
+- If brightness < 128: uses **light** watermark
+- If brightness >= 128: uses **dark** watermark
+- Preserves PNG transparency during compositing
 
 ### Post-Processing Workflow
 

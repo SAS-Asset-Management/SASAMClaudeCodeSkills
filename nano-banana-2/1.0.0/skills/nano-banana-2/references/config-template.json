@@ -19,9 +19,11 @@
       "use_mozjpeg": true,
       "watermark": {
         "enabled": true,
-        "path": "./1.0.0/skills/nano-banana-2/assets/sas-watermark.png",
+        "dark_path": "./1.0.0/skills/nano-banana-2/assets/sas-logo-dark.png",
+        "light_path": "./1.0.0/skills/nano-banana-2/assets/sas-logo-light.png",
         "size": 120,
-        "position": "southeast"
+        "position": "southeast",
+        "brightness_threshold": 128
       }
     }
   },
