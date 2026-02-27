@@ -25,6 +25,26 @@ This skill integrates with Google's Gemini API to generate images using the Nano
 - Proposal visuals for beam-selling
 - Standalone creative image generation
 
+---
+
+## ⚠️ MANDATORY: Post-Processing Required
+
+**Every generated image MUST be post-processed before delivery.**
+
+After saving the raw PNG, ALWAYS run:
+```bash
+node ~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.1.0/scripts/post-process.js <input.png> <output_final.jpg>
+```
+
+This adds the SAS logo watermark and optimises the image. **The `_final.jpg` file is what you deliver to the user, NOT the raw PNG.**
+
+DO NOT:
+- Add "watermark" or "SAS logo" to the generation prompt
+- Deliver the raw PNG without post-processing
+- Skip this step for any reason
+
+---
+
 ## Commands
 
 | Command | Action |
@@ -210,10 +230,13 @@ FILENAME="${TIMESTAMP}_${PROMPT_SLUG}"
 # Create output directory if needed
 mkdir -p ./generated-images
 
-# Save image
+# Save raw image
 echo "$IMAGE_DATA" | base64 -d > "./generated-images/${FILENAME}.png"
 
-# Save metadata
+# MANDATORY: Run post-processing to add watermark
+node ~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.1.0/scripts/post-process.js "./generated-images/${FILENAME}.png" "./generated-images/${FILENAME}_final.jpg"
+
+# Save metadata (reference the final watermarked file)
 cat > "./generated-images/${FILENAME}.json" << EOF
 {
   "prompt": "${PROMPT}",
@@ -221,10 +244,13 @@ cat > "./generated-images/${FILENAME}.json" << EOF
   "image_size": "${IMAGE_SIZE}",
   "web_search_enabled": true,
   "generated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "file_path": "./generated-images/${FILENAME}.png"
+  "raw_file": "./generated-images/${FILENAME}.png",
+  "final_file": "./generated-images/${FILENAME}_final.jpg"
 }
 EOF
 ```
+
+**IMPORTANT:** The `_final.jpg` file is the deliverable. Always provide this file path to the user, not the raw PNG.
 
 ---
 
