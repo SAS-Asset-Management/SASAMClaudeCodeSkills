@@ -16,7 +16,13 @@
       "max_file_size_kb": 200,
       "format": "jpg",
       "quality": 85,
-      "use_mozjpeg": true
+      "use_mozjpeg": true,
+      "watermark": {
+        "enabled": true,
+        "path": "./1.0.0/skills/nano-banana-2/assets/sas-watermark.png",
+        "size": 120,
+        "position": "southeast"
+      }
     }
   },
   "statistics": {

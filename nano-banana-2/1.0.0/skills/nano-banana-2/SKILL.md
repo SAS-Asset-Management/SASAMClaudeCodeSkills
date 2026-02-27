@@ -373,27 +373,70 @@ compressImage(
 );
 ```
 
+### Complete Post-Processing Script
+
+```javascript
+const sharp = require('sharp');
+const path = require('path');
+
+async function postProcess(inputPath, outputPath, watermarkPath) {
+  // Resize watermark to 120px
+  const watermark = await sharp(watermarkPath)
+    .resize(120, 120, { fit: 'inside' })
+    .toBuffer();
+
+  // Resize, add watermark, compress to JPG
+  await sharp(inputPath)
+    .resize(1000, 1000, { fit: 'inside' })
+    .composite([{
+      input: watermark,
+      gravity: 'southeast'  // bottom-right corner
+    }])
+    .jpeg({ quality: 85, mozjpeg: true })
+    .toFile(outputPath);
+}
+```
+
 ### One-Liner for Bash Integration
 
 ```bash
 node -e "
 const sharp = require('sharp');
-sharp('./generated-images/${FILENAME}.png')
-  .resize(1000, 1000, { fit: 'inside' })
-  .jpeg({ quality: 85, mozjpeg: true })
-  .toFile('./generated-images/${FILENAME}.jpg')
-  .then(() => console.log('Compressed to JPG'));
+async function run() {
+  const watermark = await sharp('./1.0.0/skills/nano-banana-2/assets/sas-watermark.png')
+    .resize(120, 120, { fit: 'inside' })
+    .toBuffer();
+  await sharp('./generated-images/\${FILENAME}.png')
+    .resize(1000, 1000, { fit: 'inside' })
+    .composite([{ input: watermark, gravity: 'southeast' }])
+    .jpeg({ quality: 85, mozjpeg: true })
+    .toFile('./generated-images/\${FILENAME}.jpg');
+  console.log('Compressed with watermark');
+}
+run();
 "
 ```
+
+### Watermark Asset
+
+The SAS-AM logo watermark is stored at:
+```
+./1.0.0/skills/nano-banana-2/assets/sas-watermark.png
+```
+
+- Automatically resized to 120x120px during compositing
+- Positioned at bottom-right corner (southeast gravity)
+- Preserves transparency for clean overlay
 
 ### Post-Processing Workflow
 
 1. **Generate** raw image from API (2K resolution PNG)
 2. **Save** original PNG to `./generated-images/`
-3. **Compress** to JPG using Sharp with MozJPEG (quality 85)
-4. **Resize** to 1000px (maintains aspect ratio)
-5. **Verify** file size is under 200KB
-6. **Update** metadata JSON with final dimensions and file size
+3. **Resize** to 1000px (maintains aspect ratio)
+4. **Add watermark** SAS logo at bottom-right corner
+5. **Compress** to JPG using Sharp with MozJPEG (quality 85)
+6. **Verify** file size is under 200KB
+7. **Update** metadata JSON with final dimensions and file size
 
 ### Metadata Update After Processing
 
