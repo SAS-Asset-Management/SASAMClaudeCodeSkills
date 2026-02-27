@@ -330,7 +330,7 @@ Each generated image has an accompanying `.json` file:
 
 1. **Run post-processing script** (REQUIRED):
    ```bash
-   node ~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.0.0/scripts/post-process.js <input.png> <output.jpg>
+   node ~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.1.0/scripts/post-process.js <input.png> <output.jpg>
    ```
 2. Report success with the final watermarked file path
 3. Update statistics in config file
@@ -347,7 +347,7 @@ Each generated image has an accompanying `.json` file:
 Run this after every image generation:
 
 ```bash
-node ~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.0.0/scripts/post-process.js ./generated-images/IMAGE.png ./generated-images/IMAGE_final.jpg
+node ~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.1.0/scripts/post-process.js ./generated-images/IMAGE.png ./generated-images/IMAGE_final.jpg
 ```
 
 The script automatically:
@@ -374,7 +374,7 @@ The post-processing script automatically selects the appropriate watermark:
 
 Assets located at:
 ```
-~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.0.0/skills/nano-banana-2/assets/
+~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.1.0/skills/nano-banana-2/assets/
 ├── sas-logo-dark.png   # For light backgrounds
 └── sas-logo-light.png  # For dark backgrounds
 ```
