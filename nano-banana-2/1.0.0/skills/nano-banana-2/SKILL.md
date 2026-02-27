@@ -344,48 +344,55 @@ All generated images are post-processed to ensure optimal file size and dimensio
 |----------|--------|
 | Dimensions | 1000x1000 pixels (or aspect-equivalent) |
 | File Size | Under 200KB |
-| Format | PNG (optimised) or WebP |
+| Format | JPG (MozJPEG optimised) |
 
-### Using Squoosh.app
+### Automated Post-Processing with Sharp
 
-After generating the raw image, use Squoosh for compression:
-
-1. **Open Squoosh**: Navigate to https://squoosh.app in browser
-2. **Upload Image**: Drag and drop the generated PNG
-3. **Resize**: Set width to 1000px (height auto-calculates for aspect ratio)
-4. **Compress**: Use OxiPNG or WebP encoder
-5. **Adjust Quality**: Reduce until file size is under 200KB
-6. **Download**: Save the optimised image
-
-### Automated Post-Processing (CLI)
-
-If ImageMagick is available, resize via command line:
+Use the Sharp library (Node.js) for high-quality compression. Ensure Sharp is installed in the project:
 
 ```bash
-# Resize to 1000px width (maintaining aspect ratio)
-magick "./generated-images/${FILENAME}.png" \
-  -resize 1000x1000 \
-  -quality 85 \
-  "./generated-images/${FILENAME}_optimised.png"
+npm install sharp --save
 ```
 
-For WebP output (smaller file size):
+Then compress images with this Node.js snippet:
+
+```javascript
+const sharp = require('sharp');
+
+async function compressImage(inputPath, outputPath) {
+  await sharp(inputPath)
+    .resize(1000, 1000, { fit: 'inside' })
+    .jpeg({ quality: 85, mozjpeg: true })
+    .toFile(outputPath);
+}
+
+// Usage:
+compressImage(
+  './generated-images/${FILENAME}.png',
+  './generated-images/${FILENAME}.jpg'
+);
+```
+
+### One-Liner for Bash Integration
 
 ```bash
-# Convert to WebP with quality optimisation
-magick "./generated-images/${FILENAME}.png" \
-  -resize 1000x1000 \
-  -quality 80 \
-  "./generated-images/${FILENAME}.webp"
+node -e "
+const sharp = require('sharp');
+sharp('./generated-images/${FILENAME}.png')
+  .resize(1000, 1000, { fit: 'inside' })
+  .jpeg({ quality: 85, mozjpeg: true })
+  .toFile('./generated-images/${FILENAME}.jpg')
+  .then(() => console.log('Compressed to JPG'));
+"
 ```
 
 ### Post-Processing Workflow
 
-1. **Generate** raw image from API (typically 2K resolution)
-2. **Save** original to `./generated-images/`
-3. **Resize** to 1000px width using Squoosh or ImageMagick
-4. **Compress** to under 200KB
-5. **Replace** original with optimised version (or save alongside)
+1. **Generate** raw image from API (2K resolution PNG)
+2. **Save** original PNG to `./generated-images/`
+3. **Compress** to JPG using Sharp with MozJPEG (quality 85)
+4. **Resize** to 1000px (maintains aspect ratio)
+5. **Verify** file size is under 200KB
 6. **Update** metadata JSON with final dimensions and file size
 
 ### Metadata Update After Processing
@@ -395,17 +402,18 @@ magick "./generated-images/${FILENAME}.png" \
   "prompt": "...",
   "original_size": "2048x2048",
   "final_size": "1000x1000",
-  "file_size_kb": 187,
-  "compression": "oxipng",
+  "file_size_kb": 194,
+  "compression": "mozjpeg",
+  "format": "jpg",
   "...": "..."
 }
 ```
 
 ### Quality Guidelines
 
-- **PNG**: Use for images with sharp edges, text, or transparency
-- **WebP**: Use for photographic content (smaller file size)
-- **Target Quality**: 80-85% produces good balance of quality and size
+- **JPG (MozJPEG)**: Default for all photographic content - best size/quality ratio
+- **Quality 85**: Optimal balance of quality and file size
+- **PNG**: Only use when transparency is required
 
 ---
 
@@ -597,6 +605,37 @@ After generation:
 - Specify lighting, mood, and composition
 - Reference time of day, weather, or environment
 - For infographics, describe the data story and visual style
+
+### Hyper-Realistic Prompt Enhancement (Default)
+
+For maximum photorealism, automatically enhance user prompts with these modifiers:
+
+**Core Hyper-Realistic Keywords:**
+- `hyperrealistic photograph`
+- `photorealistic, 8K resolution`
+- `professional DSLR photography, Canon EOS R5`
+- `RAW photo style`
+- `shallow depth of field`
+- `cinematic lighting`
+
+**Prompt Enhancement Pattern:**
+
+When the user provides a prompt, prepend hyper-realistic modifiers:
+
+```
+User prompt: "Industrial factory with machinery failure"
+
+Enhanced prompt: "Hyperrealistic photograph of an industrial factory
+with machinery failure, photorealistic, 8K resolution, professional
+DSLR photography Canon EOS R5, dramatic cinematic lighting, RAW photo
+style, shallow depth of field"
+```
+
+**When NOT to Enhance:**
+- User explicitly requests illustration, cartoon, or artistic style
+- Abstract or conceptual imagery
+- Infographics and data visualisations
+- User includes `--no-enhance` flag
 
 **Examples of Effective Prompts:**
 

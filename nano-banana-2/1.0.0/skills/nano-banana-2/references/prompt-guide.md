@@ -211,6 +211,86 @@ Add these keywords to enhance output quality:
 
 ---
 
+## Hyper-Realistic Photography Style
+
+For maximum photorealism, use this comprehensive modifier set:
+
+### Core Hyper-Realistic Modifiers
+
+```
+hyperrealistic photograph, photorealistic, 8K resolution,
+professional DSLR photography Canon EOS R5, RAW photo style,
+shallow depth of field, cinematic lighting
+```
+
+### Camera & Lens References
+
+| Camera/Lens | Effect |
+|-------------|--------|
+| Canon EOS R5 | Sharp detail, natural colours |
+| Sony A7R IV | High dynamic range |
+| Hasselblad | Medium format, exceptional detail |
+| 85mm f/1.4 | Portrait, creamy bokeh |
+| 24-70mm f/2.8 | Versatile, professional |
+| 50mm f/1.2 | Natural perspective, shallow DOF |
+
+### Hyper-Realistic Prompt Template
+
+```
+Hyperrealistic photograph of [SUBJECT],
+photorealistic, 8K resolution,
+professional DSLR photography [CAMERA],
+[LIGHTING TYPE] lighting,
+RAW photo style, shallow depth of field,
+[ADDITIONAL DETAILS]
+```
+
+### Example: Industrial Scene
+
+**Basic prompt:**
+"Factory with equipment failure"
+
+**Hyper-realistic enhanced:**
+```
+Hyperrealistic photograph of an industrial factory interior,
+large machinery with glowing red-hot metal from equipment failure,
+sparks flying, smoke billowing,
+photorealistic, 8K resolution,
+professional DSLR photography Canon EOS R5,
+dramatic cinematic lighting with emergency lighting accents,
+RAW photo style, shallow depth of field,
+workers observing from safe distance
+```
+
+### Example: Corporate Portrait
+
+**Basic prompt:**
+"Business executive in office"
+
+**Hyper-realistic enhanced:**
+```
+Hyperrealistic photograph of a confident business executive,
+modern corner office with city skyline view,
+photorealistic, 8K resolution,
+professional DSLR photography Canon EOS R5 with 85mm f/1.4,
+natural window lighting with soft fill,
+RAW photo style, shallow depth of field,
+navy suit, warm genuine expression
+```
+
+### When to Use Hyper-Realistic Style
+
+| Use Case | Recommendation |
+|----------|----------------|
+| LinkedIn posts | Yes - professional, authentic feel |
+| Product shots | Yes - maximum detail |
+| Industrial scenes | Yes - dramatic impact |
+| Infographics | No - use clean design style |
+| Abstract concepts | No - use illustration style |
+| Logos/icons | No - use vector/minimalist style |
+
+---
+
 ## Iterating on Results
 
 If the first generation isn't quite right:

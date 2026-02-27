@@ -1,0 +1,5 @@
+# Nano Banana 2 - protect API key and generated content
+.nano-banana/
+generated-images/
+node_modules/
+package-lock.json
