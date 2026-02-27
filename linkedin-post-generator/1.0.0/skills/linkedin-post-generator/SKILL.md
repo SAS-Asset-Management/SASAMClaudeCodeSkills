@@ -718,6 +718,99 @@ Present the recommended draft and ask:
 
 If the user prefers a different draft from Step 4, switch to that one and refine it instead.
 
+### Step 6: Generate Accompanying Image (Optional)
+
+After the post is finalised, offer to generate a matching image using the nano-banana-2 skill:
+
+> "Want me to generate an image to go with this post? I'll create a hyper-realistic visual that matches the content."
+
+If the user accepts:
+
+1. **Analyse the post content** to extract the core visual concept
+2. **Generate an image prompt** that captures the emotional tone and subject matter
+3. **Call nano-banana-2** with 1:1 aspect ratio (optimal for LinkedIn)
+4. **Present the watermarked image** alongside the post text
+
+See the "Image Generation Integration" section below for implementation details.
+
+---
+
+## Image Generation Integration
+
+This skill integrates with **nano-banana-2** to generate matching visuals for LinkedIn posts.
+
+### When to Offer Image Generation
+
+Offer after the post is finalised — not during drafting. Images work best for:
+
+- **SLAY posts** — story scenes, industrial settings, emotional moments
+- **This, Not That** — visual contrast or comparison
+- **BABLA posts** — before/after transformation visuals
+- **Quick Insights** — conceptual or metaphorical imagery
+
+Images are less necessary for:
+
+- **Pillar Promotion** — the linked article typically has its own image
+- **Carousel** — text-based slides are the visual
+
+### Prompt Generation from Post Content
+
+Analyse the finalised post to generate an appropriate image prompt. Follow this pattern:
+
+```
+[SCENE DESCRIPTION from post content]
+[EMOTIONAL TONE — contemplative, dramatic, optimistic, etc.]
+[SETTING — industrial, office, outdoor, etc.]
+```
+
+The nano-banana-2 skill will automatically enhance with hyper-realistic modifiers.
+
+### Example Prompt Derivations
+
+| Post Theme | Generated Image Prompt |
+|------------|----------------------|
+| Maintenance engineer facing overwhelming task | "Young professional engineer in safety vest looking up at massive industrial machinery, contemplative expression, dramatic scale contrast" |
+| Before/after transformation story | "Industrial control room with modern digital displays showing real-time analytics, operators confidently monitoring systems" |
+| Data quality challenges | "Maintenance worker entering data on tablet while standing next to industrial equipment, focused expression, factory setting" |
+| Failed AI pilot | "Empty conference room with abandoned presentation on screen showing analytics dashboard, dramatic lighting, sense of aftermath" |
+
+### Calling nano-banana-2
+
+Use the Skill tool to invoke nano-banana-2 with the generated prompt:
+
+```
+/nano-banana-2 "[generated prompt based on post content]"
+```
+
+The nano-banana-2 skill will:
+1. Enhance with hyper-realistic modifiers
+2. Generate at 1:1 aspect ratio (optimal for LinkedIn)
+3. Apply adaptive SAS watermark (light logo on dark backgrounds, dark on light)
+4. Compress to under 200KB JPG
+
+### Presenting the Result
+
+After generation, present both assets together:
+
+```
+=== LinkedIn Post Ready ===
+
+--- POST TEXT (copy below) ---
+
+[The complete post text]
+
+--- END POST ---
+
+--- ACCOMPANYING IMAGE ---
+
+File: [path to generated image]
+Size: [dimensions and file size]
+
+[Display or open the image]
+
+Ready to post. Copy the text above and upload the image to LinkedIn.
+```
+
 ---
 
 ## Quality Checklist
@@ -975,6 +1068,7 @@ The skill responds to these in-session commands:
 | `bab` | Rewrite the current topic as a BABLA transformation story |
 | `variations` | Generate 2–3 different angles on the same topic |
 | `checklist` | Run the quality checklist against the current draft |
+| `image` | Generate a matching image for the current post using nano-banana-2 (1:1 aspect ratio) |
 
 ---
 
