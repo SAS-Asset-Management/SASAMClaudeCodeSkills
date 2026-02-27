@@ -326,17 +326,36 @@ Each generated image has an accompanying `.json` file:
 
 ### After Generation
 
-1. Run post-processing (resize and compress)
-2. Report success with file path
-3. Offer to open the image (if supported by environment)
-4. Update statistics in config file
-5. Suggest next steps (regenerate, adjust parameters, use in another skill)
+**CRITICAL: Always run post-processing after saving the raw PNG.**
+
+1. **Run post-processing script** (REQUIRED):
+   ```bash
+   node ~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.0.0/scripts/post-process.js <input.png> <output.jpg>
+   ```
+2. Report success with the final watermarked file path
+3. Update statistics in config file
+4. Offer next steps (regenerate, adjust parameters, use in another skill)
 
 ---
 
 ## Post-Processing
 
-All generated images are post-processed to ensure optimal file size and dimensions for web use.
+**All generated images MUST be post-processed** to add the SAS watermark and optimise for web use.
+
+### Post-Processing Script
+
+Run this after every image generation:
+
+```bash
+node ~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.0.0/scripts/post-process.js ./generated-images/IMAGE.png ./generated-images/IMAGE_final.jpg
+```
+
+The script automatically:
+- Resizes to 1000px (maintaining aspect ratio)
+- Analyzes corner brightness to select appropriate watermark
+- Adds SAS logo watermark (bottom-right)
+- Compresses to JPG with MozJPEG (quality 85)
+- Outputs file under 200KB
 
 ### Target Specifications
 
@@ -345,127 +364,20 @@ All generated images are post-processed to ensure optimal file size and dimensio
 | Dimensions | 1000x1000 pixels (or aspect-equivalent) |
 | File Size | Under 200KB |
 | Format | JPG (MozJPEG optimised) |
+| Watermark | SAS logo, bottom-right corner |
 
-### Automated Post-Processing with Sharp
+### Watermark Selection
 
-Use the Sharp library (Node.js) for high-quality compression. Ensure Sharp is installed in the project:
+The post-processing script automatically selects the appropriate watermark:
+- **Dark backgrounds** (brightness < 128): Light SAS logo
+- **Light backgrounds** (brightness >= 128): Dark SAS logo
 
-```bash
-npm install sharp --save
+Assets located at:
 ```
-
-Then compress images with this Node.js snippet:
-
-```javascript
-const sharp = require('sharp');
-
-async function compressImage(inputPath, outputPath) {
-  await sharp(inputPath)
-    .resize(1000, 1000, { fit: 'inside' })
-    .jpeg({ quality: 85, mozjpeg: true })
-    .toFile(outputPath);
-}
-
-// Usage:
-compressImage(
-  './generated-images/${FILENAME}.png',
-  './generated-images/${FILENAME}.jpg'
-);
+~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.0.0/skills/nano-banana-2/assets/
+├── sas-logo-dark.png   # For light backgrounds
+└── sas-logo-light.png  # For dark backgrounds
 ```
-
-### Complete Post-Processing Script
-
-```javascript
-const sharp = require('sharp');
-
-async function postProcess(inputPath, outputPath, pluginRoot) {
-  const WATERMARK_DARK = `${pluginRoot}/1.0.0/skills/nano-banana-2/assets/sas-logo-dark.png`;
-  const WATERMARK_LIGHT = `${pluginRoot}/1.0.0/skills/nano-banana-2/assets/sas-logo-light.png`;
-
-  // First resize the image
-  const resized = await sharp(inputPath)
-    .resize(1000, 1000, { fit: 'inside' })
-    .toBuffer({ resolveWithObject: true });
-
-  const { width, height } = resized.info;
-
-  // Analyze bottom-right corner brightness (where watermark will go)
-  const cornerSize = 150;
-  const corner = await sharp(resized.data)
-    .extract({
-      left: width - cornerSize,
-      top: height - cornerSize,
-      width: cornerSize,
-      height: cornerSize
-    })
-    .stats();
-
-  // Calculate average brightness from RGB channels
-  const avgBrightness = (corner.channels[0].mean + corner.channels[1].mean + corner.channels[2].mean) / 3;
-
-  // Choose watermark: light logo for dark backgrounds, dark logo for light backgrounds
-  const isDark = avgBrightness < 128;
-  const watermarkPath = isDark ? WATERMARK_LIGHT : WATERMARK_DARK;
-
-  // Resize watermark preserving transparency
-  const watermark = await sharp(watermarkPath)
-    .resize(120, 120, { fit: 'inside' })
-    .png()
-    .toBuffer();
-
-  // Composite and output as JPG
-  await sharp(resized.data)
-    .composite([{ input: watermark, gravity: 'southeast' }])
-    .jpeg({ quality: 85, mozjpeg: true })
-    .toFile(outputPath);
-}
-```
-
-### Adaptive Watermark Assets
-
-Two watermark variants for optimal visibility:
-
-```
-./1.0.0/skills/nano-banana-2/assets/
-├── sas-logo-dark.png   # Dark logo for light backgrounds
-└── sas-logo-light.png  # Light logo for dark backgrounds
-```
-
-**Automatic Selection:**
-- Analyzes brightness of bottom-right corner (150x150px)
-- If brightness < 128: uses **light** watermark
-- If brightness >= 128: uses **dark** watermark
-- Preserves PNG transparency during compositing
-
-### Post-Processing Workflow
-
-1. **Generate** raw image from API (2K resolution PNG)
-2. **Save** original PNG to `./generated-images/`
-3. **Resize** to 1000px (maintains aspect ratio)
-4. **Add watermark** SAS logo at bottom-right corner
-5. **Compress** to JPG using Sharp with MozJPEG (quality 85)
-6. **Verify** file size is under 200KB
-7. **Update** metadata JSON with final dimensions and file size
-
-### Metadata Update After Processing
-
-```json
-{
-  "prompt": "...",
-  "original_size": "2048x2048",
-  "final_size": "1000x1000",
-  "file_size_kb": 194,
-  "compression": "mozjpeg",
-  "format": "jpg",
-  "...": "..."
-}
-```
-
-### Quality Guidelines
-
-- **JPG (MozJPEG)**: Default for all photographic content - best size/quality ratio
-- **Quality 85**: Optimal balance of quality and file size
-- **PNG**: Only use when transparency is required
 
 ---
 
