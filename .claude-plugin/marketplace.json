@@ -79,9 +79,9 @@
     },
     {
       "name": "nano-banana-2",
-      "source": "./nano-banana-2/1.0.0",
-      "description": "Generate images using Google's Nano Banana 2 model (gemini-3.1-flash-image-preview) with web search grounding for real-world context. Creates optimised 1000px images under 200KB.",
-      "version": "1.0.0",
+      "source": "./nano-banana-2/1.1.0",
+      "description": "Generate images using Google's Nano Banana 2 model (gemini-3.1-flash-image-preview) with web search grounding for real-world context. Creates optimised 1000px images under 200KB with SAS watermark.",
+      "version": "1.1.0",
       "license": "MIT",
       "keywords": ["image-generation", "gemini", "nano-banana", "google-ai", "text-to-image", "ai-art"],
       "category": "productivity",
