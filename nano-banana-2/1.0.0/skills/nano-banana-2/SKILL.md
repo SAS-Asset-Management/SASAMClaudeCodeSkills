@@ -51,10 +51,10 @@ This skill integrates with Google's Gemini API to generate images using the Nano
 
 ### Check Configuration State
 
-Before generating any image, check if `.nano-banana/config.json` exists.
+Before generating any image, check if `~/.claude/skills/nano-banana-2/config.json` exists.
 
 **If config exists:**
-1. Load configuration from `.nano-banana/config.json`
+1. Load configuration from `~/.claude/skills/nano-banana-2/config.json`
 2. Validate API key is set
 3. Proceed with generation using saved preferences
 
@@ -99,15 +99,15 @@ To get your Google AI Studio API key:
 4. Copy the generated key (starts with "AIza...")
 5. Paste it here when prompted
 
-Note: The API key will be stored locally in .nano-banana/config.json
-Make sure this directory is in your .gitignore to protect the key.
+Note: The API key will be stored globally in ~/.claude/skills/nano-banana-2/config.json
+This location is outside your project directory, so credentials are protected.
 ```
 
 ---
 
 ## Configuration State
 
-Store configuration in `.nano-banana/config.json`:
+Store configuration in `~/.claude/skills/nano-banana-2/config.json`:
 
 ```json
 {
@@ -132,8 +132,8 @@ Store configuration in `.nano-banana/config.json`:
 See `references/config-template.json` for the full schema.
 
 **Security:**
-- After creating config, check if `.nano-banana/` is in `.gitignore`
-- If not, offer to add it to protect the API key
+- Config is stored in `~/.claude/skills/nano-banana-2/` (outside project directory)
+- No `.gitignore` changes needed - credentials are not in the repo
 - When displaying status, mask the API key: `AIza...xyz`
 
 ---
@@ -378,9 +378,9 @@ compressImage(
 ```javascript
 const sharp = require('sharp');
 
-async function postProcess(inputPath, outputPath) {
-  const WATERMARK_DARK = './1.0.0/skills/nano-banana-2/assets/sas-logo-dark.png';
-  const WATERMARK_LIGHT = './1.0.0/skills/nano-banana-2/assets/sas-logo-light.png';
+async function postProcess(inputPath, outputPath, pluginRoot) {
+  const WATERMARK_DARK = `${pluginRoot}/1.0.0/skills/nano-banana-2/assets/sas-logo-dark.png`;
+  const WATERMARK_LIGHT = `${pluginRoot}/1.0.0/skills/nano-banana-2/assets/sas-logo-light.png`;
 
   // First resize the image
   const resized = await sharp(inputPath)
@@ -632,7 +632,7 @@ Recent Generations:
 
 Before completing a generation request, verify:
 
-- [ ] Configuration loaded from `.nano-banana/config.json`
+- [ ] Configuration loaded from `~/.claude/skills/nano-banana-2/config.json`
 - [ ] API key is valid and not expired
 - [ ] Prompt is not empty
 - [ ] Output directory exists or was created

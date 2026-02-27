@@ -30,7 +30,7 @@ Generate images using Google's Nano Banana 2 model (`gemini-3.1-flash-image-prev
 
 ## Configuration
 
-Configuration is stored in `.nano-banana/config.json`:
+Configuration is stored globally in `~/.claude/skills/nano-banana-2/config.json`:
 
 ```json
 {
@@ -78,5 +78,5 @@ Images are optimised for web use:
 
 ## Security
 
-- API key stored locally in `.nano-banana/config.json`
-- Add `.nano-banana/` to `.gitignore` to protect credentials
+- API key stored globally in `~/.claude/skills/nano-banana-2/config.json`
+- Config is outside project directory - no `.gitignore` changes needed
