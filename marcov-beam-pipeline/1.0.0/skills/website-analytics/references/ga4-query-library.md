@@ -1,16 +1,73 @@
-# GA4 Query Library
+# GA4 Data API Query Library
 
-Common GA4 Data API queries for MBP:website-analytics. Use these patterns when querying GA4 via MCP or as a guide for which GA4 UI reports to export.
+Pre-built Google Analytics 4 (GA4) Data API v1 query patterns for use with the GA4 MCP server. These queries cover the most common analysis tasks in MBP:website-analytics, organised by the analysis phases defined in the skill.
 
-These queries use the GA4 Data API v1 (also known as the Google Analytics Data API). When using via MCP, adapt the format to match the MCP server's expected input structure.
+## Important Notes
+
+- **API endpoint**: All queries use the GA4 Data API v1 `RunReport` method (`POST https://analyticsdata.googleapis.com/v1beta/properties/{propertyId}:runReport`)
+- **Property ID**: Replace `{{GA4_PROPERTY_ID}}` with the numeric GA4 property ID (e.g., `123456789`)
+- **Date ranges**: Use `startDate` and `endDate` in `YYYY-MM-DD` format, or relative values like `today`, `yesterday`, `7daysAgo`, `30daysAgo`
+- **Metric values**: Rates (engagement rate, conversion rate) are returned as decimals (0.62 = 62%). Counts are integers.
+- **Dimension scopes**: GA4 dimensions have scopes (event, session, user). Mixing scopes in a single query can produce unexpected results. Session-scoped dimensions (e.g., `sessionSource`) are preferred for acquisition analysis.
+- **Row limits**: The API returns a maximum of 10,000 rows by default. Use `limit` and `offset` for pagination if needed.
+- **Thresholding**: GA4 may apply data thresholding to protect user privacy, particularly for small segments. If rows are missing, this is the likely cause.
+- **MCP tool mapping**: Where a GA4 MCP server is available, these request bodies can be passed directly to the `runReport` tool. Confirm the exact tool name with the connected MCP server (see the MCP Tool Mapping section at the end of this document).
+- **Quota**: The GA4 Data API has quota limits per property. Avoid running unnecessary queries; batch analysis where possible.
 
 ---
 
-## 1. Traffic by Source / Medium
+## 1. Traffic Overview
 
-The foundational acquisition query. Breaks down all sessions by how users arrived.
+High-level website performance metrics for the analysis period. Use this as the starting point for every website review.
 
-### GA4 Data API Request
+**Use in:** Phase 1 -- Traffic Overview
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28",
+      "name": "current_period"
+    },
+    {
+      "startDate": "2026-01-01",
+      "endDate": "2026-01-31",
+      "name": "previous_period"
+    }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "totalUsers" },
+    { "name": "newUsers" },
+    { "name": "engagementRate" },
+    { "name": "engagedSessions" },
+    { "name": "screenPageViewsPerSession" },
+    { "name": "averageSessionDuration" },
+    { "name": "userEngagementDuration" },
+    { "name": "conversions" }
+  ]
+}
+```
+
+**GA4 UI equivalent:** Reports > Life cycle > Acquisition > Overview
+
+**Notes:**
+- Including two date ranges in a single request returns both periods side by side, enabling period-over-period comparison without separate queries
+- `engagementRate` is the proportion of engaged sessions (lasted >10s, had a conversion event, or had 2+ page views)
+- `screenPageViewsPerSession` replaces the Universal Analytics "pages per session" metric
+- `userEngagementDuration` is the total active time users spent on the site (in seconds)
+- `averageSessionDuration` includes idle time; `userEngagementDuration` per session is more meaningful for B2B analysis
+- No dimensions are specified -- this returns a single aggregated row per date range
+- **Scope:** Requires read access to the GA4 property. No special scopes beyond standard reporting.
+
+---
+
+## 2. Acquisition Source/Medium
+
+Traffic breakdown by session source and medium, with engagement and conversion metrics. This is the primary attribution query.
+
+**Use in:** Phase 2 -- Acquisition Source Analysis
 
 ```json
 {
@@ -22,8 +79,7 @@ The foundational acquisition query. Breaks down all sessions by how users arrive
   ],
   "dimensions": [
     { "name": "sessionSource" },
-    { "name": "sessionMedium" },
-    { "name": "sessionDefaultChannelGroup" }
+    { "name": "sessionMedium" }
   ],
   "metrics": [
     { "name": "sessions" },
@@ -32,8 +88,8 @@ The foundational acquisition query. Breaks down all sessions by how users arrive
     { "name": "engagementRate" },
     { "name": "engagedSessions" },
     { "name": "averageSessionDuration" },
-    { "name": "screenPageViewsPerSession" },
-    { "name": "conversions" }
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
   ],
   "orderBys": [
     {
@@ -41,42 +97,44 @@ The foundational acquisition query. Breaks down all sessions by how users arrive
       "desc": true
     }
   ],
-  "limit": 25
+  "limit": 50
 }
 ```
 
-### GA4 UI Equivalent
+**GA4 UI equivalent:** Reports > Acquisition > Traffic acquisition (primary dimension: Session source / medium)
 
-**Reports > Acquisition > Traffic acquisition**
-- Primary dimension: Session source / medium
-- Secondary dimension: Session default channel group
-- Columns: Sessions, Users, New users, Engagement rate, Conversions
-
-### What to Look For
-
-- Verify `google / cpc` traffic exists if Google Ads campaigns are running
-- Verify `linkedin / paid_social` traffic exists if LinkedIn Ads campaigns are running (requires UTM tagging)
-- Check proportion of `(direct) / (none)` — if >30% of total, investigate untagged campaigns
-- Compare source/medium values against `shared/utm-taxonomy.md` for consistency
+**Notes:**
+- `sessionSource` and `sessionMedium` are session-scoped dimensions -- they attribute the source/medium to the session that brought the user
+- Common source/medium combinations to look for:
+  - `google / organic` -- organic search traffic
+  - `google / cpc` -- Google Ads paid search (auto-tagged via `gclid`)
+  - `linkedin / paid_social` -- LinkedIn Ads (UTM-tagged per `shared/utm-taxonomy.md`)
+  - `(direct) / (none)` -- direct traffic (no referrer detected)
+  - `linkedin.com / referral` -- untagged LinkedIn traffic (potential UTM issue)
+- If `linkedin.com / referral` appears with significant volume while LinkedIn Ads are running, flag this as a UTM tagging failure -- see `shared/utm-taxonomy.md`
+- Cross-reference `google / cpc` sessions with Google Ads click data from MBP:google-ads to verify tracking integrity
+- **Scope:** Standard GA4 reporting access
 
 ---
 
-## 2. Traffic by Default Channel Group (Summary)
+## 3. Channel Grouping
 
-Higher-level view that groups sources into standard channel categories.
+Performance by GA4 default channel group. Provides a higher-level view than source/medium, useful for executive summaries.
 
-### GA4 Data API Request
+**Use in:** Phase 2 -- Acquisition Source Analysis (channel-level summary)
 
 ```json
 {
   "dateRanges": [
     {
       "startDate": "2026-02-01",
-      "endDate": "2026-02-28"
+      "endDate": "2026-02-28",
+      "name": "current_period"
     },
     {
       "startDate": "2026-01-01",
-      "endDate": "2026-01-31"
+      "endDate": "2026-01-31",
+      "name": "previous_period"
     }
   ],
   "dimensions": [
@@ -88,7 +146,7 @@ Higher-level view that groups sources into standard channel categories.
     { "name": "newUsers" },
     { "name": "engagementRate" },
     { "name": "conversions" },
-    { "name": "userConversionRate" }
+    { "name": "sessionConversionRate" }
   ],
   "orderBys": [
     {
@@ -99,19 +157,107 @@ Higher-level view that groups sources into standard channel categories.
 }
 ```
 
-### Notes
+**GA4 UI equivalent:** Reports > Acquisition > Traffic acquisition (primary dimension: Session default channel group)
 
-- Using two date ranges returns both current and comparison period data in a single query
-- GA4 default channel groups: Organic Search, Paid Search, Paid Social, Organic Social, Direct, Referral, Email, Display, Video, Affiliates, Cross-network
-- Channel grouping rules are applied by GA4 based on source, medium, and campaign parameters
+**Notes:**
+- `sessionDefaultChannelGroup` returns GA4's built-in channel groupings: Organic Search, Paid Search, Paid Social, Organic Social, Direct, Referral, Email, Display, etc.
+- GA4 assigns channels based on source, medium, and campaign parameters -- see the SKILL.md channel grouping table for the full mapping
+- Including two date ranges enables period-over-period comparison at the channel level
+- If "Unassigned" appears as a channel with significant volume, investigate UTM parameter configuration
+- Direct traffic exceeding 30% of total sessions warrants investigation -- it often masks untagged campaign traffic
+- **Scope:** Standard GA4 reporting access
 
 ---
 
-## 3. Content Performance (Top Pages)
+## 4. Landing Page Performance
 
-Identifies which pages drive traffic, engagement, and conversions.
+Entry pages with session counts, engagement metrics, and conversions. Identifies which pages attract visitors and which convert them.
 
-### GA4 Data API Request
+**Use in:** Phase 3 -- Content Performance (landing page analysis)
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "landingPage" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "totalUsers" },
+    { "name": "engagementRate" },
+    { "name": "averageSessionDuration" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "orderBys": [
+    {
+      "metric": { "metricName": "sessions" },
+      "desc": true
+    }
+  ],
+  "limit": 50
+}
+```
+
+**GA4 UI equivalent:** Reports > Engagement > Landing page
+
+**Notes:**
+- `landingPage` is the page path (e.g., `/blog/iso-55001-readiness-checklist`) of the first page viewed in a session
+- Landing pages with high sessions but low conversion rate are strong CRO candidates -- review CTA placement, form visibility, and content relevance
+- Landing pages with high conversion rate but low sessions represent scaling opportunities -- consider driving more traffic via paid or organic channels
+- To see landing page performance by source, add `sessionSource` and `sessionMedium` dimensions (see query 4a below)
+- Cross-reference with Google Ads landing page data from MBP:google-ads to compare paid landing page performance
+- **Scope:** Standard GA4 reporting access
+
+### 4a. Landing Page by Source/Medium
+
+Combines landing page with acquisition source to answer: "Which pages convert best for each traffic source?"
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "landingPage" },
+    { "name": "sessionSource" },
+    { "name": "sessionMedium" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "engagementRate" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "orderBys": [
+    {
+      "metric": { "metricName": "sessions" },
+      "desc": true
+    }
+  ],
+  "limit": 100
+}
+```
+
+**Notes:**
+- This query produces a high row count -- use `limit` to focus on the most trafficked combinations
+- Particularly useful for comparing paid landing page performance (e.g., `google / cpc` sessions on `/services/asset-management`) against organic entry performance on the same page
+
+---
+
+## 5. Content Performance (Page Path)
+
+Page-level performance across all sessions (not just landing page views). Shows which content users engage with during their visit.
+
+**Use in:** Phase 3 -- Content Performance (page-level analysis)
 
 ```json
 {
@@ -129,9 +275,8 @@ Identifies which pages drive traffic, engagement, and conversions.
     { "name": "sessions" },
     { "name": "totalUsers" },
     { "name": "engagementRate" },
-    { "name": "averageSessionDuration" },
-    { "name": "conversions" },
-    { "name": "userConversionRate" }
+    { "name": "userEngagementDuration" },
+    { "name": "conversions" }
   ],
   "orderBys": [
     {
@@ -143,39 +288,23 @@ Identifies which pages drive traffic, engagement, and conversions.
 }
 ```
 
-### GA4 UI Equivalent
+**GA4 UI equivalent:** Reports > Engagement > Pages and screens
 
-**Reports > Engagement > Pages and screens**
-- Primary dimension: Page path and screen class
-- Columns: Views, Users, Engagement rate, Average engagement time, Conversions
+**Notes:**
+- `pagePath` includes all pages viewed during a session, not just the entry page -- this differs from `landingPage`
+- `screenPageViews` counts total page views (including repeat views within a session)
+- `userEngagementDuration` on a per-page basis shows how long users actively spent on that page
+- Use URL patterns to categorise content:
+  - `/blog/*` or `/insights/*` -- blog and thought leadership content
+  - `/services/*` -- service offering pages
+  - `/resources/*` -- downloadable resources (whitepapers, guides)
+  - `/contact` or `/get-in-touch` -- conversion pages
+- Pages with high views but low engagement duration may indicate thin content or poor relevance to search intent
+- **Scope:** Standard GA4 reporting access
 
-### Variant: Blog Content Only
+### 5a. Content Performance by Page Title
 
-Add a dimension filter to isolate blog content:
-
-```json
-{
-  "dimensionFilter": {
-    "filter": {
-      "fieldName": "pagePath",
-      "stringFilter": {
-        "matchType": "BEGINS_WITH",
-        "value": "/blog/"
-      }
-    }
-  }
-}
-```
-
-Adjust the path prefix (`/blog/`, `/insights/`, `/resources/`) to match the website's URL structure.
-
----
-
-## 4. Landing Page Analysis
-
-Which pages users enter the site on, and how those entry points convert.
-
-### GA4 Data API Request
+Use page title instead of path for more readable results, especially when URL structures are not descriptive.
 
 ```json
 {
@@ -186,53 +315,19 @@ Which pages users enter the site on, and how those entry points convert.
     }
   ],
   "dimensions": [
-    { "name": "landingPage" }
+    { "name": "pageTitle" },
+    { "name": "pagePath" }
   ],
   "metrics": [
+    { "name": "screenPageViews" },
     { "name": "sessions" },
-    { "name": "totalUsers" },
-    { "name": "newUsers" },
     { "name": "engagementRate" },
-    { "name": "averageSessionDuration" },
-    { "name": "screenPageViewsPerSession" },
-    { "name": "conversions" },
-    { "name": "userConversionRate" }
+    { "name": "userEngagementDuration" },
+    { "name": "conversions" }
   ],
   "orderBys": [
     {
-      "metric": { "metricName": "sessions" },
-      "desc": true
-    }
-  ],
-  "limit": 30
-}
-```
-
-### GA4 UI Equivalent
-
-**Reports > Engagement > Landing page**
-- Primary dimension: Landing page
-- Columns: Sessions, Users, New users, Engagement rate, Conversions
-
-### Variant: Landing Pages by Source
-
-Combine landing page with source to understand which channels drive traffic to which entry points:
-
-```json
-{
-  "dimensions": [
-    { "name": "landingPage" },
-    { "name": "sessionSource" },
-    { "name": "sessionMedium" }
-  ],
-  "metrics": [
-    { "name": "sessions" },
-    { "name": "conversions" },
-    { "name": "userConversionRate" }
-  ],
-  "orderBys": [
-    {
-      "metric": { "metricName": "sessions" },
+      "metric": { "metricName": "screenPageViews" },
       "desc": true
     }
   ],
@@ -240,13 +335,9 @@ Combine landing page with source to understand which channels drive traffic to w
 }
 ```
 
----
+### 5b. Blog Content Only
 
-## 5. Conversion Events
-
-Breaks down conversions by event name — essential for understanding which conversion actions are firing.
-
-### GA4 Data API Request
+Isolate blog or insight content using a dimension filter on the page path prefix.
 
 ```json
 {
@@ -257,60 +348,27 @@ Breaks down conversions by event name — essential for understanding which conv
     }
   ],
   "dimensions": [
-    { "name": "eventName" }
+    { "name": "pagePath" }
   ],
   "metrics": [
-    { "name": "eventCount" },
-    { "name": "totalUsers" },
-    { "name": "eventCountPerUser" }
+    { "name": "screenPageViews" },
+    { "name": "sessions" },
+    { "name": "engagementRate" },
+    { "name": "userEngagementDuration" },
+    { "name": "conversions" }
   ],
   "dimensionFilter": {
     "filter": {
-      "fieldName": "eventName",
-      "inListFilter": {
-        "values": ["generate_lead", "form_submit", "file_download", "sign_up", "purchase"]
+      "fieldName": "pagePath",
+      "stringFilter": {
+        "value": "/blog/",
+        "matchType": "BEGINS_WITH"
       }
     }
   },
   "orderBys": [
     {
-      "metric": { "metricName": "eventCount" },
-      "desc": true
-    }
-  ]
-}
-```
-
-### Notes
-
-- Adjust the `inListFilter` values to match the website's actual conversion event names
-- GA4 marks events as conversions in the admin settings — only marked events appear in the `conversions` metric
-- Common conversion event names: `generate_lead`, `form_submit`, `file_download`, `sign_up`, `purchase`, `contact`, `book_demo`
-
-### Variant: Conversions by Source
-
-```json
-{
-  "dimensions": [
-    { "name": "eventName" },
-    { "name": "sessionSource" },
-    { "name": "sessionMedium" }
-  ],
-  "metrics": [
-    { "name": "eventCount" },
-    { "name": "totalUsers" }
-  ],
-  "dimensionFilter": {
-    "filter": {
-      "fieldName": "eventName",
-      "inListFilter": {
-        "values": ["generate_lead", "form_submit", "file_download"]
-      }
-    }
-  },
-  "orderBys": [
-    {
-      "metric": { "metricName": "eventCount" },
+      "metric": { "metricName": "screenPageViews" },
       "desc": true
     }
   ],
@@ -318,58 +376,17 @@ Breaks down conversions by event name — essential for understanding which conv
 }
 ```
 
----
-
-## 6. Conversion Paths (Multi-Touch Attribution)
-
-Understand the sequence of channels users interact with before converting.
-
-### GA4 Data API Request
-
-```json
-{
-  "dateRanges": [
-    {
-      "startDate": "2026-02-01",
-      "endDate": "2026-02-28"
-    }
-  ],
-  "dimensions": [
-    { "name": "sessionDefaultChannelGroup" }
-  ],
-  "metrics": [
-    { "name": "conversions" },
-    { "name": "totalUsers" },
-    { "name": "sessions" }
-  ],
-  "orderBys": [
-    {
-      "metric": { "metricName": "conversions" },
-      "desc": true
-    }
-  ]
-}
-```
-
-### GA4 UI Equivalent
-
-**Advertising > Attribution > Conversion paths**
-- Shows the sequence of channels in conversion paths
-- Toggle between first touch, last touch, and data-driven attribution models
-
-### Notes
-
-- Full path analysis requires the GA4 Advertising workspace, which needs linked Google Ads
-- For LinkedIn attribution in multi-touch paths, UTM-tagged traffic must be present — without UTMs, LinkedIn will appear under Organic Social or Referral, breaking the attribution chain
-- Conversion path data may be subject to thresholding in low-volume properties
+**Notes:**
+- Adjust the path prefix (`/blog/`, `/insights/`, `/resources/`) to match the website's URL structure
+- Compare blog content performance against service pages to assess whether content marketing is contributing to conversions or only to awareness
 
 ---
 
-## 7. Device Breakdown
+## 6. Device Category Breakdown
 
-Understand how traffic and conversions differ across device categories.
+Desktop vs mobile vs tablet performance. Critical for identifying device-specific conversion rate gaps.
 
-### GA4 Data API Request
+**Use in:** Phase 1 -- Traffic Overview (device breakdown); Phase 5 -- User Behaviour
 
 ```json
 {
@@ -385,11 +402,12 @@ Understand how traffic and conversions differ across device categories.
   "metrics": [
     { "name": "sessions" },
     { "name": "totalUsers" },
+    { "name": "newUsers" },
     { "name": "engagementRate" },
-    { "name": "averageSessionDuration" },
     { "name": "screenPageViewsPerSession" },
+    { "name": "averageSessionDuration" },
     { "name": "conversions" },
-    { "name": "userConversionRate" }
+    { "name": "sessionConversionRate" }
   ],
   "orderBys": [
     {
@@ -400,37 +418,17 @@ Understand how traffic and conversions differ across device categories.
 }
 ```
 
-### Variant: Device by Source
+**GA4 UI equivalent:** Reports > Tech > Tech overview (device category card)
 
-Cross-reference device with source to identify channel-specific device patterns (e.g., LinkedIn social traffic is predominantly mobile):
+**Notes:**
+- `deviceCategory` returns: `desktop`, `mobile`, `tablet`
+- For B2B websites, desktop typically dominates sessions and has a higher conversion rate
+- If mobile conversion rate is significantly lower than desktop (e.g., >50% difference), investigate mobile UX -- form usability, page load speed, CTA visibility
+- **Scope:** Standard GA4 reporting access
 
-```json
-{
-  "dimensions": [
-    { "name": "deviceCategory" },
-    { "name": "sessionDefaultChannelGroup" }
-  ],
-  "metrics": [
-    { "name": "sessions" },
-    { "name": "engagementRate" },
-    { "name": "conversions" }
-  ],
-  "orderBys": [
-    {
-      "metric": { "metricName": "sessions" },
-      "desc": true
-    }
-  ]
-}
-```
+### 6a. Device by Source/Medium
 
----
-
-## 8. Geographic Analysis
-
-Identify where users are located — important for B2B targeting validation.
-
-### GA4 Data API Request
+Cross-reference device category with traffic source to identify channel-specific device patterns.
 
 ```json
 {
@@ -441,14 +439,15 @@ Identify where users are located — important for B2B targeting validation.
     }
   ],
   "dimensions": [
-    { "name": "country" },
-    { "name": "city" }
+    { "name": "deviceCategory" },
+    { "name": "sessionSource" },
+    { "name": "sessionMedium" }
   ],
   "metrics": [
     { "name": "sessions" },
-    { "name": "totalUsers" },
     { "name": "engagementRate" },
-    { "name": "conversions" }
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
   ],
   "orderBys": [
     {
@@ -456,14 +455,32 @@ Identify where users are located — important for B2B targeting validation.
       "desc": true
     }
   ],
-  "limit": 30
+  "limit": 50
 }
 ```
 
-### Variant: Country-Level Only
+**Notes:**
+- LinkedIn Ads traffic often skews heavily mobile (users browsing the LinkedIn feed on phones) -- compare mobile vs desktop conversion rate for `linkedin / paid_social` specifically
+- Google Ads traffic device split depends on campaign targeting -- cross-reference with device bid adjustments from MBP:google-ads
+
+---
+
+## 7. Geographic Performance
+
+Country and city level traffic and conversion data. Essential for businesses targeting specific geographic markets.
+
+**Use in:** Phase 1 -- Traffic Overview (geographic breakdown)
+
+### 7a. Country-Level Performance
 
 ```json
 {
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
   "dimensions": [
     { "name": "country" }
   ],
@@ -472,7 +489,7 @@ Identify where users are located — important for B2B targeting validation.
     { "name": "totalUsers" },
     { "name": "engagementRate" },
     { "name": "conversions" },
-    { "name": "userConversionRate" }
+    { "name": "sessionConversionRate" }
   ],
   "orderBys": [
     {
@@ -480,23 +497,66 @@ Identify where users are located — important for B2B targeting validation.
       "desc": true
     }
   ],
-  "limit": 15
+  "limit": 20
 }
 ```
 
-### What to Look For
+### 7b. City-Level Performance (Filtered to Target Country)
 
-- For Australian-focused B2B, the majority of converting traffic should come from Australia
-- High volumes of traffic from unexpected geographies may indicate bot traffic or irrelevant ad targeting
-- City-level data helps validate whether traffic aligns with target industry geographies (e.g., mining-heavy regions)
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "city" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "totalUsers" },
+    { "name": "engagementRate" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "dimensionFilter": {
+    "filter": {
+      "fieldName": "country",
+      "stringFilter": {
+        "value": "Australia",
+        "matchType": "EXACT"
+      }
+    }
+  },
+  "orderBys": [
+    {
+      "metric": { "metricName": "sessions" },
+      "desc": true
+    }
+  ],
+  "limit": 20
+}
+```
+
+**GA4 UI equivalent:** Reports > User attributes > Demographic details (primary dimension: Country or City)
+
+**Notes:**
+- `country` and `city` are user-scoped dimensions based on IP geolocation
+- For Australian-focused businesses, filter to Australia and examine city-level distribution (Sydney, Melbourne, Brisbane, Perth, Adelaide)
+- Sessions from unexpected countries with zero conversions may indicate bot traffic or irrelevant ad targeting
+- If Google Ads campaigns are geo-targeted to Australia but GA4 shows significant traffic from other countries, investigate campaign location settings (are they set to "presence" or "presence or interest"?)
+- City-level data is subject to GA4 thresholding -- small cities may be grouped into "(not set)"
+- **Scope:** Standard GA4 reporting access
 
 ---
 
-## 9. New vs Returning Users
+## 8. New vs Returning Users
 
-Compare behaviour between first-time and returning visitors.
+Behavioural comparison between first-time and returning visitors. Key for understanding nurture effectiveness.
 
-### GA4 Data API Request
+**Use in:** Phase 5 -- User Behaviour (new vs returning analysis)
 
 ```json
 {
@@ -513,27 +573,668 @@ Compare behaviour between first-time and returning visitors.
     { "name": "sessions" },
     { "name": "totalUsers" },
     { "name": "engagementRate" },
-    { "name": "averageSessionDuration" },
     { "name": "screenPageViewsPerSession" },
+    { "name": "averageSessionDuration" },
+    { "name": "userEngagementDuration" },
     { "name": "conversions" },
-    { "name": "userConversionRate" }
+    { "name": "sessionConversionRate" }
   ]
 }
 ```
 
-### What to Look For
+**GA4 UI equivalent:** Reports > Retention > Overview (new vs returning users card)
 
-- Returning users typically have 2-3x higher conversion rates than new users in B2B
-- If new user conversion rate is very low, the site may need better first-visit CTAs or trust signals
-- The ratio of new-to-returning indicates whether the site is growing its audience (high new %) or retaining well (high returning %)
+**Notes:**
+- `newVsReturning` returns two values: `new` and `returning`
+- In B2B contexts, returning users typically have significantly higher conversion rates -- they have already evaluated the brand and are further along the decision-making journey
+- A healthy B2B website typically has 60-70% new users (indicating ongoing acquisition) with returning users converting at 2-3x the rate of new users
+- If returning user conversion rate is not meaningfully higher than new users, the website may lack effective nurture paths (e.g., no email capture, no retargeting, weak content journey)
+- **Scope:** Standard GA4 reporting access
+
+### 8a. Returning Users by Source
+
+Identifies which channels bring users back for repeat visits.
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "newVsReturning" },
+    { "name": "sessionSource" },
+    { "name": "sessionMedium" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "engagementRate" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "dimensionFilter": {
+    "filter": {
+      "fieldName": "newVsReturning",
+      "stringFilter": {
+        "value": "returning",
+        "matchType": "EXACT"
+      }
+    }
+  },
+  "orderBys": [
+    {
+      "metric": { "metricName": "sessions" },
+      "desc": true
+    }
+  ],
+  "limit": 20
+}
+```
+
+**Notes:**
+- Returning users arriving via `(direct) / (none)` have likely bookmarked the site or typed the URL -- a strong brand signal
+- Returning users from `google / organic` may be searching for the brand name specifically -- check branded search terms in MBP:seo
+- Returning users from `email / newsletter` or `email / nurture` indicate effective email marketing
 
 ---
 
-## 10. Traffic Trend Over Time
+## 9. Conversion Events
 
-Track session and conversion trends across the analysis period.
+Event-level breakdown of conversion actions. Shows which conversion types are firing and at what volume.
 
-### GA4 Data API Request (Daily)
+**Use in:** Phase 4 -- Conversion Analysis
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "eventName" }
+  ],
+  "metrics": [
+    { "name": "eventCount" },
+    { "name": "totalUsers" },
+    { "name": "eventCountPerUser" },
+    { "name": "conversions" }
+  ],
+  "dimensionFilter": {
+    "filter": {
+      "fieldName": "isConversionEvent",
+      "stringFilter": {
+        "value": "true",
+        "matchType": "EXACT"
+      }
+    }
+  },
+  "orderBys": [
+    {
+      "metric": { "metricName": "eventCount" },
+      "desc": true
+    }
+  ]
+}
+```
+
+**GA4 UI equivalent:** Reports > Engagement > Conversions
+
+**Notes:**
+- `isConversionEvent` filters to only events marked as conversions in the GA4 property configuration
+- Common GA4 conversion event names: `generate_lead`, `form_submit`, `file_download`, `purchase`, `sign_up`, `contact`, `phone_call_click`
+- `eventCount` is the total number of times the event fired; `conversions` counts each event once per session (deduplicated)
+- If no conversion events appear, the GA4 property may not have conversion events configured -- flag this as a critical tracking issue
+- `eventCountPerUser` helps identify repeat conversions (e.g., a user downloading multiple resources)
+- **Scope:** Standard GA4 reporting access. Conversion event marking is configured in GA4 Admin > Events.
+
+### 9a. Conversions by Source/Medium
+
+Combines conversion event data with acquisition source to show which channels drive which conversion types.
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "eventName" },
+    { "name": "sessionSource" },
+    { "name": "sessionMedium" }
+  ],
+  "metrics": [
+    { "name": "eventCount" },
+    { "name": "conversions" },
+    { "name": "totalUsers" }
+  ],
+  "dimensionFilter": {
+    "filter": {
+      "fieldName": "isConversionEvent",
+      "stringFilter": {
+        "value": "true",
+        "matchType": "EXACT"
+      }
+    }
+  },
+  "orderBys": [
+    {
+      "metric": { "metricName": "conversions" },
+      "desc": true
+    }
+  ],
+  "limit": 50
+}
+```
+
+**Notes:**
+- This query answers: "Which channels drive which types of conversions?"
+- For example, Google Ads may drive `form_submit` conversions (high-intent search) while LinkedIn Ads may drive `file_download` conversions (content engagement)
+- Understanding conversion type by channel helps calibrate expectations -- not all channels produce the same conversion type
+
+---
+
+## 10. UTM Campaign Performance
+
+Traffic and conversions broken down by UTM parameters. Essential for evaluating tagged marketing campaigns.
+
+**Use in:** Phase 2 -- Acquisition Source Analysis (campaign-level)
+
+### 10a. Full UTM Breakdown
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "sessionSource" },
+    { "name": "sessionMedium" },
+    { "name": "sessionCampaignName" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "totalUsers" },
+    { "name": "newUsers" },
+    { "name": "engagementRate" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "dimensionFilter": {
+    "notExpression": {
+      "filter": {
+        "fieldName": "sessionCampaignName",
+        "stringFilter": {
+          "value": "(not set)",
+          "matchType": "EXACT"
+        }
+      }
+    }
+  },
+  "orderBys": [
+    {
+      "metric": { "metricName": "sessions" },
+      "desc": true
+    }
+  ],
+  "limit": 50
+}
+```
+
+### 10b. UTM Content (Ad/Creative Level)
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "sessionSource" },
+    { "name": "sessionMedium" },
+    { "name": "sessionCampaignName" },
+    { "name": "sessionManualAdContent" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "engagementRate" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "orderBys": [
+    {
+      "metric": { "metricName": "sessions" },
+      "desc": true
+    }
+  ],
+  "limit": 100
+}
+```
+
+**GA4 UI equivalent:** Reports > Acquisition > Traffic acquisition (add secondary dimension: Session campaign)
+
+**Notes:**
+- `sessionCampaignName` maps to the `utm_campaign` parameter -- should follow the naming convention `{platform}-{objective}-{audience}-{YYYYMM}` per `shared/utm-taxonomy.md`
+- `sessionManualAdContent` maps to the `utm_content` parameter -- identifies the specific creative or ad variant
+- Campaigns appearing as `(not set)` indicate traffic without UTM campaign tagging
+- The `notExpression` filter in query 10a removes `(not set)` campaigns to focus on deliberately tagged traffic
+- Validate that campaign names follow the `shared/utm-taxonomy.md` naming convention. Non-standard names make cross-channel reporting in MBP:marketing-dashboard unreliable.
+- For Google Ads, auto-tagged campaigns will populate `sessionCampaignName` with the Google Ads campaign name automatically (no UTM required)
+- For LinkedIn Ads, `sessionCampaignName` is only populated if `utm_campaign` is set in the ad creative URL -- verify this is configured
+- **Scope:** Standard GA4 reporting access
+
+---
+
+## 11. Google Ads Integration
+
+GA4 sessions and conversions from Google Ads specifically. Use this to cross-reference with MBP:google-ads platform data.
+
+**Use in:** Phase 2 -- Acquisition Source Analysis (Google Ads attribution check)
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "sessionSource" },
+    { "name": "sessionMedium" },
+    { "name": "sessionCampaignName" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "totalUsers" },
+    { "name": "engagementRate" },
+    { "name": "engagedSessions" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "dimensionFilter": {
+    "andGroup": {
+      "expressions": [
+        {
+          "filter": {
+            "fieldName": "sessionSource",
+            "stringFilter": {
+              "value": "google",
+              "matchType": "EXACT"
+            }
+          }
+        },
+        {
+          "filter": {
+            "fieldName": "sessionMedium",
+            "stringFilter": {
+              "value": "cpc",
+              "matchType": "EXACT"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "orderBys": [
+    {
+      "metric": { "metricName": "sessions" },
+      "desc": true
+    }
+  ]
+}
+```
+
+**Notes:**
+- This query isolates `google / cpc` traffic, which corresponds to Google Ads paid search campaigns
+- **Critical cross-reference**: Compare total `sessions` from this query with total clicks from the Google Ads platform (via MBP:google-ads). A discrepancy of <15% is normal. Discrepancy >25% indicates tracking issues:
+  - GA4 sessions < Google Ads clicks: page load failures, consent banner blocking, redirect chain dropping the `gclid` parameter, or slow pages where users abandon before GA4 loads
+  - GA4 sessions > Google Ads clicks: rare, but possible if users bookmark and return to the auto-tagged URL
+- If this query returns zero rows but Google Ads campaigns are running, auto-tagging (`gclid`) may be disabled -- this is a critical tracking failure. Flag it as a high-severity issue.
+- Campaign names in GA4 come from the Google Ads campaign name when auto-tagging is active -- they should match exactly
+- **Scope:** Requires Google Ads to be linked to the GA4 property for auto-tagging. Standard GA4 reporting access.
+
+### 11a. Google Ads with Landing Page
+
+Shows which Google Ads campaigns are sending traffic to which landing pages and how those pages convert.
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "sessionCampaignName" },
+    { "name": "landingPage" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "engagementRate" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "dimensionFilter": {
+    "andGroup": {
+      "expressions": [
+        {
+          "filter": {
+            "fieldName": "sessionSource",
+            "stringFilter": {
+              "value": "google",
+              "matchType": "EXACT"
+            }
+          }
+        },
+        {
+          "filter": {
+            "fieldName": "sessionMedium",
+            "stringFilter": {
+              "value": "cpc",
+              "matchType": "EXACT"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "orderBys": [
+    {
+      "metric": { "metricName": "sessions" },
+      "desc": true
+    }
+  ],
+  "limit": 50
+}
+```
+
+**Notes:**
+- Cross-reference with landing page performance data from MBP:google-ads (GAQL query 8 in the GAQL query library) to compare platform-reported and GA4-reported metrics
+
+---
+
+## 12. LinkedIn Attribution
+
+Sessions from LinkedIn Ads traffic, identified via UTM parameters. Since LinkedIn does not have native GA4 integration like Google Ads, UTM tagging is the sole attribution mechanism.
+
+**Use in:** Phase 2 -- Acquisition Source Analysis (LinkedIn Ads attribution check)
+
+### 12a. LinkedIn Paid Social Traffic
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "sessionSource" },
+    { "name": "sessionMedium" },
+    { "name": "sessionCampaignName" },
+    { "name": "sessionManualAdContent" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "totalUsers" },
+    { "name": "newUsers" },
+    { "name": "engagementRate" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "dimensionFilter": {
+    "andGroup": {
+      "expressions": [
+        {
+          "filter": {
+            "fieldName": "sessionSource",
+            "stringFilter": {
+              "value": "linkedin",
+              "matchType": "EXACT"
+            }
+          }
+        },
+        {
+          "filter": {
+            "fieldName": "sessionMedium",
+            "stringFilter": {
+              "value": "paid_social",
+              "matchType": "EXACT"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "orderBys": [
+    {
+      "metric": { "metricName": "sessions" },
+      "desc": true
+    }
+  ]
+}
+```
+
+### 12b. All LinkedIn Traffic (Paid + Organic + Referral)
+
+Use this query to understand the full picture of LinkedIn-originated traffic, including untagged sessions.
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "sessionSource" },
+    { "name": "sessionMedium" },
+    { "name": "sessionCampaignName" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "totalUsers" },
+    { "name": "engagementRate" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "dimensionFilter": {
+    "orGroup": {
+      "expressions": [
+        {
+          "filter": {
+            "fieldName": "sessionSource",
+            "stringFilter": {
+              "value": "linkedin",
+              "matchType": "EXACT"
+            }
+          }
+        },
+        {
+          "filter": {
+            "fieldName": "sessionSource",
+            "stringFilter": {
+              "value": "linkedin.com",
+              "matchType": "EXACT"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "orderBys": [
+    {
+      "metric": { "metricName": "sessions" },
+      "desc": true
+    }
+  ]
+}
+```
+
+**Notes:**
+- LinkedIn traffic can appear under multiple source values depending on tagging:
+  - `linkedin / paid_social` -- correctly UTM-tagged LinkedIn Ads traffic (per `shared/utm-taxonomy.md`)
+  - `linkedin / organic_social` -- UTM-tagged organic LinkedIn posts
+  - `linkedin.com / referral` -- untagged LinkedIn traffic (could be organic OR paid with missing UTMs)
+- **Critical check**: If LinkedIn Ads are actively running (per MBP:linkedin-ads) but `linkedin / paid_social` shows zero or minimal sessions, UTM tagging is broken. Meanwhile, if `linkedin.com / referral` shows high traffic, those are likely your paid sessions appearing as unattributed referral traffic.
+- Compare `linkedin / paid_social` sessions with LinkedIn Ads platform click data from MBP:linkedin-ads. Discrepancy >30% is concerning for LinkedIn due to mobile app redirect chain losses.
+- Campaign names should follow `{platform}-{objective}-{audience}-{YYYYMM}` format per `shared/utm-taxonomy.md` (e.g., `linkedin-leadgen-utilities-202602`)
+- **Scope:** Standard GA4 reporting access. Requires UTM parameters to be applied to all LinkedIn Ads campaigns.
+
+---
+
+## 13. Conversion Paths
+
+Multi-touch attribution data showing the sequence of channels users interact with before converting. Requires the GA4 property to have sufficient conversion volume for path analysis.
+
+**Use in:** Phase 4 -- Conversion Analysis (multi-touch attribution)
+
+### 13a. First User Source/Medium (First Touch Attribution)
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "firstUserSource" },
+    { "name": "firstUserMedium" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "totalUsers" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
+  ],
+  "orderBys": [
+    {
+      "metric": { "metricName": "conversions" },
+      "desc": true
+    }
+  ],
+  "limit": 20
+}
+```
+
+### 13b. Last Touch Attribution (Session Source of Converting Sessions)
+
+Run this alongside 13a and compare to identify channels that introduce users (first touch) vs channels that close conversions (last touch).
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "sessionSource" },
+    { "name": "sessionMedium" }
+  ],
+  "metrics": [
+    { "name": "conversions" },
+    { "name": "totalUsers" }
+  ],
+  "metricFilter": {
+    "filter": {
+      "fieldName": "conversions",
+      "numericFilter": {
+        "operation": "GREATER_THAN",
+        "value": {
+          "int64Value": "0"
+        }
+      }
+    }
+  },
+  "orderBys": [
+    {
+      "metric": { "metricName": "conversions" },
+      "desc": true
+    }
+  ],
+  "limit": 20
+}
+```
+
+### 13c. Session Count Before Conversion
+
+Shows how many sessions users had before converting, indicating typical conversion path length.
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "sessionNumber" }
+  ],
+  "metrics": [
+    { "name": "conversions" },
+    { "name": "sessions" }
+  ],
+  "metricFilter": {
+    "filter": {
+      "fieldName": "conversions",
+      "numericFilter": {
+        "operation": "GREATER_THAN",
+        "value": {
+          "int64Value": "0"
+        }
+      }
+    }
+  },
+  "orderBys": [
+    {
+      "dimension": { "dimensionName": "sessionNumber" },
+      "desc": false
+    }
+  ],
+  "limit": 20
+}
+```
+
+**GA4 UI equivalent:** Advertising > Attribution > Conversion paths (for full path visualisation)
+
+**Notes:**
+- `firstUserSource` and `firstUserMedium` are user-scoped dimensions -- they record the source/medium of the user's very first visit, regardless of which session they are currently in
+- `sessionSource` and `sessionMedium` are session-scoped -- they record the source/medium of the current session
+- Comparing first touch vs last touch reveals the "assist" role of channels:
+  - A channel with many first touches but few last touches is an **introducer** (e.g., Paid Social often introduces users who later convert via Direct or Organic Search)
+  - A channel with few first touches but many last touches is a **closer** (e.g., Direct traffic, branded organic search)
+- `sessionNumber` indicates how many sessions the user has had. If most conversions occur on session 1, the conversion path is short. If conversions cluster around sessions 3-5, there is a multi-visit consideration phase -- nurture and retargeting are important.
+- For more granular path analysis, consider using the GA4 UI Advertising section (attribution paths) or the GA4 Data API `runFunnelReport` method, which is not covered in this library
+- **Scope:** Full conversion path data in the GA4 UI Advertising section requires Google Ads to be linked. The Data API queries above work with standard reporting access.
+
+---
+
+## 14. Engagement Trends
+
+Daily and weekly engagement rate and session trends for identifying patterns and anomalies over time.
+
+**Use in:** Phase 5 -- User Behaviour (engagement trends)
+
+### 14a. Daily Session and Engagement Trend
 
 ```json
 {
@@ -549,7 +1250,10 @@ Track session and conversion trends across the analysis period.
   "metrics": [
     { "name": "sessions" },
     { "name": "totalUsers" },
+    { "name": "newUsers" },
     { "name": "engagementRate" },
+    { "name": "engagedSessions" },
+    { "name": "screenPageViewsPerSession" },
     { "name": "conversions" }
   ],
   "orderBys": [
@@ -561,18 +1265,27 @@ Track session and conversion trends across the analysis period.
 }
 ```
 
-### Variant: Weekly Aggregation
+### 14b. Weekly Session and Engagement Trend
 
 ```json
 {
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
   "dimensions": [
     { "name": "isoYearIsoWeek" }
   ],
   "metrics": [
     { "name": "sessions" },
     { "name": "totalUsers" },
+    { "name": "newUsers" },
     { "name": "engagementRate" },
-    { "name": "conversions" }
+    { "name": "engagedSessions" },
+    { "name": "conversions" },
+    { "name": "sessionConversionRate" }
   ],
   "orderBys": [
     {
@@ -583,225 +1296,423 @@ Track session and conversion trends across the analysis period.
 }
 ```
 
-### Variant: Monthly Aggregation (for longer periods)
+### 14c. Day of Week Pattern
+
+Aggregated day-of-week performance across the analysis period. Identifies which days of the week drive the most engagement and conversions.
 
 ```json
 {
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
   "dimensions": [
-    { "name": "yearMonth" }
+    { "name": "dayOfWeekName" }
   ],
   "metrics": [
     { "name": "sessions" },
-    { "name": "totalUsers" },
-    { "name": "newUsers" },
     { "name": "engagementRate" },
     { "name": "conversions" },
-    { "name": "userConversionRate" }
+    { "name": "sessionConversionRate" }
+  ]
+}
+```
+
+### 14d. Hourly Pattern
+
+Aggregated hour-of-day performance. Useful for identifying peak activity windows for ad scheduling.
+
+```json
+{
+  "dateRanges": [
+    {
+      "startDate": "2026-02-01",
+      "endDate": "2026-02-28"
+    }
+  ],
+  "dimensions": [
+    { "name": "hour" }
+  ],
+  "metrics": [
+    { "name": "sessions" },
+    { "name": "engagementRate" },
+    { "name": "conversions" }
   ],
   "orderBys": [
     {
-      "dimension": { "dimensionName": "yearMonth" },
+      "dimension": { "dimensionName": "hour" },
       "desc": false
     }
   ]
 }
 ```
 
+**Notes:**
+- `date` dimension returns dates in `YYYYMMDD` format (e.g., `20260201`)
+- `isoYearIsoWeek` returns week numbers in `YYYYWW` format (e.g., `202606` for week 6 of 2026) -- useful for smoothing out daily volatility
+- `dayOfWeekName` returns the day name (e.g., `Monday`, `Tuesday`) -- aggregated across all weeks in the date range
+- `hour` returns the hour of day in the GA4 property's configured time zone (0-23)
+- **Daily trends** reveal sudden spikes or drops -- correlate with campaign launches, content publications, or external events
+- **Weekly trends** smooth out day-of-week effects and show the underlying growth or decline trajectory
+- **Day-of-week patterns** are valuable for B2B: business days typically show higher quality traffic than weekends. If weekend traffic has very low engagement, consider scheduling Google Ads to reduce weekend spend (cross-reference with MBP:google-ads)
+- **Hourly patterns** help identify peak activity windows -- useful for ad scheduling and content publication timing
+- **Scope:** Standard GA4 reporting access
+
 ---
 
-## 11. UTM Campaign Performance
+## Custom Date Range Patterns
 
-Analyse performance of specifically tagged campaigns. Critical for LinkedIn Ads attribution.
-
-### GA4 Data API Request
+For any of the above queries, adapt the `dateRanges` field to suit the analysis period.
 
 ```json
 {
   "dateRanges": [
-    {
-      "startDate": "2026-02-01",
-      "endDate": "2026-02-28"
+    { "startDate": "30daysAgo", "endDate": "yesterday" }
+  ]
+}
+```
+
+```json
+{
+  "dateRanges": [
+    { "startDate": "7daysAgo", "endDate": "yesterday" }
+  ]
+}
+```
+
+```json
+{
+  "dateRanges": [
+    { "startDate": "2026-02-01", "endDate": "2026-02-28" }
+  ]
+}
+```
+
+```json
+{
+  "dateRanges": [
+    { "startDate": "2026-02-01", "endDate": "2026-02-28", "name": "current" },
+    { "startDate": "2026-01-01", "endDate": "2026-01-31", "name": "previous" }
+  ]
+}
+```
+
+```json
+{
+  "dateRanges": [
+    { "startDate": "2026-02-01", "endDate": "2026-02-28", "name": "current" },
+    { "startDate": "2025-02-01", "endDate": "2025-02-28", "name": "year_ago" }
+  ]
+}
+```
+
+```json
+{
+  "dateRanges": [
+    { "startDate": "2026-01-01", "endDate": "today" }
+  ]
+}
+```
+
+**Notes:**
+- Relative date values (`today`, `yesterday`, `7daysAgo`, `30daysAgo`) are calculated based on the GA4 property's configured time zone
+- Named date ranges (`"name": "current"`) allow you to distinguish between periods in the API response -- each row will include a `dateRange` field indicating which period it belongs to
+- When comparing periods, ensure the date ranges cover the same number of days for fair comparison. A 31-day month vs a 28-day month will skew absolute counts.
+- For period-over-period delta calculations:
+  - Absolute change: `current_value - previous_value`
+  - Percentage change: `(current_value - previous_value) / previous_value * 100`
+  - For rates (engagement rate, conversion rate): use percentage point change, not percentage change (e.g., 62% to 58% is a 4 percentage point decline, not a 6.5% decline)
+
+---
+
+## Dimension Filter Patterns
+
+Common filter patterns reusable across any query in this library.
+
+### Filter by Specific Page Path Prefix
+
+```json
+{
+  "dimensionFilter": {
+    "filter": {
+      "fieldName": "pagePath",
+      "stringFilter": {
+        "value": "/blog/",
+        "matchType": "BEGINS_WITH"
+      }
     }
-  ],
-  "dimensions": [
-    { "name": "sessionCampaignName" },
-    { "name": "sessionSource" },
-    { "name": "sessionMedium" }
-  ],
-  "metrics": [
-    { "name": "sessions" },
-    { "name": "totalUsers" },
-    { "name": "engagementRate" },
-    { "name": "conversions" },
-    { "name": "userConversionRate" }
-  ],
+  }
+}
+```
+
+### Filter by Multiple Sources (OR Logic)
+
+```json
+{
+  "dimensionFilter": {
+    "orGroup": {
+      "expressions": [
+        {
+          "filter": {
+            "fieldName": "sessionSource",
+            "stringFilter": {
+              "value": "google",
+              "matchType": "EXACT"
+            }
+          }
+        },
+        {
+          "filter": {
+            "fieldName": "sessionSource",
+            "stringFilter": {
+              "value": "bing",
+              "matchType": "EXACT"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+### Filter by Source AND Medium (AND Logic)
+
+```json
+{
+  "dimensionFilter": {
+    "andGroup": {
+      "expressions": [
+        {
+          "filter": {
+            "fieldName": "sessionSource",
+            "stringFilter": {
+              "value": "google",
+              "matchType": "EXACT"
+            }
+          }
+        },
+        {
+          "filter": {
+            "fieldName": "sessionMedium",
+            "stringFilter": {
+              "value": "cpc",
+              "matchType": "EXACT"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+### Exclude Direct Traffic
+
+```json
+{
   "dimensionFilter": {
     "notExpression": {
       "filter": {
-        "fieldName": "sessionCampaignName",
+        "fieldName": "sessionSource",
         "stringFilter": {
-          "matchType": "EXACT",
-          "value": "(not set)"
+          "value": "(direct)",
+          "matchType": "EXACT"
         }
       }
     }
-  },
-  "orderBys": [
-    {
-      "metric": { "metricName": "sessions" },
-      "desc": true
-    }
-  ],
-  "limit": 30
+  }
 }
 ```
 
-### Notes
+### Filter to Paid Channels Only
 
-- Filters out `(not set)` campaigns to focus on deliberately tagged traffic
-- Campaign names should follow the convention in `shared/utm-taxonomy.md`: `{platform}-{objective}-{audience}-{YYYYMM}`
-- Cross-reference campaign names with MBP:google-ads and MBP:linkedin-ads data to validate consistency
+```json
+{
+  "dimensionFilter": {
+    "filter": {
+      "fieldName": "sessionDefaultChannelGroup",
+      "inListFilter": {
+        "values": ["Paid Search", "Paid Social", "Display"]
+      }
+    }
+  }
+}
+```
+
+### Filter to Australian Traffic Only
+
+```json
+{
+  "dimensionFilter": {
+    "filter": {
+      "fieldName": "country",
+      "stringFilter": {
+        "value": "Australia",
+        "matchType": "EXACT"
+      }
+    }
+  }
+}
+```
+
+### Filter by Regex (Page Path Pattern)
+
+```json
+{
+  "dimensionFilter": {
+    "filter": {
+      "fieldName": "pagePath",
+      "stringFilter": {
+        "value": "^/services/(asset-management|data-quality|consulting)",
+        "matchType": "FULL_REGEXP"
+      }
+    }
+  }
+}
+```
+
+**Notes:**
+- `matchType` values: `EXACT`, `BEGINS_WITH`, `ENDS_WITH`, `CONTAINS`, `FULL_REGEXP`, `PARTIAL_REGEXP`
+- Filters can be nested using `andGroup`, `orGroup`, and `notExpression` for complex logic
+- Dimension filters reduce the data before aggregation -- this is more efficient than fetching all data and filtering downstream
+- Regex filters (`FULL_REGEXP`, `PARTIAL_REGEXP`) follow RE2 syntax
 
 ---
 
-## 12. Exit Pages
+## Metric Filter Patterns
 
-Identify where users leave the site. Useful for finding content or UX problems.
+Filter rows based on metric values in the response. Metric filters are applied after aggregation.
 
-### GA4 Data API Request
-
-GA4 does not have a direct "exit page" dimension in the Data API like Universal Analytics did. Instead, approximate exit analysis by looking at pages with low engagement:
+### Only Show High-Traffic Pages (Minimum Sessions Threshold)
 
 ```json
 {
-  "dateRanges": [
-    {
-      "startDate": "2026-02-01",
-      "endDate": "2026-02-28"
+  "metricFilter": {
+    "filter": {
+      "fieldName": "sessions",
+      "numericFilter": {
+        "operation": "GREATER_THAN_OR_EQUAL",
+        "value": {
+          "int64Value": "10"
+        }
+      }
     }
-  ],
-  "dimensions": [
-    { "name": "pagePath" }
-  ],
-  "metrics": [
-    { "name": "screenPageViews" },
-    { "name": "sessions" },
-    { "name": "engagementRate" },
-    { "name": "averageSessionDuration" },
-    { "name": "bounceRate" }
-  ],
-  "orderBys": [
-    {
-      "metric": { "metricName": "bounceRate" },
-      "desc": true
-    }
-  ],
-  "limit": 20
+  }
 }
 ```
 
-### GA4 UI Equivalent
+### Only Show Converting Sources
 
-Use the **Explore** workspace in GA4:
-1. Create a Free Form exploration
-2. Add `Page path` as a dimension
-3. Add `Exits` and `Exit rate` as metrics (available in Explore but not the standard Data API)
-4. Sort by exits descending
+```json
+{
+  "metricFilter": {
+    "filter": {
+      "fieldName": "conversions",
+      "numericFilter": {
+        "operation": "GREATER_THAN",
+        "value": {
+          "int64Value": "0"
+        }
+      }
+    }
+  }
+}
+```
 
-### Notes
-
-- In GA4, `bounceRate` is the inverse of `engagementRate` (bounceRate = 1 - engagementRate)
-- High bounce/exit rates on confirmation or thank-you pages are expected and not a concern
-- Focus investigation on service pages, blog posts, and landing pages with unexpectedly high exit rates
+**Notes:**
+- Metric filters are applied after aggregation -- they filter rows from the result set rather than filtering raw data
+- `numericFilter.operation` values: `EQUAL`, `LESS_THAN`, `LESS_THAN_OR_EQUAL`, `GREATER_THAN`, `GREATER_THAN_OR_EQUAL`
+- Use metric filters to remove noise from reports (e.g., pages with only 1-2 sessions that are not statistically meaningful)
 
 ---
 
-## Query Tips
+## GA4 Dimension Reference
 
-### Date Range Patterns
+Quick reference for commonly used GA4 dimensions across the queries in this library.
 
-```json
-// Last 30 days
-{ "startDate": "30daysAgo", "endDate": "yesterday" }
+| Dimension | Scope | Description | Example Values |
+|---|---|---|---|
+| `sessionSource` | Session | Traffic source for the session | `google`, `linkedin`, `(direct)`, `linkedin.com` |
+| `sessionMedium` | Session | Traffic medium for the session | `organic`, `cpc`, `paid_social`, `referral`, `(none)` |
+| `sessionCampaignName` | Session | Campaign name (from UTM or auto-tag) | `linkedin-leadgen-utilities-202602`, `(not set)` |
+| `sessionManualAdContent` | Session | UTM content parameter (`utm_content`) | `iso55001-awareness-v2`, `(not set)` |
+| `sessionDefaultChannelGroup` | Session | GA4 default channel group | `Organic Search`, `Paid Search`, `Paid Social`, `Direct` |
+| `firstUserSource` | User | Source of the user's first ever session | `google`, `linkedin` |
+| `firstUserMedium` | User | Medium of the user's first ever session | `organic`, `cpc`, `paid_social` |
+| `newVsReturning` | Session | Whether the user is new or returning | `new`, `returning` |
+| `deviceCategory` | Session | Device type | `desktop`, `mobile`, `tablet` |
+| `country` | User | User's country (from IP geolocation) | `Australia`, `United States` |
+| `city` | User | User's city (from IP geolocation) | `Sydney`, `Melbourne`, `Brisbane` |
+| `pagePath` | Event | Page URL path | `/blog/iso-55001-guide`, `/services/` |
+| `pageTitle` | Event | HTML page title | `ISO 55001 Readiness Guide` |
+| `landingPage` | Session | First page viewed in the session | `/`, `/blog/data-quality-tips` |
+| `eventName` | Event | GA4 event name | `page_view`, `form_submit`, `file_download` |
+| `isConversionEvent` | Event | Whether the event is marked as conversion | `true`, `false` |
+| `date` | Event | Date in `YYYYMMDD` format | `20260201` |
+| `isoYearIsoWeek` | Event | ISO year and week number | `202606` |
+| `yearMonth` | Event | Year and month in `YYYYMM` format | `202602` |
+| `dayOfWeekName` | Event | Day of the week name | `Monday`, `Tuesday` |
+| `hour` | Event | Hour of day (0-23) | `9`, `14`, `22` |
+| `sessionNumber` | Session | The ordinal session number for the user | `1`, `2`, `5` |
 
-// This month
-{ "startDate": "2026-03-01", "endDate": "2026-03-02" }
+---
 
-// Comparison: current vs previous period
-[
-  { "startDate": "2026-02-01", "endDate": "2026-02-28" },
-  { "startDate": "2026-01-01", "endDate": "2026-01-31" }
-]
-```
+## GA4 Metric Reference
 
-### Common Dimension Filters
+Quick reference for commonly used GA4 metrics across the queries in this library.
 
-```json
-// Filter to a specific source
-{
-  "filter": {
-    "fieldName": "sessionSource",
-    "stringFilter": {
-      "matchType": "EXACT",
-      "value": "google"
-    }
-  }
-}
-
-// Filter to paid traffic only
-{
-  "filter": {
-    "fieldName": "sessionDefaultChannelGroup",
-    "inListFilter": {
-      "values": ["Paid Search", "Paid Social", "Display"]
-    }
-  }
-}
-
-// Filter to Australian traffic only
-{
-  "filter": {
-    "fieldName": "country",
-    "stringFilter": {
-      "matchType": "EXACT",
-      "value": "Australia"
-    }
-  }
-}
-```
-
-### Metric Definitions Reference
-
-| GA4 Metric | API Name | Description |
+| Metric | Type | Description |
 |---|---|---|
-| Sessions | `sessions` | Total number of sessions |
-| Total users | `totalUsers` | Total unique users |
-| New users | `newUsers` | First-time users |
-| Engagement rate | `engagementRate` | Engaged sessions / total sessions |
-| Bounce rate | `bounceRate` | 1 - engagement rate |
-| Avg. session duration | `averageSessionDuration` | Average time per session (seconds) |
-| Pages per session | `screenPageViewsPerSession` | Average page views per session |
-| Conversions | `conversions` | Total conversion events (all marked conversion events) |
-| User conversion rate | `userConversionRate` | Converting users / total users |
-| Page views | `screenPageViews` | Total page views |
-| Event count | `eventCount` | Total event occurrences |
+| `sessions` | Integer | Total number of sessions |
+| `totalUsers` | Integer | Total unique users |
+| `newUsers` | Integer | Users visiting for the first time |
+| `engagementRate` | Decimal | Proportion of engaged sessions (>10s, conversion, or 2+ pages) |
+| `engagedSessions` | Integer | Number of engaged sessions |
+| `bounceRate` | Decimal | Proportion of non-engaged sessions (inverse of engagement rate) |
+| `averageSessionDuration` | Seconds | Average session length (includes idle time) |
+| `userEngagementDuration` | Seconds | Total active engagement time |
+| `screenPageViews` | Integer | Total page views |
+| `screenPageViewsPerSession` | Decimal | Average pages viewed per session |
+| `conversions` | Integer | Total conversion events (deduplicated per session) |
+| `sessionConversionRate` | Decimal | Proportion of sessions with at least one conversion |
+| `eventCount` | Integer | Total event count |
+| `eventCountPerUser` | Decimal | Average events per user |
 
-### Dimension Definitions Reference
+---
 
-| GA4 Dimension | API Name | Description |
+## MCP Tool Mapping
+
+When a GA4 MCP server is connected, the query bodies above can be passed to the MCP tool that corresponds to the `RunReport` endpoint. The exact tool name depends on the MCP server implementation.
+
+| MCP Server | Likely Tool Name | Notes |
 |---|---|---|
-| Source | `sessionSource` | Traffic source (e.g., google, linkedin) |
-| Medium | `sessionMedium` | Traffic medium (e.g., organic, cpc, paid_social) |
-| Channel group | `sessionDefaultChannelGroup` | GA4 default channel grouping |
-| Campaign | `sessionCampaignName` | UTM campaign or Google Ads campaign name |
-| Page path | `pagePath` | URL path of the page |
-| Landing page | `landingPage` | First page of the session |
-| Device | `deviceCategory` | desktop, mobile, or tablet |
-| Country | `country` | User's country |
-| City | `city` | User's city |
-| Date | `date` | Date in YYYYMMDD format |
-| New vs returning | `newVsReturning` | `new` or `returning` |
-| Event name | `eventName` | Name of the GA4 event |
+| GA4 Data API MCP (generic) | `runReport` or `run_report` | Pass the full JSON body as the request parameter |
+| Custom GA4 MCP | Varies | Check available tools with the MCP server; look for a tool that accepts `dimensions`, `metrics`, and `dateRanges` parameters |
+
+**Usage pattern:**
+1. Confirm GA4 property ID with the user
+2. Check which MCP tools are available
+3. Adapt the query body from this library to match the MCP tool's expected parameter format
+4. Execute the query and parse the response
+
+**Response parsing:**
+- The API returns rows with `dimensionValues` and `metricValues` arrays
+- Dimension values are strings; metric values may be strings representing integers or decimals
+- An empty response (no rows) may indicate: no data for the date range, dimension filter too restrictive, or GA4 thresholding applied
+
+---
+
+## Rate Limiting and Best Practices
+
+- The GA4 Data API has per-property quota limits (typically 200 requests per minute, varying by property tier)
+- Batch related analysis into fewer, broader queries where possible rather than running many narrow queries
+- Use `limit` to constrain result sets -- start with 50 rows and expand only if needed
+- For large date ranges with daily segments, be mindful of result set size (e.g., 28 days * 50 source/mediums = 1,400 rows)
+- Cache results within a single analysis session -- do not re-run the same query multiple times
+- If quota errors occur, wait 60 seconds before retrying
 
 ---
 
