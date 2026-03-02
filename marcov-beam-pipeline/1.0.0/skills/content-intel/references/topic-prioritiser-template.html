@@ -28,7 +28,7 @@
       /* Rating / priority colours */
       --priority-critical: #E23939;
       --priority-high:     #F5A623;
-      --priority-medium:   #4A9B1C;
+      --priority-medium:   #3B82F6;
       --priority-low:      #9B9B9B;
 
       /* Scoring badge colours */
@@ -153,6 +153,7 @@
       border-radius: 6px;
       cursor: pointer;
       font-size: 14px;
+      font-family: var(--font-primary);
       transition: border-color 0.2s;
     }
 
@@ -179,7 +180,7 @@
        MAIN LAYOUT
        ====================================================== */
     .report-body {
-      max-width: 1200px;
+      max-width: 1280px;
       margin: 0 auto;
       padding: 32px 24px 64px;
     }
@@ -303,7 +304,7 @@
 
     .priority-key {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 10px;
       margin-top: 16px;
     }
@@ -328,6 +329,48 @@
     .priority-dot.low      { background: var(--priority-low); }
 
     /* ======================================================
+       SUMMARY CARDS
+       ====================================================== */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--border-radius);
+      padding: 18px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+    }
+
+    .summary-card .card-value {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .summary-card .card-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-label);
+    }
+
+    .card-value.critical { color: var(--priority-critical); }
+    .card-value.high     { color: var(--priority-high); }
+    .card-value.medium   { color: var(--priority-medium); }
+    .card-value.low      { color: var(--priority-low); }
+    .card-value.total    { color: var(--sas-blue); }
+    .card-value.top      { color: var(--sas-green); }
+    [data-theme="dark"] .card-value.total { color: var(--sas-green); }
+
+    /* ======================================================
        FILTER CONTROLS
        ====================================================== */
     .filter-bar {
@@ -335,7 +378,7 @@
       flex-wrap: wrap;
       gap: 12px;
       margin-bottom: 20px;
-      align-items: center;
+      align-items: flex-end;
     }
 
     .filter-bar select,
@@ -383,7 +426,6 @@
       cursor: pointer;
       font-family: var(--font-primary);
       font-size: 13px;
-      align-self: flex-end;
       transition: border-color 0.2s, color 0.2s;
     }
 
@@ -391,47 +433,6 @@
       border-color: var(--priority-critical);
       color: var(--priority-critical);
     }
-
-    /* ======================================================
-       SUMMARY CARDS
-       ====================================================== */
-    .summary-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 14px;
-      margin-bottom: 28px;
-    }
-
-    .summary-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-card);
-      border-radius: var(--border-radius);
-      padding: 18px 20px;
-      text-align: center;
-      box-shadow: var(--shadow-card);
-    }
-
-    .summary-card .card-value {
-      font-size: 32px;
-      font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 4px;
-    }
-
-    .summary-card .card-label {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-label);
-    }
-
-    .card-value.critical { color: var(--priority-critical); }
-    .card-value.high     { color: var(--priority-high); }
-    .card-value.medium   { color: var(--priority-medium); }
-    .card-value.low      { color: var(--priority-low); }
-    .card-value.top      { color: var(--sas-blue); }
-    [data-theme="dark"] .card-value.top { color: var(--sas-green); }
 
     /* ======================================================
        DATA TABLE
@@ -468,6 +469,10 @@
 
     .topics-table thead th:hover {
       background: #003366;
+    }
+
+    [data-theme="dark"] .topics-table thead th:hover {
+      background: #263545;
     }
 
     .topics-table thead th .sort-arrow {
@@ -508,7 +513,7 @@
     }
 
     .topics-table .col-topic {
-      min-width: 260px;
+      min-width: 240px;
     }
 
     .topic-title {
@@ -531,7 +536,7 @@
     .col-score {
       text-align: center;
       font-weight: 600;
-      width: 60px;
+      width: 56px;
     }
 
     .col-total {
@@ -543,6 +548,12 @@
 
     .col-category {
       white-space: nowrap;
+    }
+
+    .col-format {
+      white-space: nowrap;
+      font-size: 13px;
+      color: var(--text-secondary);
     }
 
     /* Score colour coding */
@@ -597,16 +608,6 @@
     .priority-medium   { background: var(--priority-medium); }
     .priority-low      { background: var(--priority-low); }
 
-    .content-angle-cell {
-      font-size: 13px;
-      color: var(--text-secondary);
-      max-width: 220px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
     /* ======================================================
        DETAIL MODAL
        ====================================================== */
@@ -628,7 +629,7 @@
     .modal-content {
       background: var(--bg-modal);
       border-radius: var(--border-radius);
-      max-width: 720px;
+      max-width: 780px;
       width: 100%;
       max-height: 85vh;
       overflow-y: auto;
@@ -647,6 +648,7 @@
       align-items: flex-start;
       justify-content: space-between;
       gap: 16px;
+      z-index: 1;
     }
 
     .modal-header h2 {
@@ -676,7 +678,7 @@
 
     .modal-meta {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 14px;
       margin-bottom: 20px;
     }
@@ -778,6 +780,40 @@
 
     .modal-thread-links a:hover { text-decoration: underline; }
 
+    .modal-cross-skill {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 14px;
+    }
+
+    .cross-skill-card {
+      padding: 14px 16px;
+      background: var(--bg-page);
+      border-radius: 6px;
+      border-left: 3px solid var(--sas-green);
+    }
+
+    .cross-skill-card .cs-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--sas-blue);
+      margin-bottom: 6px;
+    }
+
+    [data-theme="dark"] .cross-skill-card .cs-label { color: var(--sas-green); }
+
+    .cross-skill-card .cs-detail {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .cross-skill-card .cs-detail strong {
+      color: var(--text-primary);
+    }
+
     /* ======================================================
        FOOTER
        ====================================================== */
@@ -807,21 +843,37 @@
       .theme-toggle, .btn-print, .filter-bar { display: none !important; }
       .modal-overlay { display: none !important; }
       .topics-table tbody tr { break-inside: avoid; }
-      body { font-size: 12px; }
+      .summary-cards { grid-template-columns: repeat(6, 1fr); }
+      .summary-card { padding: 10px 8px; }
+      .summary-card .card-value { font-size: 24px; }
+      body { font-size: 11px; background: #FFFFFF; color: #1A2535; }
+      .report-body { padding: 16px; }
+      .intro-panel, .scoring-key, .table-wrapper, .summary-card { box-shadow: none; border: 1px solid #D9DEE3; }
+      .topics-table thead th { background: #002244 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .badge-priority, .badge-category { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .col-format { white-space: normal; }
     }
 
     /* ======================================================
        RESPONSIVE
        ====================================================== */
     @media (max-width: 768px) {
-      .report-header { padding: 0 16px; }
+      .report-header { padding: 0 12px; flex-wrap: wrap; height: auto; min-height: var(--header-height); padding-top: 8px; padding-bottom: 8px; }
       .header-title h1 { font-size: 15px; }
       .header-date { display: none; }
-      .report-body { padding: 20px 16px 48px; }
-      .summary-cards { grid-template-columns: repeat(2, 1fr); }
-      .filter-bar { flex-direction: column; }
+      .report-body { padding: 20px 12px 48px; }
+      .summary-cards { grid-template-columns: repeat(3, 1fr); }
+      .filter-bar { flex-direction: column; align-items: stretch; }
       .filter-bar input[type="text"] { min-width: 100%; }
       .scoring-grid { grid-template-columns: 1fr; }
+      .modal-content { max-height: 95vh; }
+      .modal-cross-skill { grid-template-columns: 1fr; }
+      .col-format { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .summary-cards { grid-template-columns: repeat(2, 1fr); }
+      .header-brand span:not(.logo-mark) { display: none; }
     }
   </style>
 </head>
@@ -830,12 +882,13 @@
   <!-- ======================== HEADER ======================== -->
   <header class="report-header">
     <div class="header-brand">
+      <!-- SAS-AM Logo Placeholder: replace with <img> tag pointing to logo asset -->
       <span class="logo-mark">SAS</span>
       <span style="font-weight: 600; font-size: 14px;">Content Intelligence</span>
     </div>
     <div class="header-title">
-      <h1>Topic Prioritiser Report</h1>
-      <span class="header-date" id="reportDate">{{REPORT_DATE}}</span>
+      <h1>Content Intelligence Report</h1>
+      <span class="header-date" id="reportDate"></span>
     </div>
     <div class="header-controls">
       <button class="btn-print" onclick="window.print()" aria-label="Print report">Print</button>
@@ -852,7 +905,7 @@
     <!-- ======== INTRO PANEL ======== -->
     <div class="intro-panel">
       <h2>What Is This Report?</h2>
-      <p>This report identifies and prioritises content opportunities discovered from Reddit and community platforms. Topics are scored against SAS-AM's service lines to find the highest-value content gaps — where audience demand is high but existing answers are poor.</p>
+      <p>This report identifies and prioritises content opportunities discovered from Reddit and community platforms. Topics are scored against SAS-AM's service lines to find the highest-value content gaps -- where audience demand is high but existing answers are poor.</p>
 
       <div class="intro-grid">
         <div class="intro-item">
@@ -861,11 +914,11 @@
         </div>
         <div class="intro-item">
           <strong>How to Use It</strong>
-          <span>Focus on Critical and High priority topics first. Click any row to see the full content brief including our recommended angle, format, and distribution channels. Use the filters to narrow by category or priority tier.</span>
+          <span>Focus on Critical and High priority topics first. Click any row to see the full content brief including our recommended angle, format, service tie-in, distribution channels, and cross-skill recommendations. Use the filters to narrow by category or priority tier.</span>
         </div>
         <div class="intro-item">
           <strong>What Happens Next</strong>
-          <span>Content briefs feed directly into MBP:linkedin-post for social content, MBP:seo for website optimisation, and MBP:google-ads / MBP:linkedin-ads for paid campaigns. This ensures every piece of content is backed by real audience demand.</span>
+          <span>Content briefs feed directly into MBP:linkedin-post for social content, MBP:seo for website optimisation, MBP:google-ads for paid search, and MBP:linkedin-ads for paid social campaigns. Every piece of content is backed by real audience demand.</span>
         </div>
       </div>
     </div>
@@ -878,14 +931,14 @@
           <div class="scoring-dimension-header">Frequency</div>
           <div class="scoring-dimension-body">
             <span class="score-label">1</span> Rare niche discussion, single thread<br>
-            <span class="score-label">3</span> Periodic discussion, 1-2 subreddits<br>
-            <span class="score-label">5</span> Constant high-traffic threads, multiple subreddits
+            <span class="score-label">3</span> Periodic discussion across 1-2 subreddits<br>
+            <span class="score-label">5</span> Constant high-traffic threads across multiple subreddits
           </div>
         </div>
         <div class="scoring-dimension">
           <div class="scoring-dimension-header">SAS-AM Relevance</div>
           <div class="scoring-dimension-body">
-            <span class="score-label">1</span> Tangentially related<br>
+            <span class="score-label">1</span> Tangentially related to asset management<br>
             <span class="score-label">3</span> Related but not a core offering<br>
             <span class="score-label">5</span> Directly maps to a core SAS-AM service
           </div>
@@ -893,17 +946,17 @@
         <div class="scoring-dimension">
           <div class="scoring-dimension-header">Content Gap</div>
           <div class="scoring-dimension-body">
-            <span class="score-label">1</span> Well-covered by competitors<br>
-            <span class="score-label">3</span> Some coverage, inconsistent quality<br>
-            <span class="score-label">5</span> High demand, low quality answers
+            <span class="score-label">1</span> Well-covered by competitors and existing content<br>
+            <span class="score-label">3</span> Some coverage exists but quality is inconsistent<br>
+            <span class="score-label">5</span> High demand, low quality answers -- significant opportunity
           </div>
         </div>
       </div>
       <div class="priority-key">
-        <div class="priority-key-item"><span class="priority-dot critical"></span> Critical (13-15): Act now</div>
-        <div class="priority-key-item"><span class="priority-dot high"></span> High (10-12): Schedule this month</div>
-        <div class="priority-key-item"><span class="priority-dot medium"></span> Medium (7-9): Add to calendar</div>
-        <div class="priority-key-item"><span class="priority-dot low"></span> Low (3-6): Monitor</div>
+        <div class="priority-key-item"><span class="priority-dot critical"></span> Critical (13-15): Act now -- create content this week</div>
+        <div class="priority-key-item"><span class="priority-dot high"></span> High (10-12): Schedule this month -- strong opportunity</div>
+        <div class="priority-key-item"><span class="priority-dot medium"></span> Medium (7-9): Add to content calendar -- worth covering</div>
+        <div class="priority-key-item"><span class="priority-dot low"></span> Low (3-6): Monitor -- watch for rising interest</div>
       </div>
     </div>
 
@@ -924,6 +977,10 @@
       <div class="summary-card">
         <div class="card-value low" id="countLow">0</div>
         <div class="card-label">Low</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-value total" id="countTotal">0</div>
+        <div class="card-label">Total Topics</div>
       </div>
       <div class="summary-card">
         <div class="card-value top" id="topScore">0</div>
@@ -969,14 +1026,14 @@
         <thead>
           <tr>
             <th class="col-num" data-sort="id"># <span class="sort-arrow">&#9650;</span></th>
-            <th class="col-topic" data-sort="title">Topic & Question <span class="sort-arrow">&#9650;</span></th>
+            <th data-sort="priority">Priority <span class="sort-arrow">&#9650;</span></th>
             <th data-sort="category">Category <span class="sort-arrow">&#9650;</span></th>
+            <th class="col-topic" data-sort="title">Topic <span class="sort-arrow">&#9650;</span></th>
             <th class="col-score" data-sort="frequency">Freq <span class="sort-arrow">&#9650;</span></th>
             <th class="col-score" data-sort="relevance">Rel <span class="sort-arrow">&#9650;</span></th>
             <th class="col-score" data-sort="gap">Gap <span class="sort-arrow">&#9650;</span></th>
             <th class="col-total" data-sort="total">Total <span class="sort-arrow">&#9650;</span></th>
-            <th data-sort="priority">Priority <span class="sort-arrow">&#9650;</span></th>
-            <th>Content Angle</th>
+            <th class="col-format" data-sort="suggested_format">Format <span class="sort-arrow">&#9650;</span></th>
           </tr>
         </thead>
         <tbody id="topicsBody">
@@ -1022,13 +1079,18 @@
         </div>
 
         <div class="modal-section">
-          <h4>Target Distribution</h4>
+          <h4>Distribution Channels</h4>
           <ul id="modalDistribution"></ul>
         </div>
 
         <div class="modal-section">
           <h4>Source Threads</h4>
           <ul class="modal-thread-links" id="modalThreads"></ul>
+        </div>
+
+        <div class="modal-section">
+          <h4>Cross-Skill Recommendations</h4>
+          <div class="modal-cross-skill" id="modalCrossSkill"></div>
         </div>
 
         <div class="modal-section">
@@ -1041,7 +1103,7 @@
 
   <!-- ======================== FOOTER ======================== -->
   <footer class="report-footer">
-    <div>Content Intelligence Report &mdash; Generated {{REPORT_DATE}} &mdash; SAS-AM Marcov Beam Pipeline</div>
+    <div>Content Intelligence Report -- Generated by MBP:content-intel -- SAS-AM Marcov Beam Pipeline</div>
   </footer>
 
   <!-- ======================== DATA ======================== -->
@@ -1049,7 +1111,7 @@
     /*
      * DATA INJECTION POINT
      * --------------------
-     * Replace the placeholder below with the actual topics array.
+     * Replace the sample data below with the actual topics array.
      * Each topic object must follow the DATA_SCHEMA below.
      *
      * DATA_SCHEMA:
@@ -1068,40 +1130,136 @@
      *   content_angle:    String,    // Our unique take on this topic
      *   suggested_format: String,    // e.g. "Pillar article", "LinkedIn SLAY post", "Carousel"
      *   service_tie_in:   String,    // Which SAS-AM service this maps to
-     *   subreddits:       String[],  // Target subreddits for distribution
+     *   distribution:     String[],  // Target distribution channels
+     *   subreddits:       String[],  // Source subreddits where topic was found
      *   thread_urls:      String[],  // URLs to source Reddit threads
-     *   strategic_notes:  String     // Why this matters, competitive advantage, timing
+     *   strategic_notes:  String,    // Why this matters, competitive advantage, timing
+     *   cross_skill: {                // Recommendations for downstream MBP skills
+     *     linkedin_post: String,      // Prompt/format for MBP:linkedin-post
+     *     seo:           String,      // Keywords/cluster for MBP:seo
+     *     google_ads:    String,      // Theme/angle for MBP:google-ads
+     *     linkedin_ads:  String       // Audience/messaging for MBP:linkedin-ads
+     *   }
      * }
      */
 
-    <!-- INJECT_DATA_HERE -->
-    // Example (remove and replace with injected data):
-    const TOPICS_DATA = [];
+    // INJECT_DATA_HERE
+    // -----------------------------------------------------------------------
+    // SAMPLE DATA: Replace these 3 example topics with real discovered data.
+    // -----------------------------------------------------------------------
+    const TOPICS_DATA = [
+      {
+        id: 1,
+        title: "Why Your CMMS Data Is Failing Your Predictive Maintenance Programme",
+        question: "We've been trying to implement predictive maintenance for 2 years and the models keep producing garbage results. Our CMMS data has duplicate asset IDs, inconsistent failure codes, and no one follows the same naming conventions. Where do we even start cleaning this up?",
+        category: "Data Quality",
+        frequency: 5,
+        relevance: 5,
+        gap: 5,
+        total: 15,
+        priority: "Critical",
+        content_angle: "Most organisations jump straight to ML models without fixing the data underneath. We've seen this pattern across 40+ sites. The real bottleneck isn't the algorithm — it's the failure taxonomy, asset hierarchy, and work order discipline. Start with a data quality baseline before touching any predictive model.",
+        suggested_format: "Pillar article",
+        service_tie_in: "Data quality assessment and remediation consulting. SAS-AM's data readiness framework maps directly to this pain point — we assess CMMS data quality across 8 dimensions before recommending any AI/ML implementation.",
+        distribution: ["LinkedIn (organic post)", "Website pillar article", "Email newsletter feature", "Reddit community response"],
+        subreddits: ["r/dataengineering", "r/ReliabilityEngineering", "r/MachineLearning"],
+        thread_urls: [
+          "https://reddit.com/r/dataengineering/comments/example1/cmms_data_quality_nightmare",
+          "https://reddit.com/r/ReliabilityEngineering/comments/example2/predictive_maintenance_data_issues",
+          "https://reddit.com/r/MachineLearning/comments/example3/industrial_ml_data_problems"
+        ],
+        strategic_notes: "This is the single highest-opportunity topic. The frustration level in threads is very high and existing answers are superficial vendor pitches. We have deep credibility here from real project experience. Timing is strong — many organisations are 2-3 years into failed AI pilots and looking for answers.",
+        cross_skill: {
+          linkedin_post: "SLAY format. Hook: 'Your predictive maintenance programme is failing. But the problem isn't your model — it's your data.' Walk through the 3 most common CMMS data quality failures we see on site.",
+          seo: "Primary keyword: 'CMMS data quality for predictive maintenance'. Long-tail: 'how to clean CMMS data', 'failure taxonomy best practices', 'asset hierarchy data standards'. Content cluster: Data Readiness for AI.",
+          google_ads: "Keyword theme: CMMS data quality, predictive maintenance data preparation. Ad angle: 'Your AI pilot failed? Start with the data.' Negative keywords: CMMS software reviews, free CMMS.",
+          linkedin_ads: "Target: Maintenance Managers, Reliability Engineers, Data Engineers in mining, utilities, transport. Messaging: 'Before you invest in another AI pilot, check your data foundation.' Sponsored content format."
+        }
+      },
+      {
+        id: 2,
+        title: "Running ML Models On-Site Without Cloud Access: Edge AI for Asset Management",
+        question: "Our mining operation has zero reliable internet at remote sites. Management wants predictive maintenance but everything I find requires cloud connectivity. Are there any practical ways to run ML inference on-premises or at the edge for vibration monitoring?",
+        category: "Edge & Sovereign AI",
+        frequency: 4,
+        relevance: 5,
+        gap: 5,
+        total: 14,
+        priority: "Critical",
+        content_angle: "The cloud-first approach to industrial AI ignores the reality of remote operations. We've deployed edge inference for vibration monitoring at sites with satellite-only connectivity. The answer isn't waiting for better internet — it's bringing the model to the data. Our AMiPU platform was designed for exactly this constraint.",
+        suggested_format: "Case study",
+        service_tie_in: "AMiPU edge computing platform and sovereign AI consulting. SAS-AM's edge deployment capability addresses the air-gapped and low-connectivity environments that most vendors ignore.",
+        distribution: ["LinkedIn (organic post)", "Website case study", "Reddit community response", "Mining industry newsletter"],
+        subreddits: ["r/mining", "r/LocalLLaMA", "r/sysadmin"],
+        thread_urls: [
+          "https://reddit.com/r/mining/comments/example4/predictive_maintenance_remote_sites",
+          "https://reddit.com/r/LocalLLaMA/comments/example5/edge_ml_industrial_applications"
+        ],
+        strategic_notes: "Data sovereignty and edge AI are converging themes. The mining sector is desperate for solutions that work without cloud dependency. Very few competitors are talking about this credibly because most don't have real edge deployment experience. This positions SAS-AM uniquely.",
+        cross_skill: {
+          linkedin_post: "Confession format. Hook: 'We tried to deploy a cloud-based predictive maintenance system at a remote mine site. It lasted 3 days before the satellite link dropped out.' Tell the story of pivoting to edge inference.",
+          seo: "Primary keyword: 'edge AI asset management'. Long-tail: 'predictive maintenance without internet', 'on-premises ML mining', 'air-gapped machine learning deployment'. Content cluster: Sovereign AI.",
+          google_ads: "Keyword theme: edge AI mining, on-premises predictive maintenance, air-gapped ML. Ad angle: 'Predictive maintenance that works without the cloud.' Negative keywords: cloud ML platform, AWS SageMaker.",
+          linkedin_ads: "Target: Mining Engineers, Operations Managers, IT Managers in mining and resources. Industries: mining, oil and gas, remote infrastructure. Messaging: 'Your remote sites deserve the same AI capability as your head office.'"
+        }
+      },
+      {
+        id: 3,
+        title: "Getting Started With ISO 55001: Practical Steps vs Consultant Fog",
+        question: "My GM wants us to get ISO 55001 certified within 18 months. Every consultant I talk to gives me vague frameworks and expensive proposals but no clear roadmap. What does an actual practical gap assessment look like, and can we do most of the groundwork ourselves?",
+        category: "Maturity & ISO 55001",
+        frequency: 4,
+        relevance: 5,
+        gap: 4,
+        total: 13,
+        priority: "Critical",
+        content_angle: "Most ISO 55001 content is written by consultants trying to make it sound harder than it is. The truth is that 60-70% of the groundwork can be done internally if you know what the auditor actually looks for. We'll walk through what a practical gap assessment covers, what you can self-assess, and where you genuinely need external help.",
+        suggested_format: "LinkedIn SLAY post",
+        service_tie_in: "ISO 55001 gap assessments and maturity modelling. SAS-AM delivers structured gap assessments that give organisations a clear, prioritised roadmap rather than a generic framework deck.",
+        distribution: ["LinkedIn (organic post)", "Website guide", "Email newsletter", "LinkedIn (paid promotion)"],
+        subreddits: ["r/AssetManagement", "r/ReliabilityEngineering"],
+        thread_urls: [
+          "https://reddit.com/r/ReliabilityEngineering/comments/example6/iso_55001_practical_steps",
+          "https://reddit.com/r/AssetManagement/comments/example7/iso_55001_gap_assessment_experience"
+        ],
+        strategic_notes: "This topic has a strong contrarian angle — calling out the consulting industry's tendency to overcomplicate ISO 55001. Positions SAS-AM as the practical, no-nonsense alternative. The question format ('can we do it ourselves?') is perfect for a trust-building response that demonstrates competence without hard-selling.",
+        cross_skill: {
+          linkedin_post: "SLAY format. Hook: 'ISO 55001 is not as complicated as your consultant wants you to think.' Break down the 5 things an auditor actually checks vs the 20 things consultants pad their proposals with.",
+          seo: "Primary keyword: 'ISO 55001 gap assessment'. Long-tail: 'ISO 55001 certification roadmap practical', 'asset management maturity assessment template', 'ISO 55001 self-assessment guide'. Content cluster: Asset Management Maturity.",
+          google_ads: "Keyword theme: ISO 55001 gap assessment, asset management maturity assessment. Ad angle: 'Get a clear ISO 55001 roadmap — not another framework deck.' Negative keywords: ISO 55001 training course, ISO 55001 certification body.",
+          linkedin_ads: "Target: Head of Asset Management, GM Operations, Chief Engineer in utilities, transport, government. Messaging: 'Know exactly where you stand on ISO 55001 — and what to fix first.' Lead gen form for gap assessment enquiry."
+        }
+      }
+    ];
   </script>
 
   <!-- ======================== APPLICATION LOGIC ======================== -->
   <script>
     // -----------------------------------------------------------
-    // Theme management
+    // Theme management (localStorage persistence)
     // -----------------------------------------------------------
-    const STORAGE_KEY = 'sas-content-intel-theme';
+    var STORAGE_KEY = 'sas-content-intel-theme';
 
     function setTheme(theme) {
       document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem(STORAGE_KEY, theme);
+      try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) { /* localStorage unavailable */ }
     }
 
     function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      var current = document.documentElement.getAttribute('data-theme') || 'light';
       setTheme(current === 'light' ? 'dark' : 'light');
     }
 
-    setTheme(localStorage.getItem(STORAGE_KEY) || 'light');
+    (function initTheme() {
+      var saved = null;
+      try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { /* ignore */ }
+      setTheme(saved || 'light');
+    })();
 
     // -----------------------------------------------------------
     // Category CSS class mapping
     // -----------------------------------------------------------
-    const CATEGORY_CLASSES = {
+    var CATEGORY_CLASSES = {
       'AI & ML':                'cat-ai-ml',
       'Data Quality':           'cat-data-quality',
       'Edge & Sovereign AI':    'cat-edge-sovereign',
@@ -1111,41 +1269,54 @@
       'Workforce':              'cat-workforce'
     };
 
-    const PRIORITY_CLASSES = {
+    var PRIORITY_CLASSES = {
       'Critical': 'priority-critical',
       'High':     'priority-high',
       'Medium':   'priority-medium',
       'Low':      'priority-low'
     };
 
-    const PRIORITY_ORDER = { 'Critical': 0, 'High': 1, 'Medium': 2, 'Low': 3 };
+    var PRIORITY_ORDER = { 'Critical': 0, 'High': 1, 'Medium': 2, 'Low': 3 };
 
     // -----------------------------------------------------------
-    // Rendering
+    // Utility: HTML-escape
     // -----------------------------------------------------------
-    let currentSort = { key: 'total', dir: 'desc' };
+    function esc(str) {
+      if (!str) return '';
+      var div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
 
     function scoreClass(val) {
       return 'score-' + val;
     }
 
+    // -----------------------------------------------------------
+    // Rendering: Summary cards
+    // -----------------------------------------------------------
     function renderSummary(topics) {
-      const counts = { Critical: 0, High: 0, Medium: 0, Low: 0 };
-      let topScore = 0;
-      topics.forEach(t => {
+      var counts = { Critical: 0, High: 0, Medium: 0, Low: 0 };
+      var topScore = 0;
+      for (var i = 0; i < topics.length; i++) {
+        var t = topics[i];
         counts[t.priority] = (counts[t.priority] || 0) + 1;
         if (t.total > topScore) topScore = t.total;
-      });
+      }
       document.getElementById('countCritical').textContent = counts.Critical;
       document.getElementById('countHigh').textContent     = counts.High;
       document.getElementById('countMedium').textContent   = counts.Medium;
       document.getElementById('countLow').textContent      = counts.Low;
-      document.getElementById('topScore').textContent      = topScore;
+      document.getElementById('countTotal').textContent    = topics.length;
+      document.getElementById('topScore').textContent      = topScore > 0 ? topScore + '/15' : '0';
     }
 
+    // -----------------------------------------------------------
+    // Rendering: Topic table
+    // -----------------------------------------------------------
     function renderTable(topics) {
-      const tbody = document.getElementById('topicsBody');
-      const noResults = document.getElementById('noResults');
+      var tbody = document.getElementById('topicsBody');
+      var noResults = document.getElementById('noResults');
       tbody.innerHTML = '';
 
       if (topics.length === 0) {
@@ -1154,62 +1325,60 @@
       }
       noResults.style.display = 'none';
 
-      topics.forEach((t, i) => {
-        const catClass = CATEGORY_CLASSES[t.category] || '';
-        const priClass = PRIORITY_CLASSES[t.priority] || '';
-        const row = document.createElement('tr');
+      for (var i = 0; i < topics.length; i++) {
+        var t = topics[i];
+        var catClass = CATEGORY_CLASSES[t.category] || '';
+        var priClass = PRIORITY_CLASSES[t.priority] || '';
+        var totalScoreClass = t.total >= 13 ? 5 : t.total >= 10 ? 4 : t.total >= 7 ? 3 : 1;
+        var row = document.createElement('tr');
         row.setAttribute('data-id', t.id);
-        row.onclick = () => openModal(t);
-        row.innerHTML = `
-          <td class="col-num">${t.id}</td>
-          <td class="col-topic">
-            <div class="topic-title">${esc(t.title)}</div>
-            <div class="topic-question">"${esc(t.question)}"</div>
-          </td>
-          <td class="col-category"><span class="badge-category ${catClass}">${esc(t.category)}</span></td>
-          <td class="col-score ${scoreClass(t.frequency)}">${t.frequency}</td>
-          <td class="col-score ${scoreClass(t.relevance)}">${t.relevance}</td>
-          <td class="col-score ${scoreClass(t.gap)}">${t.gap}</td>
-          <td class="col-total ${scoreClass(t.total >= 13 ? 5 : t.total >= 10 ? 4 : t.total >= 7 ? 3 : 1)}">${t.total}</td>
-          <td><span class="badge-priority ${priClass}">${t.priority}</span></td>
-          <td class="content-angle-cell">${esc(t.content_angle)}</td>
-        `;
+        row.onclick = (function(topic) { return function() { openModal(topic); }; })(t);
+        row.innerHTML =
+          '<td class="col-num">' + t.id + '</td>' +
+          '<td><span class="badge-priority ' + priClass + '">' + t.priority + '</span></td>' +
+          '<td class="col-category"><span class="badge-category ' + catClass + '">' + esc(t.category) + '</span></td>' +
+          '<td class="col-topic">' +
+            '<div class="topic-title">' + esc(t.title) + '</div>' +
+            '<div class="topic-question">"' + esc(t.question) + '"</div>' +
+          '</td>' +
+          '<td class="col-score ' + scoreClass(t.frequency) + '">' + t.frequency + '</td>' +
+          '<td class="col-score ' + scoreClass(t.relevance) + '">' + t.relevance + '</td>' +
+          '<td class="col-score ' + scoreClass(t.gap) + '">' + t.gap + '</td>' +
+          '<td class="col-total ' + scoreClass(totalScoreClass) + '">' + t.total + '</td>' +
+          '<td class="col-format">' + esc(t.suggested_format) + '</td>';
         tbody.appendChild(row);
-      });
-    }
-
-    function esc(str) {
-      if (!str) return '';
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
+      }
     }
 
     // -----------------------------------------------------------
     // Filtering
     // -----------------------------------------------------------
-    function getFilteredTopics() {
-      const cat    = document.getElementById('filterCategory').value;
-      const pri    = document.getElementById('filterPriority').value;
-      const search = document.getElementById('filterSearch').value.toLowerCase().trim();
+    var currentSort = { key: 'total', dir: 'desc' };
 
-      let filtered = TOPICS_DATA.filter(t => {
-        if (cat && t.category !== cat) return false;
-        if (pri && t.priority !== pri) return false;
+    function getFilteredTopics() {
+      var cat    = document.getElementById('filterCategory').value;
+      var pri    = document.getElementById('filterPriority').value;
+      var search = document.getElementById('filterSearch').value.toLowerCase().trim();
+
+      var filtered = [];
+      for (var i = 0; i < TOPICS_DATA.length; i++) {
+        var t = TOPICS_DATA[i];
+        if (cat && t.category !== cat) continue;
+        if (pri && t.priority !== pri) continue;
         if (search) {
-          const haystack = (t.title + ' ' + t.question + ' ' + t.content_angle + ' ' + t.category).toLowerCase();
-          if (!haystack.includes(search)) return false;
+          var haystack = (t.title + ' ' + t.question + ' ' + t.content_angle + ' ' + t.category + ' ' + t.suggested_format).toLowerCase();
+          if (haystack.indexOf(search) === -1) continue;
         }
-        return true;
-      });
+        filtered.push(t);
+      }
 
       // Sort
-      filtered.sort((a, b) => {
-        let va = a[currentSort.key];
-        let vb = b[currentSort.key];
+      filtered.sort(function(a, b) {
+        var va = a[currentSort.key];
+        var vb = b[currentSort.key];
         if (currentSort.key === 'priority') {
-          va = PRIORITY_ORDER[va] ?? 4;
-          vb = PRIORITY_ORDER[vb] ?? 4;
+          va = PRIORITY_ORDER[va] !== undefined ? PRIORITY_ORDER[va] : 4;
+          vb = PRIORITY_ORDER[vb] !== undefined ? PRIORITY_ORDER[vb] : 4;
         }
         if (typeof va === 'string') va = va.toLowerCase();
         if (typeof vb === 'string') vb = vb.toLowerCase();
@@ -1230,6 +1399,13 @@
       document.getElementById('filterPriority').value = '';
       document.getElementById('filterSearch').value   = '';
       currentSort = { key: 'total', dir: 'desc' };
+      // Reset sort arrow visuals
+      var allTh = document.querySelectorAll('.topics-table thead th');
+      for (var i = 0; i < allTh.length; i++) {
+        allTh[i].classList.remove('sort-active');
+        var arrow = allTh[i].querySelector('.sort-arrow');
+        if (arrow) arrow.innerHTML = '&#9650;';
+      }
       applyFilters();
     }
 
@@ -1238,116 +1414,163 @@
     document.getElementById('filterSearch').addEventListener('input', applyFilters);
 
     // -----------------------------------------------------------
-    // Sorting
+    // Sorting (column header click)
     // -----------------------------------------------------------
-    document.querySelectorAll('.topics-table thead th[data-sort]').forEach(th => {
-      th.addEventListener('click', () => {
-        const key = th.getAttribute('data-sort');
-        if (currentSort.key === key) {
-          currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
-        } else {
-          currentSort = { key, dir: key === 'title' || key === 'category' ? 'asc' : 'desc' };
-        }
-        // Update sort arrow visuals
-        document.querySelectorAll('.topics-table thead th').forEach(h => h.classList.remove('sort-active'));
-        th.classList.add('sort-active');
-        th.querySelector('.sort-arrow').textContent = currentSort.dir === 'asc' ? '\u25B2' : '\u25BC';
-        applyFilters();
-      });
-    });
+    var sortHeaders = document.querySelectorAll('.topics-table thead th[data-sort]');
+    for (var si = 0; si < sortHeaders.length; si++) {
+      (function(th) {
+        th.addEventListener('click', function() {
+          var key = th.getAttribute('data-sort');
+          if (currentSort.key === key) {
+            currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+          } else {
+            currentSort = { key: key, dir: (key === 'title' || key === 'category' || key === 'suggested_format') ? 'asc' : 'desc' };
+          }
+          // Update sort arrow visuals
+          var allTh = document.querySelectorAll('.topics-table thead th');
+          for (var j = 0; j < allTh.length; j++) allTh[j].classList.remove('sort-active');
+          th.classList.add('sort-active');
+          var arrow = th.querySelector('.sort-arrow');
+          if (arrow) arrow.textContent = currentSort.dir === 'asc' ? '\u25B2' : '\u25BC';
+          applyFilters();
+        });
+      })(sortHeaders[si]);
+    }
 
     // -----------------------------------------------------------
-    // Modal
+    // Modal: Open
     // -----------------------------------------------------------
     function openModal(topic) {
-      document.getElementById('modalTitle').textContent = topic.title;
-      document.getElementById('modalQuestion').textContent = topic.question;
+      document.getElementById('modalTitle').textContent    = topic.title;
+      document.getElementById('modalQuestion').textContent = '"' + topic.question + '"';
       document.getElementById('modalAngle').textContent    = topic.content_angle;
       document.getElementById('modalFormat').textContent   = topic.suggested_format;
       document.getElementById('modalService').textContent  = topic.service_tie_in;
       document.getElementById('modalNotes').textContent    = topic.strategic_notes;
 
       // Scores
-      const scoresEl = document.getElementById('modalScores');
-      scoresEl.innerHTML = `
-        <div class="modal-score-badge">
-          <span class="score-num ${scoreClass(topic.frequency)}">${topic.frequency}</span>
-          <span class="score-dim">Frequency</span>
-        </div>
-        <div class="modal-score-badge">
-          <span class="score-num ${scoreClass(topic.relevance)}">${topic.relevance}</span>
-          <span class="score-dim">Relevance</span>
-        </div>
-        <div class="modal-score-badge">
-          <span class="score-num ${scoreClass(topic.gap)}">${topic.gap}</span>
-          <span class="score-dim">Gap</span>
-        </div>
-        <div class="modal-score-badge">
-          <span class="score-num" style="color: var(--sas-green);">${topic.total}</span>
-          <span class="score-dim">Total</span>
-        </div>
-      `;
+      var scoresEl = document.getElementById('modalScores');
+      scoresEl.innerHTML =
+        '<div class="modal-score-badge">' +
+          '<span class="score-num ' + scoreClass(topic.frequency) + '">' + topic.frequency + '</span>' +
+          '<span class="score-dim">Frequency</span>' +
+        '</div>' +
+        '<div class="modal-score-badge">' +
+          '<span class="score-num ' + scoreClass(topic.relevance) + '">' + topic.relevance + '</span>' +
+          '<span class="score-dim">Relevance</span>' +
+        '</div>' +
+        '<div class="modal-score-badge">' +
+          '<span class="score-num ' + scoreClass(topic.gap) + '">' + topic.gap + '</span>' +
+          '<span class="score-dim">Gap</span>' +
+        '</div>' +
+        '<div class="modal-score-badge">' +
+          '<span class="score-num" style="color: var(--sas-green);">' + topic.total + '/15</span>' +
+          '<span class="score-dim">Total</span>' +
+        '</div>';
 
       // Meta
-      const metaEl = document.getElementById('modalMeta');
-      const catClass = CATEGORY_CLASSES[topic.category] || '';
-      const priClass = PRIORITY_CLASSES[topic.priority] || '';
-      metaEl.innerHTML = `
-        <div class="meta-item">
-          <div class="meta-label">Category</div>
-          <div class="meta-value"><span class="badge-category ${catClass}">${esc(topic.category)}</span></div>
-        </div>
-        <div class="meta-item">
-          <div class="meta-label">Priority</div>
-          <div class="meta-value"><span class="badge-priority ${priClass}">${topic.priority}</span></div>
-        </div>
-        <div class="meta-item">
-          <div class="meta-label">Format</div>
-          <div class="meta-value">${esc(topic.suggested_format)}</div>
-        </div>
-      `;
+      var metaEl = document.getElementById('modalMeta');
+      var catClass = CATEGORY_CLASSES[topic.category] || '';
+      var priClass = PRIORITY_CLASSES[topic.priority] || '';
+      metaEl.innerHTML =
+        '<div class="meta-item">' +
+          '<div class="meta-label">Category</div>' +
+          '<div class="meta-value"><span class="badge-category ' + catClass + '">' + esc(topic.category) + '</span></div>' +
+        '</div>' +
+        '<div class="meta-item">' +
+          '<div class="meta-label">Priority</div>' +
+          '<div class="meta-value"><span class="badge-priority ' + priClass + '">' + topic.priority + '</span></div>' +
+        '</div>' +
+        '<div class="meta-item">' +
+          '<div class="meta-label">Format</div>' +
+          '<div class="meta-value">' + esc(topic.suggested_format) + '</div>' +
+        '</div>';
 
-      // Distribution
-      const distEl = document.getElementById('modalDistribution');
+      // Distribution channels
+      var distEl = document.getElementById('modalDistribution');
       distEl.innerHTML = '';
-      (topic.subreddits || []).forEach(sub => {
-        const li = document.createElement('li');
-        li.textContent = sub;
+      var channels = topic.distribution || topic.subreddits || [];
+      for (var i = 0; i < channels.length; i++) {
+        var li = document.createElement('li');
+        li.textContent = channels[i];
         distEl.appendChild(li);
-      });
+      }
 
       // Thread links
-      const threadsEl = document.getElementById('modalThreads');
+      var threadsEl = document.getElementById('modalThreads');
       threadsEl.innerHTML = '';
-      (topic.thread_urls || []).forEach(url => {
-        const li = document.createElement('li');
-        const a  = document.createElement('a');
-        a.href = url;
+      var urls = topic.thread_urls || [];
+      for (var i = 0; i < urls.length; i++) {
+        var li = document.createElement('li');
+        var a  = document.createElement('a');
+        a.href = urls[i];
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
-        a.textContent = url;
+        // Display subreddit name if available
+        var displayText = urls[i];
+        if (topic.subreddits && topic.subreddits[i]) {
+          displayText = topic.subreddits[i] + ' -- ' + urls[i];
+        }
+        a.textContent = displayText;
         li.appendChild(a);
         threadsEl.appendChild(li);
-      });
+      }
+
+      // Cross-skill recommendations
+      var csEl = document.getElementById('modalCrossSkill');
+      csEl.innerHTML = '';
+      if (topic.cross_skill) {
+        var skills = [
+          { key: 'linkedin_post', label: 'MBP:linkedin-post' },
+          { key: 'seo',           label: 'MBP:seo' },
+          { key: 'google_ads',    label: 'MBP:google-ads' },
+          { key: 'linkedin_ads',  label: 'MBP:linkedin-ads' }
+        ];
+        for (var i = 0; i < skills.length; i++) {
+          var s = skills[i];
+          var val = topic.cross_skill[s.key];
+          if (val) {
+            var card = document.createElement('div');
+            card.className = 'cross-skill-card';
+            card.innerHTML =
+              '<div class="cs-label">' + esc(s.label) + '</div>' +
+              '<div class="cs-detail">' + esc(val) + '</div>';
+            csEl.appendChild(card);
+          }
+        }
+      }
 
       document.getElementById('detailModal').classList.add('active');
       document.body.style.overflow = 'hidden';
     }
 
+    // -----------------------------------------------------------
+    // Modal: Close
+    // -----------------------------------------------------------
     function closeModal() {
       document.getElementById('detailModal').classList.remove('active');
       document.body.style.overflow = '';
     }
 
     // Close modal on overlay click
-    document.getElementById('detailModal').addEventListener('click', (e) => {
+    document.getElementById('detailModal').addEventListener('click', function(e) {
       if (e.target === e.currentTarget) closeModal();
     });
 
     // Close modal on Escape key
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeModal();
     });
+
+    // -----------------------------------------------------------
+    // Set report date
+    // -----------------------------------------------------------
+    (function setReportDate() {
+      var now = new Date();
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var dateStr = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+      document.getElementById('reportDate').textContent = dateStr;
+    })();
 
     // -----------------------------------------------------------
     // Initialise
