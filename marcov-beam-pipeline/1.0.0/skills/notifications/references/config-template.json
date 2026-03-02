@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "created_at": "{{CREATED_AT}}",
+  "updated_at": "{{UPDATED_AT}}",
+  "channels": {
+    "teams": {
+      "enabled": false,
+      "webhook_url": null,
+      "verified_at": null
+    },
+    "desktop": {
+      "enabled": false,
+      "tool": null,
+      "verified_at": null
+    }
+  },
+  "preferences": {
+    "default_channel": "both",
+    "sound_enabled": true,
+    "default_type": "info"
+  },
+  "statistics": {
+    "total_sent": 0,
+    "teams_sent": 0,
+    "desktop_sent": 0,
+    "last_sent_at": null,
+    "last_error_at": null
+  }
+}

@@ -4,88 +4,28 @@
     "name": "SAS-AM"
   },
   "metadata": {
-    "description": "Collection of custom Claude Code skills for professional workflows"
+    "description": "Marcov Beam Pipeline (MBP) — full-stack B2B pursuit engine connecting research, marketing, analytics, and sales in a single measurement chain."
   },
   "plugins": [
     {
-      "name": "sas-presentation",
-      "source": "./sas-presentation/1.0.0",
-      "description": "Create polished SAS-AM branded Reveal.js presentations with light/dark mode, narrative structure, and professional layouts.",
+      "name": "marcov-beam-pipeline",
+      "source": "./marcov-beam-pipeline/1.0.0",
+      "description": "Full-stack B2B pursuit engine. 14 skills spanning research (b2b-research, tender), paid marketing (google-ads, linkedin-ads), organic marketing (seo, content-intel), content (linkedin-post, presentation, nano-banana), measurement (website-analytics, marketing-dashboard), sales (beam-selling), and operations (data-quality, notifications). All skills share normalised metrics, UTM taxonomy, and brand guidelines for closed-loop attribution from first touch to revenue.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["sas", "presentation", "reveal.js", "slides", "asset-management"],
-      "category": "productivity",
-      "tags": ["presentations", "slides", "reveal.js", "sas"]
-    },
-    {
-      "name": "data-quality-analysis",
-      "source": "./data-quality-analysis/1.0.0",
-      "description": "Analyse raw data quality using the ABS Data Quality Framework. Assesses seven dimensions (institutional environment, relevance, timeliness, accuracy, coherence, interpretability, accessibility) and produces a structured markdown report with ratings and recommendations.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "keywords": ["data-quality", "abs", "quality-framework", "data-analysis", "data-profiling"],
-      "category": "data-analysis",
-      "tags": ["data-quality", "abs-framework", "reporting", "data-profiling"]
-    },
-    {
-      "name": "b2b-research-agent",
-      "source": "./b2b-research-agent/1.0.0",
-      "description": "Research and identify B2B engagement opportunities. Conducts structured web research to build prospect intelligence dossiers, map decision-makers, surface buying signals, and produce actionable outreach strategies.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "keywords": ["b2b", "research", "sales", "prospecting", "outreach", "business-development", "pipeline"],
+      "keywords": [
+        "marcov-beam-pipeline", "mbp", "b2b", "marketing", "sales",
+        "google-ads", "linkedin-ads", "seo", "content-intelligence",
+        "website-analytics", "ga4", "marketing-dashboard", "attribution",
+        "beam-selling", "presentations", "data-quality", "notifications",
+        "asset-management", "linkedin", "content-marketing"
+      ],
       "category": "business-development",
-      "tags": ["b2b", "research", "prospecting", "outreach", "sales"]
-    },
-    {
-      "name": "beam-selling",
-      "source": "./beam-selling/1.0.0",
-      "description": "Guide sales engagements through the marcov.BEAM evidence-gated lifecycle. Integrates with b2b-research-agent output to form scope, build SPIN-based engagement strategy, and advance deals stage by stage with local progress saving and session-to-session resumption.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "keywords": ["sales", "beam", "spin-selling", "pipeline", "b2b", "engagement", "proposal", "markov", "bayesian"],
-      "category": "business-development",
-      "tags": ["sales", "beam", "spin-selling", "pipeline", "engagement"]
-    },
-    {
-      "name": "linkedin-post-generator",
-      "source": "./linkedin-post-generator/1.0.0",
-      "description": "Generate LinkedIn posts for SAS-AM in brand voice. Supports pillar promotion posts (driving traffic to website articles) and quick insight posts (standalone thought leadership). Applies SAS-AM tone, Australian English, and content strategy for asset management professionals.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "keywords": ["linkedin", "content", "social-media", "asset-management", "thought-leadership", "copywriting"],
-      "category": "content-marketing",
-      "tags": ["linkedin", "content", "social-media", "thought-leadership"]
-    },
-    {
-      "name": "tender-assessment",
-      "source": "./vicTenders/tender-assessment/1.0.0",
-      "description": "Scrape Victorian government tenders, score alignment to marcov capabilities using weighted matrix, and generate full pursuit packages for opportunities with ≥80% fit.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "keywords": ["tenders", "procurement", "bid-no-bid", "opportunity-assessment", "government", "victorian-tenders"],
-      "category": "business-development",
-      "tags": ["tenders", "procurement", "pursuit", "assessment"]
-    },
-    {
-      "name": "push-notifications",
-      "source": "./push-notifications/1.0.0",
-      "description": "Send push notifications via Microsoft Teams webhook and macOS desktop notifications. Use when workflows complete, errors occur, tasks need attention, or other skills finish.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "keywords": ["notifications", "teams", "webhook", "alerts", "desktop", "terminal-notifier", "workflow"],
-      "category": "productivity",
-      "tags": ["notifications", "teams", "desktop", "alerts", "workflow"]
-    },
-    {
-      "name": "nano-banana-2",
-      "source": "./nano-banana-2/1.1.0",
-      "description": "Generate images using Google's Nano Banana 2 model (gemini-3.1-flash-image-preview) with web search grounding for real-world context. Creates optimised 1000px images under 200KB with SAS watermark.",
-      "version": "1.1.0",
-      "license": "MIT",
-      "keywords": ["image-generation", "gemini", "nano-banana", "google-ai", "text-to-image", "ai-art"],
-      "category": "productivity",
-      "tags": ["image-generation", "gemini", "ai-art", "visual-content"]
+      "tags": [
+        "marketing-analytics", "b2b-sales", "cross-channel",
+        "attribution", "seo", "google-ads", "linkedin-ads",
+        "content-strategy", "pipeline-management"
+      ]
     }
   ]
 }

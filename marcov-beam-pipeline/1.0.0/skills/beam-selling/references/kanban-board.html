@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>marcov.BEAM — Kanban Board</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ============================
+       CSS CUSTOM PROPERTIES
+       ============================ */
+    :root,
+    :root[data-theme="light"] {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f8fa;
+      --bg-tertiary: #eef1f5;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --accent-subtle: rgba(105, 190, 40, 0.1);
+      --card-bg: #ffffff;
+      --card-border: rgba(0, 34, 68, 0.12);
+      --shadow-sm: 0 1px 3px rgba(0, 34, 68, 0.06);
+      --shadow-md: 0 4px 12px rgba(0, 34, 68, 0.08);
+      --shadow-lg: 0 8px 24px rgba(0, 34, 68, 0.12);
+      --header-bg: #002244;
+      --header-text: #ffffff;
+
+      /* Stage colours */
+      --stage-1: #3B82F6;
+      --stage-2: #8B5CF6;
+      --stage-3: #EC4899;
+      --stage-4: #F59E0B;
+      --stage-5: #10B981;
+      --stage-6: #06B6D4;
+
+      /* Card status */
+      --status-todo: #94a3b8;
+      --status-doing: #3B82F6;
+      --status-done: #10B981;
+      --status-blocked: #EF4444;
+
+      /* Column bg */
+      --col-bg: #f1f5f9;
+      --col-active-bg: #e8f0fe;
+      --col-complete-bg: #ecfdf5;
+
+      /* Modal */
+      --modal-bg: #ffffff;
+      --modal-overlay: rgba(0, 34, 68, 0.5);
+    }
+
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #111827;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --accent: #7AD33B;
+      --accent-hover: #69BE28;
+      --accent-subtle: rgba(122, 211, 59, 0.1);
+      --card-bg: #1e293b;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --header-bg: #0f172a;
+      --header-text: #f4fbff;
+      --stage-1: #60a5fa;
+      --stage-2: #a78bfa;
+      --stage-3: #f472b6;
+      --stage-4: #fbbf24;
+      --stage-5: #34d399;
+      --stage-6: #22d3ee;
+      --status-todo: #64748b;
+      --status-doing: #60a5fa;
+      --status-done: #34d399;
+      --status-blocked: #f87171;
+      --col-bg: #111827;
+      --col-active-bg: #1a2744;
+      --col-complete-bg: #0f2922;
+      --modal-bg: #1e293b;
+      --modal-overlay: rgba(0, 0, 0, 0.7);
+    }
+
+    /* ============================
+       BASE STYLES
+       ============================ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ============================
+       HEADER
+       ============================ */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 16px; }
+
+    .logo {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+
+    .logo-marcov { font-size: 16px; font-weight: 300; opacity: 0.7; }
+    .logo-dot { font-size: 16px; opacity: 0.5; }
+    .logo-beam {
+      font-size: 20px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 400;
+      opacity: 0.8;
+      border-left: 1px solid rgba(255,255,255,0.2);
+      padding-left: 16px;
+    }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .header-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .meta-item { display: flex; align-items: center; gap: 6px; }
+    .meta-label { opacity: 0.6; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .meta-value { font-weight: 600; }
+    .meta-value.win-prob { color: var(--sas-green); }
+
+    .theme-toggle {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--header-text);
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .theme-toggle:hover { background: rgba(255,255,255,0.2); }
+
+    /* ============================
+       BOARD
+       ============================ */
+    .board {
+      flex: 1;
+      display: flex;
+      gap: 0;
+      padding: 16px;
+      overflow-x: auto;
+      min-height: 0;
+    }
+
+    .column {
+      flex: 1;
+      min-width: 240px;
+      max-width: 320px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--card-border);
+    }
+
+    .column:last-child { border-right: none; }
+
+    .column-header {
+      padding: 12px 16px;
+      border-bottom: 3px solid;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .column[data-stage="1"] .column-header { border-color: var(--stage-1); }
+    .column[data-stage="2"] .column-header { border-color: var(--stage-2); }
+    .column[data-stage="3"] .column-header { border-color: var(--stage-3); }
+    .column[data-stage="4"] .column-header { border-color: var(--stage-4); }
+    .column[data-stage="5"] .column-header { border-color: var(--stage-5); }
+    .column[data-stage="6"] .column-header { border-color: var(--stage-6); }
+
+    .column-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .column-title {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .column[data-stage="1"] .column-title { color: var(--stage-1); }
+    .column[data-stage="2"] .column-title { color: var(--stage-2); }
+    .column[data-stage="3"] .column-title { color: var(--stage-3); }
+    .column[data-stage="4"] .column-title { color: var(--stage-4); }
+    .column[data-stage="5"] .column-title { color: var(--stage-5); }
+    .column[data-stage="6"] .column-title { color: var(--stage-6); }
+
+    .stage-number {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .column[data-stage="1"] .stage-number { background: var(--stage-1); }
+    .column[data-stage="2"] .stage-number { background: var(--stage-2); }
+    .column[data-stage="3"] .stage-number { background: var(--stage-3); }
+    .column[data-stage="4"] .stage-number { background: var(--stage-4); }
+    .column[data-stage="5"] .stage-number { background: var(--stage-5); }
+    .column[data-stage="6"] .stage-number { background: var(--stage-6); }
+
+    .stage-status-badge {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .stage-status-badge.complete { background: rgba(16, 185, 129, 0.15); color: var(--status-done); }
+    .stage-status-badge.active { background: rgba(59, 130, 246, 0.15); color: var(--status-doing); }
+    .stage-status-badge.pending { background: rgba(148, 163, 184, 0.15); color: var(--status-todo); }
+
+    .column-spin {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Gate progress bar */
+    .gate-progress {
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .gate-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .gate-bar-label { font-size: 10px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; }
+    .gate-bar-count { font-size: 11px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+
+    .gate-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .gate-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .column[data-stage="1"] .gate-bar-fill { background: var(--stage-1); }
+    .column[data-stage="2"] .gate-bar-fill { background: var(--stage-2); }
+    .column[data-stage="3"] .gate-bar-fill { background: var(--stage-3); }
+    .column[data-stage="4"] .gate-bar-fill { background: var(--stage-4); }
+    .column[data-stage="5"] .gate-bar-fill { background: var(--stage-5); }
+    .column[data-stage="6"] .gate-bar-fill { background: var(--stage-6); }
+
+    .gate-criteria-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .gate-criteria-list li {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .gate-criteria-list li .gate-icon { font-size: 10px; }
+    .gate-criteria-list li .gate-icon.met { color: var(--status-done); }
+    .gate-criteria-list li .gate-icon.unmet { color: var(--status-todo); }
+    .gate-criteria-list li.met { color: var(--text-secondary); }
+
+    /* Card area */
+    .card-area {
+      flex: 1;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+      min-height: 100px;
+    }
+
+    .column.active .card-area { background: var(--col-active-bg); }
+    .column.complete .card-area { background: var(--col-complete-bg); }
+
+    /* ============================
+       CARDS
+       ============================ */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.15s;
+      position: relative;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    .card-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .card-icon.research { background: #3B82F6; }
+    .card-icon.meeting { background: #8B5CF6; }
+    .card-icon.evidence { background: #10B981; }
+    .card-icon.document { background: #F59E0B; }
+    .card-icon.stakeholder { background: #EC4899; }
+    .card-icon.blocker { background: #EF4444; }
+    .card-icon.question { background: #F97316; }
+
+    .card-status {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .card-status.todo { background: rgba(148, 163, 184, 0.15); color: var(--status-todo); }
+    .card-status.doing { background: rgba(59, 130, 246, 0.15); color: var(--status-doing); }
+    .card-status.done { background: rgba(16, 185, 129, 0.15); color: var(--status-done); }
+    .card-status.blocked { background: rgba(239, 68, 68, 0.15); color: var(--status-blocked); }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .card-notes {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .card-date { font-size: 10px; color: var(--text-muted); }
+    .card-owner { font-size: 10px; color: var(--text-muted); font-style: italic; }
+
+    .card-gate-tag {
+      font-size: 9px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: var(--accent-subtle);
+      color: var(--accent);
+    }
+
+    /* ============================
+       ADD CARD BUTTON
+       ============================ */
+    .add-card-btn {
+      border: 2px dashed var(--card-border);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      background: transparent;
+      width: 100%;
+    }
+
+    .add-card-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ============================
+       MODAL
+       ============================ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--modal-overlay);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.visible { display: flex; }
+
+    .modal {
+      background: var(--modal-bg);
+      border-radius: 12px;
+      width: 560px;
+      max-width: 90vw;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .modal-header-left { display: flex; align-items: center; gap: 12px; }
+
+    .modal-title { font-size: 18px; font-weight: 700; }
+    .modal-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .modal-close:hover { background: var(--bg-tertiary); }
+
+    .modal-body { padding: 20px 24px; }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .modal-field {
+      margin-bottom: 12px;
+    }
+
+    .modal-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .modal-field input,
+    .modal-field textarea,
+    .modal-field select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .modal-field textarea { resize: vertical; min-height: 60px; }
+
+    .modal-evidence-block {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    .modal-evidence-block .quote {
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+      margin: 8px 0;
+      font-style: italic;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--card-border);
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+    .btn-secondary:hover { background: var(--bg-tertiary); }
+
+    /* ============================
+       FOOTER
+       ============================ */
+    .footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+    }
+
+    .footer-logo .logo-marcov { font-size: 12px; }
+    .footer-logo .logo-dot { font-size: 12px; }
+    .footer-logo .logo-beam { font-size: 12px; }
+
+    /* ============================
+       EMPTY STATE
+       ============================ */
+    .empty-state {
+      text-align: center;
+      padding: 24px 16px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .empty-state i { font-size: 24px; margin-bottom: 8px; display: block; opacity: 0.4; }
+
+    /* ============================
+       PRINT
+       ============================ */
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .theme-toggle, .add-card-btn { display: none; }
+      .board { overflow: visible; }
+      .card-area { overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-marcov">marcov</span>
+        <span class="logo-dot">.</span>
+        <span class="logo-beam">BEAM</span>
+      </div>
+      <span class="header-title" id="boardTitle">Kanban Board</span>
+    </div>
+    <div class="header-right">
+      <div class="header-meta">
+        <div class="meta-item">
+          <span class="meta-label">Win</span>
+          <span class="meta-value win-prob" id="metaWinProb">—</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Stage</span>
+          <span class="meta-value" id="metaStage">—</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Days</span>
+          <span class="meta-value" id="metaDays">—</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Value</span>
+          <span class="meta-value" id="metaValue">—</span>
+        </div>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Board -->
+  <div class="board" id="board"></div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-logo">
+      <span class="logo-marcov">marcov</span>
+      <span class="logo-dot">.</span>
+      <span class="logo-beam">BEAM</span>
+    </div>
+    <span>Advance only when evidence earns it</span>
+    <span id="lastUpdated"></span>
+  </div>
+
+  <!-- Card Detail Modal -->
+  <div class="modal-overlay" id="cardModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <div class="card-icon" id="modalIcon"></div>
+          <div>
+            <div class="modal-title" id="modalTitle"></div>
+            <div class="modal-subtitle" id="modalSubtitle"></div>
+          </div>
+        </div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ============================
+       THEME MANAGEMENT
+       ============================ */
+    const STORAGE_KEY = 'beam-kanban-theme';
+
+    function getSystemTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function setTheme(theme) {
+      const resolved = theme === 'system' ? getSystemTheme() : theme;
+      document.documentElement.setAttribute('data-theme', resolved);
+      localStorage.setItem(STORAGE_KEY, theme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    }
+
+    setTheme(localStorage.getItem(STORAGE_KEY) || 'light');
+
+    /* ============================
+       STAGE DEFINITIONS
+       ============================ */
+    const STAGES = [
+      { id: '1_qualify',   num: 1, name: 'Qualify',         spin: 'Situation',                icon: 'fa-magnifying-glass' },
+      { id: '2_diagnose',  num: 2, name: 'Diagnose',        spin: 'Problem \u2192 Implication',       icon: 'fa-stethoscope' },
+      { id: '3_align',     num: 3, name: 'Align',           spin: 'Implication \u2192 Need-payoff',   icon: 'fa-handshake' },
+      { id: '4_propose',   num: 4, name: 'Propose',         spin: 'Need-payoff',              icon: 'fa-file-contract' },
+      { id: '5_commit',    num: 5, name: 'Commit',          spin: 'Validation',               icon: 'fa-check-double' },
+      { id: '6_deliver',   num: 6, name: 'Deliver & Renew', spin: 'Continuous Discovery',     icon: 'fa-rocket' }
+    ];
+
+    const GATE_CRITERIA = {
+      '1_qualify': [
+        { key: 'problem_domain_identified', label: 'Problem domain identified' },
+        { key: 'access_to_authority', label: 'Access to authority confirmed' },
+        { key: 'willing_to_diagnose', label: 'Willing to have diagnostic conversation' }
+      ],
+      '2_diagnose': [
+        { key: 'problems_articulated', label: 'Specific problems articulated' },
+        { key: 'implications_quantified', label: 'Implications quantified' },
+        { key: 'cost_of_inaction_acknowledged', label: 'Cost of inaction acknowledged' }
+      ],
+      '3_align': [
+        { key: 'problem_definition_agreed', label: 'Problem definition agreed' },
+        { key: 'success_criteria_defined', label: 'Success criteria defined' },
+        { key: 'stakeholder_landscape_mapped', label: 'Stakeholder landscape mapped' },
+        { key: 'decision_process_understood', label: 'Decision process understood' }
+      ],
+      '4_propose': [
+        { key: 'proposal_addresses_needs', label: 'Proposal addresses all needs' },
+        { key: 'commercial_terms_clear', label: 'Commercial terms clear' },
+        { key: 'decision_process_confirmed', label: 'Decision process confirmed' },
+        { key: 'objections_addressed', label: 'Key objections addressed' }
+      ],
+      '5_commit': [
+        { key: 'commitment_received', label: 'Commitment received' },
+        { key: 'commercial_terms_accepted', label: 'Commercial terms accepted' },
+        { key: 'delivery_handover_initiated', label: 'Delivery handover initiated' }
+      ],
+      '6_deliver': [
+        { key: 'outcomes_delivered', label: 'Outcomes delivered' },
+        { key: 'relationship_maintained', label: 'Relationship maintained' },
+        { key: 'future_needs_surfaced', label: 'Future needs surfaced' },
+        { key: 'case_study_identified', label: 'Case study potential identified' }
+      ]
+    };
+
+    const CARD_TYPES = {
+      research:    { icon: 'R', class: 'research',    faIcon: 'fa-magnifying-glass-chart' },
+      meeting:     { icon: 'M', class: 'meeting',     faIcon: 'fa-users' },
+      evidence:    { icon: 'E', class: 'evidence',    faIcon: 'fa-clipboard-check' },
+      document:    { icon: 'D', class: 'document',    faIcon: 'fa-file-lines' },
+      stakeholder: { icon: 'S', class: 'stakeholder', faIcon: 'fa-user-tie' },
+      blocker:     { icon: '!', class: 'blocker',     faIcon: 'fa-triangle-exclamation' },
+      question:    { icon: '?', class: 'question',    faIcon: 'fa-circle-question' }
+    };
+
+    /* ============================
+       DATA LOADING
+       ============================ */
+
+    // The board reads from a global `BEAM_DATA` variable.
+    // The skill populates this when generating the board.
+    // Fallback to sample data if not set.
+
+    function getEngagementData() {
+      if (typeof BEAM_DATA !== 'undefined') return BEAM_DATA;
+      return getSampleData();
+    }
+
+    function getSampleData() {
+      return {
+        engagement: {
+          company_name: '{{COMPANY_NAME}}',
+          deal_name: '{{DEAL_NAME}}',
+          current_stage: 2,
+          win_probability: 35,
+          status: 'active',
+          created_at: '2026-02-01'
+        },
+        timeline: {
+          estimated_deal_value: null,
+          target_close_date: null
+        },
+        stages: {
+          '1_qualify': {
+            status: 'complete',
+            gate_criteria: {
+              problem_domain_identified: { met: true },
+              access_to_authority: { met: true },
+              willing_to_diagnose: { met: true }
+            }
+          },
+          '2_diagnose': {
+            status: 'in_progress',
+            gate_criteria: {
+              problems_articulated: { met: false },
+              implications_quantified: { met: false },
+              cost_of_inaction_acknowledged: { met: false }
+            }
+          },
+          '3_align': { status: 'not_started', gate_criteria: { problem_definition_agreed: { met: false }, success_criteria_defined: { met: false }, stakeholder_landscape_mapped: { met: false }, decision_process_understood: { met: false } } },
+          '4_propose': { status: 'not_started', gate_criteria: { proposal_addresses_needs: { met: false }, commercial_terms_clear: { met: false }, decision_process_confirmed: { met: false }, objections_addressed: { met: false } } },
+          '5_commit': { status: 'not_started', gate_criteria: { commitment_received: { met: false }, commercial_terms_accepted: { met: false }, delivery_handover_initiated: { met: false } } },
+          '6_deliver': { status: 'not_started', gate_criteria: { outcomes_delivered: { met: false }, relationship_maintained: { met: false }, future_needs_surfaced: { met: false }, case_study_identified: { met: false } } }
+        },
+        kanban: {
+          '1_qualify': { cards: [] },
+          '2_diagnose': { cards: [] },
+          '3_align': { cards: [] },
+          '4_propose': { cards: [] },
+          '5_commit': { cards: [] },
+          '6_deliver': { cards: [] }
+        }
+      };
+    }
+
+    /* ============================
+       RENDER BOARD
+       ============================ */
+    function renderBoard() {
+      const data = getEngagementData();
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+
+      // Update header
+      const company = data.engagement.company_name || 'Engagement';
+      const deal = data.engagement.deal_name || '';
+      document.getElementById('boardTitle').textContent = deal ? `${company} \u2014 ${deal}` : company;
+      document.getElementById('metaWinProb').textContent = `${data.engagement.win_probability}%`;
+      document.getElementById('metaStage').textContent = STAGES[data.engagement.current_stage - 1]?.name || '—';
+
+      const daysActive = data.engagement.created_at
+        ? Math.floor((new Date() - new Date(data.engagement.created_at)) / 86400000)
+        : 0;
+      document.getElementById('metaDays').textContent = `${daysActive}d`;
+
+      const val = data.timeline?.estimated_deal_value;
+      document.getElementById('metaValue').textContent = val ? `$${Number(val).toLocaleString()}` : '—';
+
+      document.getElementById('lastUpdated').textContent = `Updated: ${new Date().toLocaleDateString('en-AU')}`;
+
+      // Render columns
+      STAGES.forEach(stage => {
+        const stageData = data.stages[stage.id] || {};
+        const kanbanCards = data.kanban?.[stage.id]?.cards || [];
+        const gates = GATE_CRITERIA[stage.id] || [];
+        const gateData = stageData.gate_criteria || {};
+
+        const metCount = gates.filter(g => gateData[g.key]?.met).length;
+        const totalGates = gates.length;
+        const pct = totalGates > 0 ? (metCount / totalGates) * 100 : 0;
+
+        const stageStatus = stageData.status || 'not_started';
+        const statusClass = stageStatus === 'complete' ? 'complete' : stageStatus === 'in_progress' ? 'active' : 'pending';
+        const statusLabel = stageStatus === 'complete' ? 'Complete' : stageStatus === 'in_progress' ? 'Active' : 'Pending';
+        const isActive = stageStatus === 'in_progress';
+        const isComplete = stageStatus === 'complete';
+
+        const col = document.createElement('div');
+        col.className = `column ${isActive ? 'active' : ''} ${isComplete ? 'complete' : ''}`;
+        col.setAttribute('data-stage', stage.num);
+
+        col.innerHTML = `
+          <div class="column-header">
+            <div class="column-title-row">
+              <div class="column-title">
+                <span class="stage-number">${stage.num}</span>
+                ${stage.name}
+              </div>
+              <span class="stage-status-badge ${statusClass}">${statusLabel}</span>
+            </div>
+            <div class="column-spin"><i class="fa-solid fa-comment-dots"></i> ${stage.spin}</div>
+          </div>
+          <div class="gate-progress">
+            <div class="gate-bar-row">
+              <span class="gate-bar-label">Gates</span>
+              <div class="gate-bar"><div class="gate-bar-fill" style="width:${pct}%"></div></div>
+              <span class="gate-bar-count">${metCount}/${totalGates}</span>
+            </div>
+            <ul class="gate-criteria-list">
+              ${gates.map(g => {
+                const met = gateData[g.key]?.met;
+                return `<li class="${met ? 'met' : ''}">
+                  <span class="gate-icon ${met ? 'met' : 'unmet'}">
+                    <i class="fa-solid ${met ? 'fa-circle-check' : 'fa-circle'}"></i>
+                  </span>
+                  ${g.label}
+                </li>`;
+              }).join('')}
+            </ul>
+          </div>
+          <div class="card-area" id="cards-${stage.id}">
+            ${kanbanCards.length === 0
+              ? `<div class="empty-state">
+                   <i class="fa-solid ${stage.icon}"></i>
+                   ${isActive ? 'Add activities to track progress' : isComplete ? 'Stage complete' : 'Not yet started'}
+                 </div>`
+              : kanbanCards.map(card => renderCard(card)).join('')
+            }
+            ${(isActive || isComplete) ? `<button class="add-card-btn" onclick="openAddCard('${stage.id}')"><i class="fa-solid fa-plus"></i> Add card</button>` : ''}
+          </div>
+        `;
+
+        board.appendChild(col);
+      });
+    }
+
+    function renderCard(card) {
+      const type = CARD_TYPES[card.type] || CARD_TYPES.research;
+      return `
+        <div class="card" onclick="openCardDetail('${card.id}')">
+          <div class="card-top">
+            <div class="card-icon ${type.class}">
+              <i class="fa-solid ${type.faIcon}"></i>
+            </div>
+            <span class="card-status ${card.status}">${card.status.toUpperCase()}</span>
+          </div>
+          <div class="card-title">${escapeHtml(card.title)}</div>
+          ${card.notes ? `<div class="card-notes">${escapeHtml(card.notes)}</div>` : ''}
+          <div class="card-footer">
+            <span class="card-date">${card.completed_at || card.due_date || card.created_at || ''}</span>
+            ${card.gate_ref ? `<span class="card-gate-tag"><i class="fa-solid fa-shield-check"></i> Gate</span>` : ''}
+            ${card.owner ? `<span class="card-owner">${escapeHtml(card.owner)}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    /* ============================
+       MODAL — CARD DETAIL
+       ============================ */
+    function openCardDetail(cardId) {
+      const data = getEngagementData();
+      let card = null;
+      let stageName = '';
+
+      for (const stageId of Object.keys(data.kanban || {})) {
+        const found = (data.kanban[stageId].cards || []).find(c => c.id === cardId);
+        if (found) {
+          card = found;
+          stageName = STAGES.find(s => s.id === stageId)?.name || stageId;
+          break;
+        }
+      }
+
+      if (!card) return;
+
+      const type = CARD_TYPES[card.type] || CARD_TYPES.research;
+      const modal = document.getElementById('cardModal');
+      const icon = document.getElementById('modalIcon');
+      const title = document.getElementById('modalTitle');
+      const subtitle = document.getElementById('modalSubtitle');
+      const body = document.getElementById('modalBody');
+
+      icon.className = `card-icon ${type.class}`;
+      icon.innerHTML = `<i class="fa-solid ${type.faIcon}"></i>`;
+      title.textContent = card.title;
+      subtitle.textContent = `Stage: ${stageName} \u00B7 ${card.status.toUpperCase()} \u00B7 ${card.type}`;
+
+      let html = '';
+
+      if (card.notes) {
+        html += `
+          <div class="modal-section">
+            <div class="modal-section-title">Notes</div>
+            <div class="modal-evidence-block">${escapeHtml(card.notes).replace(/\n/g, '<br>')}</div>
+          </div>`;
+      }
+
+      if (card.evidence_ref) {
+        html += `
+          <div class="modal-section">
+            <div class="modal-section-title">Evidence</div>
+            <div class="modal-evidence-block">${escapeHtml(card.evidence_ref)}</div>
+          </div>`;
+      }
+
+      html += `
+        <div class="modal-section">
+          <div class="modal-section-title">Details</div>
+          <table style="width:100%;font-size:13px;border-collapse:collapse;">
+            <tr><td style="padding:4px 8px;color:var(--text-muted);width:120px;">Created</td><td style="padding:4px 8px;">${card.created_at || '—'}</td></tr>
+            <tr><td style="padding:4px 8px;color:var(--text-muted);">Completed</td><td style="padding:4px 8px;">${card.completed_at || '—'}</td></tr>
+            <tr><td style="padding:4px 8px;color:var(--text-muted);">Due Date</td><td style="padding:4px 8px;">${card.due_date || '—'}</td></tr>
+            <tr><td style="padding:4px 8px;color:var(--text-muted);">Owner</td><td style="padding:4px 8px;">${card.owner || '—'}</td></tr>
+            <tr><td style="padding:4px 8px;color:var(--text-muted);">Gate Link</td><td style="padding:4px 8px;">${card.gate_ref || '—'}</td></tr>
+          </table>
+        </div>`;
+
+      body.innerHTML = html;
+      modal.classList.add('visible');
+    }
+
+    function openAddCard(stageId) {
+      const modal = document.getElementById('cardModal');
+      const icon = document.getElementById('modalIcon');
+      const title = document.getElementById('modalTitle');
+      const subtitle = document.getElementById('modalSubtitle');
+      const body = document.getElementById('modalBody');
+
+      const stageName = STAGES.find(s => s.id === stageId)?.name || stageId;
+
+      icon.className = 'card-icon research';
+      icon.innerHTML = '<i class="fa-solid fa-plus"></i>';
+      title.textContent = 'Add Card';
+      subtitle.textContent = `Stage: ${stageName}`;
+
+      body.innerHTML = `
+        <div class="modal-section">
+          <div class="modal-field">
+            <label>Card Type</label>
+            <select id="newCardType">
+              <option value="research">Research</option>
+              <option value="meeting">Meeting</option>
+              <option value="evidence">Evidence</option>
+              <option value="document">Document</option>
+              <option value="stakeholder">Stakeholder</option>
+              <option value="blocker">Blocker</option>
+              <option value="question">Question</option>
+            </select>
+          </div>
+          <div class="modal-field">
+            <label>Title</label>
+            <input type="text" id="newCardTitle" placeholder="Short description of the activity">
+          </div>
+          <div class="modal-field">
+            <label>Notes</label>
+            <textarea id="newCardNotes" placeholder="Details, context, findings..."></textarea>
+          </div>
+          <div class="modal-field">
+            <label>Status</label>
+            <select id="newCardStatus">
+              <option value="todo">TODO</option>
+              <option value="doing">DOING</option>
+              <option value="done">DONE</option>
+              <option value="blocked">BLOCKED</option>
+            </select>
+          </div>
+          <div class="modal-field">
+            <label>Date</label>
+            <input type="date" id="newCardDate" value="${new Date().toISOString().split('T')[0]}">
+          </div>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:12px;">
+            <i class="fa-solid fa-circle-info"></i>
+            Cards added here are for visual tracking. The skill will persist them to <code>.beam/</code> on next save.
+          </p>
+        </div>
+      `;
+
+      // Replace the footer close button with save + close
+      const footer = document.querySelector('.modal-footer');
+      footer.innerHTML = `
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="addCard('${stageId}')"><i class="fa-solid fa-plus"></i> Add</button>
+      `;
+
+      modal.classList.add('visible');
+    }
+
+    function addCard(stageId) {
+      const data = getEngagementData();
+      if (!data.kanban) data.kanban = {};
+      if (!data.kanban[stageId]) data.kanban[stageId] = { cards: [] };
+
+      const type = document.getElementById('newCardType').value;
+      const title = document.getElementById('newCardTitle').value.trim();
+      const notes = document.getElementById('newCardNotes').value.trim();
+      const status = document.getElementById('newCardStatus').value;
+      const date = document.getElementById('newCardDate').value;
+
+      if (!title) { alert('Please enter a title.'); return; }
+
+      const prefix = stageId.split('_')[0];
+      const id = `${prefix}-${String(data.kanban[stageId].cards.length + 1).padStart(3, '0')}`;
+
+      data.kanban[stageId].cards.push({
+        id, type, title, notes, status,
+        icon: CARD_TYPES[type]?.icon || 'R',
+        created_at: date,
+        completed_at: status === 'done' ? date : null,
+        due_date: status === 'todo' ? date : null,
+        owner: 'seller',
+        evidence_ref: null,
+        gate_ref: null
+      });
+
+      closeModal();
+      renderBoard();
+    }
+
+    function closeModal() {
+      document.getElementById('cardModal').classList.remove('visible');
+      // Restore default footer
+      document.querySelector('.modal-footer').innerHTML = `
+        <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+      `;
+    }
+
+    /* ============================
+       UTILITIES
+       ============================ */
+    function escapeHtml(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Close modal on overlay click
+    document.getElementById('cardModal').addEventListener('click', function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    // Close modal on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    /* ============================
+       INITIALISE
+       ============================ */
+    renderBoard();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Intelligence Report | SAS-AM</title>
+
+  <!-- Google Fonts: DM Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ======================================================
+       CSS VARIABLES — SAS-AM Branding (shared/sas-branding.md)
+       ====================================================== */
+    :root {
+      /* Brand colours */
+      --sas-blue:       #002244;
+      --sas-green:      #69BE28;
+      --tint-light:     #F2F4F6;
+      --tint-mid:       #E5E9EC;
+      --tint-dark:      #D9DEE3;
+      --blue-grey:      #5D6C7B;
+      --mid-grey:       #9B9B9B;
+      --text:           #1A2535;
+
+      /* Rating / priority colours */
+      --priority-critical: #E23939;
+      --priority-high:     #F5A623;
+      --priority-medium:   #4A9B1C;
+      --priority-low:      #9B9B9B;
+
+      /* Scoring badge colours */
+      --score-high:   #4A9B1C;
+      --score-mid:    #F5A623;
+      --score-low:    #E23939;
+
+      /* Typography */
+      --font-primary:   'DM Sans', 'Source Sans Pro', system-ui, sans-serif;
+      --font-mono:      'Source Code Pro', monospace;
+
+      /* Layout */
+      --header-height:  64px;
+      --border-radius:  8px;
+      --shadow-card:    0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-modal:   0 20px 60px rgba(0,0,0,0.3);
+
+      /* Theme — Light (default) */
+      --bg-page:        var(--tint-light);
+      --bg-card:        #FFFFFF;
+      --bg-thead:       var(--sas-blue);
+      --bg-row-alt:     var(--tint-light);
+      --bg-modal:       #FFFFFF;
+      --text-primary:   var(--text);
+      --text-secondary: var(--blue-grey);
+      --text-label:     var(--mid-grey);
+      --border-card:    var(--tint-mid);
+      --border-input:   var(--tint-dark);
+    }
+
+    [data-theme="dark"] {
+      --bg-page:        #0D1117;
+      --bg-card:        #161B22;
+      --bg-thead:       #1C2530;
+      --bg-row-alt:     #1C2530;
+      --bg-modal:       #161B22;
+      --text-primary:   #E6EDF3;
+      --text-secondary: #8B949E;
+      --text-label:     #6E7681;
+      --border-card:    #30363D;
+      --border-input:   #30363D;
+    }
+
+    /* ======================================================
+       RESET & BASE
+       ====================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-primary);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background: var(--bg-page);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ======================================================
+       HEADER
+       ====================================================== */
+    .report-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--header-height);
+      padding: 0 24px;
+      background: var(--sas-blue);
+      border-bottom: 3px solid var(--sas-green);
+      color: #FFFFFF;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--sas-green);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .header-title {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .header-date {
+      font-size: 13px;
+      opacity: 0.7;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #FFFFFF;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .theme-toggle:hover { border-color: var(--sas-green); }
+
+    [data-theme="light"] .dark-icon { display: none; }
+    [data-theme="dark"] .light-icon { display: none; }
+
+    .btn-print {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #FFFFFF;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: var(--font-primary);
+      transition: border-color 0.2s;
+    }
+
+    .btn-print:hover { border-color: var(--sas-green); }
+
+    /* ======================================================
+       MAIN LAYOUT
+       ====================================================== */
+    .report-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* ======================================================
+       INTRO PANEL
+       ====================================================== */
+    .intro-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--border-radius);
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .intro-panel h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--sas-blue);
+      margin-bottom: 12px;
+    }
+
+    [data-theme="dark"] .intro-panel h2 { color: var(--sas-green); }
+
+    .intro-panel p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      line-height: 1.7;
+    }
+
+    .intro-panel p:last-child { margin-bottom: 0; }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .intro-item {
+      padding: 12px 16px;
+      background: var(--bg-page);
+      border-radius: 6px;
+      border-left: 3px solid var(--sas-green);
+    }
+
+    .intro-item strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-label);
+      margin-bottom: 4px;
+    }
+
+    .intro-item span {
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    /* ======================================================
+       SCORING KEY
+       ====================================================== */
+    .scoring-key {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--border-radius);
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .scoring-key h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--sas-blue);
+      margin-bottom: 16px;
+    }
+
+    [data-theme="dark"] .scoring-key h3 { color: var(--sas-green); }
+
+    .scoring-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .scoring-dimension {
+      border: 1px solid var(--border-card);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .scoring-dimension-header {
+      background: var(--sas-blue);
+      color: #FFFFFF;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .scoring-dimension-body {
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .scoring-dimension-body .score-label {
+      display: inline-block;
+      font-weight: 600;
+      min-width: 18px;
+      text-align: center;
+      margin-right: 6px;
+    }
+
+    .priority-key {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .priority-key-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+    }
+
+    .priority-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .priority-dot.critical { background: var(--priority-critical); }
+    .priority-dot.high     { background: var(--priority-high); }
+    .priority-dot.medium   { background: var(--priority-medium); }
+    .priority-dot.low      { background: var(--priority-low); }
+
+    /* ======================================================
+       FILTER CONTROLS
+       ====================================================== */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .filter-bar select,
+    .filter-bar input[type="text"] {
+      font-family: var(--font-primary);
+      font-size: 14px;
+      padding: 8px 12px;
+      border: 1px solid var(--border-input);
+      border-radius: 6px;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .filter-bar select:focus,
+    .filter-bar input[type="text"]:focus {
+      border-color: var(--sas-green);
+    }
+
+    .filter-bar input[type="text"] {
+      min-width: 240px;
+    }
+
+    .filter-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-label);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .filter-reset {
+      background: none;
+      border: 1px solid var(--border-input);
+      color: var(--text-secondary);
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--font-primary);
+      font-size: 13px;
+      align-self: flex-end;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .filter-reset:hover {
+      border-color: var(--priority-critical);
+      color: var(--priority-critical);
+    }
+
+    /* ======================================================
+       SUMMARY CARDS
+       ====================================================== */
+    .summary-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .summary-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--border-radius);
+      padding: 18px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-card);
+    }
+
+    .summary-card .card-value {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .summary-card .card-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-label);
+    }
+
+    .card-value.critical { color: var(--priority-critical); }
+    .card-value.high     { color: var(--priority-high); }
+    .card-value.medium   { color: var(--priority-medium); }
+    .card-value.low      { color: var(--priority-low); }
+    .card-value.top      { color: var(--sas-blue); }
+    [data-theme="dark"] .card-value.top { color: var(--sas-green); }
+
+    /* ======================================================
+       DATA TABLE
+       ====================================================== */
+    .table-wrapper {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--border-radius);
+      overflow-x: auto;
+      box-shadow: var(--shadow-card);
+      margin-bottom: 28px;
+    }
+
+    .topics-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .topics-table thead th {
+      background: var(--bg-thead);
+      color: #FFFFFF;
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    .topics-table thead th:hover {
+      background: #003366;
+    }
+
+    .topics-table thead th .sort-arrow {
+      margin-left: 4px;
+      opacity: 0.4;
+      font-size: 10px;
+    }
+
+    .topics-table thead th.sort-active .sort-arrow {
+      opacity: 1;
+      color: var(--sas-green);
+    }
+
+    .topics-table tbody tr {
+      border-bottom: 1px solid var(--border-card);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .topics-table tbody tr:nth-child(even) {
+      background: var(--bg-row-alt);
+    }
+
+    .topics-table tbody tr:hover {
+      background: rgba(105, 190, 40, 0.08);
+    }
+
+    .topics-table tbody td {
+      padding: 10px 14px;
+      vertical-align: top;
+    }
+
+    .topics-table .col-num {
+      width: 40px;
+      text-align: center;
+      color: var(--text-label);
+      font-weight: 600;
+    }
+
+    .topics-table .col-topic {
+      min-width: 260px;
+    }
+
+    .topic-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .topic-question {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-style: italic;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .col-score {
+      text-align: center;
+      font-weight: 600;
+      width: 60px;
+    }
+
+    .col-total {
+      text-align: center;
+      font-weight: 700;
+      width: 60px;
+      font-size: 16px;
+    }
+
+    .col-category {
+      white-space: nowrap;
+    }
+
+    /* Score colour coding */
+    .score-5 { color: var(--score-high); }
+    .score-4 { color: var(--score-high); }
+    .score-3 { color: var(--score-mid); }
+    .score-2 { color: var(--score-low); }
+    .score-1 { color: var(--score-low); }
+
+    /* Category badges */
+    .badge-category {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .cat-ai-ml          { background: #E8F0FE; color: #1A73E8; }
+    .cat-data-quality    { background: #FFF3E0; color: #E65100; }
+    .cat-edge-sovereign  { background: #F3E5F5; color: #7B1FA2; }
+    .cat-reliability     { background: #E0F2F1; color: #00695C; }
+    .cat-maturity        { background: #FBE9E7; color: #BF360C; }
+    .cat-mining          { background: #EFEBE9; color: #4E342E; }
+    .cat-workforce       { background: #E3F2FD; color: #0D47A1; }
+
+    [data-theme="dark"] .cat-ai-ml          { background: #1A3A5C; color: #90CAF9; }
+    [data-theme="dark"] .cat-data-quality    { background: #4A2800; color: #FFB74D; }
+    [data-theme="dark"] .cat-edge-sovereign  { background: #3A1A4A; color: #CE93D8; }
+    [data-theme="dark"] .cat-reliability     { background: #1A3A35; color: #80CBC4; }
+    [data-theme="dark"] .cat-maturity        { background: #3E1A10; color: #FFAB91; }
+    [data-theme="dark"] .cat-mining          { background: #2E1E18; color: #BCAAA4; }
+    [data-theme="dark"] .cat-workforce       { background: #0D2744; color: #90CAF9; }
+
+    /* Priority badges */
+    .badge-priority {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #FFFFFF;
+    }
+
+    .priority-critical { background: var(--priority-critical); }
+    .priority-high     { background: var(--priority-high); color: #1A2535; }
+    .priority-medium   { background: var(--priority-medium); }
+    .priority-low      { background: var(--priority-low); }
+
+    .content-angle-cell {
+      font-size: 13px;
+      color: var(--text-secondary);
+      max-width: 220px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* ======================================================
+       DETAIL MODAL
+       ====================================================== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-modal);
+      border-radius: var(--border-radius);
+      max-width: 720px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-modal);
+      position: relative;
+    }
+
+    .modal-header {
+      position: sticky;
+      top: 0;
+      background: var(--sas-blue);
+      color: #FFFFFF;
+      padding: 18px 24px;
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .modal-header h2 {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: #FFFFFF;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover { opacity: 1; }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .meta-item {
+      padding: 10px 14px;
+      background: var(--bg-page);
+      border-radius: 6px;
+      border-left: 3px solid var(--sas-green);
+    }
+
+    .meta-item .meta-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-label);
+      margin-bottom: 2px;
+    }
+
+    .meta-item .meta-value {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .modal-section {
+      margin-bottom: 18px;
+    }
+
+    .modal-section h4 {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-label);
+      margin-bottom: 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border-card);
+    }
+
+    .modal-section p,
+    .modal-section li {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .modal-section ul {
+      padding-left: 18px;
+    }
+
+    .modal-section li { margin-bottom: 4px; }
+
+    .modal-scores {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .modal-score-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 16px;
+      background: var(--bg-page);
+      border-radius: 6px;
+      min-width: 70px;
+    }
+
+    .modal-score-badge .score-num {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .modal-score-badge .score-dim {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-label);
+    }
+
+    .modal-thread-links {
+      list-style: none;
+      padding: 0;
+    }
+
+    .modal-thread-links li {
+      margin-bottom: 6px;
+    }
+
+    .modal-thread-links a {
+      color: var(--sas-green);
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .modal-thread-links a:hover { text-decoration: underline; }
+
+    /* ======================================================
+       FOOTER
+       ====================================================== */
+    .report-footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: var(--text-label);
+      border-top: 1px solid var(--border-card);
+    }
+
+    /* ======================================================
+       NO RESULTS
+       ====================================================== */
+    .no-results {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-label);
+      font-size: 14px;
+    }
+
+    /* ======================================================
+       PRINT STYLES
+       ====================================================== */
+    @media print {
+      .report-header { position: static; }
+      .theme-toggle, .btn-print, .filter-bar { display: none !important; }
+      .modal-overlay { display: none !important; }
+      .topics-table tbody tr { break-inside: avoid; }
+      body { font-size: 12px; }
+    }
+
+    /* ======================================================
+       RESPONSIVE
+       ====================================================== */
+    @media (max-width: 768px) {
+      .report-header { padding: 0 16px; }
+      .header-title h1 { font-size: 15px; }
+      .header-date { display: none; }
+      .report-body { padding: 20px 16px 48px; }
+      .summary-cards { grid-template-columns: repeat(2, 1fr); }
+      .filter-bar { flex-direction: column; }
+      .filter-bar input[type="text"] { min-width: 100%; }
+      .scoring-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================== HEADER ======================== -->
+  <header class="report-header">
+    <div class="header-brand">
+      <span class="logo-mark">SAS</span>
+      <span style="font-weight: 600; font-size: 14px;">Content Intelligence</span>
+    </div>
+    <div class="header-title">
+      <h1>Topic Prioritiser Report</h1>
+      <span class="header-date" id="reportDate">{{REPORT_DATE}}</span>
+    </div>
+    <div class="header-controls">
+      <button class="btn-print" onclick="window.print()" aria-label="Print report">Print</button>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode">
+        <span class="light-icon">Dark</span>
+        <span class="dark-icon">Light</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ======================== BODY ======================== -->
+  <div class="report-body">
+
+    <!-- ======== INTRO PANEL ======== -->
+    <div class="intro-panel">
+      <h2>What Is This Report?</h2>
+      <p>This report identifies and prioritises content opportunities discovered from Reddit and community platforms. Topics are scored against SAS-AM's service lines to find the highest-value content gaps — where audience demand is high but existing answers are poor.</p>
+
+      <div class="intro-grid">
+        <div class="intro-item">
+          <strong>How It Works</strong>
+          <span>We scan relevant subreddits for recurring questions, pain points, and debates. Each topic is scored across three dimensions: Frequency (how often it's discussed), Relevance (how closely it maps to SAS-AM services), and Content Gap (how poor the existing answers are).</span>
+        </div>
+        <div class="intro-item">
+          <strong>How to Use It</strong>
+          <span>Focus on Critical and High priority topics first. Click any row to see the full content brief including our recommended angle, format, and distribution channels. Use the filters to narrow by category or priority tier.</span>
+        </div>
+        <div class="intro-item">
+          <strong>What Happens Next</strong>
+          <span>Content briefs feed directly into MBP:linkedin-post for social content, MBP:seo for website optimisation, and MBP:google-ads / MBP:linkedin-ads for paid campaigns. This ensures every piece of content is backed by real audience demand.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== SCORING KEY ======== -->
+    <div class="scoring-key">
+      <h3>Scoring Framework</h3>
+      <div class="scoring-grid">
+        <div class="scoring-dimension">
+          <div class="scoring-dimension-header">Frequency</div>
+          <div class="scoring-dimension-body">
+            <span class="score-label">1</span> Rare niche discussion, single thread<br>
+            <span class="score-label">3</span> Periodic discussion, 1-2 subreddits<br>
+            <span class="score-label">5</span> Constant high-traffic threads, multiple subreddits
+          </div>
+        </div>
+        <div class="scoring-dimension">
+          <div class="scoring-dimension-header">SAS-AM Relevance</div>
+          <div class="scoring-dimension-body">
+            <span class="score-label">1</span> Tangentially related<br>
+            <span class="score-label">3</span> Related but not a core offering<br>
+            <span class="score-label">5</span> Directly maps to a core SAS-AM service
+          </div>
+        </div>
+        <div class="scoring-dimension">
+          <div class="scoring-dimension-header">Content Gap</div>
+          <div class="scoring-dimension-body">
+            <span class="score-label">1</span> Well-covered by competitors<br>
+            <span class="score-label">3</span> Some coverage, inconsistent quality<br>
+            <span class="score-label">5</span> High demand, low quality answers
+          </div>
+        </div>
+      </div>
+      <div class="priority-key">
+        <div class="priority-key-item"><span class="priority-dot critical"></span> Critical (13-15): Act now</div>
+        <div class="priority-key-item"><span class="priority-dot high"></span> High (10-12): Schedule this month</div>
+        <div class="priority-key-item"><span class="priority-dot medium"></span> Medium (7-9): Add to calendar</div>
+        <div class="priority-key-item"><span class="priority-dot low"></span> Low (3-6): Monitor</div>
+      </div>
+    </div>
+
+    <!-- ======== SUMMARY CARDS ======== -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="card-value critical" id="countCritical">0</div>
+        <div class="card-label">Critical</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-value high" id="countHigh">0</div>
+        <div class="card-label">High</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-value medium" id="countMedium">0</div>
+        <div class="card-label">Medium</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-value low" id="countLow">0</div>
+        <div class="card-label">Low</div>
+      </div>
+      <div class="summary-card">
+        <div class="card-value top" id="topScore">0</div>
+        <div class="card-label">Top Score</div>
+      </div>
+    </div>
+
+    <!-- ======== FILTER CONTROLS ======== -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label">Category</span>
+        <select id="filterCategory">
+          <option value="">All Categories</option>
+          <option value="AI & ML">AI & ML</option>
+          <option value="Data Quality">Data Quality</option>
+          <option value="Edge & Sovereign AI">Edge & Sovereign AI</option>
+          <option value="Reliability Engineering">Reliability Engineering</option>
+          <option value="Maturity & ISO 55001">Maturity & ISO 55001</option>
+          <option value="Mining & Heavy Industry">Mining & Heavy Industry</option>
+          <option value="Workforce">Workforce</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Priority</span>
+        <select id="filterPriority">
+          <option value="">All Priorities</option>
+          <option value="Critical">Critical</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Search</span>
+        <input type="text" id="filterSearch" placeholder="Search topics and questions...">
+      </div>
+      <button class="filter-reset" onclick="resetFilters()">Reset Filters</button>
+    </div>
+
+    <!-- ======== TOPIC TABLE ======== -->
+    <div class="table-wrapper">
+      <table class="topics-table" id="topicsTable">
+        <thead>
+          <tr>
+            <th class="col-num" data-sort="id"># <span class="sort-arrow">&#9650;</span></th>
+            <th class="col-topic" data-sort="title">Topic & Question <span class="sort-arrow">&#9650;</span></th>
+            <th data-sort="category">Category <span class="sort-arrow">&#9650;</span></th>
+            <th class="col-score" data-sort="frequency">Freq <span class="sort-arrow">&#9650;</span></th>
+            <th class="col-score" data-sort="relevance">Rel <span class="sort-arrow">&#9650;</span></th>
+            <th class="col-score" data-sort="gap">Gap <span class="sort-arrow">&#9650;</span></th>
+            <th class="col-total" data-sort="total">Total <span class="sort-arrow">&#9650;</span></th>
+            <th data-sort="priority">Priority <span class="sort-arrow">&#9650;</span></th>
+            <th>Content Angle</th>
+          </tr>
+        </thead>
+        <tbody id="topicsBody">
+          <!-- Rows injected by JavaScript -->
+        </tbody>
+      </table>
+      <div class="no-results" id="noResults" style="display: none;">
+        No topics match the current filters.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ======================== DETAIL MODAL ======================== -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Topic Title</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-scores" id="modalScores"></div>
+        <div class="modal-meta" id="modalMeta"></div>
+
+        <div class="modal-section">
+          <h4>Original Question</h4>
+          <p id="modalQuestion" style="font-style: italic;"></p>
+        </div>
+
+        <div class="modal-section">
+          <h4>Content Angle</h4>
+          <p id="modalAngle"></p>
+        </div>
+
+        <div class="modal-section">
+          <h4>Suggested Format</h4>
+          <p id="modalFormat"></p>
+        </div>
+
+        <div class="modal-section">
+          <h4>SAS-AM Service Tie-In</h4>
+          <p id="modalService"></p>
+        </div>
+
+        <div class="modal-section">
+          <h4>Target Distribution</h4>
+          <ul id="modalDistribution"></ul>
+        </div>
+
+        <div class="modal-section">
+          <h4>Source Threads</h4>
+          <ul class="modal-thread-links" id="modalThreads"></ul>
+        </div>
+
+        <div class="modal-section">
+          <h4>Strategic Notes</h4>
+          <p id="modalNotes"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================== FOOTER ======================== -->
+  <footer class="report-footer">
+    <div>Content Intelligence Report &mdash; Generated {{REPORT_DATE}} &mdash; SAS-AM Marcov Beam Pipeline</div>
+  </footer>
+
+  <!-- ======================== DATA ======================== -->
+  <script>
+    /*
+     * DATA INJECTION POINT
+     * --------------------
+     * Replace the placeholder below with the actual topics array.
+     * Each topic object must follow the DATA_SCHEMA below.
+     *
+     * DATA_SCHEMA:
+     * {
+     *   id:               Number,    // Sequential rank (1-based)
+     *   title:            String,    // Attention-grabbing topic title
+     *   question:         String,    // Original Reddit question (verbatim)
+     *   category:         String,    // One of: "AI & ML", "Data Quality", "Edge & Sovereign AI",
+     *                                //   "Reliability Engineering", "Maturity & ISO 55001",
+     *                                //   "Mining & Heavy Industry", "Workforce"
+     *   frequency:        Number,    // Score 1-5
+     *   relevance:        Number,    // Score 1-5
+     *   gap:              Number,    // Score 1-5
+     *   total:            Number,    // Sum of frequency + relevance + gap (3-15)
+     *   priority:         String,    // "Critical" | "High" | "Medium" | "Low"
+     *   content_angle:    String,    // Our unique take on this topic
+     *   suggested_format: String,    // e.g. "Pillar article", "LinkedIn SLAY post", "Carousel"
+     *   service_tie_in:   String,    // Which SAS-AM service this maps to
+     *   subreddits:       String[],  // Target subreddits for distribution
+     *   thread_urls:      String[],  // URLs to source Reddit threads
+     *   strategic_notes:  String     // Why this matters, competitive advantage, timing
+     * }
+     */
+
+    <!-- INJECT_DATA_HERE -->
+    // Example (remove and replace with injected data):
+    const TOPICS_DATA = [];
+  </script>
+
+  <!-- ======================== APPLICATION LOGIC ======================== -->
+  <script>
+    // -----------------------------------------------------------
+    // Theme management
+    // -----------------------------------------------------------
+    const STORAGE_KEY = 'sas-content-intel-theme';
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem(STORAGE_KEY, theme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    }
+
+    setTheme(localStorage.getItem(STORAGE_KEY) || 'light');
+
+    // -----------------------------------------------------------
+    // Category CSS class mapping
+    // -----------------------------------------------------------
+    const CATEGORY_CLASSES = {
+      'AI & ML':                'cat-ai-ml',
+      'Data Quality':           'cat-data-quality',
+      'Edge & Sovereign AI':    'cat-edge-sovereign',
+      'Reliability Engineering':'cat-reliability',
+      'Maturity & ISO 55001':   'cat-maturity',
+      'Mining & Heavy Industry':'cat-mining',
+      'Workforce':              'cat-workforce'
+    };
+
+    const PRIORITY_CLASSES = {
+      'Critical': 'priority-critical',
+      'High':     'priority-high',
+      'Medium':   'priority-medium',
+      'Low':      'priority-low'
+    };
+
+    const PRIORITY_ORDER = { 'Critical': 0, 'High': 1, 'Medium': 2, 'Low': 3 };
+
+    // -----------------------------------------------------------
+    // Rendering
+    // -----------------------------------------------------------
+    let currentSort = { key: 'total', dir: 'desc' };
+
+    function scoreClass(val) {
+      return 'score-' + val;
+    }
+
+    function renderSummary(topics) {
+      const counts = { Critical: 0, High: 0, Medium: 0, Low: 0 };
+      let topScore = 0;
+      topics.forEach(t => {
+        counts[t.priority] = (counts[t.priority] || 0) + 1;
+        if (t.total > topScore) topScore = t.total;
+      });
+      document.getElementById('countCritical').textContent = counts.Critical;
+      document.getElementById('countHigh').textContent     = counts.High;
+      document.getElementById('countMedium').textContent   = counts.Medium;
+      document.getElementById('countLow').textContent      = counts.Low;
+      document.getElementById('topScore').textContent      = topScore;
+    }
+
+    function renderTable(topics) {
+      const tbody = document.getElementById('topicsBody');
+      const noResults = document.getElementById('noResults');
+      tbody.innerHTML = '';
+
+      if (topics.length === 0) {
+        noResults.style.display = 'block';
+        return;
+      }
+      noResults.style.display = 'none';
+
+      topics.forEach((t, i) => {
+        const catClass = CATEGORY_CLASSES[t.category] || '';
+        const priClass = PRIORITY_CLASSES[t.priority] || '';
+        const row = document.createElement('tr');
+        row.setAttribute('data-id', t.id);
+        row.onclick = () => openModal(t);
+        row.innerHTML = `
+          <td class="col-num">${t.id}</td>
+          <td class="col-topic">
+            <div class="topic-title">${esc(t.title)}</div>
+            <div class="topic-question">"${esc(t.question)}"</div>
+          </td>
+          <td class="col-category"><span class="badge-category ${catClass}">${esc(t.category)}</span></td>
+          <td class="col-score ${scoreClass(t.frequency)}">${t.frequency}</td>
+          <td class="col-score ${scoreClass(t.relevance)}">${t.relevance}</td>
+          <td class="col-score ${scoreClass(t.gap)}">${t.gap}</td>
+          <td class="col-total ${scoreClass(t.total >= 13 ? 5 : t.total >= 10 ? 4 : t.total >= 7 ? 3 : 1)}">${t.total}</td>
+          <td><span class="badge-priority ${priClass}">${t.priority}</span></td>
+          <td class="content-angle-cell">${esc(t.content_angle)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function esc(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // -----------------------------------------------------------
+    // Filtering
+    // -----------------------------------------------------------
+    function getFilteredTopics() {
+      const cat    = document.getElementById('filterCategory').value;
+      const pri    = document.getElementById('filterPriority').value;
+      const search = document.getElementById('filterSearch').value.toLowerCase().trim();
+
+      let filtered = TOPICS_DATA.filter(t => {
+        if (cat && t.category !== cat) return false;
+        if (pri && t.priority !== pri) return false;
+        if (search) {
+          const haystack = (t.title + ' ' + t.question + ' ' + t.content_angle + ' ' + t.category).toLowerCase();
+          if (!haystack.includes(search)) return false;
+        }
+        return true;
+      });
+
+      // Sort
+      filtered.sort((a, b) => {
+        let va = a[currentSort.key];
+        let vb = b[currentSort.key];
+        if (currentSort.key === 'priority') {
+          va = PRIORITY_ORDER[va] ?? 4;
+          vb = PRIORITY_ORDER[vb] ?? 4;
+        }
+        if (typeof va === 'string') va = va.toLowerCase();
+        if (typeof vb === 'string') vb = vb.toLowerCase();
+        if (va < vb) return currentSort.dir === 'asc' ? -1 : 1;
+        if (va > vb) return currentSort.dir === 'asc' ? 1 : -1;
+        return 0;
+      });
+
+      return filtered;
+    }
+
+    function applyFilters() {
+      renderTable(getFilteredTopics());
+    }
+
+    function resetFilters() {
+      document.getElementById('filterCategory').value = '';
+      document.getElementById('filterPriority').value = '';
+      document.getElementById('filterSearch').value   = '';
+      currentSort = { key: 'total', dir: 'desc' };
+      applyFilters();
+    }
+
+    document.getElementById('filterCategory').addEventListener('change', applyFilters);
+    document.getElementById('filterPriority').addEventListener('change', applyFilters);
+    document.getElementById('filterSearch').addEventListener('input', applyFilters);
+
+    // -----------------------------------------------------------
+    // Sorting
+    // -----------------------------------------------------------
+    document.querySelectorAll('.topics-table thead th[data-sort]').forEach(th => {
+      th.addEventListener('click', () => {
+        const key = th.getAttribute('data-sort');
+        if (currentSort.key === key) {
+          currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+        } else {
+          currentSort = { key, dir: key === 'title' || key === 'category' ? 'asc' : 'desc' };
+        }
+        // Update sort arrow visuals
+        document.querySelectorAll('.topics-table thead th').forEach(h => h.classList.remove('sort-active'));
+        th.classList.add('sort-active');
+        th.querySelector('.sort-arrow').textContent = currentSort.dir === 'asc' ? '\u25B2' : '\u25BC';
+        applyFilters();
+      });
+    });
+
+    // -----------------------------------------------------------
+    // Modal
+    // -----------------------------------------------------------
+    function openModal(topic) {
+      document.getElementById('modalTitle').textContent = topic.title;
+      document.getElementById('modalQuestion').textContent = topic.question;
+      document.getElementById('modalAngle').textContent    = topic.content_angle;
+      document.getElementById('modalFormat').textContent   = topic.suggested_format;
+      document.getElementById('modalService').textContent  = topic.service_tie_in;
+      document.getElementById('modalNotes').textContent    = topic.strategic_notes;
+
+      // Scores
+      const scoresEl = document.getElementById('modalScores');
+      scoresEl.innerHTML = `
+        <div class="modal-score-badge">
+          <span class="score-num ${scoreClass(topic.frequency)}">${topic.frequency}</span>
+          <span class="score-dim">Frequency</span>
+        </div>
+        <div class="modal-score-badge">
+          <span class="score-num ${scoreClass(topic.relevance)}">${topic.relevance}</span>
+          <span class="score-dim">Relevance</span>
+        </div>
+        <div class="modal-score-badge">
+          <span class="score-num ${scoreClass(topic.gap)}">${topic.gap}</span>
+          <span class="score-dim">Gap</span>
+        </div>
+        <div class="modal-score-badge">
+          <span class="score-num" style="color: var(--sas-green);">${topic.total}</span>
+          <span class="score-dim">Total</span>
+        </div>
+      `;
+
+      // Meta
+      const metaEl = document.getElementById('modalMeta');
+      const catClass = CATEGORY_CLASSES[topic.category] || '';
+      const priClass = PRIORITY_CLASSES[topic.priority] || '';
+      metaEl.innerHTML = `
+        <div class="meta-item">
+          <div class="meta-label">Category</div>
+          <div class="meta-value"><span class="badge-category ${catClass}">${esc(topic.category)}</span></div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Priority</div>
+          <div class="meta-value"><span class="badge-priority ${priClass}">${topic.priority}</span></div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Format</div>
+          <div class="meta-value">${esc(topic.suggested_format)}</div>
+        </div>
+      `;
+
+      // Distribution
+      const distEl = document.getElementById('modalDistribution');
+      distEl.innerHTML = '';
+      (topic.subreddits || []).forEach(sub => {
+        const li = document.createElement('li');
+        li.textContent = sub;
+        distEl.appendChild(li);
+      });
+
+      // Thread links
+      const threadsEl = document.getElementById('modalThreads');
+      threadsEl.innerHTML = '';
+      (topic.thread_urls || []).forEach(url => {
+        const li = document.createElement('li');
+        const a  = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = url;
+        li.appendChild(a);
+        threadsEl.appendChild(li);
+      });
+
+      document.getElementById('detailModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close modal on overlay click
+    document.getElementById('detailModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // -----------------------------------------------------------
+    // Initialise
+    // -----------------------------------------------------------
+    renderSummary(TOPICS_DATA);
+    applyFilters();
+  </script>
+
+</body>
+</html>

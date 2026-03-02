@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.1.0",
+  "created_at": null,
+  "updated_at": null,
+  "api_key": null,
+  "verified_at": null,
+  "preferences": {
+    "default_aspect_ratio": "16:9",
+    "default_image_size": "2K",
+    "web_search_enabled": true,
+    "output_directory": "./generated-images",
+    "hyper_realistic_enhance": true,
+    "post_processing": {
+      "enabled": true,
+      "target_width": 1000,
+      "max_file_size_kb": 200,
+      "format": "jpg",
+      "quality": 85,
+      "use_mozjpeg": true,
+      "watermark": {
+        "enabled": true,
+        "dark_path": "${CLAUDE_PLUGIN_ROOT}/1.0.0/skills/nano-banana/assets/sas-logo-dark.png",
+        "light_path": "${CLAUDE_PLUGIN_ROOT}/1.0.0/skills/nano-banana/assets/sas-logo-light.png",
+        "size": 120,
+        "position": "southeast",
+        "brightness_threshold": 128
+      }
+    }
+  },
+  "statistics": {
+    "total_generated": 0,
+    "last_generated_at": null
+  },
+  "_comments": {
+    "hyper_realistic_enhance": "When true, automatically prepend hyper-realistic modifiers to prompts",
+    "format": "jpg recommended for photographic content, png only for transparency",
+    "use_mozjpeg": "Sharp's MozJPEG encoder produces smaller files at same quality"
+  }
+}

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}} | SAS-AM</title>
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Main presentation container -->
+  <div class="presentation-wrapper">
+    <!-- Subtle binary flow background -->
+    <div class="binary-background" id="binaryBg"></div>
+
+    <!-- Reveal.js slides area -->
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- SLIDE 1: Title Slide -->
+        <section id="title" class="title-slide" data-section="opening">
+          <div class="title-content">
+            <img src="assets/sas-logo-light.png" alt="SAS Logo" class="title-logo logo-light">
+            <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="title-logo logo-dark">
+            <h1>{{MAIN_TITLE}}</h1>
+            <h2>{{SUBTITLE}}</h2>
+            <p class="author">{{AUTHOR}}</p>
+          </div>
+        </section>
+
+        <!-- SLIDE 2: Opening -->
+        <section id="opening-1" data-section="opening">
+          <div class="slide-layout with-image">
+            <img src="assets/sas-logo-light.png" alt="SAS Logo" class="slide-logo logo-light">
+            <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="slide-logo logo-dark">
+            <div class="slide-header">
+              <span class="section-tag">OPENING</span>
+            </div>
+            <div class="slide-body split">
+              <div class="slide-content">
+                <h2 class="slide-title">SLIDE TITLE HERE</h2>
+                <p class="slide-subtitle">Subtitle explaining the key point of this slide</p>
+              </div>
+              <div class="slide-image">
+                <!-- Add image or SVG here -->
+                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                  Visual Placeholder
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 3: Context -->
+        <section id="context-1" data-section="context">
+          <div class="slide-layout with-image">
+            <img src="assets/sas-logo-light.png" alt="SAS Logo" class="slide-logo logo-light">
+            <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="slide-logo logo-dark">
+            <div class="slide-header">
+              <span class="section-tag">THE CONTEXT</span>
+            </div>
+            <div class="slide-body split">
+              <div class="slide-content">
+                <h2 class="slide-title">CONTEXT TITLE</h2>
+                <p class="slide-subtitle">Setting the scene for your audience</p>
+              </div>
+              <div class="slide-image">
+                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                  Visual Placeholder
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 4: Problem -->
+        <section id="problem-1" data-section="problem">
+          <div class="slide-layout with-image">
+            <img src="assets/sas-logo-light.png" alt="SAS Logo" class="slide-logo logo-light">
+            <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="slide-logo logo-dark">
+            <div class="slide-header">
+              <span class="section-tag">THE PROBLEM</span>
+            </div>
+            <div class="slide-body split">
+              <div class="slide-content">
+                <h2 class="slide-title">PROBLEM TITLE</h2>
+                <p class="slide-subtitle">Identifying the specific pain point</p>
+              </div>
+              <div class="slide-image">
+                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                  Visual Placeholder
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 5: Solution -->
+        <section id="solution-1" data-section="solution">
+          <div class="slide-layout with-image">
+            <img src="assets/sas-logo-light.png" alt="SAS Logo" class="slide-logo logo-light">
+            <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="slide-logo logo-dark">
+            <div class="slide-header">
+              <span class="section-tag">THE SOLUTION</span>
+            </div>
+            <div class="slide-body split">
+              <div class="slide-content">
+                <h2 class="slide-title">SOLUTION TITLE</h2>
+                <p class="slide-subtitle">Your answer to the problem</p>
+              </div>
+              <div class="slide-image">
+                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                  Visual Placeholder
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 6: Implementation -->
+        <section id="implementation-1" data-section="implementation">
+          <div class="slide-layout with-image">
+            <img src="assets/sas-logo-light.png" alt="SAS Logo" class="slide-logo logo-light">
+            <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="slide-logo logo-dark">
+            <div class="slide-header">
+              <span class="section-tag">THE IMPLEMENTATION</span>
+            </div>
+            <div class="slide-body split">
+              <div class="slide-content">
+                <h2 class="slide-title">IMPLEMENTATION</h2>
+                <p class="slide-subtitle">How it works in practice</p>
+              </div>
+              <div class="slide-image">
+                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                  Visual Placeholder
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 7: Future -->
+        <section id="future-1" data-section="future">
+          <div class="slide-layout with-image">
+            <img src="assets/sas-logo-light.png" alt="SAS Logo" class="slide-logo logo-light">
+            <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="slide-logo logo-dark">
+            <div class="slide-header">
+              <span class="section-tag">THE FUTURE</span>
+            </div>
+            <div class="slide-body split">
+              <div class="slide-content">
+                <h2 class="slide-title">FUTURE VISION</h2>
+                <p class="slide-subtitle">Where this leads</p>
+              </div>
+              <div class="slide-image">
+                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                  Visual Placeholder
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 8: Closing / CTA -->
+        <section id="closing" data-section="connection">
+          <div class="slide-layout closing">
+            <div class="slide-header">
+              <span class="section-tag">THE CONNECTION</span>
+            </div>
+            <div class="slide-body centered">
+              <h2 class="closing-headline">{{CTA_HEADLINE}}</h2>
+
+              <div class="qr-wrapper">
+                <div class="qr-container">
+                  <div class="qr-glow"></div>
+                  <!-- Replace with actual QR code -->
+                  <div class="qr-code" style="display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px;">
+                    QR Code
+                  </div>
+                </div>
+                <div class="qr-cta">
+                  <span class="qr-action">SCAN TO CONNECT</span>
+                  <p class="qr-label">{{QR_LABEL}}</p>
+                </div>
+              </div>
+
+              <div class="closing-branding">
+                <img src="assets/sas-logo-light.png" alt="SAS Logo" class="closing-logo logo-light">
+                <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="closing-logo logo-dark">
+                <p class="closing-search"><i class="fas fa-search"></i> {{SEARCH_TERM}}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- STATIC FOOTER - Outside reveal.js -->
+    <footer class="static-footer">
+      <div class="footer-content">
+        <div class="nav-items">
+          <span class="nav-item" data-section="opening">OPENING</span>
+          <span class="nav-item" data-section="context">THE CONTEXT</span>
+          <span class="nav-item" data-section="problem">THE PROBLEM</span>
+          <span class="nav-item" data-section="solution">THE SOLUTION</span>
+          <span class="nav-item" data-section="implementation">THE IMPLEMENTATION</span>
+          <span class="nav-item" data-section="future">THE FUTURE</span>
+          <span class="nav-item" data-section="connection">THE CONNECTION</span>
+        </div>
+        <div class="footer-controls">
+          <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode">
+            <i class="fas fa-sun light-icon"></i>
+            <i class="fas fa-moon dark-icon"></i>
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Reveal.js -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+
+  <script>
+    // Theme management
+    const STORAGE_KEY = 'sas-presentation-theme';
+
+    function getSystemTheme() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function getStoredTheme() {
+      return localStorage.getItem(STORAGE_KEY);
+    }
+
+    function setTheme(theme) {
+      const resolved = theme === 'system' ? getSystemTheme() : theme;
+      document.documentElement.setAttribute('data-theme', resolved);
+      document.body.setAttribute('data-theme', resolved);
+
+      // Also update reveal viewport if it exists
+      const viewport = document.querySelector('.reveal-viewport');
+      if (viewport) {
+        viewport.setAttribute('data-theme', resolved);
+      }
+
+      localStorage.setItem(STORAGE_KEY, theme);
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    }
+
+    // Initialize theme
+    const stored = getStoredTheme();
+    setTheme(stored || 'light');
+
+    // Listen for system changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (getStoredTheme() === 'system') {
+        setTheme('system');
+      }
+    });
+
+    // Initialize Reveal.js
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      showSlideNumber: 'speaker',
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      center: false,
+      width: 1920,
+      height: 1080,
+      margin: 0,
+      minScale: 0.2,
+      maxScale: 2.0,
+      embedded: false,
+      display: 'block',
+      disableLayout: false,
+    }).then(() => {
+      // Reapply theme after reveal initializes
+      const theme = document.documentElement.getAttribute('data-theme') || 'light';
+      setTheme(theme);
+    });
+
+    // Update footer navigation based on current slide
+    function updateNavigation() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const currentSection = currentSlide ? currentSlide.getAttribute('data-section') : null;
+
+      document.querySelectorAll('.static-footer .nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-section') === currentSection) {
+          item.classList.add('active');
+        }
+      });
+    }
+
+    // Listen for slide changes
+    Reveal.on('slidechanged', updateNavigation);
+
+    // Initial update
+    updateNavigation();
+
+    // Binary background animation
+    (function createBinaryBackground() {
+      const container = document.getElementById('binaryBg');
+      const columnCount = 50;
+
+      for (let i = 0; i < columnCount; i++) {
+        const column = document.createElement('div');
+        column.className = 'binary-column';
+
+        let binaryStr = '';
+        const length = 150;
+        for (let j = 0; j < length; j++) {
+          binaryStr += Math.random() > 0.5 ? '1' : '0';
+          if (j < length - 1) binaryStr += '<br>';
+        }
+        column.innerHTML = binaryStr;
+
+        column.style.left = (i * (100 / columnCount)) + '%';
+
+        const duration = 45 + Math.random() * 30;
+        column.style.animationDuration = duration + 's';
+        column.style.animationDelay = (Math.random() * -duration) + 's';
+
+        container.appendChild(column);
+      }
+    })();
+  </script>
+</body>
+</html>

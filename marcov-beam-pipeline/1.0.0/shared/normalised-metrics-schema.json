@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MBP Normalised Marketing Metrics",
+  "description": "Common schema used by all MBP marketing skills to output data that MBP:marketing-dashboard can aggregate. Each platform skill writes latest.json in this format.",
+  "type": "object",
+  "required": ["platform", "period", "currency", "metrics", "generated_at"],
+  "properties": {
+    "platform": {
+      "type": "string",
+      "enum": ["google-ads", "linkedin-ads", "website", "seo", "content-intel"]
+    },
+    "period": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": { "type": "string", "format": "date" },
+        "end": { "type": "string", "format": "date" }
+      }
+    },
+    "currency": {
+      "type": "string",
+      "default": "AUD",
+      "description": "ISO 4217 currency code. All monetary values normalised to this currency."
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "spend": { "type": "number", "description": "Total spend in currency units (not micros)" },
+        "impressions": { "type": "integer", "description": "Total impressions served" },
+        "clicks": { "type": "integer", "description": "Total clicks" },
+        "ctr": { "type": "number", "description": "Click-through rate as decimal (0.025 = 2.5%)" },
+        "cpc": { "type": "number", "description": "Average cost per click in currency units" },
+        "conversions": { "type": "number", "description": "Total conversions (may be fractional for data-driven attribution)" },
+        "conversion_rate": { "type": "number", "description": "Conversion rate as decimal" },
+        "cost_per_conversion": { "type": "number", "description": "Average cost per conversion in currency units" },
+        "conversion_value": { "type": "number", "description": "Total monetary value of conversions" },
+        "roas": { "type": "number", "description": "Return on ad spend (conversion_value / spend)" },
+        "sessions": { "type": "integer", "description": "Website sessions (GA4 only)" },
+        "engagement_rate": { "type": "number", "description": "GA4 engagement rate as decimal" },
+        "seo_health_score": { "type": "number", "description": "SEO health score 0-100 (SEO only)" },
+        "eeat_score": { "type": "number", "description": "E-E-A-T score 0-100 (SEO only)" },
+        "geo_readiness_score": { "type": "number", "description": "GEO readiness score 0-100 (SEO only)" }
+      }
+    },
+    "campaigns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "status": { "type": "string", "enum": ["active", "paused", "completed", "draft"] },
+          "objective": { "type": "string" },
+          "spend": { "type": "number" },
+          "impressions": { "type": "integer" },
+          "clicks": { "type": "integer" },
+          "conversions": { "type": "number" },
+          "cpa": { "type": "number" },
+          "roas": { "type": "number" }
+        }
+      }
+    },
+    "top_performers": {
+      "type": "array",
+      "description": "Top 5 performing campaigns/keywords/content by conversion rate",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string", "enum": ["campaign", "keyword", "ad_group", "content", "page", "topic"] },
+          "metric_value": { "type": "number" },
+          "metric_name": { "type": "string" }
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "description": "Flagged issues or anomalies detected during analysis",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+          "description": { "type": "string" },
+          "recommendation": { "type": "string" }
+        }
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this data was generated"
+    }
+  }
+}

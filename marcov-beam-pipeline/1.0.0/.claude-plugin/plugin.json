@@ -1,0 +1,31 @@
+{
+  "name": "marcov-beam-pipeline",
+  "description": "Full-stack B2B pursuit engine. Research prospects, run targeted ads, measure website engagement, manage sales pipeline, create content, and track ROI — all as one integrated workflow. 14 namespaced skills covering the complete journey from prospect identification to closed deal.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM",
+    "url": "https://www.sas-am.com.au"
+  },
+  "license": "MIT",
+  "keywords": [
+    "b2b", "sales", "marketing", "beam", "pipeline", "google-ads", "linkedin-ads",
+    "analytics", "seo", "content", "presentations", "tenders", "data-quality",
+    "attribution", "asset-management", "pursuit"
+  ],
+  "skills": [
+    { "name": "MBP:b2b-research", "description": "Prospect intelligence — decision-makers, pain points, buying signals", "category": "research" },
+    { "name": "MBP:beam-selling", "description": "6-stage evidence-gated sales pipeline with SPIN and Bayesian win probability", "category": "sales" },
+    { "name": "MBP:google-ads", "description": "Google Ads analysis — ROAS, keywords, Quality Score, budget optimisation", "category": "marketing" },
+    { "name": "MBP:linkedin-ads", "description": "LinkedIn Ads analysis — audience targeting, lead quality, B2B engagement", "category": "marketing" },
+    { "name": "MBP:website-analytics", "description": "GA4 website analysis — traffic sources, content performance, conversions", "category": "marketing" },
+    { "name": "MBP:marketing-dashboard", "description": "Cross-channel attribution, budget optimisation, BEAM pipeline bridge", "category": "marketing" },
+    { "name": "MBP:seo", "description": "Technical SEO audits, E-E-A-T analysis, GEO optimisation, schema markup", "category": "marketing" },
+    { "name": "MBP:content-intel", "description": "Reddit and community topic intelligence — content opportunity scoring and brief generation", "category": "marketing" },
+    { "name": "MBP:linkedin-post", "description": "LinkedIn content — 8 post formats, brand voice, hook library", "category": "content" },
+    { "name": "MBP:presentation", "description": "SAS-AM branded Reveal.js presentations with light/dark mode", "category": "content" },
+    { "name": "MBP:tender", "description": "Victorian government tender scraping, scoring, pursuit packages", "category": "research" },
+    { "name": "MBP:data-quality", "description": "ABS Data Quality Framework assessment with column-level scorecard", "category": "analytics" },
+    { "name": "MBP:nano-banana", "description": "AI image generation — watermarked, optimised, brand-compliant", "category": "content" },
+    { "name": "MBP:notifications", "description": "Teams webhook and desktop notifications for workflow events", "category": "integration" }
+  ]
+}
