@@ -78,10 +78,35 @@ presentation-folder/
 ├── presentation.html    # Main presentation file
 ├── styles.css           # Custom theme styles
 └── assets/              # Images (PNG, JPG, SVG)
-    ├── sas-logo-light.png
-    ├── sas-logo-dark.png
+    ├── sas-logo-light.svg   # Light mode logo (transparent background)
+    ├── sas-logo-dark.png    # Dark mode logo
     └── [slide-images]-blue.png / -green.png
 ```
+
+## Bundled Logo Assets
+
+This skill includes official SAS-AM logo files in the `references/assets/` directory:
+
+- **`sas-logo-light.svg`** - Green arrow logo for **light mode** (transparent background SVG)
+- **`sas-logo-dark.png`** - Green arrow logo for **dark mode**
+
+### Logo Behaviour
+
+The CSS automatically switches logos based on the current theme:
+- **Light mode**: Displays elements with class `logo-light`
+- **Dark mode**: Displays elements with class `logo-dark`
+
+### Copying Logos to Your Presentation
+
+When creating a new presentation, copy the bundled logos to your presentation's `assets/` folder:
+
+```bash
+# From the skill's references/assets directory
+cp sas-logo-light.svg /path/to/your-presentation/assets/
+cp sas-logo-dark.png /path/to/your-presentation/assets/
+```
+
+Or reference them directly in your HTML using the bundled paths during development.
 
 ---
 
@@ -232,7 +257,7 @@ The opening slide with logo, main title, subtitle, and author.
 ```html
 <section id="title" class="title-slide" data-section="opening">
   <div class="title-content">
-    <img src="assets/sas-logo-light.png" alt="SAS Logo" class="title-logo logo-light">
+    <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="title-logo logo-light">
     <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="title-logo logo-dark">
     <h1>From Worthless Data to Intelligent Assets</h1>
     <h2>Edge Federated ML in Real Work Asset Management</h2>
@@ -256,7 +281,7 @@ Two-column layout with content on left, image/visual on right.
 <section id="unique-id" data-section="opening">
   <div class="slide-layout with-image">
     <!-- Optional: Logo in top-right -->
-    <img src="assets/sas-logo-light.png" alt="SAS Logo" class="slide-logo logo-light">
+    <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="slide-logo logo-light">
     <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="slide-logo logo-dark">
 
     <div class="slide-header">
@@ -385,7 +410,7 @@ Call-to-action with QR code and branding.
       </div>
 
       <div class="closing-branding">
-        <img src="assets/sas-logo-light.png" alt="SAS Logo" class="closing-logo logo-light">
+        <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="closing-logo logo-light">
         <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="closing-logo logo-dark">
         <p class="closing-search"><i class="fas fa-search"></i> EDGE AI ASSET MANAGEMENT</p>
       </div>
