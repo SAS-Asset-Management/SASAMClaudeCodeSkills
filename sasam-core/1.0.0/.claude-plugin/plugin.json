@@ -1,0 +1,8 @@
+{
+  "name": "sasam-core",
+  "description": "Core utilities for SASAMClaudeCodeSkills marketplace - update management and version tracking",
+  "version": "1.0.0",
+  "author": { "name": "SAS-AM" },
+  "license": "MIT",
+  "keywords": ["sasam", "update", "version", "management", "core"]
+}

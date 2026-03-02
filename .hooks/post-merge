@@ -4,10 +4,46 @@
 #
 # This hook runs after a successful git pull/merge and syncs
 # skill files to ~/.claude/commands with absolute paths.
+# It also detects version updates and displays changelog info.
 
 REPO_DIR="$(git rev-parse --show-toplevel)"
 REGISTER_SCRIPT="${REPO_DIR}/register-commands.sh"
+VERSION_FILE="${REPO_DIR}/VERSION"
+CHANGELOG_FILE="${REPO_DIR}/CHANGELOG.md"
 
+# Store old version before pull (if VERSION exists)
+OLD_VERSION=""
+if [ -f "${VERSION_FILE}" ]; then
+    # Get version from before the merge (HEAD@{1} is pre-merge state)
+    OLD_VERSION=$(git show HEAD@{1}:VERSION 2>/dev/null || echo "")
+fi
+
+# Get new version
+NEW_VERSION=""
+if [ -f "${VERSION_FILE}" ]; then
+    NEW_VERSION=$(cat "${VERSION_FILE}" | tr -d '[:space:]')
+fi
+
+# Display version update info if version changed
+if [ -n "$OLD_VERSION" ] && [ -n "$NEW_VERSION" ] && [ "$OLD_VERSION" != "$NEW_VERSION" ]; then
+    echo ""
+    echo "╔══════════════════════════════════════════════════════════════╗"
+    echo "║  SASAMClaudeCodeSkills updated: v${OLD_VERSION} → v${NEW_VERSION}"
+    echo "╚══════════════════════════════════════════════════════════════╝"
+    echo ""
+
+    # Show changelog excerpt for this version
+    if [ -f "${CHANGELOG_FILE}" ]; then
+        echo "Changes in v${NEW_VERSION}:"
+        echo "---"
+        # Extract section for this version (between ## [NEW_VERSION] and next ## [)
+        sed -n "/^## \[${NEW_VERSION}\]/,/^## \[/p" "${CHANGELOG_FILE}" | head -n -1 | tail -n +2
+        echo "---"
+        echo ""
+    fi
+fi
+
+# Register commands
 if [ -x "${REGISTER_SCRIPT}" ]; then
     echo ""
     echo "=== Auto-registering Claude Code commands ==="
