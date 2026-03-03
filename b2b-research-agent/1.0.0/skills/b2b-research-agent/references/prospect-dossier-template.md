@@ -107,6 +107,67 @@
 
 ---
 
+## Historic Tender Activity
+
+*Sourced from government procurement portals, annual reports, and public tender databases. Most relevant for government and public sector organisations — private companies may have limited public tender data.*
+
+**Data Availability**: {{TENDER_DATA_AVAILABILITY — e.g., "Strong — government client with full public procurement records" or "Limited — private company, minimal public tender data"}}
+
+### Tender Summary
+
+| Metric | Value |
+|--------|-------|
+| **Total tenders identified** | {{TOTAL_TENDERS_FOUND}} |
+| **Period covered** | {{TENDER_PERIOD — e.g., "2021–2025"}} |
+| **Estimated annual tender frequency** | {{ANNUAL_TENDER_FREQUENCY}} |
+| **Total estimated value** | {{TOTAL_TENDER_VALUE}} |
+| **Average tender value** | {{AVG_TENDER_VALUE}} |
+| **Primary procurement portal** | {{PROCUREMENT_PORTAL — e.g., "tenders.vic.gov.au", "tenders.gov.au", "AusTender"}} |
+
+### Tender Categories
+
+| Category | Count | Total Value | Avg Value | Relevance to Us |
+|----------|-------|-------------|-----------|-----------------|
+| {{CATEGORY_1 — e.g., "Asset Management / Maintenance"}} | {{COUNT_1}} | {{VALUE_1}} | {{AVG_1}} | {{RELEVANCE_1 — HIGH/MEDIUM/LOW}} |
+| {{CATEGORY_2 — e.g., "Engineering / Technical Services"}} | {{COUNT_2}} | {{VALUE_2}} | {{AVG_2}} | {{RELEVANCE_2}} |
+| {{CATEGORY_3 — e.g., "IT / Digital / Analytics"}} | {{COUNT_3}} | {{VALUE_3}} | {{AVG_3}} | {{RELEVANCE_3}} |
+| {{CATEGORY_4 — e.g., "Strategy / Advisory / Consulting"}} | {{COUNT_4}} | {{VALUE_4}} | {{AVG_4}} | {{RELEVANCE_4}} |
+| {{CATEGORY_5}} | {{COUNT_5}} | {{VALUE_5}} | {{AVG_5}} | {{RELEVANCE_5}} |
+
+### Key Tenders — Most Relevant to Our Offering
+
+| Tender Title | RFx / ID | Year | Value | Winner(s) | Relevance |
+|-------------|----------|------|-------|-----------|-----------|
+| {{TENDER_TITLE_1}} | {{RFX_1}} | {{YEAR_1}} | {{VALUE_1}} | {{WINNER_1}} | {{WHY_RELEVANT_1}} |
+| {{TENDER_TITLE_2}} | {{RFX_2}} | {{YEAR_2}} | {{VALUE_2}} | {{WINNER_2}} | {{WHY_RELEVANT_2}} |
+| {{TENDER_TITLE_3}} | {{RFX_3}} | {{YEAR_3}} | {{VALUE_3}} | {{WINNER_3}} | {{WHY_RELEVANT_3}} |
+
+### Winner Analysis
+
+| Supplier / Winner | Tenders Won | Total Value | Categories | Incumbent Status |
+|-------------------|-------------|-------------|------------|-----------------|
+| {{WINNER_NAME_1}} | {{WIN_COUNT_1}} | {{WIN_VALUE_1}} | {{WIN_CATEGORIES_1}} | {{INCUMBENT_STATUS_1 — e.g., "Dominant incumbent", "Occasional winner"}} |
+| {{WINNER_NAME_2}} | {{WIN_COUNT_2}} | {{WIN_VALUE_2}} | {{WIN_CATEGORIES_2}} | {{INCUMBENT_STATUS_2}} |
+| {{WINNER_NAME_3}} | {{WIN_COUNT_3}} | {{WIN_VALUE_3}} | {{WIN_CATEGORIES_3}} | {{INCUMBENT_STATUS_3}} |
+
+### Procurement Patterns & Insights
+
+- **Tender frequency**: {{FREQUENCY_PATTERN — e.g., "Tenders annually in Q1 for maintenance services, ad-hoc for advisory"}}
+- **Preferred contract model**: {{CONTRACT_MODEL — e.g., "Panel arrangements (3-year), project-based engagements"}}
+- **Typical contract duration**: {{CONTRACT_DURATION — e.g., "2–3 years with 1+1 extension options"}}
+- **Evaluation approach**: {{EVAL_APPROACH — e.g., "Weighted criteria: 60% non-price, 40% price"}}
+- **Barriers to entry**: {{BARRIERS — e.g., "Mandatory pre-qualification, local presence requirements"}}
+- **Upcoming opportunities**: {{UPCOMING — e.g., "Panel refresh expected Q3 2026 based on 3-year cycle"}}
+
+### Tender Intelligence Assessment
+
+- **Opportunity level**: {{OPPORTUNITY_LEVEL — HIGH/MEDIUM/LOW/NONE}} — {{OPPORTUNITY_RATIONALE}}
+- **Best entry point**: {{BEST_ENTRY — e.g., "Upcoming advisory panel refresh, or specialist subcontract to incumbent"}}
+- **Competitive gap**: {{COMPETITIVE_GAP — e.g., "No specialist asset management advisor on current panel — dominated by generalist consultancies"}}
+- **Timing indicator**: {{TIMING — e.g., "Current panel expires Dec 2026 — new panel process likely mid-2026"}}
+
+---
+
 ## Honest Assessment
 
 ### What We Don't Know

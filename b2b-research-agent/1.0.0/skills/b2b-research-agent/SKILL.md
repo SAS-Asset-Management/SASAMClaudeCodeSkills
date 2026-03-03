@@ -177,6 +177,7 @@ For each shortlisted prospect, compile with a **problem-centric focus**:
 | **Access Path** | How can you reach authority? Warm intros, events, content, cold | Gate 2 support |
 | **Willingness Signals** | Evidence they're open to conversation — responding to content, attending events, issuing RFPs | **Gate 3: Willingness** |
 | **Competitive Landscape** | Current vendors — are they *happy* or is there vendor fatigue/dissatisfaction? | Problem/timing signal |
+| **Historic Tender Activity** | Past tenders issued: categories, values, winners, frequency, procurement patterns (see Tender History Research below) | Timing signal + competitive intelligence + willingness indicator |
 | **Qualification Assessment** | Honest evaluation: is this a real opportunity or are we forcing it? | BEAM integrity |
 
 #### Decision-Maker Identification via LinkedIn (CRITICAL)
@@ -232,6 +233,70 @@ For each shortlisted prospect, compile with a **problem-centric focus**:
 | **Gatekeeper** | Controls access to decision-makers and process | EA, Procurement Manager, PMO | Process, compliance, vendor management |
 
 **CRITICAL**: For BEAM Stage 1, you need at least one **named individual** you can access — not just "someone in IT". The skill will challenge vague answers.
+
+#### Historic Tender Activity Research
+
+**Research the prospect's historic tender and procurement activity** to understand how they buy, what they buy, who wins, and when the next opportunity window opens. This intelligence is critical for timing engagement and understanding competitive dynamics.
+
+**Applicability**: This research is **most valuable for government and public sector organisations** where procurement data is publicly available. Many private companies will have limited or no public tender data — note this in the dossier and skip to the assessment if data is unavailable.
+
+**Search strategy — run these searches for the target organisation:**
+
+1. **Government procurement portals** (prioritise based on jurisdiction):
+   ```
+   site:tenders.vic.gov.au "[Organisation Name]"
+   site:tenders.gov.au "[Organisation Name]"
+   site:austender.gov.au "[Organisation Name]"
+   site:eprocure.com.au "[Organisation Name]"
+   site:vendorpanel.com "[Organisation Name]"
+   ```
+
+2. **Tender results and contract awards**:
+   ```
+   "[Organisation Name]" tender OR RFT OR RFQ OR RFP award OR contract OR "awarded to"
+   "[Organisation Name]" "contract awarded" OR "successful tenderer" OR "panel arrangement"
+   site:tenders.vic.gov.au "[Organisation Name]" closed OR awarded
+   ```
+
+3. **Specific domain tenders** (tailor keywords to your offering):
+   ```
+   "[Organisation Name]" tender "asset management" OR "maintenance" OR "reliability" OR "condition monitoring"
+   "[Organisation Name]" tender "consulting" OR "advisory" OR "strategy" OR "review"
+   "[Organisation Name]" procurement "professional services" OR "engineering services"
+   ```
+
+4. **Annual reports and procurement disclosures**:
+   ```
+   "[Organisation Name]" annual report procurement OR "contract disclosure" OR "consultancy expenditure"
+   "[Organisation Name]" "standing offer" OR "panel" OR "preferred supplier"
+   ```
+
+**For each tender found, capture:**
+
+| Field | What to Record |
+|-------|---------------|
+| **Tender title** | Full title of the tender or contract |
+| **RFx / ID number** | Reference number for the tender |
+| **Year** | When the tender was issued or awarded |
+| **Estimated value** | Contract value (if disclosed) |
+| **Category** | Classify into: Asset Management, Engineering, IT/Digital, Advisory/Consulting, Maintenance, Other |
+| **Winner(s)** | Successful tenderer(s) if disclosed |
+| **Relevance** | How relevant this tender is to your offering (HIGH/MEDIUM/LOW) |
+
+**Compile the following analysis:**
+
+1. **Tender Summary** — total tenders found, period covered, annual frequency, total/average value
+2. **Category Breakdown** — group tenders by category with counts, values, and relevance to your offering
+3. **Key Relevant Tenders** — the most relevant past tenders to your offering, with winners
+4. **Winner Analysis** — which suppliers win repeatedly, who are the dominant incumbents, is there supplier concentration or diversity
+5. **Procurement Patterns** — tender frequency/seasonality, preferred contract models (panel, project, managed service), typical durations, evaluation approach
+6. **Opportunity Assessment** — based on the patterns: when is the next likely opportunity, what's the best entry point, where are the competitive gaps
+
+**This analysis feeds directly into:**
+- **Competitive Intelligence** — who are the incumbents and how entrenched are they
+- **Timing Score** — when is the next procurement window likely to open
+- **Willingness Signals** — active tendering in your domain = active buying signal
+- **Engagement Strategy** — whether to target direct tender response, panel inclusion, or subcontracting via incumbents
 
 ### Phase 4: BEAM Qualification Assessment
 
@@ -760,6 +825,14 @@ When conducting research, prioritise these source types:
 - Government procurement portals and tender notices
 - Official press releases
 
+### Government Procurement Sources (Historic Tender Research — REQUIRED for Public Sector)
+- **`site:tenders.vic.gov.au "[Organisation]"`** — Victorian government tenders (open and closed)
+- **`site:tenders.gov.au "[Organisation]"`** — National government tenders
+- **`site:austender.gov.au "[Organisation]"`** — Federal government contracts and tender history
+- **`"[Organisation]" tender award OR contract OR "awarded to" OR "successful tenderer"`** — tender results and winners
+- **`"[Organisation]" "panel arrangement" OR "standing offer" OR "preferred supplier"`** — panel and framework contracts
+- **`"[Organisation]" annual report "consultancy" OR "procurement" OR "contract disclosure"`** — procurement spend disclosures
+
 ### LinkedIn Sources (Decision-Maker Identification — REQUIRED)
 - **`site:linkedin.com/in "[Company]" [title]`** — find specific people by company and role
 - **`site:linkedin.com/company "[Company]"`** — company page for employee count, industry, and overview
@@ -802,7 +875,24 @@ Use this path when the user provides a specific company name (the most common in
 - **Be honest**: Document both confirming AND disconfirming evidence
 - If no problem evidence found, document that — qualifying out is valid
 
-**Step 3: Buying Committee Mapping**
+**Step 3: Historic Tender Activity Research**
+- **Search government procurement portals** for the prospect's historic tender and contract activity
+- This step is **most valuable for government and public sector organisations** — skip for private companies with no public procurement data
+- Search `site:tenders.vic.gov.au`, `site:tenders.gov.au`, `site:austender.gov.au` and other relevant portals for the organisation name
+- Search for tender results: `"[Organisation]" tender award OR contract OR "awarded to" OR "successful tenderer"`
+- Search for domain-specific tenders: `"[Organisation]" tender "asset management" OR "maintenance" OR "reliability" OR "consulting"`
+- For each tender found: capture title, RFx number, year, value, category, winner(s), and relevance
+- **Compile the analysis**:
+  - Tender summary (total count, period, annual frequency, total/average value)
+  - Category breakdown (group by type with counts, values, relevance to your offering)
+  - Key relevant tenders (the most pertinent to your offering, with winners)
+  - Winner analysis (who wins repeatedly, incumbent strength, supplier diversity)
+  - Procurement patterns (frequency, contract models, durations, evaluation approach)
+  - Opportunity assessment (next likely window, best entry point, competitive gaps)
+- **Feed findings into**: competitive intelligence (incumbent identification), timing score (next procurement window), willingness signals (active tendering = buying signal), engagement strategy (tender response vs panel vs subcontract)
+- If no public tender data is available, note "Limited — private company" in the dossier and move on
+
+**Step 4: Buying Committee Mapping**
 - **Search LinkedIn for decision-makers** using `site:linkedin.com/in "[Company]" [title]` queries:
   - Search for Economic Buyers (CEO, CFO, GM, VP)
   - Search for Technical Evaluators (CTO, Head of Engineering, IT Director)
@@ -811,22 +901,24 @@ Use this path when the user provides a specific company name (the most common in
 - For each person found: capture name, title, LinkedIn URL, BEAM buying role, and access assessment
 - Identify the most viable access path — who can you actually reach?
 
-**Step 4: BEAM Qualification Assessment**
+**Step 5: BEAM Qualification Assessment**
 - Assess each Stage 1 gate:
   - **Problem Domain**: Is there specific, evidenced problem or just assumptions?
   - **Access to Authority**: Do you have a named individual and a path to reach them?
   - **Willingness**: What signals suggest they'd engage in a conversation?
+- **Factor in tender intelligence**: Active tendering in your domain is a strong willingness signal; upcoming procurement cycles inform timing
 - Issue a qualification verdict: QUALIFIED, EXPLORATORY, NURTURE, or DISQUALIFIED
 - If DISQUALIFIED: Document the reason and stop — this is valuable intelligence, not failure
 
-**Step 5: Engagement Strategy (If Qualified)**
+**Step 6: Engagement Strategy (If Qualified)**
 - Score fit and timing (1–5 each)
+- **Incorporate tender insights into timing score**: known procurement cycles, panel expiry dates, and tender frequency patterns should directly inform timing evidence
 - Develop problem-led talking points (lead with their pain, not your features)
 - Prepare SPIN discovery questions for the first conversation
 - Design outreach focused on earning the right to a diagnostic conversation
 - Anticipate barriers and prepare to address them
 
-**Step 6: Delivery**
+**Step 7: Delivery**
 - Build the branded HTML report from the template
 - **Lead with BEAM Qualification Readiness** — gate assessments and verdict
 - Include the Executive Opportunity Summary
@@ -1283,6 +1375,7 @@ Before delivering initial research, verify:
 - [ ] Company snapshots complete (no missing fields)
 - [ ] Decision-makers identified with names and titles
 - [ ] Buying signals documented with dates and sources
+- [ ] Historic tender activity researched (for government/public sector prospects) — categories, values, winners, frequency, procurement patterns
 - [ ] Fit and timing scores assigned with justification
 - [ ] Prospects ranked into priority tiers
 - [ ] Engagement strategies personalised per prospect
