@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the SAS-AM Presentation Skill — a Claude Code skill for creating branded Reveal.js presentations">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>SAS Presentation Skill — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --card-bg: rgba(255,255,255,0.95);
+      --card-border: rgba(0,34,68,0.12);
+      --shadow-sm: 0 2px 8px rgba(0,34,68,0.06);
+      --shadow-md: 0 4px 16px rgba(0,34,68,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,34,68,0.14);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.5);
+      --code-bg: #f0f4f8;
+      --code-text: #1e3a5f;
+      --sidebar-w: 260px;
+      --header-h: 64px;
+    }
+
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --accent: #69BE28;
+      --accent-hover: #7AD33B;
+      --card-bg: rgba(20,29,43,0.9);
+      --card-border: rgba(255,255,255,0.08);
+      --shadow-sm: 0 2px 8px rgba(0,10,28,0.3);
+      --shadow-md: 0 4px 16px rgba(0,10,28,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,10,28,0.5);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.4);
+      --code-bg: #1a2332;
+      --code-text: #d1e3ed;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    .wiki-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-h);
+      background: var(--sas-blue);
+      color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+    .wiki-header .logo-area {
+      display: flex; align-items: center; gap: 14px;
+      font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px;
+    }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button {
+      background: rgba(255,255,255,0.12); border: none; color: #fff;
+      padding: 6px 14px; border-radius: 6px; cursor: pointer;
+      font-family: inherit; font-size: 0.85rem; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ── Sidebar ──────────────────────────────────── */
+    .wiki-sidebar {
+      position: fixed; top: var(--header-h); left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--card-border);
+      overflow-y: auto; padding: 20px 0;
+      z-index: 50;
+      transition: transform 0.3s ease;
+    }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--text-muted);
+      padding: 16px 20px 6px; margin: 0;
+    }
+    .wiki-sidebar a {
+      display: block; padding: 7px 20px 7px 28px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 0.88rem; font-weight: 400;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active {
+      color: var(--accent); font-weight: 600;
+      border-left-color: var(--accent); background: var(--bg-tertiary);
+    }
+
+    /* ── Main Content ─────────────────────────────── */
+    .wiki-main {
+      margin-left: var(--sidebar-w);
+      margin-top: var(--header-h);
+      padding: 40px 48px 80px;
+      max-width: 960px;
+      transition: margin-left 0.3s ease;
+    }
+    .wiki-main.expanded { margin-left: 0; }
+
+    /* ── Typography ───────────────────────────────── */
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 {
+      font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px;
+      padding-bottom: 8px; border-bottom: 2px solid var(--accent);
+      display: flex; align-items: center; gap: 10px;
+    }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+
+    /* ── Tables ────────────────────────────────────── */
+    table {
+      width: 100%; border-collapse: collapse; margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+    thead th {
+      background: var(--sas-blue); color: #fff;
+      text-align: left; padding: 10px 14px; font-weight: 600;
+      font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    tbody td {
+      padding: 9px 14px; border-bottom: 1px solid var(--card-border);
+      vertical-align: top;
+    }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code {
+      background: var(--code-bg); color: var(--code-text);
+      padding: 2px 6px; border-radius: 4px;
+      font-family: 'Source Code Pro', monospace; font-size: 0.82rem;
+    }
+
+    /* ── Code Blocks ──────────────────────────────── */
+    pre {
+      background: var(--code-bg); color: var(--code-text);
+      border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px;
+      overflow-x: auto; font-family: 'Source Code Pro', monospace;
+      font-size: 0.85rem; line-height: 1.5;
+      border: 1px solid var(--card-border);
+    }
+    code {
+      font-family: 'Source Code Pro', monospace; font-size: 0.88em;
+    }
+    :not(pre) > code {
+      background: var(--code-bg); color: var(--code-text);
+      padding: 2px 6px; border-radius: 4px;
+    }
+
+    /* ── Cards ─────────────────────────────────────── */
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+
+    /* ── Badges ────────────────────────────────────── */
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; vertical-align: middle;
+    }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    .badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    :root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+    /* ── Callouts ──────────────────────────────────── */
+    .callout {
+      border-left: 4px solid var(--accent); background: var(--bg-secondary);
+      padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px;
+    }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+
+    /* ── Checklists ────────────────────────────────── */
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li {
+      padding: 5px 0 5px 28px; position: relative;
+      font-size: 0.9rem; color: var(--text-secondary);
+    }
+    .checklist li::before {
+      content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400;
+      position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem;
+    }
+
+    /* ── Decision Tree / Flow ──────────────────────── */
+    .decision-row {
+      display: flex; align-items: stretch; gap: 0; margin: 6px 0;
+      font-size: 0.88rem;
+    }
+    .decision-if {
+      flex: 0 0 45%; padding: 8px 14px;
+      background: var(--bg-tertiary); border-radius: 8px 0 0 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .decision-then {
+      flex: 1; padding: 8px 14px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-left: none; border-radius: 0 8px 8px 0;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .decision-if i { color: var(--accent); min-width: 16px; text-align: center; }
+
+    /* ── Colour Swatches ───────────────────────────── */
+    .swatch-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+    .swatch {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 8px; padding: 8px 14px;
+    }
+    .swatch-dot {
+      width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .swatch-label { font-size: 0.82rem; }
+    .swatch-label strong { display: block; font-size: 0.78rem; }
+
+    /* ── Scroll-to-top ─────────────────────────────── */
+    .scroll-top {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none;
+      font-size: 1.1rem; cursor: pointer;
+      box-shadow: var(--shadow-md);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 90;
+    }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 900px) {
+      .wiki-sidebar { transform: translateX(-100%); }
+      .wiki-sidebar.open { transform: translateX(0); }
+      .wiki-main { margin-left: 0; padding: 28px 20px 60px; }
+      .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.3rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media print {
+      .wiki-header, .wiki-sidebar, .scroll-top { display: none; }
+      .wiki-main { margin-left: 0; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Header ═══ -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-layer-group"></i>
+      <span>SAS Presentation Skill <span style="opacity:0.5; font-weight:300;">Wiki</span></span>
+    </div>
+    <div class="header-controls">
+      <button onclick="document.querySelector('.wiki-sidebar').classList.toggle('open')" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+      <button id="themeToggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ Sidebar ═══ -->
+  <nav class="wiki-sidebar" aria-label="Wiki navigation">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#file-structure">File Structure</a>
+
+    <h3>Discovery Process</h3>
+    <a href="#phase1">Phase 1 &mdash; Presentation Type</a>
+    <a href="#phase2">Phase 2 &mdash; Content Details</a>
+    <a href="#phase3">Phase 3 &mdash; Data &amp; Charts</a>
+
+    <h3>Presentation Types</h3>
+    <a href="#types-table">All 17 Types</a>
+    <a href="#narrative-structure">Narrative Structure</a>
+
+    <h3>Design System</h3>
+    <a href="#colours">Colour System</a>
+    <a href="#typography">Typography</a>
+    <a href="#layout">Layout &amp; Dimensions</a>
+    <a href="#components">Reusable Components</a>
+
+    <h3>Charts &amp; Data</h3>
+    <a href="#chart-library">Chart Library (24 types)</a>
+    <a href="#chart-selection">Chart Selection Guide</a>
+    <a href="#data-sources">Data Sources</a>
+    <a href="#chart-attribution">Source Attribution</a>
+
+    <h3>Technical</h3>
+    <a href="#html-structure">HTML Structure</a>
+    <a href="#revealjs">Reveal.js Config</a>
+    <a href="#theming">Theme Management</a>
+    <a href="#accessibility">Accessibility</a>
+    <a href="#animations">Animations</a>
+
+    <h3>Workflow</h3>
+    <a href="#workflow">Build Workflow</a>
+    <a href="#export">Export &amp; PDF</a>
+    <a href="#checklist">Pre-Delivery Checklist</a>
+  </nav>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="wiki-main">
+
+    <!-- ── Overview ──────────────────────────────── -->
+    <h1 id="overview">SAS Presentation Skill <span class="version">v1.0.0</span></h1>
+    <p class="lead">A Claude Code skill for creating professional, branded Reveal.js presentations following the marcov / SAS-AM communication style. Outputs standalone HTML + CSS with no build step &mdash; open in any browser, share via USB, or host on a static server.</p>
+
+    <div class="card-grid card-grid-4">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-layer-group"></i></div>
+        <h4>17 Types</h4>
+        <p>From pitch decks to meeting minutes &mdash; each with its own structure and tone.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-moon"></i></div>
+        <h4>Light / Dark</h4>
+        <p>Built-in theme toggle with localStorage persistence. All colours via CSS variables.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
+        <h4>24 Chart Types</h4>
+        <p>Inline SVG chart library &mdash; theme-aware, accessible, interactive on hover.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-universal-access"></i></div>
+        <h4>WCAG 2.1 AA</h4>
+        <p>Focus indicators, reduced motion, screen reader support, semantic HTML.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>SAS-AM Tagline</strong> &mdash; every presentation MUST include on at least one slide:</p>
+      <p><em>"At SAS-AM we help organisations understand their strengths and weaknesses, model and predict the future, and make the right decisions through audit and benchmarking, advanced analytics and deep advisory services."</em></p>
+    </div>
+
+    <!-- ── How It Works ──────────────────────────── -->
+    <h2 id="how-it-works"><i class="fas fa-circle-play"></i> How It Works</h2>
+    <p>When you ask Claude to create a presentation, the skill follows a structured flow:</p>
+    <ol style="margin:10px 0 20px 20px; line-height:2;">
+      <li><strong>Discovery Interview</strong> &mdash; identify the type, gather content, plan charts</li>
+      <li><strong>Scaffold</strong> &mdash; create directory, copy base styles &amp; logos</li>
+      <li><strong>Build Slides</strong> &mdash; title, sections, components, charts</li>
+      <li><strong>Review &amp; Refine</strong> &mdash; test navigation, themes, run checklist</li>
+      <li><strong>Export</strong> (optional) &mdash; PDF via decktape</li>
+    </ol>
+
+    <!-- ── File Structure ────────────────────────── -->
+    <h2 id="file-structure"><i class="fas fa-folder-tree"></i> File Structure</h2>
+    <pre>presentation-folder/
+&#9500;&#9472;&#9472; presentation.html    # Main presentation file
+&#9500;&#9472;&#9472; styles.css           # Custom theme styles (copied from base-styles.css)
+&#9492;&#9472;&#9472; assets/              # Images (PNG, JPG, SVG)
+    &#9500;&#9472;&#9472; sas-logo-light.svg   # Light mode logo
+    &#9500;&#9472;&#9472; sas-logo-dark.png    # Dark mode logo
+    &#9492;&#9472;&#9472; [slide-images]-blue.png / -green.png</pre>
+    <p>Dual-theme images use the <code>-blue</code> / <code>-green</code> suffix convention and are switched via <code>.logo-light</code> / <code>.logo-dark</code> CSS classes.</p>
+
+    <!-- ═══ DISCOVERY PROCESS ═══ -->
+
+    <!-- ── Phase 1 ───────────────────────────────── -->
+    <h2 id="phase1"><i class="fas fa-magnifying-glass"></i> Phase 1: Identify the Presentation Type</h2>
+    <p>Ask four questions to narrow the type:</p>
+
+    <h3>1. What is the primary purpose?</h3>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-bullhorn"></i> Telling a story / persuading</div><div class="decision-then"><span class="badge badge-green">Presentation</span> <span class="badge badge-green">Pitch Deck</span> <span class="badge badge-green">Case Study</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-chart-line"></i> Presenting data or findings</div><div class="decision-then"><span class="badge badge-blue">Report</span> <span class="badge badge-blue">Dashboard</span> <span class="badge badge-blue">Chart</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-handshake"></i> Proposing or selling</div><div class="decision-then"><span class="badge badge-green">Proposal</span> <span class="badge badge-green">Capability Brochure</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-clipboard-check"></i> Tracking or reporting</div><div class="decision-then"><span class="badge badge-blue">Project Status Update</span> <span class="badge badge-blue">Meeting Minutes</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-chalkboard-user"></i> Teaching or training</div><div class="decision-then"><span class="badge badge-amber">Workshop / Training</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-diagram-project"></i> Documenting or comparing</div><div class="decision-then"><span class="badge badge-blue">Technical Architecture</span> <span class="badge badge-blue">Comparison Matrix</span> <span class="badge badge-blue">Roadmap</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-id-card"></i> Profiling people or services</div><div class="decision-then"><span class="badge badge-green">Resume / CV</span> <span class="badge badge-green">One Pager</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-user-tie"></i> Briefing leadership</div><div class="decision-then"><span class="badge badge-amber">Executive Briefing</span></div></div>
+
+    <h3>2. Who is the primary audience?</h3>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-building-columns"></i> Senior executives / board</div><div class="decision-then"><span class="badge badge-amber">Executive Briefing</span> <span class="badge badge-blue">Dashboard</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-coins"></i> Investors or partners</div><div class="decision-then"><span class="badge badge-green">Pitch Deck</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-briefcase"></i> Clients (commercial)</div><div class="decision-then"><span class="badge badge-green">Proposal</span> <span class="badge badge-green">Capability Brochure</span> <span class="badge badge-green">Case Study</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-users"></i> Internal team</div><div class="decision-then"><span class="badge badge-blue">Project Status</span> <span class="badge badge-blue">Meeting Minutes</span> <span class="badge badge-amber">Workshop</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-microphone"></i> Conference / public</div><div class="decision-then"><span class="badge badge-green">Presentation</span> <span class="badge badge-green">One Pager</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-code"></i> Technical reviewers</div><div class="decision-then"><span class="badge badge-blue">Technical Architecture</span> <span class="badge badge-blue">Comparison Matrix</span></div></div>
+
+    <h3>3. How many slides?</h3>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-file"></i> 1&ndash;3 slides</div><div class="decision-then"><span class="badge badge-green">One Pager</span> <span class="badge badge-blue">Chart</span> <span class="badge badge-amber">Executive Briefing</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-copy"></i> 5&ndash;10 slides</div><div class="decision-then"><span class="badge badge-blue">Dashboard</span> <span class="badge badge-green">Case Study</span> <span class="badge badge-green">Pitch Deck</span> <span class="badge badge-blue">Roadmap</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-layer-group"></i> 10&ndash;20 slides</div><div class="decision-then"><span class="badge badge-green">Presentation</span> <span class="badge badge-green">Proposal</span> <span class="badge badge-green">Capability Brochure</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-book"></i> 15&ndash;30 slides</div><div class="decision-then"><span class="badge badge-blue">Report</span> <span class="badge badge-amber">Workshop / Training</span></div></div>
+
+    <h3>4. What is the dominant content format?</h3>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-paragraph"></i> Narrative text with visuals</div><div class="decision-then"><span class="badge badge-green">Presentation</span> <span class="badge badge-green">Case Study</span> <span class="badge badge-green">Pitch Deck</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-table"></i> Tables, metrics, KPIs</div><div class="decision-then"><span class="badge badge-blue">Dashboard</span> <span class="badge badge-blue">Report</span> <span class="badge badge-blue">Project Status</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-sitemap"></i> Diagrams and architecture</div><div class="decision-then"><span class="badge badge-blue">Technical Architecture</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-grip"></i> Comparison grids</div><div class="decision-then"><span class="badge badge-blue">Comparison Matrix</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-list-check"></i> Lists, actions, decisions</div><div class="decision-then"><span class="badge badge-blue">Meeting Minutes</span></div></div>
+    <div class="decision-row"><div class="decision-if"><i class="fas fa-timeline"></i> Timeline / phases</div><div class="decision-then"><span class="badge badge-blue">Roadmap / Timeline</span></div></div>
+
+    <div class="callout">
+      <p><strong>Confirm:</strong> <em>"Based on what you've described, I'd recommend a <strong>[Type]</strong> format &mdash; it uses [key characteristic]. Does that sound right?"</em></p>
+    </div>
+
+    <!-- ── Phase 2 ───────────────────────────────── -->
+    <h2 id="phase2"><i class="fas fa-clipboard-list"></i> Phase 2: Gather Content Details</h2>
+
+    <h3>5. Topic &amp; Key Message</h3>
+    <ul class="checklist">
+      <li>What is this about?</li>
+      <li>What is the single most important takeaway?</li>
+      <li>Is there a specific call-to-action?</li>
+    </ul>
+
+    <h3>6. Delivery Context</h3>
+    <ul class="checklist">
+      <li>Where will this be presented? (conference, boardroom, webinar, shared via USB/email)</li>
+      <li>How much time do you have? (affects slide count)</li>
+      <li>Will you be presenting live or is it for self-navigation?</li>
+    </ul>
+
+    <h3>7. Branding</h3>
+    <ul class="checklist">
+      <li>Use marcov / SAS-AM branding (default) or a client's brand?</li>
+      <li>If client branding, what are their brand colours?</li>
+    </ul>
+
+    <h3>8. Visual Assets</h3>
+    <ul class="checklist">
+      <li>Do you have specific images, diagrams, or visualisations?</li>
+      <li>Should I create conceptual SVG diagrams?</li>
+      <li>Do you need a QR code for the closing slide?</li>
+    </ul>
+
+    <h3>9. Content Outline</h3>
+    <ul class="checklist">
+      <li>Do you have existing content, bullet points, or a rough outline?</li>
+      <li>What are the key sections or topics to cover?</li>
+      <li>Review the section list for the selected type &mdash; add, remove, or reorder?</li>
+    </ul>
+
+    <!-- ── Phase 3 ───────────────────────────────── -->
+    <h2 id="phase3"><i class="fas fa-chart-column"></i> Phase 3: Data &amp; Visualisation Planning</h2>
+    <p>If the presentation includes data, metrics, or KPIs, walk through chart selection and data sourcing <strong>before building</strong>.</p>
+
+    <h3 id="chart-selection">Step A: What Are You Trying to Show?</h3>
+    <p>Use this decision tree to recommend chart types:</p>
+    <table>
+      <thead><tr><th>You want to show&hellip;</th><th>Recommended Charts</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Ranking</strong> &mdash; biggest / smallest</td><td>Horizontal Bar, Treemap</td></tr>
+        <tr><td><strong>Comparison</strong> &mdash; side by side</td><td>Grouped Bar, Radar / Spider</td></tr>
+        <tr><td><strong>Composition</strong> &mdash; parts of a whole</td><td>Stacked Bar, Donut, Treemap</td></tr>
+        <tr><td><strong>Trend over time</strong></td><td>Line, Area, Sparkline</td></tr>
+        <tr><td><strong>Correlation</strong> &mdash; two variables</td><td>Scatter, Bubble</td></tr>
+        <tr><td><strong>Distribution</strong> &mdash; how data is spread</td><td>Distribution, Violin, Histogram</td></tr>
+        <tr><td><strong>Flow / process</strong> &mdash; stage transitions</td><td>Sankey, Funnel</td></tr>
+        <tr><td><strong>Relationships</strong> &mdash; connections</td><td>Network, Chord Diagram</td></tr>
+        <tr><td><strong>Status / health</strong></td><td>RAG Grid, Gauge, Progress Bars, Circular Bar</td></tr>
+        <tr><td><strong>Strategic positioning</strong></td><td>Quadrant Chart</td></tr>
+        <tr><td><strong>Cumulative change</strong></td><td>Waterfall</td></tr>
+        <tr><td><strong>Intensity (two dimensions)</strong></td><td>Heatmap / Matrix</td></tr>
+        <tr><td><strong>Single KPI headline</strong></td><td>Gauge, Sparkline, Circular Bar</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="data-sources">Step B: Where Is the Data?</h3>
+    <p>Classify every data element into one of three source types:</p>
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-csv"></i></div>
+        <h4>Structured File</h4>
+        <p>CSV, Excel, JSON, or database export. Real numbers exist in a file.</p>
+        <p style="margin-top:8px;"><strong>Ask:</strong> file path, columns, filters, aggregation method.</p>
+        <p><strong>Label:</strong> <em>"Source: FY24 Asset Register extract"</em></p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-comments"></i></div>
+        <h4>Anecdotal / Estimated</h4>
+        <p>Rough numbers or proportions from experience &mdash; no file.</p>
+        <p style="margin-top:8px;"><strong>Ask:</strong> categories, rough %, relative sizes. Suggest splits and confirm.</p>
+        <p><strong>Label:</strong> <em>"Indicative &mdash; based on operational experience"</em></p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-code-merge"></i></div>
+        <h4>Mixed</h4>
+        <p>Some series from files, some estimated. Handle each independently.</p>
+        <p style="margin-top:8px;"><strong>Ask:</strong> identify which is which. Footnote sourced vs estimated.</p>
+        <p><strong>Label:</strong> cite each series separately.</p>
+      </div>
+    </div>
+
+    <h3>Step C: Confirm Before Building</h3>
+    <div class="callout">
+      <p><strong>Always confirm data with the user:</strong></p>
+      <p><em>"Here's what I'll put on the chart: [labels and values]. Does that look right?"</em></p>
+      <p><em>"Should I add a source line? Something like 'Source: FY24 Asset Register' or 'Indicative estimates, March 2026'?"</em></p>
+    </div>
+
+    <h3 id="chart-attribution">Source Attribution Rules</h3>
+    <table>
+      <thead><tr><th>Data Source</th><th>Attribution Format</th></tr></thead>
+      <tbody>
+        <tr><td>File / database</td><td><em>"Source: [File name or system], [date/period]"</em></td></tr>
+        <tr><td>Anecdotal (from user)</td><td><em>"Source: [Role/name] estimates, [month year]"</em></td></tr>
+        <tr><td>Anecdotal (general)</td><td><em>"Indicative only &mdash; based on operational experience"</em></td></tr>
+        <tr><td>Published / external</td><td><em>"Source: [Publication/org], [year]"</em></td></tr>
+        <tr><td>Mixed</td><td>Cite each series separately in a footnote</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Presentation Types ────────────────────── -->
+    <h2 id="types-table"><i class="fas fa-th-list"></i> All 17 Presentation Types</h2>
+    <table>
+      <thead><tr><th>Type</th><th>Slides</th><th>Layout</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Presentation</strong></td><td>10&ndash;20</td><td>Mixed (split / full-bleed)</td><td>Conference talks, workshops, strategy sessions</td></tr>
+        <tr><td><strong>Report</strong></td><td>15&ndash;30</td><td>Text-heavy with charts</td><td>Maturity assessments, audit findings</td></tr>
+        <tr><td><strong>One Pager</strong></td><td>1&ndash;3</td><td>Dense single-slide</td><td>Service summaries, leave-behinds</td></tr>
+        <tr><td><strong>Dashboard</strong></td><td>3&ndash;8</td><td>Grid / Card-based</td><td>Monthly reporting, operational reviews</td></tr>
+        <tr><td><strong>Chart</strong></td><td>1&ndash;3</td><td>Centred visual</td><td>LinkedIn posts, data storytelling</td></tr>
+        <tr><td><strong>Resume / CV</strong></td><td>3&ndash;6</td><td>Split (sidebar + main)</td><td>Tender submissions, team profiles</td></tr>
+        <tr><td><strong>Proposal</strong></td><td>10&ndash;15</td><td>Mixed (narrative + structured)</td><td>Client proposals, tender responses</td></tr>
+        <tr><td><strong>Capability Brochure</strong></td><td>8&ndash;12</td><td>Visual-heavy / Magazine</td><td>Business development, conference handouts</td></tr>
+        <tr><td><strong>Case Study</strong></td><td>6&ndash;10</td><td>Storytelling arc</td><td>BD meetings, tender evidence</td></tr>
+        <tr><td><strong>Pitch Deck</strong></td><td>8&ndash;12</td><td>Full-bleed / High-impact</td><td>Investor pitches, partnerships</td></tr>
+        <tr><td><strong>Executive Briefing</strong></td><td>4&ndash;7</td><td>Clean / Sparse</td><td>Board updates, sponsor briefings</td></tr>
+        <tr><td><strong>Workshop / Training</strong></td><td>10&ndash;25</td><td>Mixed (instructional)</td><td>Client workshops, training</td></tr>
+        <tr><td><strong>Project Status Update</strong></td><td>5&ndash;8</td><td>Structured / Tabular</td><td>Weekly/monthly project reporting</td></tr>
+        <tr><td><strong>Technical Architecture</strong></td><td>6&ndash;12</td><td>Diagram-centric</td><td>Solution design reviews</td></tr>
+        <tr><td><strong>Roadmap / Timeline</strong></td><td>5&ndash;10</td><td>Horizontal timeline</td><td>Product roadmaps, transformation plans</td></tr>
+        <tr><td><strong>Comparison Matrix</strong></td><td>4&ndash;8</td><td>Grid / Table-centric</td><td>Technology selection, vendor evaluation</td></tr>
+        <tr><td><strong>Meeting Minutes</strong></td><td>3&ndash;6</td><td>Structured / List-based</td><td>Post-meeting distribution</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Narrative Structure ───────────────────── -->
+    <h2 id="narrative-structure"><i class="fas fa-route"></i> Default Narrative Structure</h2>
+    <p>The standard <strong>Presentation</strong> type uses a 7-section arc:</p>
+    <table>
+      <thead><tr><th>Section</th><th>Purpose</th><th>Example Hook</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">OPENING</span></td><td>Hook the audience, reframe the problem</td><td>"Your Million-Dollar EAM System Might Just Be A Very Expensive Filing Cabinet"</td></tr>
+        <tr><td><span class="badge badge-blue">THE CONTEXT</span></td><td>Establish the current situation</td><td>"Siloed failures &mdash; one truck breaks down but the fleet learns nothing"</td></tr>
+        <tr><td><span class="badge badge-red">THE PROBLEM</span></td><td>Identify specific pain points</td><td>"Cloud analytics can't make split-second decisions"</td></tr>
+        <tr><td><span class="badge badge-green">THE SOLUTION</span></td><td>Present your answer</td><td>"Edge Federated Machine Learning"</td></tr>
+        <tr><td><span class="badge badge-blue">THE IMPLEMENTATION</span></td><td>Show how it works practically</td><td>"Start small. One asset class. One location."</td></tr>
+        <tr><td><span class="badge badge-amber">THE FUTURE</span></td><td>Vision and possibilities</td><td>"Maintenance schedules that write themselves"</td></tr>
+        <tr><td><span class="badge badge-green">THE CONNECTION</span></td><td>Call to action</td><td>"Ready to make your assets intelligent?"</td></tr>
+      </tbody>
+    </table>
+    <p>Other types have their own section structures &mdash; see <code>references/presentation-types.md</code> for the full mapping.</p>
+
+    <!-- ── Colour System ─────────────────────────── -->
+    <h2 id="colours"><i class="fas fa-palette"></i> Colour System</h2>
+
+    <h3>Brand Colours</h3>
+    <div class="swatch-row">
+      <div class="swatch"><div class="swatch-dot" style="background:#002244;"></div><div class="swatch-label"><strong>SAS Blue</strong>#002244</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#69BE28;"></div><div class="swatch-label"><strong>SAS Green</strong>#69BE28</div></div>
+    </div>
+
+    <h3>Light Mode</h3>
+    <div class="swatch-row">
+      <div class="swatch"><div class="swatch-dot" style="background:#ffffff; border:1px solid #ccc;"></div><div class="swatch-label"><strong>bg-primary</strong>#ffffff</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#f7f7f7;"></div><div class="swatch-label"><strong>bg-secondary</strong>#f7f7f7</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#ededed;"></div><div class="swatch-label"><strong>bg-tertiary</strong>#ededed</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#002244;"></div><div class="swatch-label"><strong>text-primary</strong>#002244</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#334466;"></div><div class="swatch-label"><strong>text-secondary</strong>#334466</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#6b7280;"></div><div class="swatch-label"><strong>text-muted</strong>#6b7280</div></div>
+    </div>
+
+    <h3>Dark Mode</h3>
+    <div class="swatch-row">
+      <div class="swatch"><div class="swatch-dot" style="background:#0a0f1a;"></div><div class="swatch-label"><strong>bg-primary</strong>#0a0f1a</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#141d2b;"></div><div class="swatch-label"><strong>bg-secondary</strong>#141d2b</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#1e2a3d;"></div><div class="swatch-label"><strong>bg-tertiary</strong>#1e2a3d</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#f4fbff;"></div><div class="swatch-label"><strong>text-primary</strong>#f4fbff</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#d1e3ed;"></div><div class="swatch-label"><strong>text-secondary</strong>#d1e3ed</div></div>
+      <div class="swatch"><div class="swatch-dot" style="background:#8ba3b5;"></div><div class="swatch-label"><strong>text-muted</strong>#8ba3b5</div></div>
+    </div>
+
+    <p>All colours are defined as CSS custom properties. <strong>Never hardcode colour values</strong> &mdash; always use <code>var(--property)</code>.</p>
+
+    <!-- ── Typography ────────────────────────────── -->
+    <h2 id="typography"><i class="fas fa-font"></i> Typography</h2>
+    <table>
+      <thead><tr><th>Element</th><th>Size</th><th>Weight</th><th>Colour</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Title Slide h1</td><td>64px</td><td>300</td><td><code>--text-primary</code></td><td>line-height 1.2</td></tr>
+        <tr><td>Title Slide h2</td><td>36px</td><td>400</td><td><code>--accent</code></td><td>&mdash;</td></tr>
+        <tr><td>Author</td><td>24px</td><td>400</td><td><code>--text-muted</code></td><td>&mdash;</td></tr>
+        <tr><td>Section Tag</td><td>14px</td><td>600</td><td><code>--accent</code></td><td>uppercase, 2px spacing</td></tr>
+        <tr><td>Slide Title</td><td>72px</td><td>700</td><td><code>--text-primary</code></td><td>uppercase, max-width 50%</td></tr>
+        <tr><td>Slide Subtitle</td><td>36px</td><td>300</td><td><code>--text-secondary</code></td><td>line-height 1.4</td></tr>
+        <tr><td>Footer Nav</td><td>11px</td><td>600</td><td><code>--text-muted</code></td><td>uppercase, 1.5px spacing</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Font families:</strong> Source Sans Pro (300, 400, 600, 700) for body &amp; headings. Source Code Pro (400, 600) for code blocks.</p>
+
+    <!-- ── Layout ────────────────────────────────── -->
+    <h2 id="layout"><i class="fas fa-ruler-combined"></i> Layout &amp; Dimensions</h2>
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <h4>Slide Canvas</h4>
+        <p><strong>1920 &times; 1080</strong><br>16:9 aspect ratio<br>60px padding</p>
+      </div>
+      <div class="card">
+        <h4>Split Layout</h4>
+        <p>60px gap between columns<br>Content: <code>flex: 1</code><br>Image: max 600&times;500px</p>
+      </div>
+      <div class="card">
+        <h4>Logo Placement</h4>
+        <p>Slide logo: top 30px, right 40px, 80px wide<br>Title logo: 150px, centred</p>
+      </div>
+    </div>
+
+    <!-- ── Reusable Components ───────────────────── -->
+    <h2 id="components"><i class="fas fa-puzzle-piece"></i> Reusable Components</h2>
+    <table>
+      <thead><tr><th>Component</th><th>CSS Class</th><th>Use For</th></tr></thead>
+      <tbody>
+        <tr><td>Card</td><td><code>.card</code></td><td>Content container with border &amp; shadow</td></tr>
+        <tr><td>Card Grid</td><td><code>.card-grid</code> + <code>.card-grid-2/3/4</code></td><td>Responsive grid of cards</td></tr>
+        <tr><td>Table</td><td><code>.ref-table</code></td><td>Styled data table with accent headers</td></tr>
+        <tr><td>Checklist</td><td><code>.checklist</code> + <code>.check-icon</code></td><td>Lists with check/square icons</td></tr>
+        <tr><td>Badge</td><td><code>.badge</code> + modifier</td><td>Status indicator labels (RAG)</td></tr>
+        <tr><td>Code Block</td><td><code>.code-block</code></td><td>Monospace code display</td></tr>
+        <tr><td>Inline Code</td><td><code>.code-inline</code></td><td>Inline monospace text</td></tr>
+        <tr><td>Keyboard Key</td><td><code>.kbd</code></td><td>Keyboard shortcut badge</td></tr>
+        <tr><td>Split Layout</td><td><code>.split-layout</code></td><td>Two-column responsive layout</td></tr>
+        <tr><td>Scroll Container</td><td><code>.scroll-y</code></td><td>Scrollable content area</td></tr>
+        <tr><td>Section Tag</td><td><code>.ref-section-tag</code></td><td>Uppercase accent label</td></tr>
+        <tr><td>Screen Reader</td><td><code>.sr-only</code></td><td>Visually hidden text</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Chart Library ─────────────────────────── -->
+    <h2 id="chart-library"><i class="fas fa-chart-pie"></i> Chart Library (24 Types)</h2>
+    <p>All charts are inline SVG patterns from <code>references/chart-components.html</code>. They are theme-aware, accessible, and interactive.</p>
+    <table>
+      <thead><tr><th>#</th><th>Chart Type</th><th>CSS Classes</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Horizontal Bar</td><td><code>.chart-bar</code></td><td>Ranked categorical comparisons</td></tr>
+        <tr><td>2</td><td>Grouped Bar</td><td><code>.chart-bar</code> + legend</td><td>Side-by-side multi-series</td></tr>
+        <tr><td>3</td><td>Stacked Bar</td><td><code>.chart-bar</code></td><td>Composition of totals</td></tr>
+        <tr><td>4</td><td>Line Chart</td><td><code>.chart-line</code>, <code>.chart-point</code></td><td>Trends over time</td></tr>
+        <tr><td>5</td><td>Area Chart</td><td><code>.chart-area</code>, <code>.chart-line</code></td><td>Volume/magnitude trends</td></tr>
+        <tr><td>6</td><td>Sparkline</td><td><code>.chart-sparkline</code></td><td>Inline KPI trend indicators</td></tr>
+        <tr><td>7</td><td>Donut</td><td><code>.chart-slice</code></td><td>Proportions of a whole (max 6)</td></tr>
+        <tr><td>8</td><td>Waterfall</td><td><code>.chart-bar</code></td><td>Cumulative +/&minus; changes</td></tr>
+        <tr><td>9</td><td>Treemap</td><td><code>.chart-treemap-cell</code></td><td>Hierarchical proportional data</td></tr>
+        <tr><td>10</td><td>Radar / Spider</td><td><code>.chart-radar-*</code></td><td>Multi-dimension comparison</td></tr>
+        <tr><td>11</td><td>Heatmap / Matrix</td><td><code>.chart-cell</code></td><td>Two-dimension intensity</td></tr>
+        <tr><td>12</td><td>Gauge</td><td><code>.chart-gauge-*</code></td><td>Single KPI vs target</td></tr>
+        <tr><td>13</td><td>Scatter</td><td><code>.chart-point</code></td><td>Correlation between two variables</td></tr>
+        <tr><td>14</td><td>Bubble</td><td><code>.chart-bubble</code></td><td>Three-variable comparison</td></tr>
+        <tr><td>15</td><td>RAG Status Grid</td><td><code>.chart-rag-grid</code></td><td>Red/Amber/Green health</td></tr>
+        <tr><td>16</td><td>Progress Bars</td><td><code>.chart-progress-*</code></td><td>Completion / utilisation rates</td></tr>
+        <tr><td>17</td><td>Quadrant</td><td><code>.chart-quadrant-*</code></td><td>Strategic classification (2&times;2)</td></tr>
+        <tr><td>18</td><td>Funnel</td><td><code>.chart-funnel-segment</code></td><td>Sequential stage drop-off</td></tr>
+        <tr><td>19</td><td>Sankey</td><td><code>.chart-sankey-*</code></td><td>Flow between stages</td></tr>
+        <tr><td>20</td><td>Distribution</td><td><code>.chart-distribution-area</code></td><td>Probability density curves</td></tr>
+        <tr><td>21</td><td>Violin Plot</td><td><code>.chart-violin-*</code></td><td>Distribution + box plot</td></tr>
+        <tr><td>22</td><td>Circular Bar</td><td><code>.chart-circular-*</code></td><td>Radial KPI completion</td></tr>
+        <tr><td>23</td><td>Chord Diagram</td><td><code>.chart-chord-*</code></td><td>Relationship flow</td></tr>
+        <tr><td>24</td><td>Network Diagram</td><td><code>.chart-network-*</code></td><td>Entity relationship mapping</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Chart Interactivity Pattern</h3>
+    <ul class="checklist">
+      <li>Add <code>class="chart-interactive"</code> to the parent <code>&lt;svg&gt;</code> for sibling dimming on hover</li>
+      <li>Place <code>&lt;g class="chart-svg-tooltip"&gt;</code> after each data element for no-JS tooltip fallback</li>
+      <li>Use <code>--chart-1</code> through <code>--chart-6</code> for the categorical colour palette</li>
+      <li>Always include <code>role="img"</code> and <code>aria-label</code> on the SVG element</li>
+    </ul>
+
+    <!-- ── HTML Structure ────────────────────────── -->
+    <h2 id="html-structure"><i class="fas fa-code"></i> HTML Document Structure</h2>
+    <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="en-AU" data-theme="light"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;meta name="description" content="..."&gt;
+  &lt;meta name="author" content="marcov / SAS Asset Management"&gt;
+  &lt;title&gt;Presentation Title | marcov&lt;/title&gt;
+
+  &lt;!-- Reveal.js --&gt;
+  &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css"&gt;
+  &lt;!-- Font Awesome --&gt;
+  &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"&gt;
+  &lt;!-- Google Fonts --&gt;
+  &lt;link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&amp;family=Source+Code+Pro:wght@400;600&amp;display=swap" rel="stylesheet"&gt;
+  &lt;!-- marcov Styles --&gt;
+  &lt;link rel="stylesheet" href="styles.css"&gt;
+&lt;/head&gt;</pre>
+
+    <h3>Structural Rules</h3>
+    <ul class="checklist">
+      <li>Each slide is a <code>&lt;section&gt;</code> with a unique <code>id</code> and <code>data-section</code></li>
+      <li><code>&lt;h1&gt;</code> &mdash; title slide only (one per deck)</li>
+      <li><code>&lt;h2&gt;</code> slide titles, <code>&lt;h3&gt;</code> card headings, <code>&lt;h4&gt;</code> sub-headings &mdash; never skip levels</li>
+      <li>All <code>&lt;img&gt;</code> must have <code>alt</code> text; decorative: <code>alt="" role="presentation"</code></li>
+      <li>Inline SVGs preferred over image files</li>
+      <li>CSS variables for all colours &mdash; no hardcoded values</li>
+      <li>All JS at bottom of <code>&lt;body&gt;</code></li>
+      <li>No build step &mdash; open-in-browser ready</li>
+    </ul>
+
+    <!-- ── Reveal.js Config ──────────────────────── -->
+    <h2 id="revealjs"><i class="fas fa-cog"></i> Reveal.js Configuration</h2>
+    <pre>Reveal.initialize({
+  hash: true,
+  slideNumber: 'c/t',
+  showSlideNumber: 'speaker',
+  center: false,
+  width: 1920,
+  height: 1080,
+  margin: 0,
+  transition: 'slide',
+  fragments: true,
+  pdfSeparateFragments: false,
+  // ... see SKILL.md for full config
+});</pre>
+
+    <h3>Per-Type Overrides</h3>
+    <table>
+      <thead><tr><th>Type</th><th>Override</th></tr></thead>
+      <tbody>
+        <tr><td>Dashboard</td><td><code>transition: 'fade'</code></td></tr>
+        <tr><td>Workshop / Training</td><td><code>help: true</code>, <code>showSlideNumber: 'all'</code></td></tr>
+        <tr><td>One Pager</td><td><code>loop: true</code> (kiosk mode)</td></tr>
+        <tr><td>Project Status Update</td><td><code>transition: 'fade'</code></td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Theme Management ──────────────────────── -->
+    <h2 id="theming"><i class="fas fa-circle-half-stroke"></i> Theme Management</h2>
+    <p>Three states: <code>light</code> (default), <code>dark</code>, <code>system</code> (follows OS preference). Stored in <code>localStorage</code> under key <code>marcov-presentation-theme</code>.</p>
+    <p>The <code>data-theme</code> attribute is applied to <code>&lt;html&gt;</code>, <code>&lt;body&gt;</code>, and <code>.reveal-viewport</code>. Dual-theme images use:</p>
+    <pre>&lt;img src="assets/visual-blue.png" class="logo-light"&gt;
+&lt;img src="assets/visual-green.png" class="logo-dark"&gt;</pre>
+
+    <!-- ── Accessibility ─────────────────────────── -->
+    <h2 id="accessibility"><i class="fas fa-universal-access"></i> Accessibility (WCAG 2.1 AA)</h2>
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <h4><i class="fas fa-eye" style="color:var(--accent);margin-right:6px;"></i>Colour Contrast</h4>
+        <p>Normal text: 4.5:1 minimum<br>Large text (&ge;24px): 3:1<br>UI components: 3:1<br>Test both themes independently</p>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-keyboard" style="color:var(--accent);margin-right:6px;"></i>Keyboard Access</h4>
+        <p>All interactive elements focusable via Tab<br>Visible focus ring via <code>--focus-ring</code><br>Custom buttons: <code>role="button"</code> + <code>tabindex="0"</code></p>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-assistive-listening-systems" style="color:var(--accent);margin-right:6px;"></i>Screen Readers</h4>
+        <p><code>lang="en-AU"</code> on html<br>Descriptive <code>alt</code> on all images<br><code>aria-hidden="true"</code> on decorative elements<br><code>.sr-only</code> for hidden labels</p>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-gauge-low" style="color:var(--accent);margin-right:6px;"></i>Reduced Motion</h4>
+        <p>Mandatory <code>prefers-reduced-motion</code> rule in every stylesheet. All animations to 0.01ms, single iteration.</p>
+      </div>
+    </div>
+
+    <!-- ── Animations ────────────────────────────── -->
+    <h2 id="animations"><i class="fas fa-wand-magic-sparkles"></i> Animations</h2>
+    <h3>Binary Background</h3>
+    <p>Subtle falling binary code columns. Very low opacity: <code>rgba(0,34,68,0.04)</code> light / <code>rgba(255,255,255,0.03)</code> dark. Columns use <code>aria-hidden="true"</code>.</p>
+
+    <h3>QR Code Pulse</h3>
+    <p>Closing slide QR glow: radial gradient with 2s ease-in-out pulse. Uses <code>var(--accent)</code>.</p>
+
+    <h3>SVG Data Flow</h3>
+    <p>Use <code>&lt;animate&gt;</code> elements for conceptual diagrams (e.g. data flowing between nodes).</p>
+
+    <!-- ── Workflow ───────────────────────────────── -->
+    <h2 id="workflow"><i class="fas fa-list-ol"></i> Build Workflow</h2>
+    <table>
+      <thead><tr><th>Step</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1. Discovery</strong></td><td>Phase 1 (type) &rarr; Phase 2 (content) &rarr; Phase 3 (data &amp; charts) &rarr; confirm</td></tr>
+        <tr><td><strong>2. Scaffold</strong></td><td>Create directory, copy <code>base-styles.css</code> as <code>styles.css</code>, create <code>assets/</code>, copy logos</td></tr>
+        <tr><td><strong>3. Build Slides</strong></td><td>Title slide &rarr; sections &rarr; components &rarr; charts &rarr; footer nav &rarr; Reveal.js overrides</td></tr>
+        <tr><td><strong>4. Review</strong></td><td>Test navigation, light/dark toggle, images, footer tracking, run checklist</td></tr>
+        <tr><td><strong>5. Export</strong></td><td>(Optional) PDF via decktape, screenshots</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Export ─────────────────────────────────── -->
+    <h2 id="export"><i class="fas fa-file-pdf"></i> Export &amp; PDF</h2>
+    <pre># PDF export
+npx decktape reveal "presentation.html" output.pdf
+
+# Screenshots
+npx decktape reveal "presentation.html" output.pdf \
+  --screenshots --screenshots-directory screenshots/</pre>
+
+    <!-- ── Pre-Delivery Checklist ─────────────────── -->
+    <h2 id="checklist"><i class="fas fa-clipboard-check"></i> Pre-Delivery Checklist</h2>
+
+    <h3>HTML Compliance</h3>
+    <ul class="checklist">
+      <li><code>&lt;!DOCTYPE html&gt;</code> declared</li>
+      <li><code>lang="en-AU"</code> set</li>
+      <li>UTF-8 charset</li>
+      <li>Viewport meta present</li>
+      <li>Description and author meta tags</li>
+      <li>Title with <code>| marcov</code> suffix</li>
+      <li>All slides have unique IDs</li>
+      <li>All slides have <code>data-section</code> attributes</li>
+      <li>Heading hierarchy correct (h1 &rarr; h2 &rarr; h3)</li>
+      <li>No hardcoded colours</li>
+    </ul>
+
+    <h3>Accessibility</h3>
+    <ul class="checklist">
+      <li>All images have alt text</li>
+      <li>Colour contrast passes 4.5:1</li>
+      <li>Focus indicators visible</li>
+      <li>ARIA labels on icon-only buttons</li>
+      <li>Reduced motion rule in stylesheet</li>
+      <li>Keyboard navigation works</li>
+      <li>Binary columns have <code>aria-hidden="true"</code></li>
+    </ul>
+
+    <h3>Functionality</h3>
+    <ul class="checklist">
+      <li>Light/dark toggle works</li>
+      <li>Footer nav tracks correctly</li>
+      <li>Footer nav items match the type's sections</li>
+      <li>All fragments animate</li>
+      <li>Hash URLs resolve</li>
+      <li>Opens standalone in browser</li>
+      <li>Australian English spelling</li>
+      <li>PDF export tested (if needed)</li>
+    </ul>
+
+    <h3>Data Visualisations</h3>
+    <ul class="checklist">
+      <li>Chart type appropriate for the data story</li>
+      <li>Data source identified (structured, anecdotal, or mixed)</li>
+      <li>Data values confirmed with user before building</li>
+      <li>All charts have <code>role="img"</code> and <code>aria-label</code></li>
+      <li>All charts use <code>.chart-interactive</code></li>
+      <li>Chart colours use <code>--chart-1</code> through <code>--chart-6</code></li>
+      <li>Tooltips present</li>
+      <li>Source attribution on every chart</li>
+      <li>Anecdotal data labelled as estimated/indicative</li>
+      <li>Axis labels, legends, values accurate and readable</li>
+    </ul>
+
+    <h3>Content</h3>
+    <ul class="checklist">
+      <li>Discovery interview completed (Phases 1, 2, and 3)</li>
+      <li>Presentation type identified and confirmed</li>
+      <li>Section structure follows the type definition</li>
+      <li>Tone matches the type</li>
+      <li>SAS-AM tagline included on at least one slide</li>
+    </ul>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      SAS Presentation Skill v1.0.0 &mdash; marcov-revealjs-standards compliant
+    </p>
+
+  </main>
+
+  <!-- ═══ Scroll-to-top ═══ -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    /* ── Theme Toggle ─── */
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    /* ── Active Sidebar Link ─── */
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    /* ── Scroll-to-top ─── */
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>
