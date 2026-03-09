@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the B2B Research Agent Skill — a Claude Code skill for problem-first B2B intelligence and engagement strategy">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>B2B Research Agent — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --sas-green: #69BE28; --sas-blue: #002244; --bg-primary: #ffffff; --bg-secondary: #f7f7f7; --bg-tertiary: #ededed; --text-primary: #002244; --text-secondary: #334466; --text-muted: #6b7280; --accent: #69BE28; --accent-hover: #5AA822; --card-bg: rgba(255,255,255,0.95); --card-border: rgba(0,34,68,0.12); --shadow-sm: 0 2px 8px rgba(0,34,68,0.06); --shadow-md: 0 4px 16px rgba(0,34,68,0.10); --shadow-lg: 0 8px 24px rgba(0,34,68,0.14); --focus-ring: 0 0 0 3px rgba(105,190,40,0.5); --code-bg: #f0f4f8; --code-text: #1e3a5f; --sidebar-w: 260px; --header-h: 64px; }
+    :root[data-theme="dark"] { --sas-green: #7AD33B; --sas-blue: #1a4d7a; --bg-primary: #0a0f1a; --bg-secondary: #141d2b; --bg-tertiary: #1e2a3d; --text-primary: #f4fbff; --text-secondary: #d1e3ed; --text-muted: #8ba3b5; --accent: #69BE28; --accent-hover: #7AD33B; --card-bg: rgba(20,29,43,0.9); --card-border: rgba(255,255,255,0.08); --shadow-sm: 0 2px 8px rgba(0,10,28,0.3); --shadow-md: 0 4px 16px rgba(0,10,28,0.4); --shadow-lg: 0 8px 24px rgba(0,10,28,0.5); --focus-ring: 0 0 0 3px rgba(105,190,40,0.4); --code-bg: #1a2332; --code-text: #d1e3ed; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+    .wiki-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-h); background: var(--sas-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .wiki-header .logo-area { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px; }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button { background: rgba(255,255,255,0.12); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .wiki-sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: var(--bg-secondary); border-right: 1px solid var(--card-border); overflow-y: auto; padding: 20px 0; z-index: 50; transition: transform 0.3s ease; }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding: 16px 20px 6px; margin: 0; }
+    .wiki-sidebar a { display: block; padding: 7px 20px 7px 28px; color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; font-weight: 400; border-left: 3px solid transparent; transition: all 0.15s; }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active { color: var(--accent); font-weight: 600; border-left-color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 48px 80px; max-width: 960px; transition: margin-left 0.3s ease; }
+    .wiki-main.expanded { margin-left: 0; }
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 { font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 10px; }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+    thead th { background: var(--sas-blue); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    tbody td { padding: 9px 14px; border-bottom: 1px solid var(--card-border); vertical-align: top; }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; font-family: 'Source Code Pro', monospace; font-size: 0.82rem; }
+    pre { background: var(--code-bg); color: var(--code-text); border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px; overflow-x: auto; font-family: 'Source Code Pro', monospace; font-size: 0.85rem; line-height: 1.5; border: 1px solid var(--card-border); }
+    code { font-family: 'Source Code Pro', monospace; font-size: 0.88em; }
+    :not(pre) > code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; }
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s; }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    .badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    :root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .callout { border-left: 4px solid var(--accent); background: var(--bg-secondary); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px; }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li { padding: 5px 0 5px 28px; position: relative; font-size: 0.9rem; color: var(--text-secondary); }
+    .checklist li::before { content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400; position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem; }
+    .decision-row { display: flex; align-items: stretch; gap: 0; margin: 6px 0; font-size: 0.88rem; }
+    .decision-if { flex: 0 0 45%; padding: 8px 14px; background: var(--bg-tertiary); border-radius: 8px 0 0 8px; display: flex; align-items: center; gap: 8px; }
+    .decision-then { flex: 1; padding: 8px 14px; background: var(--card-bg); border: 1px solid var(--card-border); border-left: none; border-radius: 0 8px 8px 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .decision-if i { color: var(--accent); min-width: 16px; text-align: center; }
+    .swatch-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+    .swatch { display: flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 14px; }
+    .swatch-dot { width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1); }
+    .swatch-label { font-size: 0.82rem; }
+    .swatch-label strong { display: block; font-size: 0.78rem; }
+    .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 42px; height: 42px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; z-index: 90; }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+    @media (max-width: 900px) { .wiki-sidebar { transform: translateX(-100%); } .wiki-sidebar.open { transform: translateX(0); } .wiki-main { margin-left: 0; padding: 28px 20px 60px; } .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } h2 { font-size: 1.3rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+    @media print { .wiki-header, .wiki-sidebar, .scroll-top { display: none; } .wiki-main { margin-left: 0; max-width: 100%; } }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Header ═══ -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-building"></i>
+      <span>B2B Research Agent Wiki</span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../wiki.html" style="color:#fff;text-decoration:none;font-size:0.85rem;font-weight:600;opacity:0.85;">
+        <i class="fas fa-arrow-left" style="margin-right:4px;"></i> All Skills
+      </a>
+      <button id="themeToggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+    </div>
+  </header>
+
+  <!-- ═══ Sidebar ═══ -->
+  <nav class="wiki-sidebar" id="sidebar">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#philosophy">Core Philosophy</a>
+    <a href="#beam">BEAM Integration</a>
+
+    <h3>Discovery</h3>
+    <a href="#targeted-discovery">Targeted Discovery</a>
+    <a href="#pipeline-discovery">Pipeline Mode Discovery</a>
+
+    <h3>Research</h3>
+    <a href="#phase1">Phase 1 &mdash; Problem Domain</a>
+    <a href="#phase2">Phase 2 &mdash; Signal Identification</a>
+    <a href="#phase3">Phase 3 &mdash; Deep-Dive Intelligence</a>
+
+    <h3>Buying Committee</h3>
+    <a href="#decision-makers">Decision-Maker Mapping</a>
+    <a href="#beam-roles">BEAM Buying Roles</a>
+    <a href="#linkedin-search">LinkedIn Search</a>
+
+    <h3>Assessment</h3>
+    <a href="#qualification">BEAM Qualification</a>
+    <a href="#gate-assessment">Gate Assessment</a>
+
+    <h3>Output</h3>
+    <a href="#prospect-dossier">Prospect Dossier</a>
+    <a href="#engagement-strategy">Engagement Strategy</a>
+    <a href="#outreach-templates">Outreach Templates</a>
+    <a href="#output">Output Formats</a>
+
+    <h3>Reference</h3>
+    <a href="#references">Reference Files</a>
+  </nav>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="wiki-main" id="main">
+
+    <!-- ── Overview ──────────────────────────────── -->
+    <h1 id="overview">B2B Research Agent <span class="version">v1.0.0</span></h1>
+    <p class="lead">Research and identify B2B engagement opportunities with a problem-first approach. Produces intelligence dossiers, maps buying committees, and creates actionable engagement strategies that feed directly into the BEAM selling framework.</p>
+
+    <div class="card-grid card-grid-4">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-search"></i></div>
+        <h4>Problem Discovery</h4>
+        <p>Identify real business problems before pursuing engagement. Research signals, pain points, and market context.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-users"></i></div>
+        <h4>Buying Committee</h4>
+        <p>Map decision-makers, technical evaluators, champions, and gatekeepers across the target organisation.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-handshake"></i></div>
+        <h4>BEAM Integration</h4>
+        <p>Output feeds directly into BEAM Stage 1 gates: problem domain, access to authority, and willingness to diagnose.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-paper-plane"></i></div>
+        <h4>Outreach Strategy</h4>
+        <p>Generate personalised engagement timelines, outreach templates, and multi-channel contact strategies.</p>
+      </div>
+    </div>
+
+    <!-- ── Core Philosophy ───────────────────────── -->
+    <h2 id="philosophy"><i class="fas fa-lightbulb"></i> Core Philosophy: Earn the Right</h2>
+    <p>Every engagement must pass three fundamental tests before advancing. The research agent validates each one.</p>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-circle-question"></i></div>
+        <h4>Real Problem?</h4>
+        <p>Is there a real problem we can solve? Evidence-based validation, not assumptions.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-key"></i></div>
+        <h4>Access to Authority?</h4>
+        <p>Do we have access to authority? Can we reach the people who own the problem and budget?</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-comments"></i></div>
+        <h4>Willingness to Engage?</h4>
+        <p>Is there willingness to engage? Are there signals that the organisation is open to change?</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Qualifying out is a valid outcome.</strong> If research reveals no real problem or no path to authority, that's valuable intelligence. Document the finding and move on.</p>
+    </div>
+
+    <!-- ── BEAM Integration ──────────────────────── -->
+    <h2 id="beam"><i class="fas fa-bullseye"></i> BEAM Integration</h2>
+    <p>All research output feeds directly into BEAM Stage 1 qualification. The agent structures every finding to map against the three BEAM Stage 1 gates.</p>
+
+    <table>
+      <thead>
+        <tr><th>BEAM Stage 1 Gate</th><th>Research Must Provide</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Problem Domain Identified</strong></td>
+          <td>Evidence of a real business problem that aligns with our capabilities. Quantified pain where possible, with supporting signals from news, hiring, technology, and executive commentary.</td>
+        </tr>
+        <tr>
+          <td><strong>Access to Authority</strong></td>
+          <td>Mapped buying committee with identified economic buyer, technical evaluators, and potential champions. LinkedIn profiles, titles, and engagement angles for each.</td>
+        </tr>
+        <tr>
+          <td><strong>Willingness to Diagnose</strong></td>
+          <td>Signals that the organisation is open to exploring solutions: active initiatives, budget allocation, recent changes, event participation, or public statements about the problem domain.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Targeted Discovery ────────────────────── -->
+    <h2 id="targeted-discovery"><i class="fas fa-crosshairs"></i> Targeted Discovery</h2>
+    <p>When a specific target company <strong>is</strong> provided, the agent conducts a focused discovery interview across four categories to gather context before beginning research.</p>
+
+    <h3>Your Business &amp; Problem You Solve</h3>
+    <ul class="checklist">
+      <li>What does your company do in one sentence?</li>
+      <li>What specific problem do you solve for customers?</li>
+      <li>What is your unique value proposition?</li>
+      <li>Who is your ideal buyer persona (title, department)?</li>
+      <li>What industry verticals do you focus on?</li>
+    </ul>
+
+    <h3>Engagement Context</h3>
+    <ul class="checklist">
+      <li>Why this company specifically?</li>
+      <li>Have you had any prior contact or relationship?</li>
+      <li>Is there a triggering event (news, funding, leadership change)?</li>
+      <li>What is your desired outcome from this engagement?</li>
+      <li>What is your timeline for engagement?</li>
+    </ul>
+
+    <h3>Qualification Criteria</h3>
+    <ul class="checklist">
+      <li>What is the minimum deal size that makes this worthwhile?</li>
+      <li>Are there any disqualifying factors (competitors, contracts)?</li>
+      <li>What does success look like in 90 days?</li>
+    </ul>
+
+    <h3>Output Preferences</h3>
+    <ul class="checklist">
+      <li>Do you want a full dossier or a quick assessment?</li>
+      <li>Should outreach templates be included?</li>
+      <li>What format do you prefer (HTML, Markdown, both)?</li>
+    </ul>
+
+    <!-- ── Pipeline Mode Discovery ───────────────── -->
+    <h2 id="pipeline-discovery"><i class="fas fa-layer-group"></i> Pipeline Mode Discovery</h2>
+    <p>When <strong>no</strong> specific target is provided, the agent runs an expanded discovery to build a pipeline of prospects from scratch.</p>
+
+    <h3>Your Business</h3>
+    <ul class="checklist">
+      <li>What does your company do?</li>
+      <li>What problems do you solve?</li>
+      <li>What is your unique differentiation?</li>
+    </ul>
+
+    <h3>Target Market</h3>
+    <ul class="checklist">
+      <li>What industries do you serve?</li>
+      <li>What company size range (revenue, employees)?</li>
+      <li>What geographies are in scope?</li>
+    </ul>
+
+    <h3>Ideal Customer Profile</h3>
+    <ul class="checklist">
+      <li>Describe your best existing customer</li>
+      <li>What made them a great fit?</li>
+      <li>What patterns do your best deals share?</li>
+    </ul>
+
+    <h3>Engagement Goals</h3>
+    <ul class="checklist">
+      <li>How many prospects do you want to identify?</li>
+      <li>What is the engagement timeline?</li>
+      <li>Are there upcoming events or campaigns to align with?</li>
+    </ul>
+
+    <h3>Existing Intelligence</h3>
+    <ul class="checklist">
+      <li>Do you have any existing prospect lists?</li>
+      <li>Are there companies you have already disqualified?</li>
+      <li>Any warm introductions or referral paths?</li>
+    </ul>
+
+    <h3>Output Preferences</h3>
+    <ul class="checklist">
+      <li>Individual dossiers or pipeline summary?</li>
+      <li>Depth of research per prospect?</li>
+      <li>Preferred output format?</li>
+    </ul>
+
+    <!-- ── Phase 1: Problem Domain ───────────────── -->
+    <h2 id="phase1"><i class="fas fa-microscope"></i> Phase 1: Define Problem Domain</h2>
+    <p>Before any company research begins, define what you are looking for. This prevents aimless research and ensures every finding maps back to a business problem.</p>
+
+    <ul class="checklist">
+      <li><strong>Articulate the problem hypothesis</strong> &mdash; State the specific business problem you believe the target may have, based on your discovery interview and market knowledge.</li>
+      <li><strong>Define problem signals</strong> &mdash; List the observable indicators that would confirm the problem exists: hiring patterns, technology choices, news events, financial indicators.</li>
+      <li><strong>Define disqualifying signals</strong> &mdash; List the indicators that would rule out the problem: recent solution purchase, competitor lock-in, no budget authority.</li>
+      <li><strong>Set research scope</strong> &mdash; Define boundaries: time range for news, depth of competitor analysis, number of contacts to identify.</li>
+    </ul>
+
+    <!-- ── Phase 2: Signal Identification ────────── -->
+    <h2 id="phase2"><i class="fas fa-satellite-dish"></i> Phase 2: Problem Signal Identification</h2>
+    <p>Systematically search for evidence that the problem exists at the target organisation. Six signal categories to investigate.</p>
+
+    <h3>Pain Signals in News</h3>
+    <ul class="checklist">
+      <li>Press releases mentioning challenges or strategic shifts</li>
+      <li>Industry analyst reports referencing the company</li>
+      <li>Earnings calls or investor presentations discussing pain points</li>
+    </ul>
+
+    <h3>Job Postings</h3>
+    <ul class="checklist">
+      <li>Roles that indicate capability gaps</li>
+      <li>New department or team formations</li>
+      <li>Senior hires suggesting strategic pivots</li>
+    </ul>
+
+    <h3>Technology Gaps</h3>
+    <ul class="checklist">
+      <li>Legacy technology stack indicators</li>
+      <li>Missing capabilities compared to peers</li>
+      <li>Integration challenges visible in job postings or forums</li>
+    </ul>
+
+    <h3>Strategic Priorities</h3>
+    <ul class="checklist">
+      <li>Annual report themes and stated goals</li>
+      <li>Board-level initiatives or transformation programs</li>
+      <li>M&amp;A activity suggesting capability acquisition</li>
+    </ul>
+
+    <h3>Industry Benchmarks</h3>
+    <ul class="checklist">
+      <li>Performance gaps vs industry peers</li>
+      <li>Regulatory compliance requirements</li>
+      <li>Market share trends</li>
+    </ul>
+
+    <h3>Executive Commentary</h3>
+    <ul class="checklist">
+      <li>Conference presentations and panel discussions</li>
+      <li>LinkedIn posts and articles from leadership</li>
+      <li>Podcast or media interviews</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <p><strong>Be honest:</strong> If you don't find evidence of the problem, document that. Absence of signals is itself a signal. Do not manufacture evidence to justify engagement.</p>
+    </div>
+
+    <!-- ── Phase 3: Deep-Dive Intelligence ────────── -->
+    <h2 id="phase3"><i class="fas fa-magnifying-glass-chart"></i> Phase 3: Deep-Dive Intelligence</h2>
+    <p>For prospects that pass signal identification, conduct a comprehensive intelligence gathering across all categories.</p>
+
+    <table>
+      <thead>
+        <tr><th>Category</th><th>Details to Capture</th><th>BEAM Relevance</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Company Overview</strong></td>
+          <td>Industry, size, revenue, locations, ownership structure</td>
+          <td>Context for deal sizing and engagement approach</td>
+        </tr>
+        <tr>
+          <td><strong>Business Model</strong></td>
+          <td>Revenue streams, customer segments, value chain position</td>
+          <td>Understanding where the problem sits in their business</td>
+        </tr>
+        <tr>
+          <td><strong>Problem Evidence</strong></td>
+          <td>Confirmed signals, pain indicators, supporting data</td>
+          <td>Gate 1: Problem Domain validation</td>
+        </tr>
+        <tr>
+          <td><strong>Pain Quantification</strong></td>
+          <td>Financial impact, efficiency gaps, risk exposure</td>
+          <td>Business case foundation for economic buyer</td>
+        </tr>
+        <tr>
+          <td><strong>Technology Landscape</strong></td>
+          <td>Current stack, integrations, vendor relationships</td>
+          <td>Technical feasibility and competitive positioning</td>
+        </tr>
+        <tr>
+          <td><strong>Buying Committee</strong></td>
+          <td>Key decision-makers, influencers, budget holders</td>
+          <td>Gate 2: Access to Authority mapping</td>
+        </tr>
+        <tr>
+          <td><strong>Access Path</strong></td>
+          <td>Mutual connections, events, referral routes</td>
+          <td>Gate 2: Practical path to engagement</td>
+        </tr>
+        <tr>
+          <td><strong>Willingness Signals</strong></td>
+          <td>Active initiatives, budget cycles, openness indicators</td>
+          <td>Gate 3: Willingness to Diagnose</td>
+        </tr>
+        <tr>
+          <td><strong>Competitive Landscape</strong></td>
+          <td>Incumbent vendors, alternative solutions, switching costs</td>
+          <td>Competitive strategy and differentiation messaging</td>
+        </tr>
+        <tr>
+          <td><strong>Qualification Assessment</strong></td>
+          <td>Overall BEAM gate scoring and recommendation</td>
+          <td>Go/no-go decision with supporting rationale</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Decision-Maker Mapping ────────────────── -->
+    <h2 id="decision-makers"><i class="fas fa-sitemap"></i> Decision-Maker Mapping</h2>
+    <p>Systematically identify and map the buying committee using structured LinkedIn search patterns. Each search targets a different level and function within the organisation.</p>
+
+    <h3 id="linkedin-search">LinkedIn Search Patterns</h3>
+    <p>Use these search patterns to identify relevant contacts at the target company:</p>
+
+    <h4>Executive Leadership</h4>
+    <pre>site:linkedin.com/in "[Company Name]" (CEO OR "Chief Executive" OR "Managing Director" OR "General Manager")</pre>
+
+    <h4>Technology Leadership</h4>
+    <pre>site:linkedin.com/in "[Company Name]" (CTO OR CIO OR "Chief Technology" OR "Chief Information" OR "VP Technology" OR "VP Engineering")</pre>
+
+    <h4>Line of Business Owners</h4>
+    <pre>site:linkedin.com/in "[Company Name]" ("Head of" OR "Director" OR "VP") ("[Problem Domain]" OR "[Department]")</pre>
+
+    <h4>Technical Evaluators</h4>
+    <pre>site:linkedin.com/in "[Company Name]" ("Senior" OR "Lead" OR "Principal") ("[Technology]" OR "Architecture" OR "Engineering")</pre>
+
+    <h4>Procurement &amp; Legal</h4>
+    <pre>site:linkedin.com/in "[Company Name]" ("Procurement" OR "Purchasing" OR "Vendor Management" OR "Legal Counsel")</pre>
+
+    <h3>Contact Intelligence to Capture</h3>
+    <table>
+      <thead>
+        <tr><th>Field</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Full Name</strong></td><td>Complete name as listed on LinkedIn</td></tr>
+        <tr><td><strong>Title</strong></td><td>Current role and seniority level</td></tr>
+        <tr><td><strong>Department</strong></td><td>Business unit or functional area</td></tr>
+        <tr><td><strong>LinkedIn URL</strong></td><td>Direct profile link</td></tr>
+        <tr><td><strong>Relevance</strong></td><td>Why this person matters to the engagement</td></tr>
+        <tr><td><strong>Background Notes</strong></td><td>Career history, education, shared connections</td></tr>
+        <tr><td><strong>Engagement Angle</strong></td><td>Personalised approach based on their interests and role</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── BEAM Buying Roles ─────────────────────── -->
+    <h2 id="beam-roles"><i class="fas fa-user-tie"></i> BEAM Buying Roles</h2>
+    <p>Map each identified contact to their BEAM buying role. Understanding who plays which role is critical for engagement strategy.</p>
+
+    <table>
+      <thead>
+        <tr><th>BEAM Role</th><th>Description</th><th>Typical Titles</th><th>What They Care About</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-green">Economic Buyer</span></td>
+          <td>Owns the budget and makes the final purchasing decision. Can say yes when everyone else says no.</td>
+          <td>CEO, CFO, CIO, VP, GM, Department Head</td>
+          <td>ROI, business impact, risk mitigation, strategic alignment</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">Technical Evaluator</span></td>
+          <td>Assesses technical fit, integration requirements, and implementation feasibility.</td>
+          <td>CTO, Solution Architect, Engineering Lead, IT Director</td>
+          <td>Technical capabilities, integration, security, scalability</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-amber">Champion / Sponsor</span></td>
+          <td>Internal advocate who wants the solution to succeed. Provides inside intelligence and builds internal support.</td>
+          <td>Director, Senior Manager, Project Lead, Business Analyst</td>
+          <td>Solving their daily pain, career advancement, team efficiency</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-red">Gatekeeper</span></td>
+          <td>Controls access to decision-makers. Can block progress but cannot approve deals.</td>
+          <td>Procurement Manager, Executive Assistant, Legal Counsel</td>
+          <td>Process compliance, vendor management, risk, contractual terms</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── BEAM Qualification ────────────────────── -->
+    <h2 id="qualification"><i class="fas fa-clipboard-check"></i> BEAM Qualification Assessment</h2>
+    <p>Score each BEAM Stage 1 gate to determine whether the prospect warrants engagement.</p>
+
+    <h3 id="gate-assessment">Gate 1: Problem Domain</h3>
+    <table>
+      <thead>
+        <tr><th>Rating</th><th>Criteria</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">STRONG</span></td><td>Multiple confirmed signals. Quantifiable pain. Clear alignment with our capabilities.</td></tr>
+        <tr><td><span class="badge badge-blue">MODERATE</span></td><td>Some signals present. Problem likely exists but not fully confirmed. Reasonable alignment.</td></tr>
+        <tr><td><span class="badge badge-amber">WEAK</span></td><td>Limited signals. Problem may exist but evidence is thin. Marginal alignment.</td></tr>
+        <tr><td><span class="badge badge-red">NONE</span></td><td>No evidence of problem. No alignment with our capabilities. Disqualify.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Gate 2: Access to Authority</h3>
+    <table>
+      <thead>
+        <tr><th>Rating</th><th>Criteria</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">STRONG</span></td><td>Economic buyer identified. Direct or warm introduction path available. Multiple committee members mapped.</td></tr>
+        <tr><td><span class="badge badge-blue">MODERATE</span></td><td>Key contacts identified. No warm introduction but viable outreach path. Partial committee mapping.</td></tr>
+        <tr><td><span class="badge badge-amber">WEAK</span></td><td>Limited contacts found. No clear path to economic buyer. Cold outreach only.</td></tr>
+        <tr><td><span class="badge badge-red">NONE</span></td><td>Cannot identify decision-makers. No viable access path. Disqualify.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Gate 3: Willingness to Diagnose</h3>
+    <table>
+      <thead>
+        <tr><th>Rating</th><th>Criteria</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge badge-green">STRONG</span></td><td>Active initiative underway. Budget allocated. Public statements about seeking solutions.</td></tr>
+        <tr><td><span class="badge badge-blue">MODERATE</span></td><td>Some willingness indicators. Strategic priority identified. Budget cycle aligns.</td></tr>
+        <tr><td><span class="badge badge-amber">WEAK</span></td><td>No clear willingness signals. May be receptive but no evidence. Speculative engagement.</td></tr>
+        <tr><td><span class="badge badge-red">NONE</span></td><td>Active resistance or recent competitive lock-in. Not open to engagement. Disqualify.</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Output Formats ────────────────────────── -->
+    <h2 id="output"><i class="fas fa-file-export"></i> Output Formats</h2>
+    <p>The research agent produces structured deliverables designed for immediate use in BEAM Stage 1 selling activities.</p>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-code"></i></div>
+        <h4 id="prospect-dossier">HTML Report</h4>
+        <p>Self-contained HTML prospect dossier with interactive sections, BEAM gate scoring, and buying committee visualisation.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-lines"></i></div>
+        <h4 id="engagement-strategy">Markdown Dossier</h4>
+        <p>Structured Markdown document with all research findings, suitable for CRM import or team collaboration.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-calendar-days"></i></div>
+        <h4 id="outreach-templates">Engagement Timeline</h4>
+        <p>Sequenced outreach plan with personalised templates, channel recommendations, and follow-up cadence.</p>
+      </div>
+    </div>
+
+    <!-- ── Reference Files ───────────────────────── -->
+    <h2 id="references"><i class="fas fa-book"></i> Reference Files</h2>
+    <p>The skill uses the following reference templates to structure its output.</p>
+
+    <table>
+      <thead>
+        <tr><th>File</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>prospect-dossier-template.md</code></td>
+          <td>Master template for individual prospect research dossiers. Includes all BEAM gate sections, buying committee mapping, and qualification scoring.</td>
+        </tr>
+        <tr>
+          <td><code>event-brief-template.md</code></td>
+          <td>Template for event-specific research briefs. Used when engagement is tied to a conference, trade show, or industry event.</td>
+        </tr>
+        <tr>
+          <td><code>outreach-templates.md</code></td>
+          <td>Collection of outreach message templates for email, LinkedIn, and phone. Personalisation variables map to dossier fields.</td>
+        </tr>
+        <tr>
+          <td><code>pipeline-template.md</code></td>
+          <td>Pipeline summary template for multi-prospect research. Includes comparative scoring and prioritisation matrix.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      B2B Research Agent v1.0.0 &mdash; Problem-first B2B intelligence
+    </p>
+
+  </main>
+
+  <!-- ═══ Scroll-to-top ═══ -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    /* ── Theme Toggle ─── */
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    /* ── Active Sidebar Link ─── */
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    /* ── Scroll-to-top ─── */
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

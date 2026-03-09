@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the BEAM Selling Skill — a Claude Code skill for evidence-gated sales lifecycle management">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>BEAM Selling Skill — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --card-bg: rgba(255,255,255,0.95);
+      --card-border: rgba(0,34,68,0.12);
+      --shadow-sm: 0 2px 8px rgba(0,34,68,0.06);
+      --shadow-md: 0 4px 16px rgba(0,34,68,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,34,68,0.14);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.5);
+      --code-bg: #f0f4f8;
+      --code-text: #1e3a5f;
+      --sidebar-w: 260px;
+      --header-h: 64px;
+    }
+
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --accent: #69BE28;
+      --accent-hover: #7AD33B;
+      --card-bg: rgba(20,29,43,0.9);
+      --card-border: rgba(255,255,255,0.08);
+      --shadow-sm: 0 2px 8px rgba(0,10,28,0.3);
+      --shadow-md: 0 4px 16px rgba(0,10,28,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,10,28,0.5);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.4);
+      --code-bg: #1a2332;
+      --code-text: #d1e3ed;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    .wiki-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-h);
+      background: var(--sas-blue);
+      color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+    .wiki-header .logo-area {
+      display: flex; align-items: center; gap: 14px;
+      font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px;
+    }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button {
+      background: rgba(255,255,255,0.12); border: none; color: #fff;
+      padding: 6px 14px; border-radius: 6px; cursor: pointer;
+      font-family: inherit; font-size: 0.85rem; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ── Sidebar ──────────────────────────────────── */
+    .wiki-sidebar {
+      position: fixed; top: var(--header-h); left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--card-border);
+      overflow-y: auto; padding: 20px 0;
+      z-index: 50;
+      transition: transform 0.3s ease;
+    }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--text-muted);
+      padding: 16px 20px 6px; margin: 0;
+    }
+    .wiki-sidebar a {
+      display: block; padding: 7px 20px 7px 28px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 0.88rem; font-weight: 400;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active {
+      color: var(--accent); font-weight: 600;
+      border-left-color: var(--accent); background: var(--bg-tertiary);
+    }
+
+    /* ── Main Content ─────────────────────────────── */
+    .wiki-main {
+      margin-left: var(--sidebar-w);
+      margin-top: var(--header-h);
+      padding: 40px 48px 80px;
+      max-width: 960px;
+      transition: margin-left 0.3s ease;
+    }
+    .wiki-main.expanded { margin-left: 0; }
+
+    /* ── Typography ───────────────────────────────── */
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 {
+      font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px;
+      padding-bottom: 8px; border-bottom: 2px solid var(--accent);
+      display: flex; align-items: center; gap: 10px;
+    }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+
+    /* ── Tables ────────────────────────────────────── */
+    table {
+      width: 100%; border-collapse: collapse; margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+    thead th {
+      background: var(--sas-blue); color: #fff;
+      text-align: left; padding: 10px 14px; font-weight: 600;
+      font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    tbody td {
+      padding: 9px 14px; border-bottom: 1px solid var(--card-border);
+      vertical-align: top;
+    }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code {
+      background: var(--code-bg); color: var(--code-text);
+      padding: 2px 6px; border-radius: 4px;
+      font-family: 'Source Code Pro', monospace; font-size: 0.82rem;
+    }
+
+    /* ── Code Blocks ──────────────────────────────── */
+    pre {
+      background: var(--code-bg); color: var(--code-text);
+      border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px;
+      overflow-x: auto; font-family: 'Source Code Pro', monospace;
+      font-size: 0.85rem; line-height: 1.5;
+      border: 1px solid var(--card-border);
+    }
+    code {
+      font-family: 'Source Code Pro', monospace; font-size: 0.88em;
+    }
+    :not(pre) > code {
+      background: var(--code-bg); color: var(--code-text);
+      padding: 2px 6px; border-radius: 4px;
+    }
+
+    /* ── Cards ─────────────────────────────────────── */
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+
+    /* ── Badges ────────────────────────────────────── */
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; vertical-align: middle;
+    }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    .badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    :root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+    /* ── Callouts ──────────────────────────────────── */
+    .callout {
+      border-left: 4px solid var(--accent); background: var(--bg-secondary);
+      padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px;
+    }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+
+    /* ── Checklists ────────────────────────────────── */
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li {
+      padding: 5px 0 5px 28px; position: relative;
+      font-size: 0.9rem; color: var(--text-secondary);
+    }
+    .checklist li::before {
+      content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400;
+      position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem;
+    }
+
+    /* ── Decision Tree / Flow ──────────────────────── */
+    .decision-row {
+      display: flex; align-items: stretch; gap: 0; margin: 6px 0;
+      font-size: 0.88rem;
+    }
+    .decision-if {
+      flex: 0 0 45%; padding: 8px 14px;
+      background: var(--bg-tertiary); border-radius: 8px 0 0 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .decision-then {
+      flex: 1; padding: 8px 14px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-left: none; border-radius: 0 8px 8px 0;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .decision-if i { color: var(--accent); min-width: 16px; text-align: center; }
+
+    /* ── Colour Swatches ───────────────────────────── */
+    .swatch-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+    .swatch {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 8px; padding: 8px 14px;
+    }
+    .swatch-dot {
+      width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .swatch-label { font-size: 0.82rem; }
+    .swatch-label strong { display: block; font-size: 0.78rem; }
+
+    /* ── Scroll-to-top ─────────────────────────────── */
+    .scroll-top {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none;
+      font-size: 1.1rem; cursor: pointer;
+      box-shadow: var(--shadow-md);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 90;
+    }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 900px) {
+      .wiki-sidebar { transform: translateX(-100%); }
+      .wiki-sidebar.open { transform: translateX(0); }
+      .wiki-main { margin-left: 0; padding: 28px 20px 60px; }
+      .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.3rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media print {
+      .wiki-header, .wiki-sidebar, .scroll-top { display: none; }
+      .wiki-main { margin-left: 0; max-width: 100%; }
+    }
+
+    /* ── Pipeline Flow (custom) ────────────────────── */
+    .pipeline-flow {
+      display: flex; align-items: center; gap: 0; margin: 20px 0 28px;
+      flex-wrap: wrap;
+    }
+    .pipeline-flow .stage-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 700;
+      background: var(--card-bg); border: 2px solid var(--accent);
+      color: var(--text-primary);
+    }
+    .pipeline-flow .stage-arrow {
+      font-size: 1.1rem; color: var(--accent); padding: 0 4px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Header ═══ -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-handshake"></i>
+      <span>BEAM Selling Skill <span style="opacity:0.5; font-weight:300;">Wiki</span></span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../wiki.html" style="color:#fff; text-decoration:none; font-size:0.85rem; font-weight:600; padding:6px 14px; border-radius:6px; background:rgba(255,255,255,0.12); transition:background 0.2s;">
+        <i class="fas fa-arrow-left"></i> All Skills
+      </a>
+      <button onclick="document.querySelector('.wiki-sidebar').classList.toggle('open')" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+      <button id="themeToggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ Sidebar ═══ -->
+  <nav class="wiki-sidebar" aria-label="Wiki navigation">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#acronym">BEAM Acronym</a>
+    <a href="#principles">Design Principles</a>
+
+    <h3>Pipeline</h3>
+    <a href="#pipeline">The 6-Stage Pipeline</a>
+    <a href="#stage1">Stage 1 &mdash; Qualify</a>
+    <a href="#stage2">Stage 2 &mdash; Diagnose</a>
+    <a href="#stage3">Stage 3 &mdash; Align</a>
+    <a href="#stage4">Stage 4 &mdash; Propose</a>
+    <a href="#stage5">Stage 5 &mdash; Commit</a>
+    <a href="#stage6">Stage 6 &mdash; Deliver</a>
+
+    <h3>Methodology</h3>
+    <a href="#spin">SPIN Questioning</a>
+    <a href="#evidence-gating">Evidence Gating</a>
+    <a href="#probability">Probability Updates</a>
+
+    <h3>Tools</h3>
+    <a href="#state">State Persistence</a>
+    <a href="#kanban">Kanban Board</a>
+    <a href="#tracker">Engagement Tracker</a>
+
+    <h3>Integration</h3>
+    <a href="#b2b">B2B Research Agent</a>
+    <a href="#commands">Input &amp; Commands</a>
+
+    <h3>Reference</h3>
+    <a href="#references">Reference Files</a>
+  </nav>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="wiki-main">
+
+    <!-- ── Overview ──────────────────────────────── -->
+    <h1 id="overview">marcov.BEAM Selling Skill <span class="version">v1.0.0</span></h1>
+    <p class="lead">Guide sales engagements through a structured, evidence-gated lifecycle. BEAM = <strong>Bayesian Evidence-Advancing Markov</strong> framework &mdash; a 6-stage pipeline where advancement requires earning the right through demonstrated evidence. No gut feel. No stage-skipping. Evidence or nothing.</p>
+
+    <div class="card-grid card-grid-4">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-stairs"></i></div>
+        <h4>6 Stages</h4>
+        <p>From Qualify through Deliver &mdash; each stage has explicit gates and evidence requirements.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-shield-check"></i></div>
+        <h4>Evidence Gated</h4>
+        <p>No advancing without meeting gate criteria. The skill is the gatekeeper, not the salesperson.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-comments"></i></div>
+        <h4>SPIN Integrated</h4>
+        <p>Situation, Problem, Implication, Need-payoff questioning woven into every stage.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-floppy-disk"></i></div>
+        <h4>Save &amp; Resume</h4>
+        <p>Session-to-session persistence via <code>.beam/</code> directory. Pick up exactly where you left off.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Core Philosophy</strong> &mdash; Sales is a process of earning the right to advance. Each stage must be completed with concrete evidence before moving forward. The BEAM framework treats every engagement as a probabilistic model updated by real evidence.</p>
+    </div>
+
+
+    <!-- ── BEAM Acronym ──────────────────────────── -->
+    <h2 id="acronym"><i class="fas fa-spell-check"></i> BEAM Acronym</h2>
+    <p>Each letter in BEAM maps to a foundational principle of the methodology:</p>
+
+    <table>
+      <thead>
+        <tr><th>Letter</th><th>Meaning</th><th>Application</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>B</strong></td>
+          <td>Bayesian</td>
+          <td>Update win probability with each new piece of evidence. Prior beliefs are refined, never ignored.</td>
+        </tr>
+        <tr>
+          <td><strong>E</strong></td>
+          <td>Evidence</td>
+          <td>Concrete evidence, not gut feel. Every gate requires demonstrable proof from prospect interactions.</td>
+        </tr>
+        <tr>
+          <td><strong>A</strong></td>
+          <td>Advancing</td>
+          <td>Forward movement only when earned. No stage-skipping, no premature proposals.</td>
+        </tr>
+        <tr>
+          <td><strong>M</strong></td>
+          <td>Markov</td>
+          <td>Current state determines next actions. History informs but the present stage dictates strategy.</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <!-- ── Design Principles ─────────────────────── -->
+    <h2 id="principles"><i class="fas fa-compass"></i> Design Principles</h2>
+    <p>Six non-negotiable principles govern every BEAM engagement:</p>
+
+    <ol style="margin: 14px 0 24px; padding-left: 24px;">
+      <li style="margin-bottom: 10px;"><strong>No stage-skipping.</strong> Each stage must be completed sequentially. There are no shortcuts &mdash; skipping Diagnose to jump to Propose guarantees a weak proposal.</li>
+      <li style="margin-bottom: 10px;"><strong>Skill is gatekeeper.</strong> The BEAM skill enforces stage transitions. The salesperson does not self-certify advancement &mdash; the evidence does.</li>
+      <li style="margin-bottom: 10px;"><strong>SPIN peaks in Stages 2&ndash;3.</strong> The heaviest questioning work happens during Diagnose and Align. By Propose, the prospect should already be selling themselves.</li>
+      <li style="margin-bottom: 10px;"><strong>&ldquo;No&rdquo; is legitimate.</strong> A qualified &ldquo;no&rdquo; is better than a delusional &ldquo;maybe.&rdquo; Disqualification is a valid and valuable outcome.</li>
+      <li style="margin-bottom: 10px;"><strong>Evidence over opinion.</strong> &ldquo;I think they liked us&rdquo; is worthless. &ldquo;The CFO confirmed a $2M annual cost of the current process&rdquo; is evidence.</li>
+      <li style="margin-bottom: 10px;"><strong>Earn the right.</strong> Every stage earns the right to the next. You earn the right to diagnose by qualifying. You earn the right to propose by aligning.</li>
+    </ol>
+
+
+    <!-- ── The 6-Stage Pipeline ──────────────────── -->
+    <h2 id="pipeline"><i class="fas fa-diagram-project"></i> The 6-Stage Pipeline</h2>
+    <p>The BEAM pipeline is a linear, evidence-gated progression. Each stage has defined entry criteria, activities, and exit gates.</p>
+
+    <div class="pipeline-flow">
+      <span class="stage-badge"><span class="badge badge-blue">1</span> Qualify</span>
+      <span class="stage-arrow">&rarr;</span>
+      <span class="stage-badge"><span class="badge badge-blue">2</span> Diagnose</span>
+      <span class="stage-arrow">&rarr;</span>
+      <span class="stage-badge"><span class="badge badge-blue">3</span> Align</span>
+      <span class="stage-arrow">&rarr;</span>
+      <span class="stage-badge"><span class="badge badge-amber">4</span> Propose</span>
+      <span class="stage-arrow">&rarr;</span>
+      <span class="stage-badge"><span class="badge badge-green">5</span> Commit</span>
+      <span class="stage-arrow">&rarr;</span>
+      <span class="stage-badge"><span class="badge badge-green">6</span> Deliver</span>
+    </div>
+
+    <div class="callout callout-warn">
+      <p><strong>Direction is forward only.</strong> If evidence reveals a gap, you address it within the current stage. Regression is a signal to re-evaluate, not to retreat.</p>
+    </div>
+
+
+    <!-- ── Stage 1: Qualify ──────────────────────── -->
+    <h2 id="stage1"><i class="fas fa-filter"></i> Stage 1: Qualify</h2>
+    <p><strong>Purpose:</strong> Determine whether this opportunity is worth pursuing. Qualify out quickly if the fit is poor.</p>
+
+    <h3>SPIN Focus</h3>
+    <p><span class="badge badge-blue">Situation</span> &mdash; Understand the prospect&rsquo;s context, current state, and environment.</p>
+
+    <h3>Activities</h3>
+    <ul class="checklist">
+      <li>Research the prospect&rsquo;s industry, company, and key contacts</li>
+      <li>Identify the problem domain and whether it aligns with your offering</li>
+      <li>Determine access to authority (can you reach a decision-maker?)</li>
+      <li>Assess willingness to engage in a diagnostic conversation</li>
+      <li>Ingest B2B research dossier if available</li>
+    </ul>
+
+    <h3>Gate Criteria</h3>
+    <table>
+      <thead>
+        <tr><th>Gate</th><th>Requirement</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Problem domain identified</td><td>A clear, relevant problem domain has been articulated</td><td><span class="badge badge-amber">Required</span></td></tr>
+        <tr><td>Access to authority</td><td>Path to a decision-maker or strong influencer confirmed</td><td><span class="badge badge-amber">Required</span></td></tr>
+        <tr><td>Willing to diagnose</td><td>Prospect agrees to a diagnostic conversation or meeting</td><td><span class="badge badge-amber">Required</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Right to Advance</h3>
+    <p>Meeting all three gates earns the right to <strong>Diagnose</strong>. Failing any gate means the opportunity is disqualified or parked until conditions change.</p>
+
+    <h3>Minimum Evidence Bar</h3>
+    <table>
+      <thead>
+        <tr><th>Gate</th><th>Acceptable Evidence</th><th>Rejected Evidence</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Problem domain identified</td><td>Specific problem statement from prospect communication, RFP, or industry research</td><td>&ldquo;They probably have this problem&rdquo;</td></tr>
+        <tr><td>Access to authority</td><td>Named contact with title, confirmed meeting or email thread</td><td>&ldquo;We know someone there&rdquo;</td></tr>
+        <tr><td>Willing to diagnose</td><td>Accepted meeting invite, replied to diagnostic request, verbal agreement</td><td>&ldquo;They seemed interested&rdquo;</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Key Questions</h3>
+    <ul class="checklist">
+      <li>What business is the prospect in and what are their primary challenges?</li>
+      <li>Who are the key stakeholders and what are their roles?</li>
+      <li>What systems, processes, or solutions do they currently use?</li>
+      <li>Is there a triggering event or timeline driving urgency?</li>
+      <li>What is the approximate budget or investment capacity?</li>
+    </ul>
+
+
+    <!-- ── Stage 2: Diagnose ─────────────────────── -->
+    <h2 id="stage2"><i class="fas fa-stethoscope"></i> Stage 2: Diagnose</h2>
+    <p><strong>Purpose:</strong> Deeply understand the prospect&rsquo;s problems, their impact, and the cost of inaction. This is where SPIN questioning does its heaviest work.</p>
+
+    <h3>SPIN Focus</h3>
+    <p><span class="badge badge-blue">Problem</span> <span class="stage-arrow">&rarr;</span> <span class="badge badge-amber">Implication</span> &mdash; Uncover difficulties, then develop their severity and business impact.</p>
+
+    <h3>Activities</h3>
+    <ul class="checklist">
+      <li>Conduct diagnostic meetings with key stakeholders</li>
+      <li>Map problems to business impact using quantifiable metrics</li>
+      <li>Build implication chains (problem &rarr; consequence &rarr; cost)</li>
+      <li>Document problems in the prospect&rsquo;s own words</li>
+      <li>Quantify cost of inaction where possible</li>
+      <li>Validate findings with multiple stakeholders</li>
+    </ul>
+
+    <h3>Gate Criteria</h3>
+    <table>
+      <thead>
+        <tr><th>Gate</th><th>Requirement</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Problems articulated by prospect</td><td>Prospect has stated problems in their own words, not parroted back</td><td><span class="badge badge-amber">Required</span></td></tr>
+        <tr><td>Implications quantified</td><td>At least one problem has a measurable business impact (time, cost, risk)</td><td><span class="badge badge-amber">Required</span></td></tr>
+        <tr><td>Cost of inaction acknowledged</td><td>Prospect acknowledges what happens if nothing changes</td><td><span class="badge badge-amber">Required</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Minimum Evidence Bar</h3>
+    <table>
+      <thead>
+        <tr><th>Gate</th><th>Acceptable Evidence</th><th>Rejected Evidence</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Problems articulated by prospect</td><td>Direct quotes from meetings, email confirmations, recorded statements</td><td>&ldquo;They nodded when I described the problem&rdquo;</td></tr>
+        <tr><td>Implications quantified</td><td>&ldquo;The CFO confirmed $2M annual cost&rdquo;, &ldquo;3 FTEs dedicated to manual workarounds&rdquo;</td><td>&ldquo;It&rsquo;s costing them a lot&rdquo;</td></tr>
+        <tr><td>Cost of inaction acknowledged</td><td>Prospect statement: &ldquo;If we don&rsquo;t address this, we risk X&rdquo;</td><td>&ldquo;They know it&rsquo;s bad&rdquo;</td></tr>
+      </tbody>
+    </table>
+
+    <h3>SPIN Questions &mdash; Problem</h3>
+    <ul class="checklist">
+      <li>What difficulties are you experiencing with your current approach?</li>
+      <li>How satisfied are you with the existing process/system?</li>
+      <li>What workarounds has your team developed?</li>
+      <li>Where do errors or failures most commonly occur?</li>
+      <li>What limitations are preventing you from achieving your goals?</li>
+    </ul>
+
+    <h3>SPIN Questions &mdash; Implication</h3>
+    <ul class="checklist">
+      <li>What effect does this problem have on overall productivity?</li>
+      <li>How does this impact your ability to meet deadlines or targets?</li>
+      <li>What is the financial cost of this issue annually?</li>
+      <li>How does this affect your team&rsquo;s morale or retention?</li>
+      <li>If this problem worsens, what are the consequences for the business?</li>
+      <li>Does this create risk in other areas of the organisation?</li>
+    </ul>
+
+
+    <!-- ── Stage 3: Align ────────────────────────── -->
+    <h2 id="stage3"><i class="fas fa-bullseye"></i> Stage 3: Align</h2>
+    <p><strong>Purpose:</strong> Agree on the problem definition, success criteria, and decision process. By the end of Align, both parties should have a shared understanding of what &ldquo;solved&rdquo; looks like.</p>
+
+    <h3>SPIN Focus</h3>
+    <p><span class="badge badge-amber">Implication</span> <span class="stage-arrow">&rarr;</span> <span class="badge badge-green">Need-payoff</span> &mdash; Transition from pain to desired outcomes. Let the prospect articulate the value.</p>
+
+    <h3>Activities</h3>
+    <ul class="checklist">
+      <li>Co-create a shared problem definition document</li>
+      <li>Define measurable success criteria with the prospect</li>
+      <li>Map the stakeholder landscape (decision-makers, influencers, blockers)</li>
+      <li>Understand the decision process (timeline, stages, approvals)</li>
+      <li>Identify budget parameters and procurement requirements</li>
+      <li>Align on evaluation criteria</li>
+    </ul>
+
+    <h3>Gate Criteria</h3>
+    <table>
+      <thead>
+        <tr><th>Gate</th><th>Requirement</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Problem definition agreed</td><td>Both parties have a written, agreed problem statement</td><td><span class="badge badge-amber">Required</span></td></tr>
+        <tr><td>Success criteria defined</td><td>Measurable outcomes that define &ldquo;solved&rdquo; are documented</td><td><span class="badge badge-amber">Required</span></td></tr>
+        <tr><td>Stakeholder landscape mapped</td><td>All key stakeholders identified with roles and influence levels</td><td><span class="badge badge-amber">Required</span></td></tr>
+        <tr><td>Decision process understood</td><td>Timeline, approval steps, and evaluation criteria are known</td><td><span class="badge badge-amber">Required</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Minimum Evidence Bar</h3>
+    <table>
+      <thead>
+        <tr><th>Gate</th><th>Acceptable Evidence</th><th>Rejected Evidence</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Problem definition agreed</td><td>Signed-off problem statement, email confirmation of shared document</td><td>&ldquo;We&rsquo;re on the same page&rdquo;</td></tr>
+        <tr><td>Success criteria defined</td><td>Written KPIs: &ldquo;Reduce processing time by 40%&rdquo;, &ldquo;Eliminate manual reconciliation&rdquo;</td><td>&ldquo;They want it to be better&rdquo;</td></tr>
+        <tr><td>Stakeholder landscape mapped</td><td>Named individuals with titles, roles (champion, blocker, approver), and contact details</td><td>&ldquo;A few people are involved&rdquo;</td></tr>
+        <tr><td>Decision process understood</td><td>Documented timeline, approval chain, budget holder identified</td><td>&ldquo;They&rsquo;ll decide soon&rdquo;</td></tr>
+      </tbody>
+    </table>
+
+    <h3>SPIN Questions &mdash; Need-payoff</h3>
+    <ul class="checklist">
+      <li>If you could solve this problem, what would that mean for your team?</li>
+      <li>How would reducing [specific cost] impact your annual budget?</li>
+      <li>What would it be worth to eliminate [specific problem]?</li>
+      <li>How would your stakeholders react to [specific outcome]?</li>
+      <li>What other benefits would come from solving this?</li>
+      <li>Would a solution that achieves [X] justify the investment?</li>
+    </ul>
+
+
+    <!-- ── Stage 4: Propose ──────────────────────── -->
+    <h2 id="stage4"><i class="fas fa-file-signature"></i> Stage 4: Propose</h2>
+    <p><strong>Purpose:</strong> Present a tailored proposal that directly addresses the agreed problems, success criteria, and stakeholder needs. No surprises &mdash; the proposal should feel like a natural conclusion to Stages 1&ndash;3.</p>
+
+    <h3>SPIN Focus</h3>
+    <p><span class="badge badge-green">Need-payoff</span> &mdash; Reinforce the value. The prospect should already be advocating internally by this stage.</p>
+
+    <h3>Activities</h3>
+    <ul class="checklist">
+      <li>Draft proposal using the proposal template</li>
+      <li>Map every proposal element back to a diagnosed problem</li>
+      <li>Include success criteria from the Align stage</li>
+      <li>Address known objections proactively</li>
+      <li>Present commercial terms clearly (pricing, timeline, deliverables)</li>
+      <li>Confirm the decision process and next steps</li>
+      <li>Socialise the proposal with the champion before formal presentation</li>
+    </ul>
+
+    <h3>Gate Criteria</h3>
+    <table>
+      <thead>
+        <tr><th>Gate</th><th>Requirement</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Proposal addresses diagnosed needs</td><td>Every proposal element traces to a specific diagnosed problem</td><td><span class="badge badge-amber">Required</span></td></tr>
+        <tr><td>Commercial terms clear</td><td>Pricing, scope, timeline, and deliverables are unambiguous</td><td><span class="badge badge-amber">Required</span></td></tr>
+        <tr><td>Decision process confirmed</td><td>Next steps, timeline, and approvers re-confirmed post-proposal</td><td><span class="badge badge-amber">Required</span></td></tr>
+        <tr><td>Objections addressed</td><td>Known concerns have been surfaced and resolved or mitigated</td><td><span class="badge badge-amber">Required</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Minimum Evidence Bar</h3>
+    <table>
+      <thead>
+        <tr><th>Gate</th><th>Acceptable Evidence</th><th>Rejected Evidence</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Proposal addresses diagnosed needs</td><td>Traceability matrix linking proposal sections to diagnosed problems</td><td>&ldquo;The proposal covers everything&rdquo;</td></tr>
+        <tr><td>Commercial terms clear</td><td>Written proposal with pricing table, scope document, and timeline</td><td>Verbal pricing discussion only</td></tr>
+        <tr><td>Decision process confirmed</td><td>Email from prospect confirming next steps and timeline</td><td>&ldquo;They said they&rsquo;ll get back to us&rdquo;</td></tr>
+        <tr><td>Objections addressed</td><td>Documented objection log with resolution notes</td><td>&ldquo;They didn&rsquo;t raise any concerns&rdquo;</td></tr>
+      </tbody>
+    </table>
+
+
+    <!-- ── Stage 5: Commit ───────────────────────── -->
+    <h2 id="stage5"><i class="fas fa-signature"></i> Stage 5: Commit</h2>
+    <p><strong>Purpose:</strong> Secure formal commitment &mdash; contract signature, purchase order, or equivalent binding agreement.</p>
+
+    <h3>Activities</h3>
+    <ul class="checklist">
+      <li>Facilitate final negotiations and contract review</li>
+      <li>Support champion through internal approval process</li>
+      <li>Address any last-minute objections or concerns</li>
+      <li>Coordinate legal and procurement requirements</li>
+      <li>Confirm implementation timeline and kick-off logistics</li>
+      <li>Obtain signed contract or equivalent commitment</li>
+    </ul>
+
+    <h3>Gate Criteria</h3>
+    <table>
+      <thead>
+        <tr><th>Gate</th><th>Requirement</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Contract signed</td><td>Signed agreement, purchase order, or equivalent binding commitment received</td><td><span class="badge badge-green">Required</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p><strong>Commitment is binary.</strong> Either you have a signed contract or you do not. Verbal commitments, handshakes, and &ldquo;we&rsquo;ll sign next week&rdquo; are not commitment. Stay in Stage 5 until ink is on paper.</p>
+    </div>
+
+
+    <!-- ── Stage 6: Deliver & Renew ──────────────── -->
+    <h2 id="stage6"><i class="fas fa-rocket"></i> Stage 6: Deliver &amp; Renew</h2>
+    <p><strong>Purpose:</strong> Execute on the commitment, deliver value, and lay the groundwork for renewal, expansion, or referral.</p>
+
+    <h3>Activities</h3>
+    <ul class="checklist">
+      <li>Conduct kick-off meeting with implementation team and client</li>
+      <li>Deliver against agreed scope, timeline, and success criteria</li>
+      <li>Provide regular progress updates to stakeholders</li>
+      <li>Measure outcomes against the success criteria from Stage 3</li>
+      <li>Gather testimonials and case study material</li>
+      <li>Identify expansion opportunities and new problem domains</li>
+      <li>Initiate renewal conversations before contract expiry</li>
+    </ul>
+
+    <h3>Success Criteria</h3>
+    <table>
+      <thead>
+        <tr><th>Criterion</th><th>Measure</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Value delivered</td><td>Success criteria from Stage 3 met or exceeded</td></tr>
+        <tr><td>Client satisfaction</td><td>Positive feedback, NPS score, or testimonial obtained</td></tr>
+        <tr><td>Renewal pipeline</td><td>Expansion or renewal opportunity identified and entered into pipeline</td></tr>
+        <tr><td>Reference potential</td><td>Client willing to serve as reference or provide case study</td></tr>
+      </tbody>
+    </table>
+
+
+    <!-- ── SPIN Questioning ──────────────────────── -->
+    <h2 id="spin"><i class="fas fa-comments"></i> SPIN Questioning</h2>
+    <p>SPIN is the questioning engine that powers the BEAM pipeline. Each question type has a specific purpose and peaks at different stages.</p>
+
+    <div class="card-grid card-grid-4">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-magnifying-glass"></i></div>
+        <h4>Situation</h4>
+        <p>Understand the prospect&rsquo;s context, current state, processes, and environment. Peaks in <strong>Stage 1</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-triangle-exclamation"></i></div>
+        <h4>Problem</h4>
+        <p>Uncover difficulties, dissatisfactions, and challenges the prospect faces. Peaks in <strong>Stage 2</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-bolt"></i></div>
+        <h4>Implication</h4>
+        <p>Develop the severity and business impact of problems. Make the cost of inaction tangible. Peaks in <strong>Stage 2&ndash;3</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-gem"></i></div>
+        <h4>Need-payoff</h4>
+        <p>Let the prospect articulate the value of a solution. They sell themselves. Peaks in <strong>Stage 3&ndash;4</strong>.</p>
+      </div>
+    </div>
+
+    <h3>Example Situation Questions</h3>
+    <ul class="checklist">
+      <li>How is your team currently handling [process]?</li>
+      <li>What tools or systems do you use for [function]?</li>
+      <li>How many people are involved in [activity]?</li>
+      <li>What does your typical workflow look like?</li>
+    </ul>
+
+    <h3>Example Problem Questions</h3>
+    <ul class="checklist">
+      <li>What are the biggest challenges with your current approach?</li>
+      <li>Where do things most commonly break down?</li>
+      <li>How often do errors or delays occur?</li>
+      <li>What frustrates your team about the current process?</li>
+    </ul>
+
+    <h3>Example Implication Questions</h3>
+    <ul class="checklist">
+      <li>When errors occur, how long does it take to recover?</li>
+      <li>What is the downstream impact on [revenue / customers / compliance]?</li>
+      <li>How does this affect your ability to scale?</li>
+      <li>What happens if this problem gets worse over the next 12 months?</li>
+    </ul>
+
+    <h3>Example Need-payoff Questions</h3>
+    <ul class="checklist">
+      <li>If you could eliminate [problem], what would that free your team to focus on?</li>
+      <li>How would [specific improvement] impact your KPIs?</li>
+      <li>What would it be worth to your organisation to achieve [outcome]?</li>
+      <li>Would solving this problem make it easier to achieve [strategic goal]?</li>
+    </ul>
+
+
+    <!-- ── Evidence Gating ───────────────────────── -->
+    <h2 id="evidence-gating"><i class="fas fa-shield-halved"></i> Evidence Gating</h2>
+    <p>Evidence gating is the mechanism that prevents premature stage advancement. The BEAM skill acts as an impartial gatekeeper.</p>
+
+    <h3>How It Works</h3>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-check-circle"></i> All gates met with acceptable evidence</div>
+      <div class="decision-then"><span class="badge badge-green">Advance</span> to next stage</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-minus-circle"></i> Some gates met, others pending</div>
+      <div class="decision-then"><span class="badge badge-amber">Hold</span> &mdash; identify specific actions to close gaps</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-times-circle"></i> Evidence contradicts viability</div>
+      <div class="decision-then"><span class="badge badge-red">Disqualify</span> or park the opportunity</div>
+    </div>
+
+    <div class="callout callout-critical">
+      <p><strong>The skill never rubber-stamps.</strong> If the salesperson asserts a gate is met, the skill will ask for the specific evidence. &ldquo;They seemed positive&rdquo; is not evidence. A direct quote, an email, or a confirmed metric is evidence.</p>
+    </div>
+
+
+    <!-- ── Probability Updates ───────────────────── -->
+    <h2 id="probability"><i class="fas fa-chart-line"></i> Probability Updates</h2>
+    <p>Win probability is updated at each stage transition using Bayesian reasoning. The probability reflects the cumulative evidence strength.</p>
+
+    <table>
+      <thead>
+        <tr><th>Stage</th><th>Typical Probability Range</th><th>Key Evidence Driver</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Qualify</td><td>5&ndash;15%</td><td>Problem-fit and access confirmed</td></tr>
+        <tr><td>2. Diagnose</td><td>15&ndash;30%</td><td>Problems quantified, cost of inaction acknowledged</td></tr>
+        <tr><td>3. Align</td><td>30&ndash;50%</td><td>Shared problem definition, success criteria agreed</td></tr>
+        <tr><td>4. Propose</td><td>50&ndash;75%</td><td>Proposal accepted, objections resolved</td></tr>
+        <tr><td>5. Commit</td><td>75&ndash;95%</td><td>Contract in negotiation or signature pending</td></tr>
+        <tr><td>6. Deliver</td><td>100%</td><td>Contract signed, engagement active</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p><strong>Probabilities are not fixed.</strong> They are updated based on evidence quality. A Stage 3 deal with weak evidence may sit at 30%, while a Stage 3 deal with strong multi-stakeholder alignment may reach 50%. The framework is Bayesian, not formulaic.</p>
+    </div>
+
+
+    <!-- ── State Persistence ─────────────────────── -->
+    <h2 id="state"><i class="fas fa-database"></i> State Persistence</h2>
+    <p>BEAM engagements persist across sessions using a <code>.beam/</code> directory in the project root. This allows you to resume any engagement exactly where you left off.</p>
+
+    <h3>Directory Structure</h3>
+    <pre>.beam/
+  engagements/
+    {company-slug}/
+      beam-state.json        # Current engagement state
+      evidence-log.md        # Timestamped evidence entries
+      stakeholder-map.md     # Stakeholder landscape
+      meeting-notes/         # Individual meeting summaries
+  kanban.md                  # Pipeline-wide kanban board
+  config.json                # Skill configuration</pre>
+
+    <h3>beam-state-template.json</h3>
+    <pre>{
+  "engagement_id": "",
+  "company": "",
+  "created": "",
+  "last_updated": "",
+  "current_stage": 1,
+  "stage_name": "Qualify",
+  "win_probability": 0.10,
+  "gates": {
+    "stage_1": {
+      "problem_domain_identified": { "met": false, "evidence": "" },
+      "access_to_authority": { "met": false, "evidence": "" },
+      "willing_to_diagnose": { "met": false, "evidence": "" }
+    },
+    "stage_2": {
+      "problems_articulated": { "met": false, "evidence": "" },
+      "implications_quantified": { "met": false, "evidence": "" },
+      "cost_of_inaction_acknowledged": { "met": false, "evidence": "" }
+    },
+    "stage_3": {
+      "problem_definition_agreed": { "met": false, "evidence": "" },
+      "success_criteria_defined": { "met": false, "evidence": "" },
+      "stakeholder_landscape_mapped": { "met": false, "evidence": "" },
+      "decision_process_understood": { "met": false, "evidence": "" }
+    },
+    "stage_4": {
+      "proposal_addresses_needs": { "met": false, "evidence": "" },
+      "commercial_terms_clear": { "met": false, "evidence": "" },
+      "decision_process_confirmed": { "met": false, "evidence": "" },
+      "objections_addressed": { "met": false, "evidence": "" }
+    },
+    "stage_5": {
+      "contract_signed": { "met": false, "evidence": "" }
+    }
+  },
+  "contacts": [],
+  "next_actions": [],
+  "notes": ""
+}</pre>
+
+
+    <!-- ── Kanban Board ──────────────────────────── -->
+    <h2 id="kanban"><i class="fas fa-columns"></i> Kanban Board</h2>
+    <p>The kanban board provides a pipeline-wide view of all active engagements, organised by stage. It is stored at <code>.beam/kanban.md</code> and updated automatically as engagements progress.</p>
+
+    <table>
+      <thead>
+        <tr><th>Qualify</th><th>Diagnose</th><th>Align</th><th>Propose</th><th>Commit</th><th>Deliver</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><em>New leads awaiting qualification</em></td>
+          <td><em>Active diagnostic conversations</em></td>
+          <td><em>Problem &amp; criteria alignment</em></td>
+          <td><em>Proposals out for review</em></td>
+          <td><em>Contracts in negotiation</em></td>
+          <td><em>Active engagements</em></td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <!-- ── Engagement Tracker ────────────────────── -->
+    <h2 id="tracker"><i class="fas fa-chart-bar"></i> Engagement Tracker</h2>
+    <p>The engagement tracker provides a detailed view of each individual engagement, including stage history, evidence log, stakeholder map, and next actions. Stored per-engagement at <code>.beam/engagements/{slug}/</code>.</p>
+
+    <h3>Key Metrics Tracked</h3>
+    <ul class="checklist">
+      <li>Current stage and time-in-stage</li>
+      <li>Win probability (Bayesian-updated)</li>
+      <li>Gates met vs. gates remaining</li>
+      <li>Last interaction date and next scheduled action</li>
+      <li>Stakeholder engagement level</li>
+      <li>Evidence quality score per gate</li>
+    </ul>
+
+
+    <!-- ── B2B Research Agent ────────────────────── -->
+    <h2 id="b2b"><i class="fas fa-building"></i> B2B Research Agent</h2>
+    <p>The BEAM selling skill integrates with the <strong>b2b-research-agent</strong> skill for automated prospect research. When a B2B research dossier is available, the BEAM skill auto-ingests it during Stage 1 qualification.</p>
+
+    <h3>Integration Flow</h3>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-file-lines"></i> B2B dossier available</div>
+      <div class="decision-then"><span class="badge badge-green">Auto-ingest</span> into engagement context during Qualify</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-circle-xmark"></i> No dossier available</div>
+      <div class="decision-then"><span class="badge badge-blue">Manual</span> research using BEAM&rsquo;s own qualification questions</div>
+    </div>
+
+    <h3>What Gets Ingested</h3>
+    <ul class="checklist">
+      <li>Company overview, size, industry, and key financials</li>
+      <li>Key contacts and stakeholder profiles</li>
+      <li>Recent news, initiatives, and strategic priorities</li>
+      <li>Competitive landscape and market position</li>
+      <li>Technology stack and infrastructure indicators</li>
+    </ul>
+
+
+    <!-- ── Input & Commands ──────────────────────── -->
+    <h2 id="commands"><i class="fas fa-terminal"></i> Input &amp; Commands</h2>
+    <p>The BEAM skill is invoked through natural language or specific command patterns. The skill recognises context from the conversation and engagement state.</p>
+
+    <h3>Invocation Examples</h3>
+    <pre># Start a new engagement
+"Start a new BEAM engagement for Acme Corp"
+"Begin qualifying Acme Corp"
+
+# Resume an existing engagement
+"Resume the Acme Corp engagement"
+"Where are we with Acme Corp?"
+
+# Update evidence
+"Log evidence: CFO confirmed $2M annual cost of manual reconciliation"
+"Gate update: problem domain identified — they need asset lifecycle management"
+
+# Check status
+"Show pipeline"
+"What stage is Acme Corp at?"
+"Show gate status for Acme Corp"
+
+# Request guidance
+"What questions should I ask in the next meeting?"
+"What evidence do I still need for Stage 2?"
+"Help me prepare for the diagnostic meeting"</pre>
+
+    <h3>Dossier Auto-Ingestion</h3>
+    <p>When the <code>b2b-research-agent</code> skill has produced a dossier for a prospect, BEAM will detect it automatically and offer to ingest the findings. This pre-populates Situation context and accelerates Stage 1 qualification.</p>
+
+    <pre># If a dossier exists at .b2b/dossiers/acme-corp.md:
+"Start BEAM engagement for Acme Corp"
+# → Skill detects dossier and prompts:
+# "B2B dossier found for Acme Corp. Ingest into engagement? [Y/n]"</pre>
+
+
+    <!-- ── Reference Files ───────────────────────── -->
+    <h2 id="references"><i class="fas fa-folder-open"></i> Reference Files</h2>
+    <p>The BEAM skill includes the following reference templates and resources:</p>
+
+    <table>
+      <thead>
+        <tr><th>File</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>beam-state-template.json</code></td><td>Template for engagement state persistence. Tracks stage, gates, probability, contacts, and actions.</td></tr>
+        <tr><td><code>engagement-tracker-template.md</code></td><td>Per-engagement tracking document with stage history, evidence log, and stakeholder map.</td></tr>
+        <tr><td><code>proposal-template.md</code></td><td>Structured proposal template that maps back to diagnosed problems and agreed success criteria.</td></tr>
+        <tr><td><code>spin-question-bank.md</code></td><td>Comprehensive bank of SPIN questions organised by type and stage.</td></tr>
+        <tr><td><code>stage-gate-checklist.md</code></td><td>Printable checklist of all gates across all 6 stages with evidence requirements.</td></tr>
+        <tr><td><code>kanban-board-template.md</code></td><td>Pipeline-wide kanban board template for tracking multiple engagements.</td></tr>
+      </tbody>
+    </table>
+
+
+    <!-- ── Footer ────────────────────────────────── -->
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      marcov.BEAM Selling Skill v1.0.0 &mdash; Evidence-gated sales lifecycle
+    </p>
+
+  </main>
+
+  <!-- ═══ Scroll-to-top ═══ -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    /* ── Theme Toggle ─── */
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    /* ── Active Sidebar Link ─── */
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    /* ── Scroll-to-top ─── */
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

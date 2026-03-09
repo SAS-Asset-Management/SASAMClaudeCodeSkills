@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the Push Notifications Skill — a Claude Code skill for sending notifications via Microsoft Teams and desktop alerts">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>Push Notifications Skill — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --card-bg: rgba(255,255,255,0.95);
+      --card-border: rgba(0,34,68,0.12);
+      --shadow-sm: 0 2px 8px rgba(0,34,68,0.06);
+      --shadow-md: 0 4px 16px rgba(0,34,68,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,34,68,0.14);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.5);
+      --code-bg: #f0f4f8;
+      --code-text: #1e3a5f;
+      --sidebar-w: 260px;
+      --header-h: 64px;
+    }
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --accent: #69BE28;
+      --accent-hover: #7AD33B;
+      --card-bg: rgba(20,29,43,0.9);
+      --card-border: rgba(255,255,255,0.08);
+      --shadow-sm: 0 2px 8px rgba(0,10,28,0.3);
+      --shadow-md: 0 4px 16px rgba(0,10,28,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,10,28,0.5);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.4);
+      --code-bg: #1a2332;
+      --code-text: #d1e3ed;
+    }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+    .wiki-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-h); background: var(--sas-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .wiki-header .logo-area { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px; }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button { background: rgba(255,255,255,0.12); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .wiki-sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: var(--bg-secondary); border-right: 1px solid var(--card-border); overflow-y: auto; padding: 20px 0; z-index: 50; transition: transform 0.3s ease; }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding: 16px 20px 6px; margin: 0; }
+    .wiki-sidebar a { display: block; padding: 7px 20px 7px 28px; color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; font-weight: 400; border-left: 3px solid transparent; transition: all 0.15s; }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active { color: var(--accent); font-weight: 600; border-left-color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 48px 80px; max-width: 960px; transition: margin-left 0.3s ease; }
+    .wiki-main.expanded { margin-left: 0; }
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 { font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 10px; }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+    thead th { background: var(--sas-blue); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    tbody td { padding: 9px 14px; border-bottom: 1px solid var(--card-border); vertical-align: top; }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; font-family: 'Source Code Pro', monospace; font-size: 0.82rem; }
+    pre { background: var(--code-bg); color: var(--code-text); border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px; overflow-x: auto; font-family: 'Source Code Pro', monospace; font-size: 0.85rem; line-height: 1.5; border: 1px solid var(--card-border); }
+    code { font-family: 'Source Code Pro', monospace; font-size: 0.88em; }
+    :not(pre) > code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; }
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s; }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    .badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    :root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .callout { border-left: 4px solid var(--accent); background: var(--bg-secondary); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px; }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li { padding: 5px 0 5px 28px; position: relative; font-size: 0.9rem; color: var(--text-secondary); }
+    .checklist li::before { content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400; position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem; }
+    .decision-row { display: flex; align-items: stretch; gap: 0; margin: 6px 0; font-size: 0.88rem; }
+    .decision-if { flex: 0 0 45%; padding: 8px 14px; background: var(--bg-tertiary); border-radius: 8px 0 0 8px; display: flex; align-items: center; gap: 8px; }
+    .decision-then { flex: 1; padding: 8px 14px; background: var(--card-bg); border: 1px solid var(--card-border); border-left: none; border-radius: 0 8px 8px 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .decision-if i { color: var(--accent); min-width: 16px; text-align: center; }
+    .swatch-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+    .swatch { display: flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 14px; }
+    .swatch-dot { width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1); }
+    .swatch-label { font-size: 0.82rem; }
+    .swatch-label strong { display: block; font-size: 0.78rem; }
+    .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 42px; height: 42px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; z-index: 90; }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+    @media (max-width: 900px) { .wiki-sidebar { transform: translateX(-100%); } .wiki-sidebar.open { transform: translateX(0); } .wiki-main { margin-left: 0; padding: 28px 20px 60px; } .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } h2 { font-size: 1.3rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+    @media print { .wiki-header, .wiki-sidebar, .scroll-top { display: none; } .wiki-main { margin-left: 0; max-width: 100%; } }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Header ═══ -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-bell"></i>
+      <span>Push Notifications Skill Wiki</span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../wiki.html" style="color:#fff;text-decoration:none;font-size:0.85rem;font-weight:600;background:rgba(255,255,255,0.12);padding:6px 14px;border-radius:6px;transition:background 0.2s;">
+        <i class="fas fa-arrow-left" style="margin-right:6px;"></i>All Skills
+      </a>
+      <button id="themeToggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+    </div>
+  </header>
+
+  <!-- ═══ Sidebar ═══ -->
+  <nav class="wiki-sidebar" id="sidebar">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#commands">Commands</a>
+
+    <h3>Channels</h3>
+    <a href="#notification-types">Notification Types</a>
+    <a href="#teams">Teams Channel</a>
+    <a href="#desktop">Desktop Channel</a>
+    <a href="#alt-platforms">Alternative Platforms</a>
+
+    <h3>Configuration</h3>
+    <a href="#setup">Setup Process</a>
+    <a href="#config">Config File</a>
+    <a href="#preferences">Preferences</a>
+
+    <h3>Integration</h3>
+    <a href="#integration">Other Skills Integration</a>
+    <a href="#workflow">Notification Workflow</a>
+
+    <h3>Reference</h3>
+    <a href="#errors">Error Handling</a>
+    <a href="#security">Security</a>
+    <a href="#guidelines">Content Guidelines</a>
+    <a href="#checklist">Pre-Delivery Checklist</a>
+  </nav>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="wiki-main" id="main">
+
+    <!-- ── Overview ── -->
+    <h1 id="overview">Push Notifications Skill <span class="version">v1.0.0</span></h1>
+    <p class="lead">Send notifications to Microsoft Teams and macOS desktop when tasks complete, errors occur, or attention is needed. Two channels, five notification types, full integration with other SASAMClaudeCodeSkills.</p>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-users-rectangle"></i></div>
+        <h4>Teams Webhooks</h4>
+        <p>Send Adaptive Card messages to any Microsoft Teams channel via incoming webhook URL.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-desktop"></i></div>
+        <h4>Desktop Alerts</h4>
+        <p>Native macOS notifications via terminal-notifier with sound and click actions.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-plug"></i></div>
+        <h4>Skill Integration</h4>
+        <p>Automatically notify when other skills complete &mdash; beam-selling, tender-assessment, and more.</p>
+      </div>
+    </div>
+
+    <!-- ── How It Works ── -->
+    <h2 id="how-it-works"><i class="fas fa-diagram-project"></i> How It Works</h2>
+    <p>The notification workflow follows seven steps from command to confirmation:</p>
+    <ol style="margin:12px 0 24px 20px; font-size:0.92rem; color:var(--text-secondary);">
+      <li style="margin-bottom:6px;"><strong>Parse Command</strong> &mdash; Determine if setup, test, send, or channel-specific</li>
+      <li style="margin-bottom:6px;"><strong>Load Config</strong> &mdash; Read <code>.notifications/config.json</code> or trigger setup</li>
+      <li style="margin-bottom:6px;"><strong>Validate Channels</strong> &mdash; Check enabled channels are still functional</li>
+      <li style="margin-bottom:6px;"><strong>Format Message</strong> &mdash; Apply notification type styling (icon, colour)</li>
+      <li style="margin-bottom:6px;"><strong>Send Notification</strong> &mdash; Execute curl (Teams) and/or terminal-notifier (desktop)</li>
+      <li style="margin-bottom:6px;"><strong>Update Statistics</strong> &mdash; Increment counters in config</li>
+      <li style="margin-bottom:6px;"><strong>Report Result</strong> &mdash; Confirm success or explain failure</li>
+    </ol>
+
+    <!-- ── Commands ── -->
+    <h2 id="commands"><i class="fas fa-terminal"></i> Commands</h2>
+    <table>
+      <thead>
+        <tr><th>Command</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>setup</code></td><td>Run setup wizard for one or both channels</td></tr>
+        <tr><td><code>test</code></td><td>Send test notification to all configured channels</td></tr>
+        <tr><td><code>status</code></td><td>Show current configuration and statistics</td></tr>
+        <tr><td><code>send [message]</code></td><td>Send a custom notification (default: info type)</td></tr>
+        <tr><td><code>teams [message]</code></td><td>Send to Teams only</td></tr>
+        <tr><td><code>desktop [message]</code></td><td>Send to desktop only</td></tr>
+        <tr><td><code>disable [channel]</code></td><td>Temporarily disable a channel</td></tr>
+        <tr><td><code>enable [channel]</code></td><td>Re-enable a disabled channel</td></tr>
+        <tr><td><code>log</code></td><td>Show recent notification history</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Invocation Examples</h3>
+<pre>/push-notifications setup                           # First-time configuration
+/push-notifications test                            # Test all channels
+/push-notifications "Build complete"                # Send info notification
+/push-notifications "Deployment failed" --type error
+/push-notifications teams "Ready for review"        # Teams only
+/push-notifications desktop "Process finished"      # Desktop only
+/push-notifications status                          # Show config</pre>
+
+    <!-- ── Notification Types ── -->
+    <h2 id="notification-types"><i class="fas fa-palette"></i> Notification Types</h2>
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Icon</th><th>Colour</th><th>Use When</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>success</code></td>
+          <td>&check;</td>
+          <td><span class="badge badge-green">Green</span></td>
+          <td>Task completed successfully</td>
+        </tr>
+        <tr>
+          <td><code>error</code></td>
+          <td>&cross;</td>
+          <td><span class="badge badge-red">Red</span></td>
+          <td>Task failed, requires attention</td>
+        </tr>
+        <tr>
+          <td><code>warning</code></td>
+          <td>&#9888;</td>
+          <td><span class="badge badge-amber">Amber</span></td>
+          <td>Task completed with issues</td>
+        </tr>
+        <tr>
+          <td><code>info</code></td>
+          <td>&#8505;</td>
+          <td><span class="badge badge-blue">Blue</span></td>
+          <td>General information update</td>
+        </tr>
+        <tr>
+          <td><code>attention</code></td>
+          <td>&#128065;</td>
+          <td><span class="badge" style="background:rgba(139,92,246,0.15);color:#6d28d9;">Purple</span></td>
+          <td>User input required</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Teams Channel ── -->
+    <h2 id="teams"><i class="fas fa-users-rectangle"></i> Teams Channel</h2>
+    <p>Send messages to a Microsoft Teams channel via incoming webhook. Messages are formatted as Adaptive Cards with type-specific styling.</p>
+
+    <h3>Webhook Integration</h3>
+    <p>Use the Bash tool to send via curl. The payload uses the Adaptive Card format:</p>
+<pre>curl -H "Content-Type: application/json" -d @- "WEBHOOK_URL" &lt;&lt; 'EOF'
+{
+  "type": "message",
+  "attachments": [{
+    "contentType": "application/vnd.microsoft.card.adaptive",
+    "content": {
+      "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+      "type": "AdaptiveCard",
+      "version": "1.4",
+      "body": [
+        {
+          "type": "TextBlock",
+          "text": "&#10003; {{TITLE}}",
+          "weight": "Bolder",
+          "size": "Medium",
+          "color": "Good"
+        },
+        {
+          "type": "TextBlock",
+          "text": "{{MESSAGE}}",
+          "wrap": true
+        },
+        {
+          "type": "FactSet",
+          "facts": [
+            {"title": "Skill", "value": "{{SKILL_NAME}}"},
+            {"title": "Time", "value": "{{TIMESTAMP}}"}
+          ]
+        }
+      ]
+    }
+  }]
+}
+EOF</pre>
+
+    <h3>Colour Mapping for Adaptive Cards</h3>
+    <table>
+      <thead>
+        <tr><th>Notification Type</th><th>Adaptive Card Colour</th><th>Renders As</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>success</code></td><td><code>"color": "Good"</code></td><td><span class="badge badge-green">Green</span></td></tr>
+        <tr><td><code>error</code></td><td><code>"color": "Attention"</code></td><td><span class="badge badge-red">Red</span></td></tr>
+        <tr><td><code>warning</code></td><td><code>"color": "Warning"</code></td><td><span class="badge badge-amber">Amber</span></td></tr>
+        <tr><td><code>info</code></td><td><code>"color": "Default"</code></td><td><span class="badge badge-blue">Blue</span></td></tr>
+        <tr><td><code>attention</code></td><td><code>"color": "Accent"</code></td><td><span class="badge" style="background:rgba(139,92,246,0.15);color:#6d28d9;">Purple</span></td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Desktop Channel ── -->
+    <h2 id="desktop"><i class="fas fa-desktop"></i> Desktop Channel</h2>
+    <p>Native macOS notifications via <code>terminal-notifier</code>. Supports sound alerts and click actions.</p>
+
+    <h3>Basic Usage</h3>
+<pre>terminal-notifier \
+  -title "{{TITLE}}" \
+  -message "{{MESSAGE}}" \
+  -sound "default" \
+  -group "claude-code"</pre>
+
+    <h3>Sound Mappings per Type</h3>
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Sound</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>success</code></td><td><code>-sound "Glass"</code></td></tr>
+        <tr><td><code>error</code></td><td><code>-sound "Basso"</code></td></tr>
+        <tr><td><code>warning</code></td><td><code>-sound "Sosumi"</code></td></tr>
+        <tr><td><code>info</code></td><td><code>-sound "default"</code></td></tr>
+        <tr><td><code>attention</code></td><td><code>-sound "Ping"</code></td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Alternative Platforms ── -->
+    <h2 id="alt-platforms"><i class="fas fa-layer-group"></i> Alternative Platforms</h2>
+
+    <h3>Linux (notify-send)</h3>
+<pre>notify-send "{{TITLE}}" "{{MESSAGE}}" --urgency=normal</pre>
+
+    <h3>Windows (PowerShell Toast)</h3>
+<pre>[Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+$template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::ToastText02)
+$template.SelectNodes("//text[@id='1']")[0].AppendChild($template.CreateTextNode("{{TITLE}}"))
+$template.SelectNodes("//text[@id='2']")[0].AppendChild($template.CreateTextNode("{{MESSAGE}}"))
+[Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("Claude Code").Show([Windows.UI.Notifications.ToastNotification]::new($template))</pre>
+
+    <!-- ── Setup Process ── -->
+    <h2 id="setup"><i class="fas fa-wand-magic-sparkles"></i> Setup Process</h2>
+    <p>When no configuration exists, the skill runs a first-time setup interview covering four areas:</p>
+
+    <h3>1. Notification Channels</h3>
+    <p>Which notification channels would you like to enable?</p>
+    <ul style="margin:8px 0 16px 20px; font-size:0.9rem; color:var(--text-secondary);">
+      <li>Microsoft Teams</li>
+      <li>Desktop (macOS)</li>
+      <li>Both</li>
+    </ul>
+
+    <h3>2. Microsoft Teams Setup</h3>
+    <p>If Teams is selected, check whether the user has an incoming webhook URL ready. If not, provide the setup guide from <code>references/setup-guide-teams.md</code>.</p>
+
+    <h3>3. Desktop Setup</h3>
+    <p>Check if <code>terminal-notifier</code> is installed via <code>which terminal-notifier</code>. If not installed, provide the installation guide from <code>references/setup-guide-desktop.md</code>.</p>
+
+    <h3>4. Default Preferences</h3>
+    <p>Configure default preferences:</p>
+    <ul style="margin:8px 0 16px 20px; font-size:0.9rem; color:var(--text-secondary);">
+      <li>Should notifications include sound? (default: yes)</li>
+      <li>Default notification type? (default: info)</li>
+    </ul>
+
+    <!-- ── Config File ── -->
+    <h2 id="config"><i class="fas fa-file-code"></i> Config File</h2>
+    <p>Configuration is stored in <code>.notifications/config.json</code>. This file is created during setup and updated after each notification.</p>
+<pre>{
+  "schema_version": "1.0.0",
+  "created_at": "2026-02-25T10:30:00Z",
+  "updated_at": "2026-02-25T10:30:00Z",
+  "channels": {
+    "teams": {
+      "enabled": true,
+      "webhook_url": "https://outlook.office.com/webhook/...",
+      "verified_at": "2026-02-25T10:30:00Z"
+    },
+    "desktop": {
+      "enabled": true,
+      "tool": "terminal-notifier",
+      "verified_at": "2026-02-25T10:30:00Z"
+    }
+  },
+  "preferences": {
+    "default_channel": "both",
+    "sound_enabled": true,
+    "default_type": "info"
+  },
+  "statistics": {
+    "total_sent": 0,
+    "teams_sent": 0,
+    "desktop_sent": 0,
+    "last_sent_at": null
+  }
+}</pre>
+
+    <h4>Section Breakdown</h4>
+    <table>
+      <thead>
+        <tr><th>Section</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>schema_version</code></td><td>Config format version for future migrations</td></tr>
+        <tr><td><code>channels.teams</code></td><td>Teams webhook URL, enabled state, and last verification timestamp</td></tr>
+        <tr><td><code>channels.desktop</code></td><td>Desktop tool name, enabled state, and last verification timestamp</td></tr>
+        <tr><td><code>preferences</code></td><td>Default channel, sound toggle, and default notification type</td></tr>
+        <tr><td><code>statistics</code></td><td>Counters for total, per-channel, and last-sent timestamp</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Preferences ── -->
+    <h2 id="preferences"><i class="fas fa-sliders"></i> Preferences</h2>
+    <table>
+      <thead>
+        <tr><th>Preference</th><th>Default</th><th>Options</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>default_channel</code></td><td><code>"both"</code></td><td><code>"teams"</code>, <code>"desktop"</code>, <code>"both"</code></td></tr>
+        <tr><td><code>sound_enabled</code></td><td><code>true</code></td><td><code>true</code>, <code>false</code></td></tr>
+        <tr><td><code>default_type</code></td><td><code>"info"</code></td><td><code>"success"</code>, <code>"error"</code>, <code>"warning"</code>, <code>"info"</code>, <code>"attention"</code></td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Other Skills Integration ── -->
+    <h2 id="integration"><i class="fas fa-plug"></i> Other Skills Integration</h2>
+    <p>When another skill completes, it can trigger a notification. The pattern sends a summary through the configured channels.</p>
+    <table>
+      <thead>
+        <tr><th>Skill</th><th>Trigger</th><th>Message</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>beam-selling</code></td><td>Engagement saved</td><td>"BEAM engagement [Company] updated &mdash; Stage [N]"</td></tr>
+        <tr><td><code>tender-assessment</code></td><td>Assessment complete</td><td>"Tender assessment complete &mdash; [N] shortlisted"</td></tr>
+        <tr><td><code>b2b-research-agent</code></td><td>Dossier generated</td><td>"B2B dossier ready: [Company]"</td></tr>
+        <tr><td><code>data-quality-analysis</code></td><td>Report generated</td><td>"Data quality report ready &mdash; Rating: [X]"</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Notification Workflow ── -->
+    <h2 id="workflow"><i class="fas fa-arrows-spin"></i> Notification Workflow</h2>
+    <p>The full notification lifecycle from trigger to confirmation:</p>
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-magnifying-glass"></i></div>
+        <h4>Discovery</h4>
+        <p>Check if <code>.notifications/config.json</code> exists. If not, run first-time setup. Validate webhook URL and terminal-notifier availability.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-paper-plane"></i></div>
+        <h4>Delivery</h4>
+        <p>Format the message with type-specific icon and colour. Send via curl (Teams) and/or terminal-notifier (desktop). Update statistics.</p>
+      </div>
+    </div>
+
+    <!-- ── Error Handling ── -->
+    <h2 id="errors"><i class="fas fa-triangle-exclamation"></i> Error Handling</h2>
+
+    <div class="callout callout-warn">
+      <p><strong>Teams Webhook Unreachable</strong></p>
+      <p>If the webhook endpoint cannot be reached, the skill will attempt desktop notification as a fallback (if configured), log the error, and advise the user to check network connectivity or re-run <code>/push-notifications setup teams</code> to reconfigure.</p>
+    </div>
+
+    <div class="callout callout-warn">
+      <p><strong>terminal-notifier Not Installed</strong></p>
+      <p>If <code>terminal-notifier</code> is not found in PATH, the skill will fall back to Teams (if configured), skip desktop notifications, and suggest installing via <code>brew install terminal-notifier</code> (macOS) or <code>sudo apt install libnotify-bin</code> (Linux).</p>
+    </div>
+
+    <div class="callout callout-critical">
+      <p><strong>No Channels Configured</strong></p>
+      <p>If no notification channels are configured, the skill cannot send any notifications. Run <code>/push-notifications setup</code> to configure Microsoft Teams (incoming webhook) and/or Desktop notifications (terminal-notifier).</p>
+    </div>
+
+    <!-- ── Security ── -->
+    <h2 id="security"><i class="fas fa-shield-halved"></i> Security</h2>
+
+    <h3>Webhook URL Protection</h3>
+    <ul style="margin:8px 0 16px 20px; font-size:0.9rem; color:var(--text-secondary);">
+      <li>Store webhook URL in <code>.notifications/config.json</code> (should be in <code>.gitignore</code>)</li>
+      <li>Never display the full webhook URL &mdash; mask it: <code>https://outlook.office.com/webhook/...abc123</code></li>
+      <li>Validate URL starts with <code>https://</code> before saving</li>
+    </ul>
+
+    <h3>HTTPS Validation</h3>
+    <p>All webhook URLs must use HTTPS. The skill will reject any HTTP URLs during setup and warn the user to provide a secure endpoint.</p>
+
+    <h3>Testing Webhook</h3>
+    <p>When the user provides a webhook URL, the skill sends a test message to verify it works before saving to config. This confirms the URL is valid and the channel is reachable.</p>
+
+    <!-- ── Content Guidelines ── -->
+    <h2 id="guidelines"><i class="fas fa-pen-ruler"></i> Content Guidelines</h2>
+
+    <h3>Message Formatting Rules</h3>
+    <ul style="margin:8px 0 16px 20px; font-size:0.9rem; color:var(--text-secondary);">
+      <li>Keep titles under 50 characters</li>
+      <li>Keep messages under 200 characters</li>
+      <li>Be specific: "Tender assessment complete &mdash; 3 shortlisted" not "Task done"</li>
+      <li>Include context: which skill, what happened, what to do next</li>
+      <li>Use Australian English spelling throughout</li>
+    </ul>
+
+    <!-- ── Pre-Delivery Checklist ── -->
+    <h2 id="checklist"><i class="fas fa-clipboard-check"></i> Pre-Delivery Checklist</h2>
+
+    <h3>Before Sending</h3>
+    <ul class="checklist">
+      <li>Configuration loaded from <code>.notifications/config.json</code></li>
+      <li>At least one channel is configured and enabled</li>
+      <li>Message is not empty</li>
+      <li>Message type is valid (success, error, warning, info, attention)</li>
+      <li>Teams webhook URL is HTTPS (if Teams enabled)</li>
+      <li>terminal-notifier exists in PATH (if desktop enabled on macOS)</li>
+    </ul>
+
+    <h3>After Sending</h3>
+    <ul class="checklist">
+      <li>Update statistics in config (total_sent, channel counts, last_sent_at)</li>
+      <li>Report success or failure to user</li>
+    </ul>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      Push Notifications Skill v1.0.0 &mdash; SASAMClaudeCodeSkills marketplace
+    </p>
+
+  </main>
+
+  <!-- ═══ Scroll-to-top ═══ -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    /* ── Theme Toggle ─── */
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    /* ── Active Sidebar Link ─── */
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    /* ── Scroll-to-top ─── */
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

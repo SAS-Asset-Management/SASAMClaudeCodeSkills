@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the SAS-AM LinkedIn Post Generator Skill — a Claude Code skill for creating branded LinkedIn posts in 8 formats">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>LinkedIn Post Generator — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --card-bg: rgba(255,255,255,0.95);
+      --card-border: rgba(0,34,68,0.12);
+      --shadow-sm: 0 2px 8px rgba(0,34,68,0.06);
+      --shadow-md: 0 4px 16px rgba(0,34,68,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,34,68,0.14);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.5);
+      --code-bg: #f0f4f8;
+      --code-text: #1e3a5f;
+      --sidebar-w: 260px;
+      --header-h: 64px;
+    }
+
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --accent: #69BE28;
+      --accent-hover: #7AD33B;
+      --card-bg: rgba(20,29,43,0.9);
+      --card-border: rgba(255,255,255,0.08);
+      --shadow-sm: 0 2px 8px rgba(0,10,28,0.3);
+      --shadow-md: 0 4px 16px rgba(0,10,28,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,10,28,0.5);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.4);
+      --code-bg: #1a2332;
+      --code-text: #d1e3ed;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    .wiki-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-h);
+      background: var(--sas-blue);
+      color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+    .wiki-header .logo-area {
+      display: flex; align-items: center; gap: 14px;
+      font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px;
+    }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button {
+      background: rgba(255,255,255,0.12); border: none; color: #fff;
+      padding: 6px 14px; border-radius: 6px; cursor: pointer;
+      font-family: inherit; font-size: 0.85rem; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ── Sidebar ──────────────────────────────────── */
+    .wiki-sidebar {
+      position: fixed; top: var(--header-h); left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--card-border);
+      overflow-y: auto; padding: 20px 0;
+      z-index: 50;
+      transition: transform 0.3s ease;
+    }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--text-muted);
+      padding: 16px 20px 6px; margin: 0;
+    }
+    .wiki-sidebar a {
+      display: block; padding: 7px 20px 7px 28px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 0.88rem; font-weight: 400;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active {
+      color: var(--accent); font-weight: 600;
+      border-left-color: var(--accent); background: var(--bg-tertiary);
+    }
+
+    /* ── Main Content ─────────────────────────────── */
+    .wiki-main {
+      margin-left: var(--sidebar-w);
+      margin-top: var(--header-h);
+      padding: 40px 48px 80px;
+      max-width: 960px;
+      transition: margin-left 0.3s ease;
+    }
+    .wiki-main.expanded { margin-left: 0; }
+
+    /* ── Typography ───────────────────────────────── */
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 {
+      font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px;
+      padding-bottom: 8px; border-bottom: 2px solid var(--accent);
+      display: flex; align-items: center; gap: 10px;
+    }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+
+    /* ── Tables ────────────────────────────────────── */
+    table {
+      width: 100%; border-collapse: collapse; margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+    thead th {
+      background: var(--sas-blue); color: #fff;
+      text-align: left; padding: 10px 14px; font-weight: 600;
+      font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    tbody td {
+      padding: 9px 14px; border-bottom: 1px solid var(--card-border);
+      vertical-align: top;
+    }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code {
+      background: var(--code-bg); color: var(--code-text);
+      padding: 2px 6px; border-radius: 4px;
+      font-family: 'Source Code Pro', monospace; font-size: 0.82rem;
+    }
+
+    /* ── Code Blocks ──────────────────────────────── */
+    pre {
+      background: var(--code-bg); color: var(--code-text);
+      border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px;
+      overflow-x: auto; font-family: 'Source Code Pro', monospace;
+      font-size: 0.85rem; line-height: 1.5;
+      border: 1px solid var(--card-border);
+    }
+    code {
+      font-family: 'Source Code Pro', monospace; font-size: 0.88em;
+    }
+    :not(pre) > code {
+      background: var(--code-bg); color: var(--code-text);
+      padding: 2px 6px; border-radius: 4px;
+    }
+
+    /* ── Cards ─────────────────────────────────────── */
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+
+    /* ── Badges ────────────────────────────────────── */
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; vertical-align: middle;
+    }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    .badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    :root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+    /* ── Callouts ──────────────────────────────────── */
+    .callout {
+      border-left: 4px solid var(--accent); background: var(--bg-secondary);
+      padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px;
+    }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+
+    /* ── Checklists ────────────────────────────────── */
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li {
+      padding: 5px 0 5px 28px; position: relative;
+      font-size: 0.9rem; color: var(--text-secondary);
+    }
+    .checklist li::before {
+      content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400;
+      position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem;
+    }
+
+    /* ── Decision Tree / Flow ──────────────────────── */
+    .decision-row {
+      display: flex; align-items: stretch; gap: 0; margin: 6px 0;
+      font-size: 0.88rem;
+    }
+    .decision-if {
+      flex: 0 0 45%; padding: 8px 14px;
+      background: var(--bg-tertiary); border-radius: 8px 0 0 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .decision-then {
+      flex: 1; padding: 8px 14px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-left: none; border-radius: 0 8px 8px 0;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .decision-if i { color: var(--accent); min-width: 16px; text-align: center; }
+
+    /* ── Colour Swatches ───────────────────────────── */
+    .swatch-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+    .swatch {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 8px; padding: 8px 14px;
+    }
+    .swatch-dot {
+      width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .swatch-label { font-size: 0.82rem; }
+    .swatch-label strong { display: block; font-size: 0.78rem; }
+
+    /* ── Scroll-to-top ─────────────────────────────── */
+    .scroll-top {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none;
+      font-size: 1.1rem; cursor: pointer;
+      box-shadow: var(--shadow-md);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 90;
+    }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 900px) {
+      .wiki-sidebar { transform: translateX(-100%); }
+      .wiki-sidebar.open { transform: translateX(0); }
+      .wiki-main { margin-left: 0; padding: 28px 20px 60px; }
+      .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.3rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media print {
+      .wiki-header, .wiki-sidebar, .scroll-top { display: none; }
+      .wiki-main { margin-left: 0; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Header ═══ -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fab fa-linkedin"></i>
+      <span>LinkedIn Post Generator <span style="opacity:0.5; font-weight:300;">Wiki</span></span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../wiki.html" style="color:#fff; text-decoration:none; font-size:0.85rem; font-weight:600; padding:6px 14px; border-radius:6px; background:rgba(255,255,255,0.12); transition:background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.22)'" onmouseout="this.style.background='rgba(255,255,255,0.12)'">
+        <i class="fas fa-arrow-left" style="margin-right:6px;"></i>All Skills
+      </a>
+      <button onclick="document.querySelector('.wiki-sidebar').classList.toggle('open')" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+      <button id="themeToggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ Sidebar ═══ -->
+  <nav class="wiki-sidebar" aria-label="Wiki navigation">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#how-it-works">How It Works</a>
+
+    <h3>Interview</h3>
+    <a href="#interview">Mandatory Interview</a>
+    <a href="#interview-questions">Interview Questions</a>
+
+    <h3>Formats</h3>
+    <a href="#formats">All 8 Formats</a>
+    <a href="#format-pillar">Pillar Promotion</a>
+    <a href="#format-quick">Quick Insight</a>
+    <a href="#format-carousel">Carousel</a>
+    <a href="#format-slay">SLAY</a>
+    <a href="#format-confession">Confession</a>
+    <a href="#format-tnt">This Not That</a>
+    <a href="#format-myth">Myth vs Reality</a>
+    <a href="#format-babla">BABLA</a>
+
+    <h3>Strategy</h3>
+    <a href="#recommendation">Format Recommendation</a>
+    <a href="#hooks">Hook Library</a>
+    <a href="#hook-triggers">Hook Triggers</a>
+
+    <h3>Brand</h3>
+    <a href="#voice">Voice &amp; Tone</a>
+    <a href="#language">Language Rules</a>
+    <a href="#words-use">Words to Use</a>
+    <a href="#words-avoid">Words to Avoid</a>
+
+    <h3>Reference</h3>
+    <a href="#themes">Content Themes</a>
+    <a href="#checklist">Pre-Delivery Checklist</a>
+  </nav>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="wiki-main">
+
+    <!-- ── Overview ──────────────────────────────── -->
+    <h1 id="overview">LinkedIn Post Generator <span class="version">v1.0.0</span></h1>
+    <p class="lead">Generate LinkedIn posts in SAS-AM brand voice for asset management professionals. Interview-first approach gathers real material, then produces all eligible formats in parallel and recommends the strongest.</p>
+
+    <div class="card-grid card-grid-4">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-newspaper"></i></div>
+        <h4>8 Formats</h4>
+        <p>Pillar Promotion, Quick Insight, Carousel, SLAY, Confession, This Not That, Myth vs Reality, and BABLA.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-microphone"></i></div>
+        <h4>Interview First</h4>
+        <p>Every post is grounded in real stories, data, and experiences gathered through a mandatory interview.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-anchor"></i></div>
+        <h4>20 Hooks</h4>
+        <p>Master hook library built on 7 psychological triggers and the &ldquo;I See You&rdquo; principle.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-volume-high"></i></div>
+        <h4>Brand Voice</h4>
+        <p>Australian English, no emojis, no hashtags, no corporate waffle &mdash; conversational and authentic.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>SAS-AM LinkedIn Voice</strong> &mdash; Write like a knowledgeable peer who&rsquo;s spent time on the tools, understands the realities of maintenance depots and control rooms, and can translate complex technical concepts into actionable insights. You&rsquo;re not a vendor pushing product; you&rsquo;re a trusted advisor sharing what actually works.</p>
+    </div>
+
+    <!-- ── How It Works ──────────────────────────── -->
+    <h2 id="how-it-works"><i class="fas fa-route"></i> How It Works</h2>
+    <p>The skill follows a 5-step flow from topic to published post:</p>
+
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-1"></i> <strong>Interview</strong></div>
+      <div class="decision-then">Gather real stories, confessions, contrasts, myths, data, and transformation material from the user</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-2"></i> <strong>Catalogue</strong></div>
+      <div class="decision-then">Map interview answers to available material &mdash; stories, confessions, contrasts, myths, data, articles, transformations</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-3"></i> <strong>Recommend</strong></div>
+      <div class="decision-then">Use the Format Recommendation Engine to identify eligible formats and recommend the strongest</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-4"></i> <strong>Produce</strong></div>
+      <div class="decision-then">Draft all eligible formats in parallel &mdash; each with its own hook, structure, and CTA</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-5"></i> <strong>Review</strong></div>
+      <div class="decision-then">Compare all drafts side by side, rank them, and recommend the strongest for the topic</div>
+    </div>
+
+    <!-- ── Mandatory Interview ───────────────────── -->
+    <h2 id="interview"><i class="fas fa-microphone-lines"></i> Mandatory Interview</h2>
+    <p>The skill MUST interview the user before drafting any post. This is non-negotiable.</p>
+    <p><strong>The skill never invents stories, quotes, anecdotes, data points, or client experiences.</strong> Every narrative element in a post must come directly from the user&rsquo;s interview answers. If the user hasn&rsquo;t provided a story, the skill does not write a story-led post. If the user hasn&rsquo;t provided a number, the skill does not fabricate one. Authenticity is the brand &mdash; and fabrication destroys it.</p>
+
+    <div class="callout callout-critical">
+      <p><strong>No Drafting Without Interview.</strong> The interview is mandatory. No exceptions. Every narrative element must trace back to something the user said.</p>
+    </div>
+
+    <h3 id="interview-questions">Interview Questions</h3>
+    <p>Ask all of the following before any drafting begins:</p>
+    <ul class="checklist">
+      <li><strong>Topic &amp; message</strong> &mdash; &ldquo;What&rsquo;s the core insight or argument for this post?&rdquo;</li>
+      <li><strong>Story material</strong> &mdash; &ldquo;Do you have a real story, project anecdote, or client experience related to this?&rdquo;</li>
+      <li><strong>Confession material</strong> &mdash; &ldquo;Is there anything about this topic that you (or the industry) used to get wrong?&rdquo;</li>
+      <li><strong>Contrast material</strong> &mdash; &ldquo;What&rsquo;s the common practice you see that doesn&rsquo;t work? What&rsquo;s the better approach?&rdquo;</li>
+      <li><strong>Myth material</strong> &mdash; &ldquo;Any myths or misconceptions about this topic that frustrate you?&rdquo;</li>
+      <li><strong>Data &amp; evidence</strong> &mdash; &ldquo;Any specific numbers, metrics, or results you can share? These must be real.&rdquo;</li>
+      <li><strong>CTA goal</strong> &mdash; &ldquo;What do you want the reader to do &mdash; visit the website, comment, book a call?&rdquo;</li>
+      <li><strong>Related content</strong> &mdash; &ldquo;Is there a website article or resource to link to?&rdquo;</li>
+      <li><strong>Transformation material</strong> &mdash; &ldquo;Have you seen a real before/after transformation with measurable outcomes?&rdquo;</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <p><strong>Handling Pushback</strong> &mdash; If the user says &ldquo;just draft something&rdquo; or tries to skip the interview:</p>
+      <p><em>&ldquo;I need real material to work with &mdash; the best posts come from real experiences, not invented ones. Let me ask you a few quick questions to surface the good stuff. This takes 2 minutes and makes the difference between a post that sounds like everyone else&rsquo;s and one that sounds like yours.&rdquo;</em></p>
+    </div>
+
+    <!-- ── All 8 Formats ─────────────────────────── -->
+    <h2 id="formats"><i class="fas fa-newspaper"></i> All 8 Formats</h2>
+    <p>Each format serves a different purpose and requires specific material from the interview.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Format</th>
+          <th>Purpose</th>
+          <th>Length</th>
+          <th>Requires from Interview</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><strong>Pillar Promotion</strong></td>
+          <td>Drive traffic to article</td>
+          <td>150&ndash;300 words</td>
+          <td>Website article</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><strong>Quick Insight</strong></td>
+          <td>Engagement, thought leadership</td>
+          <td>150&ndash;400 words</td>
+          <td>Single insight</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><strong>Carousel</strong></td>
+          <td>High engagement, shareability</td>
+          <td>Max 30 words/slide</td>
+          <td>5+ items</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><strong>SLAY (Story-Led)</strong></td>
+          <td>Build trust through experience</td>
+          <td>200&ndash;400 words</td>
+          <td>Real story</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><strong>Confession</strong></td>
+          <td>Vulnerability, trust</td>
+          <td>200&ndash;400 words</td>
+          <td>Change of mind</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><strong>This, Not That</strong></td>
+          <td>Challenge common practice</td>
+          <td>150&ndash;350 words</td>
+          <td>Common practice failing + better alternative</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><strong>Myth vs Reality</strong></td>
+          <td>Debunk misconception</td>
+          <td>150&ndash;350 words</td>
+          <td>Specific myth</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><strong>BABLA (Transformation)</strong></td>
+          <td>Show real transformation</td>
+          <td>200&ndash;400 words</td>
+          <td>Before/after with measurable outcomes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Format Details ────────────────────────── -->
+    <h2 id="format-details"><i class="fas fa-layer-group"></i> Format Details</h2>
+
+    <!-- Format 1: Pillar Promotion -->
+    <h3 id="format-pillar">1. Pillar Promotion</h3>
+    <p>Drive traffic to a full website article. <span class="badge badge-blue">150&ndash;300 words</span></p>
+    <pre>[HOOK &mdash; provocative question or surprising insight]
+
+[CONTEXT &mdash; 1-2 sentences on why this matters]
+
+[KEY POINTS &mdash; 2-3 insights from the article]
+&rarr; Point one
+&rarr; Point two
+&rarr; Point three
+
+[BRIDGE &mdash; what they'll get from the full article]
+
+[CTA &mdash; clear link to website]</pre>
+    <ul class="checklist">
+      <li>The hook (first line) must grab attention &mdash; it&rsquo;s all they see before &ldquo;...see more&rdquo;</li>
+      <li>Pull 2&ndash;3 key insights from the article &mdash; don&rsquo;t summarise the whole thing</li>
+      <li>Give enough value that non-clickers still learn something</li>
+      <li>CTA must be clear and specific about what awaits on the website</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Why it works:</strong> Gives standalone value while creating a compelling reason to read the full article. The hook + key insights format respects the reader&rsquo;s time while driving traffic.</p>
+    </div>
+
+    <!-- Format 2: Quick Insight -->
+    <h3 id="format-quick">2. Quick Insight</h3>
+    <p>Engagement, thought leadership, community building. <span class="badge badge-blue">150&ndash;400 words</span></p>
+    <pre>[HOOK &mdash; single powerful line]
+
+[INSIGHT &mdash; the main point in 2-3 sentences]
+
+[EVIDENCE or EXAMPLE &mdash; brief support]
+
+[SO WHAT &mdash; why this matters to them]
+
+[CTA &mdash; question or link to related content]</pre>
+    <ul class="checklist">
+      <li>Must stand alone &mdash; no dependency on an external article</li>
+      <li>Prioritise a single clear takeaway over breadth</li>
+      <li>End with engagement: a question, a challenge, or a prompt</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Why it works:</strong> Clean, focused format that delivers a single valuable insight. The standalone nature means it works regardless of whether the reader follows a link.</p>
+    </div>
+
+    <!-- Format 3: Carousel -->
+    <h3 id="format-carousel">3. Carousel / Infographic Text</h3>
+    <p>High engagement, shareability, brand awareness. <span class="badge badge-blue">Max 30 words/slide</span></p>
+    <pre>Slide 1: Bold hook/title
+Slides 2&ndash;8: One idea per slide, minimal text
+Final slide: CTA and branding</pre>
+    <ul class="checklist">
+      <li>Max 30 words per slide</li>
+      <li>One idea per slide &mdash; no cramming</li>
+      <li>Write the text only; visual design is handled separately</li>
+      <li>Final slide should prompt action (follow, visit website, comment)</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Why it works:</strong> Carousel format drives high engagement through swipe interaction. One idea per slide keeps content digestible and shareable across mobile-first audiences.</p>
+    </div>
+
+    <!-- Format 4: SLAY -->
+    <h3 id="format-slay">4. SLAY &mdash; Story-Led Post</h3>
+    <p>Build trust through shared experience. Adapted from Lara Acosta&rsquo;s SLAY framework. <span class="badge badge-blue">200&ndash;400 words</span></p>
+    <pre>[STORY &mdash; open with a real moment: a project, a conversation, a failure, a surprise]
+
+[LESSON &mdash; what you learned from it, stated plainly]
+
+[ACTIONABLE &mdash; one thing the reader can do or think about differently]
+
+[YOU &mdash; hand the mic to the reader: ask for their experience]</pre>
+    <ul class="checklist">
+      <li>The story MUST come from the user&rsquo;s interview answers &mdash; never fabricate</li>
+      <li>Start in the middle of the action, not with background context</li>
+      <li>The lesson should feel earned, not preachy</li>
+      <li>The &ldquo;You&rdquo; ending must be a genuine question, not a throwaway &ldquo;thoughts?&rdquo;</li>
+      <li>Keep the story to 40% of the post, the lesson and action to 40%, the &ldquo;You&rdquo; to 20%</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Why it works:</strong> Story-driven posts maximise dwell time &mdash; the #1 algorithm signal in 2026. The &ldquo;You&rdquo; ending drives comments, which are weighted 8x more than likes by LinkedIn&rsquo;s algorithm.</p>
+    </div>
+
+    <!-- Format 5: Confession -->
+    <h3 id="format-confession">5. Confession &mdash; &ldquo;I Was Wrong About...&rdquo;</h3>
+    <p>Build trust through vulnerability. Adapted from PAS copywriting framework. <span class="badge badge-blue">200&ndash;400 words</span></p>
+    <pre>[ADMISSION &mdash; state what you were wrong about, plainly and specifically]
+
+[WHAT I USED TO BELIEVE &mdash; describe the old thinking and why it seemed reasonable]
+
+[WHAT CHANGED MY MIND &mdash; the experience, data, or moment that shifted your view]
+
+[THE REAL LESSON &mdash; what you now understand to be true]
+
+[WHAT ABOUT YOU &mdash; ask the reader what they've changed their mind about]</pre>
+    <ul class="checklist">
+      <li>The confession MUST be genuine &mdash; sourced from the user&rsquo;s interview answers</li>
+      <li>The &ldquo;what I used to believe&rdquo; must be something the reader might also believe right now</li>
+      <li>The pivot moment should be specific: a project, a conversation, a data point</li>
+      <li>Don&rsquo;t be self-deprecating &mdash; be matter-of-fact</li>
+      <li>End with a real question that invites the reader to share their own confession</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Why it works:</strong> Admitting mistakes is the opposite of vendor-speak. Vulnerability builds trust instantly. The format naturally drives comments because everyone has something they were wrong about.</p>
+    </div>
+
+    <!-- Format 6: This, Not That -->
+    <h3 id="format-tnt">6. This, Not That &mdash; Contrarian Comparison</h3>
+    <p>Challenge a common practice with a better alternative. Adapted from Justin Welsh&rsquo;s contrarian framework. <span class="badge badge-blue">150&ndash;350 words</span></p>
+    <pre>[BOLD CLAIM &mdash; state the better approach in one line]
+
+[THE COMMON APPROACH &mdash; describe what most people do and why it seems reasonable]
+
+[WHY IT FAILS &mdash; specific evidence or experience showing the problem]
+
+[THE BETTER APPROACH &mdash; describe what works instead, with evidence]
+
+[WHY THE DIFFERENCE MATTERS &mdash; connect to real outcomes]
+
+[QUICK TEST &mdash; one question the reader can ask themselves]</pre>
+    <ul class="checklist">
+      <li>Name the &ldquo;common approach&rdquo; specifically &mdash; not a straw man</li>
+      <li>Acknowledge why the common approach exists (it&rsquo;s not stupid, it&rsquo;s just incomplete)</li>
+      <li>The &ldquo;better approach&rdquo; must be backed by real evidence from the interview</li>
+      <li>The quick test at the end drives comments: readers will answer it</li>
+      <li>Keep the contrast scannable &mdash; works well with arrow points (&rarr;)</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Why it works:</strong> Side-by-side contrast is highly scannable on mobile (72% of LinkedIn users). Contrarian content creates instant &ldquo;agree or disagree&rdquo; reactions. The quick test at the end is a low-friction comment prompt.</p>
+    </div>
+
+    <!-- Format 7: Myth vs Reality -->
+    <h3 id="format-myth">7. Myth vs Reality &mdash; Debunking Post</h3>
+    <p>Debunk a misconception, drive shares and tags. <span class="badge badge-blue">150&ndash;350 words</span></p>
+    <pre>[NAME THE MYTH &mdash; state it plainly, as the reader would have heard it]
+
+[WHY PEOPLE BELIEVE IT &mdash; empathise with the reasoning, don't mock it]
+
+[THE REALITY &mdash; present the truth with specific evidence]
+
+[WHAT TO DO INSTEAD &mdash; actionable alternative]
+
+[CHALLENGE TO READER &mdash; ask which myths they've encountered]</pre>
+    <ul class="checklist">
+      <li>The myth must be something professionals genuinely believe &mdash; not a straw man</li>
+      <li>Empathise with WHY they believe it before correcting it (&ldquo;I see you&rdquo; principle)</li>
+      <li>Evidence must be specific: a number, a project result, a standard reference</li>
+      <li>The &ldquo;what to do instead&rdquo; should be actionable this week</li>
+      <li>End with a challenge that invites the reader to name their own myth</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Why it works:</strong> Strong save/share behaviour &mdash; people tag colleagues who &ldquo;need to see this&rdquo;. Works across all SAS-AM themes (AI myths, ISO myths, reliability myths, data myths).</p>
+    </div>
+
+    <!-- Format 8: BABLA -->
+    <h3 id="format-babla">8. BABLA &mdash; Transformation Story</h3>
+    <p>Show a real transformation journey. Adapted from Nathan Baugh&rsquo;s Micro Storytelling framework. <span class="badge badge-blue">200&ndash;400 words</span></p>
+    <pre>[BEFORE &mdash; paint the starting state: the pain, the frustration, the status quo]
+
+[AFTER &mdash; juxtapose the outcome: what changed, with specific measurable results]
+
+[BRIDGE &mdash; how the transformation happened: the decision, the method, the turning point]
+
+[LESSON &mdash; the "so what": what you learned, why it matters, the non-obvious insight]
+
+[ACTION &mdash; hand the mic: ask the reader if they want the same transformation]</pre>
+    <ul class="checklist">
+      <li>The Before and After MUST come from the user&rsquo;s interview answers &mdash; never fabricate outcomes or numbers</li>
+      <li>Start with the Before state to create emotional resonance (&ldquo;I see you&rdquo; principle)</li>
+      <li>The After must include at least one specific, concrete outcome</li>
+      <li>The Bridge is the most valuable section &mdash; it&rsquo;s the &ldquo;how&rdquo; that readers save and bookmark</li>
+      <li>The Lesson should be non-obvious &mdash; not just &ldquo;we improved&rdquo;</li>
+      <li>Keep the Before concise &mdash; get to the After quickly to create the contrast</li>
+    </ul>
+    <div class="callout">
+      <p><strong>Why it works:</strong> Transformation stories tap into aspiration &mdash; the reader sees themselves in the Before and wants to reach the After. The Bridge section is highly saveable (bookmarked for reference), boosting algorithm distribution. This format works especially well for SAS-AM because asset management consulting is built on transformation: reactive to predictive, messy data to AI-ready, compliance tick-box to genuine maturity.</p>
+    </div>
+
+    <!-- ── Format Recommendation Engine ──────────── -->
+    <h2 id="recommendation"><i class="fas fa-compass"></i> Format Recommendation Engine</h2>
+    <p>After the interview, the skill recommends the optimal format based on what material was gathered. Use this decision table:</p>
+
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-link"></i> User has a website article to promote</div>
+      <div class="decision-then"><span class="badge badge-green">Pillar Promotion</span> Purpose-built for traffic</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-book-open"></i> User shared a real story or project experience</div>
+      <div class="decision-then"><span class="badge badge-green">SLAY</span> Story-driven, maximises dwell time</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-rotate-left"></i> User described something they used to believe differently</div>
+      <div class="decision-then"><span class="badge badge-green">Confession</span> Vulnerability builds trust</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-arrows-left-right"></i> User named a common practice that doesn&rsquo;t work</div>
+      <div class="decision-then"><span class="badge badge-green">This, Not That</span> Contrast is scannable and drives debate</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-ghost"></i> User identified a myth professionals believe</div>
+      <div class="decision-then"><span class="badge badge-green">Myth vs Reality</span> High shareability, tag-worthy</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-lightbulb"></i> User has a single focused tip or insight</div>
+      <div class="decision-then"><span class="badge badge-green">Quick Insight</span> Clean, standalone, proven</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-list-ol"></i> User has 5+ items to present</div>
+      <div class="decision-then"><span class="badge badge-green">Carousel</span> Visual, one idea per slide</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-chart-line"></i> User shared a before/after transformation with measurable outcomes</div>
+      <div class="decision-then"><span class="badge badge-green">BABLA</span> Aspirational, saveable bridge section</div>
+    </div>
+
+    <!-- ── Hook Library ──────────────────────────── -->
+    <h2 id="hooks"><i class="fas fa-anchor"></i> Hook Library</h2>
+    <p>The first line is everything on LinkedIn. It determines whether someone taps &ldquo;see more&rdquo; or scrolls past. Each hook targets a specific psychological trigger that stops the scroll.</p>
+
+    <h3 id="hook-triggers">Psychological Triggers</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Pattern</th>
+          <th>Trigger</th>
+          <th>Why It Works</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Uncomfortable truth</strong></td>
+          <td>Identity threat</td>
+          <td>Challenges something the reader does or believes &mdash; they HAVE to read to defend or reconsider</td>
+        </tr>
+        <tr>
+          <td><strong>Specific number</strong></td>
+          <td>Curiosity gap</td>
+          <td>A precise figure feels credible and begs &ldquo;how did they get that?&rdquo;</td>
+        </tr>
+        <tr>
+          <td><strong>Permission to fail</strong></td>
+          <td>Relief</td>
+          <td>Tells the reader the thing they&rsquo;re struggling with is normal &mdash; instant emotional connection</td>
+        </tr>
+        <tr>
+          <td><strong>Confrontation</strong></td>
+          <td>Ego engagement</td>
+          <td>Calls out a common behaviour directly &mdash; the reader argues back in their head, then reads on</td>
+        </tr>
+        <tr>
+          <td><strong>Open loop</strong></td>
+          <td>Incomplete pattern</td>
+          <td>Starts a story or claim but withholds the resolution &mdash; the brain needs closure</td>
+        </tr>
+        <tr>
+          <td><strong>Status threat</strong></td>
+          <td>Fear of being left behind</td>
+          <td>Implies the reader might be behind their peers &mdash; competitive instinct kicks in</td>
+        </tr>
+        <tr>
+          <td><strong>Shared enemy</strong></td>
+          <td>Tribal belonging</td>
+          <td>Names a frustration everyone feels but no one says &mdash; creates &ldquo;finally someone said it&rdquo; energy</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p><strong>The &ldquo;I See You&rdquo; Principle</strong> &mdash; The most powerful hooks on LinkedIn don&rsquo;t just inform &mdash; they make the reader feel recognised. The underlying thread: <em>I see your struggle. It&rsquo;s real. You&rsquo;re not alone. And there&rsquo;s a way through.</em></p>
+    </div>
+
+    <!-- ── Voice & Tone ──────────────────────────── -->
+    <h2 id="voice"><i class="fas fa-volume-high"></i> Voice &amp; Tone</h2>
+    <p>Core characteristics that define the SAS-AM LinkedIn voice:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Trait</th>
+          <th>What It Means</th>
+          <th>What It Doesn&rsquo;t Mean</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Upbeat</strong></td>
+          <td>Optimistic about technology&rsquo;s potential, energised by solving problems, genuinely enthusiastic about good outcomes</td>
+          <td>Sycophantic, fake positivity, ignoring real challenges</td>
+        </tr>
+        <tr>
+          <td><strong>Clear &amp; Concise</strong></td>
+          <td>Get to the point, respect the reader&rsquo;s time, no waffle or filler</td>
+          <td>Dumbed down, oversimplified, missing nuance</td>
+        </tr>
+        <tr>
+          <td><strong>Tech Forward</strong></td>
+          <td>Embrace AI/ML, edge computing, data analytics &mdash; but grounded in practical application</td>
+          <td>Buzzword-heavy, hype-driven, technology for its own sake</td>
+        </tr>
+        <tr>
+          <td><strong>Insightful</strong></td>
+          <td>Offer genuine value, share perspectives others haven&rsquo;t considered, connect dots</td>
+          <td>Stating the obvious, regurgitating common knowledge</td>
+        </tr>
+        <tr>
+          <td><strong>Playful</strong></td>
+          <td>Occasional wit, relatable analogies, don&rsquo;t take ourselves too seriously</td>
+          <td>Unprofessional, silly, undermining credibility</td>
+        </tr>
+        <tr>
+          <td><strong>Conversational</strong></td>
+          <td>Write like you&rsquo;re explaining to a smart colleague over coffee</td>
+          <td>Overly formal, academic, stiff corporate-speak</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Language Rules ─────────────────────────── -->
+    <h2 id="language"><i class="fas fa-spell-check"></i> Language Rules</h2>
+    <ul class="checklist">
+      <li><strong>Australian English always</strong> &mdash; organisation, favour, analyse, colour, centre, behaviour, programme (for initiatives)</li>
+      <li><strong>Active voice</strong> &mdash; &ldquo;AI identifies failure patterns&rdquo; not &ldquo;Failure patterns are identified by AI&rdquo;</li>
+      <li><strong>Plain language</strong> &mdash; &ldquo;fix&rdquo; not &ldquo;remediate&rdquo;, &ldquo;use&rdquo; not &ldquo;utilise&rdquo;, &ldquo;help&rdquo; not &ldquo;facilitate&rdquo;</li>
+      <li><strong>Contractions welcome</strong> &mdash; &ldquo;you&rsquo;ll&rdquo;, &ldquo;we&rsquo;ve&rdquo;, &ldquo;it&rsquo;s&rdquo;, &ldquo;don&rsquo;t&rdquo; &mdash; sounds more natural</li>
+      <li><strong>Metric system</strong> &mdash; kilometres, tonnes, degrees Celsius</li>
+      <li><strong>No emojis</strong> &mdash; avoid at all costs</li>
+      <li><strong>No hashtags</strong> &mdash; never include hashtags in any post</li>
+    </ul>
+
+    <h3 id="words-use">Words &amp; Phrases to Use</h3>
+    <ul class="checklist">
+      <li>&ldquo;Here&rsquo;s the thing...&rdquo;</li>
+      <li>&ldquo;In practice...&rdquo;</li>
+      <li>&ldquo;What we&rsquo;ve found is...&rdquo;</li>
+      <li>&ldquo;The honest answer is...&rdquo;</li>
+      <li>&ldquo;Let&rsquo;s be real...&rdquo;</li>
+      <li>&ldquo;Worth noting...&rdquo;</li>
+      <li>&ldquo;The good news is...&rdquo;</li>
+      <li>&ldquo;Quick win:&rdquo;</li>
+      <li>&ldquo;Pro tip:&rdquo;</li>
+      <li>&ldquo;Real talk:&rdquo;</li>
+    </ul>
+
+    <h3 id="words-avoid">Words &amp; Phrases to Avoid</h3>
+    <ul class="checklist">
+      <li>&ldquo;Leverage&rdquo; (use &ldquo;use&rdquo; or &ldquo;apply&rdquo;)</li>
+      <li>&ldquo;Synergy&rdquo; / &ldquo;synergistic&rdquo;</li>
+      <li>&ldquo;Cutting-edge&rdquo; / &ldquo;bleeding-edge&rdquo;</li>
+      <li>&ldquo;Best-in-class&rdquo;</li>
+      <li>&ldquo;Holistic&rdquo; (overused &mdash; be specific instead)</li>
+      <li>&ldquo;Journey&rdquo; (unless actually travelling)</li>
+      <li>&ldquo;Solutions&rdquo; as a standalone noun</li>
+      <li>&ldquo;Stakeholders&rdquo; (say who you mean: teams, managers, operators)</li>
+      <li>&ldquo;Going forward&rdquo; (just say &ldquo;next&rdquo; or &ldquo;from here&rdquo;)</li>
+      <li>&ldquo;At the end of the day&rdquo;</li>
+      <li>&ldquo;It goes without saying&rdquo;</li>
+      <li>&ldquo;Learnings&rdquo; (use &ldquo;lessons&rdquo; or &ldquo;what we learned&rdquo;)</li>
+      <li>&ldquo;I&rsquo;m excited to share...&rdquo;</li>
+      <li>&ldquo;Happy to announce...&rdquo;</li>
+      <li>&ldquo;In today&rsquo;s fast-paced world...&rdquo;</li>
+      <li>&ldquo;It&rsquo;s no secret that...&rdquo;</li>
+      <li>&ldquo;As we all know...&rdquo;</li>
+    </ul>
+
+    <!-- ── Content Themes ────────────────────────── -->
+    <h2 id="themes"><i class="fas fa-tags"></i> Content Themes</h2>
+    <p>Five core themes guide all SAS-AM LinkedIn content in 2026:</p>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-brain"></i></div>
+        <h4>AI &amp; Advanced Analytics</h4>
+        <p>Practical applications of AI/ML in asset management, predictive maintenance, condition monitoring, machine learning techniques.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-clipboard-check"></i></div>
+        <h4>Maturity &amp; Compliance</h4>
+        <p>ISO 55001, GFMAM frameworks, data quality, capability building, governance.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-shield-halved"></i></div>
+        <h4>Risk &amp; Reliability</h4>
+        <p>RCM, FMEA, root cause analysis, criticality, risk-based decision making, Power Law Process.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-server"></i></div>
+        <h4>Sovereign AI</h4>
+        <p>Edge computing, data sovereignty, offline capability, critical infrastructure security.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-leaf"></i></div>
+        <h4>Community Impact</h4>
+        <p>Sustainability, ESG, sector-specific challenges (healthcare, water, local government, hydrogen).</p>
+      </div>
+    </div>
+
+    <h3>Quarterly Campaign Focus</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Quarter</th>
+          <th>Campaign Focus</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Q1</strong></td>
+          <td>AI Readiness for Asset Managers</td>
+        </tr>
+        <tr>
+          <td><strong>Q2</strong></td>
+          <td>Reliability Engineering for the AI Age</td>
+        </tr>
+        <tr>
+          <td><strong>Q3</strong></td>
+          <td>Risk-Based Decision Making</td>
+        </tr>
+        <tr>
+          <td><strong>Q4</strong></td>
+          <td>Sustainable Asset Performance</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Pre-Delivery Checklist ────────────────── -->
+    <h2 id="checklist"><i class="fas fa-clipboard-list"></i> Pre-Delivery Checklist</h2>
+    <p>Before delivering any post to the user, verify every item:</p>
+
+    <h3>Interview Completion</h3>
+    <ul class="checklist">
+      <li>All 9 interview questions asked</li>
+      <li>Real material catalogued (stories, confessions, contrasts, myths, data, articles, transformations)</li>
+      <li>No fabricated stories, quotes, anecdotes, data points, or client experiences</li>
+    </ul>
+
+    <h3>Format Eligibility</h3>
+    <ul class="checklist">
+      <li>Format eligibility assessment completed and presented to user</li>
+      <li>Each format has sufficient real material from the interview</li>
+      <li>Excluded formats listed with reasons</li>
+      <li>All eligible formats produced in parallel</li>
+      <li>Drafts compared and strongest recommended</li>
+    </ul>
+
+    <h3>Brand Compliance</h3>
+    <ul class="checklist">
+      <li>Australian English throughout (organisation, colour, analyse, etc.)</li>
+      <li>Active voice used consistently</li>
+      <li>No emojis anywhere in the post</li>
+      <li>No hashtags anywhere in the post</li>
+      <li>No banned words or phrases (&ldquo;leverage&rdquo;, &ldquo;synergy&rdquo;, &ldquo;best-in-class&rdquo;, etc.)</li>
+      <li>Contractions used naturally (&ldquo;you&rsquo;ll&rdquo;, &ldquo;we&rsquo;ve&rdquo;, &ldquo;don&rsquo;t&rdquo;)</li>
+      <li>Tone matches voice characteristics (upbeat, clear, conversational)</li>
+    </ul>
+
+    <h3>Content Quality</h3>
+    <ul class="checklist">
+      <li>Hook is under 110 characters and stands on its own line</li>
+      <li>Hook uses an appropriate psychological trigger from the library</li>
+      <li>Post follows the correct format structure</li>
+      <li>Word count is within format limits</li>
+      <li>CTA matches the post&rsquo;s goal (traffic, engagement, or conversion)</li>
+      <li>Every claim is grounded in real material from the interview</li>
+      <li>Technical terminology is accurate (predictive vs condition-based vs preventive)</li>
+      <li>Post is formatted for LinkedIn (plain text, flush left, no markdown)</li>
+    </ul>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      LinkedIn Post Generator v1.0.0 &mdash; SAS-AM brand voice
+    </p>
+
+  </main>
+
+  <!-- ═══ Scroll-to-top ═══ -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    /* ── Theme Toggle ─── */
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    /* ── Active Sidebar Link ─── */
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    /* ── Scroll-to-top ─── */
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

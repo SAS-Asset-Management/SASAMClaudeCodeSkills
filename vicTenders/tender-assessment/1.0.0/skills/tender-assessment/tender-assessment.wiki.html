@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the Tender Assessment Skill — automated tender discovery, scoring, and pursuit package generation for Victorian government tenders">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>Tender Assessment Skill — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --card-bg: rgba(255,255,255,0.95);
+      --card-border: rgba(0,34,68,0.12);
+      --shadow-sm: 0 2px 8px rgba(0,34,68,0.06);
+      --shadow-md: 0 4px 16px rgba(0,34,68,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,34,68,0.14);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.5);
+      --code-bg: #f0f4f8;
+      --code-text: #1e3a5f;
+      --sidebar-w: 260px;
+      --header-h: 64px;
+    }
+
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --accent: #69BE28;
+      --accent-hover: #7AD33B;
+      --card-bg: rgba(20,29,43,0.9);
+      --card-border: rgba(255,255,255,0.08);
+      --shadow-sm: 0 2px 8px rgba(0,10,28,0.3);
+      --shadow-md: 0 4px 16px rgba(0,10,28,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,10,28,0.5);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.4);
+      --code-bg: #1a2332;
+      --code-text: #d1e3ed;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    .wiki-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-h);
+      background: var(--sas-blue);
+      color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+    .wiki-header .logo-area {
+      display: flex; align-items: center; gap: 14px;
+      font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px;
+    }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button {
+      background: rgba(255,255,255,0.12); border: none; color: #fff;
+      padding: 6px 14px; border-radius: 6px; cursor: pointer;
+      font-family: inherit; font-size: 0.85rem; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ── Sidebar ──────────────────────────────────── */
+    .wiki-sidebar {
+      position: fixed; top: var(--header-h); left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--card-border);
+      overflow-y: auto; padding: 20px 0;
+      z-index: 50;
+      transition: transform 0.3s ease;
+    }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--text-muted);
+      padding: 16px 20px 6px; margin: 0;
+    }
+    .wiki-sidebar a {
+      display: block; padding: 7px 20px 7px 28px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 0.88rem; font-weight: 400;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active {
+      color: var(--accent); font-weight: 600;
+      border-left-color: var(--accent); background: var(--bg-tertiary);
+    }
+
+    /* ── Main Content ─────────────────────────────── */
+    .wiki-main {
+      margin-left: var(--sidebar-w);
+      margin-top: var(--header-h);
+      padding: 40px 48px 80px;
+      max-width: 960px;
+      transition: margin-left 0.3s ease;
+    }
+    .wiki-main.expanded { margin-left: 0; }
+
+    /* ── Typography ───────────────────────────────── */
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 {
+      font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px;
+      padding-bottom: 8px; border-bottom: 2px solid var(--accent);
+      display: flex; align-items: center; gap: 10px;
+    }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+
+    /* ── Tables ────────────────────────────────────── */
+    table {
+      width: 100%; border-collapse: collapse; margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+    thead th {
+      background: var(--sas-blue); color: #fff;
+      text-align: left; padding: 10px 14px; font-weight: 600;
+      font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    tbody td {
+      padding: 9px 14px; border-bottom: 1px solid var(--card-border);
+      vertical-align: top;
+    }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code {
+      background: var(--code-bg); color: var(--code-text);
+      padding: 2px 6px; border-radius: 4px;
+      font-family: 'Source Code Pro', monospace; font-size: 0.82rem;
+    }
+
+    /* ── Code Blocks ──────────────────────────────── */
+    pre {
+      background: var(--code-bg); color: var(--code-text);
+      border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px;
+      overflow-x: auto; font-family: 'Source Code Pro', monospace;
+      font-size: 0.85rem; line-height: 1.5;
+      border: 1px solid var(--card-border);
+    }
+    code {
+      font-family: 'Source Code Pro', monospace; font-size: 0.88em;
+    }
+    :not(pre) > code {
+      background: var(--code-bg); color: var(--code-text);
+      padding: 2px 6px; border-radius: 4px;
+    }
+
+    /* ── Cards ─────────────────────────────────────── */
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+
+    /* ── Badges ────────────────────────────────────── */
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; vertical-align: middle;
+    }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    .badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    :root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+    /* ── Callouts ──────────────────────────────────── */
+    .callout {
+      border-left: 4px solid var(--accent); background: var(--bg-secondary);
+      padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px;
+    }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+
+    /* ── Checklists ────────────────────────────────── */
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li {
+      padding: 5px 0 5px 28px; position: relative;
+      font-size: 0.9rem; color: var(--text-secondary);
+    }
+    .checklist li::before {
+      content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400;
+      position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem;
+    }
+
+    /* ── Decision Tree / Flow ──────────────────────── */
+    .decision-row {
+      display: flex; align-items: stretch; gap: 0; margin: 6px 0;
+      font-size: 0.88rem;
+    }
+    .decision-if {
+      flex: 0 0 45%; padding: 8px 14px;
+      background: var(--bg-tertiary); border-radius: 8px 0 0 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .decision-then {
+      flex: 1; padding: 8px 14px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-left: none; border-radius: 0 8px 8px 0;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .decision-if i { color: var(--accent); min-width: 16px; text-align: center; }
+
+    /* ── Colour Swatches ───────────────────────────── */
+    .swatch-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+    .swatch {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 8px; padding: 8px 14px;
+    }
+    .swatch-dot {
+      width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .swatch-label { font-size: 0.82rem; }
+    .swatch-label strong { display: block; font-size: 0.78rem; }
+
+    /* ── Scroll-to-top ─────────────────────────────── */
+    .scroll-top {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none;
+      font-size: 1.1rem; cursor: pointer;
+      box-shadow: var(--shadow-md);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 90;
+    }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 900px) {
+      .wiki-sidebar { transform: translateX(-100%); }
+      .wiki-sidebar.open { transform: translateX(0); }
+      .wiki-main { margin-left: 0; padding: 28px 20px 60px; }
+      .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.3rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media print {
+      .wiki-header, .wiki-sidebar, .scroll-top { display: none; }
+      .wiki-main { margin-left: 0; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Header ═══ -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-gavel"></i>
+      <span>Tender Assessment Skill <span style="opacity:0.5; font-weight:300;">Wiki</span></span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../../wiki.html" style="color:#fff; text-decoration:none; font-size:0.85rem; font-weight:600; padding:6px 14px; border-radius:6px; background:rgba(255,255,255,0.12); transition:background 0.2s;">
+        <i class="fas fa-arrow-left"></i> All Skills
+      </a>
+      <button onclick="document.querySelector('.wiki-sidebar').classList.toggle('open')" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+      <button id="themeToggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ Sidebar ═══ -->
+  <nav class="wiki-sidebar" aria-label="Wiki navigation">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#how-it-works">How It Works</a>
+
+    <h3>Workflow</h3>
+    <a href="#scrape">Phase 1 &mdash; Scrape</a>
+    <a href="#score">Phase 2 &mdash; Score</a>
+    <a href="#categorise">Phase 3 &mdash; Categorise</a>
+    <a href="#shortlist">Phase 4 &mdash; Shortlist Report</a>
+    <a href="#pursuit">Phase 5 &mdash; Pursuit Packages</a>
+
+    <h3>Scoring</h3>
+    <a href="#score">Scoring Matrix</a>
+    <a href="#domain-fit">Domain Fit</a>
+    <a href="#industry">Industry Match</a>
+    <a href="#service-type">Service Type</a>
+    <a href="#strategic">Strategic Value</a>
+    <a href="#competitive">Competitive Position</a>
+
+    <h3>Output</h3>
+    <a href="#output">Output Formats</a>
+    <a href="#shortlist">Shortlist Report</a>
+    <a href="#pursuit">Pursuit Package</a>
+
+    <h3>Reference</h3>
+    <a href="#discovery">Discovery Process</a>
+    <a href="#overrides">Override Triggers</a>
+    <a href="#references">Reference Files</a>
+  </nav>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="wiki-main">
+
+    <!-- ── Overview ──────────────────────────────── -->
+    <h1 id="overview">Tender Assessment Skill <span class="version">v1.0.0</span></h1>
+    <p class="lead">Automated tender discovery, alignment scoring, and pursuit package generation for Victorian government tenders (tenders.vic.gov.au).</p>
+
+    <div class="card-grid card-grid-4">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-spider"></i></div>
+        <h4>Web Scraping</h4>
+        <p>Automated scraping of tenders.vic.gov.au with keyword filtering and new-tender tracking.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-calculator"></i></div>
+        <h4>Weighted Scoring</h4>
+        <p>100-point scoring matrix across five dimensions for objective tender alignment assessment.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-list-check"></i></div>
+        <h4>Smart Shortlisting</h4>
+        <p>Automatic categorisation into Shortlisted, Flagged, or Declined with override triggers.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-contract"></i></div>
+        <h4>Pursuit Packages</h4>
+        <p>Deep-assessment pursuit packages with win themes, compliance matrices, and team recommendations.</p>
+      </div>
+    </div>
+
+    <!-- ── How It Works ──────────────────────────── -->
+    <h2 id="how-it-works"><i class="fas fa-diagram-project"></i> How It Works</h2>
+    <p>The tender assessment workflow follows a five-phase pipeline:</p>
+
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-circle-1"></i> <strong>Phase 1 &mdash; Scrape</strong></div>
+      <div class="decision-then">Scrape tenders from tenders.vic.gov.au using keyword filters and new-only flags</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-circle-2"></i> <strong>Phase 2 &mdash; Score</strong></div>
+      <div class="decision-then">Score alignment using weighted matrix (100 pts total)</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-circle-3"></i> <strong>Phase 3 &mdash; Categorise</strong></div>
+      <div class="decision-then">Shortlisted <span class="badge badge-green">&#8805;80</span> &nbsp; Flagged <span class="badge badge-amber">60&ndash;79</span> &nbsp; Declined <span class="badge badge-red">&lt;60</span></div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-circle-4"></i> <strong>Phase 4 &mdash; Report</strong></div>
+      <div class="decision-then">Generate shortlist report with scoring breakdown and recommendations</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-if"><i class="fas fa-circle-5"></i> <strong>Phase 5 &mdash; Pursue</strong></div>
+      <div class="decision-then">Deep-assess and create pursuit packages for shortlisted tenders</div>
+    </div>
+
+    <!-- ── Discovery Process ─────────────────────── -->
+    <h2 id="discovery"><i class="fas fa-magnifying-glass"></i> Discovery Process</h2>
+    <p>Before beginning assessment, the skill gathers four required context items:</p>
+
+    <ul class="checklist">
+      <li>Scraper location &mdash; path to the tenders.vic.gov.au scraper tool</li>
+      <li>Keyword filtering &mdash; industry/domain keywords for relevance filtering</li>
+      <li>New tenders only flag &mdash; whether to process only new (unseen) tenders</li>
+      <li>Output preferences &mdash; desired output format (report, package, or HTML)</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Skip discovery</strong> &mdash; if the user provides explicit instructions covering all four context items, proceed directly to Phase 1 without the discovery dialogue.</p>
+    </div>
+
+    <!-- ── Phase 1: Scrape ───────────────────────── -->
+    <h2 id="scrape"><i class="fas fa-spider"></i> Phase 1: Scrape</h2>
+    <p>The scraper fetches tenders from tenders.vic.gov.au. Available commands:</p>
+
+    <h4>Default scrape (all active tenders)</h4>
+    <pre>python scraper.py</pre>
+
+    <h4>New tenders only</h4>
+    <pre>python scraper.py --new-only</pre>
+
+    <h4>Track new tenders and mark as seen</h4>
+    <pre>python scraper.py --track-new</pre>
+
+    <p>The scraper outputs structured data with the following fields:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>tender_id</code></td><td>String</td><td>Unique tender identifier from tenders.vic.gov.au</td></tr>
+        <tr><td><code>title</code></td><td>String</td><td>Tender title / name</td></tr>
+        <tr><td><code>agency</code></td><td>String</td><td>Issuing government agency</td></tr>
+        <tr><td><code>category</code></td><td>String</td><td>UNSPSC or agency-defined category</td></tr>
+        <tr><td><code>close_date</code></td><td>Date</td><td>Submission closing date</td></tr>
+        <tr><td><code>description</code></td><td>String</td><td>Full tender description / scope of work</td></tr>
+        <tr><td><code>value</code></td><td>Number</td><td>Estimated contract value (if disclosed)</td></tr>
+        <tr><td><code>url</code></td><td>URL</td><td>Direct link to tender on tenders.vic.gov.au</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Phase 2: Score ────────────────────────── -->
+    <h2 id="score"><i class="fas fa-calculator"></i> Phase 2: Score</h2>
+    <p>Each tender is scored against a weighted matrix totalling 100 points across five dimensions:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Weight</th>
+          <th>Assessment Basis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Domain Fit</strong></td><td>30 pts</td><td>How closely the tender matches SAS-AM core domains (asset management, advisory, analytics)</td></tr>
+        <tr><td><strong>Industry Match</strong></td><td>25 pts</td><td>Alignment with target industries (rail, transport, infrastructure, utilities)</td></tr>
+        <tr><td><strong>Service Type</strong></td><td>20 pts</td><td>Match to SAS-AM service offerings (advisory, audit, benchmarking, analytics)</td></tr>
+        <tr><td><strong>Strategic Value</strong></td><td>15 pts</td><td>Long-term strategic benefit (reference client, market entry, capability building)</td></tr>
+        <tr><td><strong>Competitive Position</strong></td><td>10 pts</td><td>Likelihood of competitive advantage (incumbency, relationships, niche expertise)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p><strong>Total = 100 points</strong> &mdash; the scoring matrix is designed so that a tender scoring 80+ across all dimensions represents a strong strategic fit warranting pursuit.</p>
+    </div>
+
+    <!-- ── Scoring Details ───────────────────────── -->
+    <h3 id="domain-fit">Domain Fit (30 pts)</h3>
+    <p>Assesses how closely the tender aligns with SAS-AM core service domains:</p>
+    <table>
+      <thead>
+        <tr><th>Score</th><th>Criteria</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>30</strong></td><td>Direct match &mdash; asset management, advisory, or analytics engagement</td></tr>
+        <tr><td><strong>20&ndash;29</strong></td><td>Strong overlap &mdash; infrastructure planning, condition assessment, lifecycle strategy</td></tr>
+        <tr><td><strong>10&ndash;19</strong></td><td>Partial overlap &mdash; general consulting with asset management components</td></tr>
+        <tr><td><strong>1&ndash;9</strong></td><td>Tangential &mdash; loosely related domain, would require stretch</td></tr>
+        <tr><td><strong>0</strong></td><td>Outside domain &mdash; no meaningful connection to SAS-AM capabilities</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="industry">Industry Match (25 pts)</h3>
+    <p>Measures alignment with SAS-AM target industries:</p>
+    <table>
+      <thead>
+        <tr><th>Score</th><th>Criteria</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>25</strong></td><td>Rail / transport &mdash; primary target industry with existing track record</td></tr>
+        <tr><td><strong>18&ndash;24</strong></td><td>Infrastructure / utilities &mdash; strong adjacency with transferable expertise</td></tr>
+        <tr><td><strong>10&ndash;17</strong></td><td>Public sector general &mdash; government services, health, education</td></tr>
+        <tr><td><strong>1&ndash;9</strong></td><td>Other sectors &mdash; private sector or non-target government areas</td></tr>
+        <tr><td><strong>0</strong></td><td>No industry fit &mdash; sector with no relevance or transferable value</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="service-type">Service Type (20 pts)</h3>
+    <p>Evaluates match to SAS-AM service offerings:</p>
+    <table>
+      <thead>
+        <tr><th>Score</th><th>Criteria</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>20</strong></td><td>Advisory / consulting &mdash; strategic advisory, audit, benchmarking</td></tr>
+        <tr><td><strong>14&ndash;19</strong></td><td>Analytics / data &mdash; data analytics, predictive modelling, decision support</td></tr>
+        <tr><td><strong>8&ndash;13</strong></td><td>Mixed services &mdash; blend of advisory and implementation components</td></tr>
+        <tr><td><strong>1&ndash;7</strong></td><td>Implementation-heavy &mdash; primarily delivery/build with minor advisory</td></tr>
+        <tr><td><strong>0</strong></td><td>No service fit &mdash; pure construction, IT build, or commodity supply</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="strategic">Strategic Value (15 pts)</h3>
+    <p>Assesses long-term strategic benefit beyond the immediate engagement:</p>
+    <table>
+      <thead>
+        <tr><th>Score</th><th>Criteria</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>15</strong></td><td>High strategic value &mdash; marquee client, new market entry, or capability showcase</td></tr>
+        <tr><td><strong>10&ndash;14</strong></td><td>Good strategic value &mdash; strengthens existing relationships or builds credentials</td></tr>
+        <tr><td><strong>5&ndash;9</strong></td><td>Moderate value &mdash; standard engagement with some reputational benefit</td></tr>
+        <tr><td><strong>1&ndash;4</strong></td><td>Limited value &mdash; short-term revenue with minimal strategic upside</td></tr>
+        <tr><td><strong>0</strong></td><td>No strategic value &mdash; one-off engagement with no follow-on potential</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="competitive">Competitive Position (10 pts)</h3>
+    <p>Evaluates SAS-AM likelihood of winning based on competitive dynamics:</p>
+    <table>
+      <thead>
+        <tr><th>Score</th><th>Criteria</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>10</strong></td><td>Strong position &mdash; incumbent, existing relationship, or niche sole-source</td></tr>
+        <tr><td><strong>7&ndash;9</strong></td><td>Good position &mdash; known to the agency, relevant past performance</td></tr>
+        <tr><td><strong>4&ndash;6</strong></td><td>Moderate position &mdash; competitive field but credible differentiators</td></tr>
+        <tr><td><strong>1&ndash;3</strong></td><td>Weak position &mdash; crowded field, no existing relationship, late entry</td></tr>
+        <tr><td><strong>0</strong></td><td>No position &mdash; locked out by panel arrangements or mandatory qualifications</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Phase 3: Categorise ───────────────────── -->
+    <h2 id="categorise"><i class="fas fa-tags"></i> Phase 3: Categorise</h2>
+    <p>Based on the total score, each tender is placed into one of three categories:</p>
+
+    <table>
+      <thead>
+        <tr><th>Score</th><th>Category</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>&#8805;80</strong></td>
+          <td><span class="badge badge-green">Shortlisted</span></td>
+          <td>Proceed to Phase 5 &mdash; generate full pursuit package</td>
+        </tr>
+        <tr>
+          <td><strong>60&ndash;79</strong></td>
+          <td><span class="badge badge-amber">Flagged</span></td>
+          <td>Include in shortlist report for manual review and decision</td>
+        </tr>
+        <tr>
+          <td><strong>&lt;60</strong></td>
+          <td><span class="badge badge-red">Declined</span></td>
+          <td>Log with reason and exclude from further processing</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Override Triggers ─────────────────────── -->
+    <h2 id="overrides"><i class="fas fa-arrows-rotate"></i> Override Triggers</h2>
+    <p>Automated scoring can be overridden in specific circumstances:</p>
+
+    <h4>Upgrade to Shortlisted (even if score &lt;80)</h4>
+    <ul class="checklist">
+      <li>Tender explicitly requests SAS-AM or names the company</li>
+      <li>Client is a strategic target identified in company profile</li>
+      <li>Sole-source or limited-tender opportunity</li>
+      <li>Directly extends an existing SAS-AM engagement</li>
+      <li>User explicitly requests the tender be shortlisted</li>
+    </ul>
+
+    <h4>Flag for review (even if score &#8805;80)</h4>
+    <ul class="checklist">
+      <li>Closing date is less than 5 business days away</li>
+      <li>Estimated value exceeds typical SAS-AM engagement size by 5x+</li>
+      <li>Requires mandatory qualifications or certifications SAS-AM may not hold</li>
+      <li>Conflicts with an existing client engagement</li>
+      <li>Requires teaming/subcontracting arrangements not yet in place</li>
+    </ul>
+
+    <!-- ── Phase 4: Shortlist Report ─────────────── -->
+    <h2 id="shortlist"><i class="fas fa-clipboard-list"></i> Phase 4: Shortlist Report</h2>
+    <p>The shortlist report provides a summary of all assessed tenders. It includes six sections:</p>
+
+    <ol>
+      <li><strong>Executive Summary</strong> &mdash; total tenders scraped, scored, and categorised</li>
+      <li><strong>Shortlisted Tenders</strong> &mdash; full scoring breakdown for each shortlisted tender</li>
+      <li><strong>Flagged Tenders</strong> &mdash; tenders requiring manual review with flag reasons</li>
+      <li><strong>Declined Tenders</strong> &mdash; summary list with primary decline reasons</li>
+      <li><strong>Score Distribution</strong> &mdash; histogram and statistical summary of scores</li>
+      <li><strong>Recommendations</strong> &mdash; prioritised pursuit order and resource allocation suggestions</li>
+    </ol>
+
+    <!-- ── Phase 5: Pursuit Packages ─────────────── -->
+    <h2 id="pursuit"><i class="fas fa-file-contract"></i> Phase 5: Pursuit Packages</h2>
+    <p>For each shortlisted tender, a comprehensive pursuit package is generated containing:</p>
+
+    <ol>
+      <li><strong>Tender Summary</strong> &mdash; key details, dates, value, and issuing agency</li>
+      <li><strong>Alignment Analysis</strong> &mdash; detailed scoring rationale for each dimension</li>
+      <li><strong>Win Themes</strong> &mdash; 3&ndash;5 key differentiators tailored to the tender requirements</li>
+      <li><strong>Compliance Matrix</strong> &mdash; mapping of tender requirements to SAS-AM capabilities</li>
+      <li><strong>Risk Assessment</strong> &mdash; identified risks and proposed mitigations</li>
+      <li><strong>Team Recommendations</strong> &mdash; suggested project team and key personnel</li>
+      <li><strong>Past Performance</strong> &mdash; relevant prior engagements and reference projects</li>
+      <li><strong>Pricing Strategy</strong> &mdash; recommended pricing approach and competitive positioning</li>
+      <li><strong>Timeline</strong> &mdash; response preparation timeline and key milestones</li>
+      <li><strong>Go/No-Go Recommendation</strong> &mdash; final recommendation with supporting rationale</li>
+    </ol>
+
+    <!-- ── Output Formats ────────────────────────── -->
+    <h2 id="output"><i class="fas fa-file-export"></i> Output Formats</h2>
+    <p>The skill supports three output formats:</p>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-clipboard-list"></i></div>
+        <h4>Shortlist Report Only</h4>
+        <p>Markdown report summarising all tenders with scoring and categorisation. Ideal for quick review cycles.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-folder-open"></i></div>
+        <h4>Full Assessment Package</h4>
+        <p>Shortlist report plus individual pursuit packages for all shortlisted tenders. Complete bid preparation kit.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-globe"></i></div>
+        <h4>HTML Report</h4>
+        <p>Self-contained HTML file with interactive scoring views, sortable tables, and print-ready formatting.</p>
+      </div>
+    </div>
+
+    <!-- ── Reference Files ───────────────────────── -->
+    <h2 id="references"><i class="fas fa-book"></i> Reference Files</h2>
+    <p>The skill relies on the following reference files:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><code>company-profile.md</code></td><td>SAS-AM capabilities, target industries, strategic objectives, and team profiles</td></tr>
+        <tr><td><code>scoring-matrix.md</code></td><td>Detailed scoring criteria, dimension weights, and override trigger definitions</td></tr>
+        <tr><td><code>pursuit-package-template.md</code></td><td>Template structure for pursuit package generation</td></tr>
+        <tr><td><code>shortlist-report-template.md</code></td><td>Template structure for shortlist report generation</td></tr>
+        <tr><td><code>output-schema.json</code></td><td>JSON schema defining the structured output format for scored tenders</td></tr>
+        <tr><td><code>sample-output.json</code></td><td>Example output demonstrating a fully scored and categorised tender batch</td></tr>
+      </tbody>
+    </table>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      Tender Assessment Skill v1.0.0 &mdash; Victorian Government Tenders
+    </p>
+
+  </main>
+
+  <!-- ═══ Scroll-to-top ═══ -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    /* ── Theme Toggle ─── */
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    /* ── Active Sidebar Link ─── */
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    /* ── Scroll-to-top ─── */
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>
