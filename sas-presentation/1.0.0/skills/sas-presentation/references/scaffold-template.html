@@ -3,24 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{TITLE}} | SAS-AM</title>
+  <meta name="description" content="{{DESCRIPTION}}">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>{{TITLE}} | marcov</title>
 
   <!-- Reveal.js -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
 
-  <!-- Font Awesome for icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Custom Styles -->
+  <!-- marcov Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Main presentation container -->
   <div class="presentation-wrapper">
     <!-- Subtle binary flow background -->
     <div class="binary-background" id="binaryBg"></div>
@@ -29,7 +30,9 @@
     <div class="reveal">
       <div class="slides">
 
-        <!-- SLIDE 1: Title Slide -->
+        <!-- ================================================================
+             SLIDE 1 — TITLE
+             ================================================================ -->
         <section id="title" class="title-slide" data-section="opening">
           <div class="title-content">
             <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="title-logo logo-light">
@@ -37,10 +40,13 @@
             <h1>{{MAIN_TITLE}}</h1>
             <h2>{{SUBTITLE}}</h2>
             <p class="author">{{AUTHOR}}</p>
+            <p class="tagline">At SAS-AM we help organisations understand their strengths and weaknesses, model and predict the future, and make the right decisions through audit and benchmarking, advanced analytics and deep advisory services.</p>
           </div>
         </section>
 
-        <!-- SLIDE 2: Opening -->
+        <!-- ================================================================
+             SLIDE 2 — OPENING
+             ================================================================ -->
         <section id="opening-1" data-section="opening">
           <div class="slide-layout with-image">
             <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="slide-logo logo-light">
@@ -54,7 +60,6 @@
                 <p class="slide-subtitle">Subtitle explaining the key point of this slide</p>
               </div>
               <div class="slide-image">
-                <!-- Add image or SVG here -->
                 <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
                   Visual Placeholder
                 </div>
@@ -63,7 +68,9 @@
           </div>
         </section>
 
-        <!-- SLIDE 3: Context -->
+        <!-- ================================================================
+             SLIDE 3 — CONTEXT
+             ================================================================ -->
         <section id="context-1" data-section="context">
           <div class="slide-layout with-image">
             <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="slide-logo logo-light">
@@ -85,7 +92,9 @@
           </div>
         </section>
 
-        <!-- SLIDE 4: Problem -->
+        <!-- ================================================================
+             SLIDE 4 — PROBLEM
+             ================================================================ -->
         <section id="problem-1" data-section="problem">
           <div class="slide-layout with-image">
             <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="slide-logo logo-light">
@@ -107,7 +116,9 @@
           </div>
         </section>
 
-        <!-- SLIDE 5: Solution -->
+        <!-- ================================================================
+             SLIDE 5 — SOLUTION
+             ================================================================ -->
         <section id="solution-1" data-section="solution">
           <div class="slide-layout with-image">
             <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="slide-logo logo-light">
@@ -129,7 +140,9 @@
           </div>
         </section>
 
-        <!-- SLIDE 6: Implementation -->
+        <!-- ================================================================
+             SLIDE 6 — IMPLEMENTATION
+             ================================================================ -->
         <section id="implementation-1" data-section="implementation">
           <div class="slide-layout with-image">
             <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="slide-logo logo-light">
@@ -151,7 +164,9 @@
           </div>
         </section>
 
-        <!-- SLIDE 7: Future -->
+        <!-- ================================================================
+             SLIDE 7 — FUTURE
+             ================================================================ -->
         <section id="future-1" data-section="future">
           <div class="slide-layout with-image">
             <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="slide-logo logo-light">
@@ -173,7 +188,9 @@
           </div>
         </section>
 
-        <!-- SLIDE 8: Closing / CTA -->
+        <!-- ================================================================
+             SLIDE 8 — CLOSING / CTA
+             ================================================================ -->
         <section id="closing" data-section="connection">
           <div class="slide-layout closing">
             <div class="slide-header">
@@ -208,7 +225,7 @@
       </div>
     </div>
 
-    <!-- STATIC FOOTER - Outside reveal.js -->
+    <!-- Static Footer — outside Reveal.js -->
     <footer class="static-footer">
       <div class="footer-content">
         <div class="nav-items">
@@ -234,28 +251,21 @@
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
 
   <script>
-    // Theme management
-    const STORAGE_KEY = 'sas-presentation-theme';
+    // ================================================================
+    //  THEME MANAGEMENT
+    // ================================================================
+    const STORAGE_KEY = 'marcov-presentation-theme';
 
     function getSystemTheme() {
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-
-    function getStoredTheme() {
-      return localStorage.getItem(STORAGE_KEY);
     }
 
     function setTheme(theme) {
       const resolved = theme === 'system' ? getSystemTheme() : theme;
       document.documentElement.setAttribute('data-theme', resolved);
       document.body.setAttribute('data-theme', resolved);
-
-      // Also update reveal viewport if it exists
       const viewport = document.querySelector('.reveal-viewport');
-      if (viewport) {
-        viewport.setAttribute('data-theme', resolved);
-      }
-
+      if (viewport) viewport.setAttribute('data-theme', resolved);
       localStorage.setItem(STORAGE_KEY, theme);
     }
 
@@ -264,77 +274,135 @@
       setTheme(current === 'light' ? 'dark' : 'light');
     }
 
-    // Initialize theme
-    const stored = getStoredTheme();
-    setTheme(stored || 'light');
+    // Initialise theme
+    setTheme(localStorage.getItem(STORAGE_KEY) || 'light');
 
-    // Listen for system changes
+    // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      if (getStoredTheme() === 'system') {
-        setTheme('system');
-      }
+      if (localStorage.getItem(STORAGE_KEY) === 'system') setTheme('system');
     });
 
-    // Initialize Reveal.js
+
+    // ================================================================
+    //  REVEAL.JS INITIALISATION
+    // ================================================================
     Reveal.initialize({
+      // Navigation
       hash: true,
+      hashOneBasedIndex: false,
+      respondToHashChanges: true,
+      history: false,
+
+      // Display
       slideNumber: 'c/t',
       showSlideNumber: 'speaker',
-      transition: 'slide',
-      transitionSpeed: 'default',
-      backgroundTransition: 'fade',
       center: false,
+
+      // Dimensions (16:9)
       width: 1920,
       height: 1080,
       margin: 0,
       minScale: 0.2,
       maxScale: 2.0,
+
+      // Transitions
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+
+      // Interaction
+      keyboard: true,
+      touch: true,
+      loop: false,
       embedded: false,
-      display: 'block',
-      disableLayout: false,
-    }).then(() => {
-      // Reapply theme after reveal initializes
-      const theme = document.documentElement.getAttribute('data-theme') || 'light';
-      setTheme(theme);
+      help: true,
+      mouseWheel: false,
+      hideInactiveCursor: true,
+      hideCursorTime: 3000,
+
+      // Fragments
+      fragments: true,
+      fragmentInURL: true,
+
+      // PDF Export
+      pdfMaxPagesPerSlide: 1,
+      pdfSeparateFragments: false,
     });
 
-    // Update footer navigation based on current slide
-    function updateNavigation() {
-      const currentSlide = Reveal.getCurrentSlide();
-      const currentSection = currentSlide ? currentSlide.getAttribute('data-section') : null;
 
-      document.querySelectorAll('.static-footer .nav-item').forEach(item => {
-        item.classList.remove('active');
-        if (item.getAttribute('data-section') === currentSection) {
-          item.classList.add('active');
+    // ================================================================
+    //  FOOTER NAVIGATION
+    // ================================================================
+    const sectionMap = {};
+
+    function buildSectionMap() {
+      const slides = Reveal.getSlides();
+      slides.forEach((slide) => {
+        const section = slide.getAttribute('data-section');
+        if (section && !(section in sectionMap)) {
+          sectionMap[section] = Reveal.getIndices(slide);
         }
       });
     }
 
-    // Listen for slide changes
+    function updateNavigation() {
+      const currentSlide = Reveal.getCurrentSlide();
+      const currentSection = currentSlide?.getAttribute('data-section');
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.getAttribute('data-section') === currentSection);
+      });
+    }
+
+    // Click-to-navigate + keyboard accessible
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const section = item.getAttribute('data-section');
+        if (sectionMap[section]) {
+          Reveal.slide(sectionMap[section].h, sectionMap[section].v || 0);
+        }
+      });
+
+      item.setAttribute('tabindex', '0');
+      item.setAttribute('role', 'button');
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          item.click();
+        }
+      });
+    });
+
+    // Wire up Reveal events
+    Reveal.on('ready', () => {
+      buildSectionMap();
+      updateNavigation();
+    });
     Reveal.on('slidechanged', updateNavigation);
 
-    // Initial update
-    updateNavigation();
 
-    // Binary background animation
-    (function createBinaryBackground() {
+    // ================================================================
+    //  BINARY BACKGROUND
+    // ================================================================
+    (function initBinaryBackground() {
       const container = document.getElementById('binaryBg');
-      const columnCount = 50;
+      if (!container) return;
 
-      for (let i = 0; i < columnCount; i++) {
+      const COLUMN_COUNT = 50;
+      const CHARS_PER_COLUMN = 150;
+
+      for (let i = 0; i < COLUMN_COUNT; i++) {
         const column = document.createElement('div');
         column.className = 'binary-column';
+        column.setAttribute('aria-hidden', 'true');
 
-        let binaryStr = '';
-        const length = 150;
-        for (let j = 0; j < length; j++) {
-          binaryStr += Math.random() > 0.5 ? '1' : '0';
-          if (j < length - 1) binaryStr += '<br>';
+        let str = '';
+        for (let j = 0; j < CHARS_PER_COLUMN; j++) {
+          str += Math.random() > 0.5 ? '1' : '0';
+          if (j < CHARS_PER_COLUMN - 1) str += '<br>';
         }
-        column.innerHTML = binaryStr;
+        column.innerHTML = str;
 
-        column.style.left = (i * (100 / columnCount)) + '%';
+        column.style.left = (i * 2) + '%';
 
         const duration = 45 + Math.random() * 30;
         column.style.animationDuration = duration + 's';
