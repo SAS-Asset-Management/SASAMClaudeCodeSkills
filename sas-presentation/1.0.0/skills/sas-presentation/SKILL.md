@@ -7,6 +7,12 @@ description: Create polished marcov / SAS-AM branded Reveal.js presentations. Us
 
 Create professional HTML presentations using Reveal.js with SAS-AM brand guidelines. The output is a standalone HTML file that can be opened directly in any browser, shared via USB, or hosted on any static file server.
 
+## SAS-AM Tagline
+
+Every presentation MUST include the SAS-AM tagline on at least one slide (typically the title slide, closing slide, or an "About Us" section):
+
+> "At SAS-AM we help organisations understand their strengths and weaknesses, model and predict the future, and make the right decisions through audit and benchmarking, advanced analytics and deep advisory services."
+
 ## Overview
 
 This skill creates presentations following the marcov / SAS-AM communication style, which features:
@@ -955,3 +961,4 @@ Example (Yarra Trams):
 - [ ] Presentation type identified and confirmed
 - [ ] Section structure follows the type definition
 - [ ] Tone matches the type (formal, punchy, narrative, etc.)
+- [ ] SAS-AM tagline included on at least one slide
