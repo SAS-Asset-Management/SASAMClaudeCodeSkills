@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the SASAM Update Skill — a Claude Code skill for managing SASAMClaudeCodeSkills marketplace updates">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>SASAM Update Skill — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --card-bg: rgba(255,255,255,0.95);
+      --card-border: rgba(0,34,68,0.12);
+      --shadow-sm: 0 2px 8px rgba(0,34,68,0.06);
+      --shadow-md: 0 4px 16px rgba(0,34,68,0.10);
+      --shadow-lg: 0 8px 24px rgba(0,34,68,0.14);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.5);
+      --code-bg: #f0f4f8;
+      --code-text: #1e3a5f;
+      --sidebar-w: 260px;
+      --header-h: 64px;
+    }
+
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --accent: #69BE28;
+      --accent-hover: #7AD33B;
+      --card-bg: rgba(20,29,43,0.9);
+      --card-border: rgba(255,255,255,0.08);
+      --shadow-sm: 0 2px 8px rgba(0,10,28,0.3);
+      --shadow-md: 0 4px 16px rgba(0,10,28,0.4);
+      --shadow-lg: 0 8px 24px rgba(0,10,28,0.5);
+      --focus-ring: 0 0 0 3px rgba(105,190,40,0.4);
+      --code-bg: #1a2332;
+      --code-text: #d1e3ed;
+    }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ───────────────────────────────────── */
+    .wiki-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: var(--header-h);
+      background: var(--sas-blue);
+      color: #fff;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+    .wiki-header .logo-area {
+      display: flex; align-items: center; gap: 14px;
+      font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px;
+    }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button {
+      background: rgba(255,255,255,0.12); border: none; color: #fff;
+      padding: 6px 14px; border-radius: 6px; cursor: pointer;
+      font-family: inherit; font-size: 0.85rem; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ── Sidebar ──────────────────────────────────── */
+    .wiki-sidebar {
+      position: fixed; top: var(--header-h); left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--card-border);
+      overflow-y: auto; padding: 20px 0;
+      z-index: 50;
+      transition: transform 0.3s ease;
+    }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 2px; color: var(--text-muted);
+      padding: 16px 20px 6px; margin: 0;
+    }
+    .wiki-sidebar a {
+      display: block; padding: 7px 20px 7px 28px;
+      color: var(--text-secondary); text-decoration: none;
+      font-size: 0.88rem; font-weight: 400;
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active {
+      color: var(--accent); font-weight: 600;
+      border-left-color: var(--accent); background: var(--bg-tertiary);
+    }
+
+    /* ── Main Content ─────────────────────────────── */
+    .wiki-main {
+      margin-left: var(--sidebar-w);
+      margin-top: var(--header-h);
+      padding: 40px 48px 80px;
+      max-width: 960px;
+      transition: margin-left 0.3s ease;
+    }
+    .wiki-main.expanded { margin-left: 0; }
+
+    /* ── Typography ───────────────────────────────── */
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 {
+      font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px;
+      padding-bottom: 8px; border-bottom: 2px solid var(--accent);
+      display: flex; align-items: center; gap: 10px;
+    }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+
+    /* ── Tables ────────────────────────────────────── */
+    table {
+      width: 100%; border-collapse: collapse; margin: 16px 0 24px;
+      font-size: 0.9rem;
+    }
+    thead th {
+      background: var(--sas-blue); color: #fff;
+      text-align: left; padding: 10px 14px; font-weight: 600;
+      font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    tbody td {
+      padding: 9px 14px; border-bottom: 1px solid var(--card-border);
+      vertical-align: top;
+    }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code {
+      background: var(--code-bg); color: var(--code-text);
+      padding: 2px 6px; border-radius: 4px;
+      font-family: 'Source Code Pro', monospace; font-size: 0.82rem;
+    }
+
+    /* ── Code Blocks ──────────────────────────────── */
+    pre {
+      background: var(--code-bg); color: var(--code-text);
+      border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px;
+      overflow-x: auto; font-family: 'Source Code Pro', monospace;
+      font-size: 0.85rem; line-height: 1.5;
+      border: 1px solid var(--card-border);
+    }
+    code {
+      font-family: 'Source Code Pro', monospace; font-size: 0.88em;
+    }
+    :not(pre) > code {
+      background: var(--code-bg); color: var(--code-text);
+      padding: 2px 6px; border-radius: 4px;
+    }
+
+    /* ── Cards ─────────────────────────────────────── */
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 10px; padding: 20px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+
+    /* ── Badges ────────────────────────────────────── */
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; vertical-align: middle;
+    }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    .badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    :root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+    /* ── Callouts ──────────────────────────────────── */
+    .callout {
+      border-left: 4px solid var(--accent); background: var(--bg-secondary);
+      padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px;
+    }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+
+    /* ── Checklists ────────────────────────────────── */
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li {
+      padding: 5px 0 5px 28px; position: relative;
+      font-size: 0.9rem; color: var(--text-secondary);
+    }
+    .checklist li::before {
+      content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400;
+      position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem;
+    }
+
+    /* ── Decision Tree / Flow ──────────────────────── */
+    .decision-row {
+      display: flex; align-items: stretch; gap: 0; margin: 6px 0;
+      font-size: 0.88rem;
+    }
+    .decision-if {
+      flex: 0 0 45%; padding: 8px 14px;
+      background: var(--bg-tertiary); border-radius: 8px 0 0 8px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .decision-then {
+      flex: 1; padding: 8px 14px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-left: none; border-radius: 0 8px 8px 0;
+      display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    }
+    .decision-if i { color: var(--accent); min-width: 16px; text-align: center; }
+
+    /* ── Colour Swatches ───────────────────────────── */
+    .swatch-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+    .swatch {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 8px; padding: 8px 14px;
+    }
+    .swatch-dot {
+      width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    .swatch-label { font-size: 0.82rem; }
+    .swatch-label strong { display: block; font-size: 0.78rem; }
+
+    /* ── Scroll-to-top ─────────────────────────────── */
+    .scroll-top {
+      position: fixed; bottom: 24px; right: 24px;
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--accent); color: #fff; border: none;
+      font-size: 1.1rem; cursor: pointer;
+      box-shadow: var(--shadow-md);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 90;
+    }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+
+    /* ── Responsive ────────────────────────────────── */
+    @media (max-width: 900px) {
+      .wiki-sidebar { transform: translateX(-100%); }
+      .wiki-sidebar.open { transform: translateX(0); }
+      .wiki-main { margin-left: 0; padding: 28px 20px 60px; }
+      .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.3rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    @media print {
+      .wiki-header, .wiki-sidebar, .scroll-top { display: none; }
+      .wiki-main { margin-left: 0; max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Header ═══ -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-arrows-rotate"></i>
+      <span>SASAM Update Skill <span style="opacity:0.5; font-weight:300;">Wiki</span></span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../wiki.html" style="color:#fff;text-decoration:none;font-size:0.85rem;font-weight:600;opacity:0.8;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"><i class="fas fa-arrow-left" style="margin-right:6px;"></i>All Skills</a>
+      <button onclick="document.querySelector('.wiki-sidebar').classList.toggle('open')" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+      <button id="themeToggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ Sidebar ═══ -->
+  <nav class="wiki-sidebar" aria-label="Wiki navigation">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#commands">Commands</a>
+
+    <h3>Update Workflow</h3>
+    <a href="#check-updates">Check for Updates</a>
+    <a href="#changelog">View Changelog</a>
+    <a href="#apply-updates">Apply Updates</a>
+
+    <h3>Technical</h3>
+    <a href="#manifest">Manifest Verification</a>
+    <a href="#auto-registration">Auto-Registration</a>
+    <a href="#errors">Error Handling</a>
+
+    <h3>Reference</h3>
+    <a href="#github-urls">GitHub URLs</a>
+    <a href="#version-display">Version Display</a>
+  </nav>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="wiki-main">
+
+    <!-- ── Overview ──────────────────────────────── -->
+    <h1 id="overview">SASAM Update Skill <span class="version">v1.0.0</span></h1>
+    <p class="lead">A Claude Code skill for managing updates to the SASAMClaudeCodeSkills marketplace. Check for new versions, view changelogs, back up local modifications, and apply updates &mdash; all from within a Claude Code conversation.</p>
+
+    <div class="card-grid card-grid-4">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-magnifying-glass"></i></div>
+        <h4>Check Updates</h4>
+        <p>Compare your local VERSION file against the remote GitHub repository to detect available updates.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-scroll"></i></div>
+        <h4>View Changelog</h4>
+        <p>Fetch and display the remote CHANGELOG to review what changed before applying an update.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-download"></i></div>
+        <h4>Apply Updates</h4>
+        <p>Back up local modifications, pull latest changes from GitHub, and re-register all skills automatically.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-info-circle"></i></div>
+        <h4>Version Info</h4>
+        <p>Display the current installed version alongside a list of all registered skills and their versions.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Safe by default</strong> &mdash; the update skill always backs up locally modified files before pulling changes. If a conflict occurs, you will be notified and no data is lost.</p>
+    </div>
+
+    <!-- ── How It Works ──────────────────────────── -->
+    <h2 id="how-it-works"><i class="fas fa-circle-play"></i> How It Works</h2>
+    <p>When you invoke the SASAM Update skill, it follows a structured workflow to ensure safe, reliable updates:</p>
+    <ol style="margin:10px 0 20px 20px; line-height:2;">
+      <li><strong>Read local VERSION file</strong> &mdash; determine the currently installed version from <code>VERSION</code> at the repository root</li>
+      <li><strong>Fetch remote VERSION from GitHub</strong> &mdash; retrieve the latest published version from the raw GitHub URL</li>
+      <li><strong>Compare versions</strong> &mdash; determine whether an update is available, and whether it is a major, minor, or patch release</li>
+      <li><strong>Display changelog</strong> &mdash; fetch and present the remote <code>CHANGELOG.md</code> so you can review changes before proceeding</li>
+      <li><strong>Backup local modifications</strong> &mdash; identify and archive any locally modified files to prevent data loss</li>
+      <li><strong>Pull updates and re-register</strong> &mdash; execute <code>git pull</code>, run <code>register-commands.sh</code>, and regenerate the marketplace manifest</li>
+    </ol>
+
+    <!-- ── Commands ──────────────────────────────── -->
+    <h2 id="commands"><i class="fas fa-terminal"></i> Commands</h2>
+    <p>The SASAM Update skill responds to the following commands:</p>
+
+    <table>
+      <thead>
+        <tr><th>Command</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>check</code></td><td>Compare local and remote versions; report whether an update is available</td></tr>
+        <tr><td><code>changelog</code></td><td>Fetch and display the remote CHANGELOG.md</td></tr>
+        <tr><td><code>apply</code></td><td>Back up modifications, pull updates, re-register skills, regenerate manifest</td></tr>
+        <tr><td><code>version</code></td><td>Display the current installed version and list all registered skills</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Invocation Examples</h3>
+    <pre># Check if updates are available
+/sasam-update check
+
+# View what changed in the latest release
+/sasam-update changelog
+
+# Apply the latest update
+/sasam-update apply
+
+# Show current version and installed skills
+/sasam-update version</pre>
+
+    <!-- ── Check for Updates ─────────────────────── -->
+    <h2 id="check-updates"><i class="fas fa-magnifying-glass"></i> Check for Updates</h2>
+    <p>The check workflow compares your local installation against the remote repository in three steps:</p>
+
+    <h3>Step 1: Read Local Version</h3>
+    <p>The skill reads the <code>VERSION</code> file at the root of your SASAMClaudeCodeSkills clone:</p>
+    <pre># Read the local version
+LOCAL_VERSION=$(cat "$SASAM_ROOT/VERSION")
+echo "Local version: $LOCAL_VERSION"</pre>
+
+    <h3>Step 2: Fetch Remote Version</h3>
+    <p>The latest published version is fetched from GitHub using the raw content URL:</p>
+    <pre># Fetch remote version from GitHub
+REMOTE_VERSION=$(curl -s \
+  "https://raw.githubusercontent.com/marcov-workshop/SASAMClaudeCodeSkills/main/VERSION")
+echo "Remote version: $REMOTE_VERSION"</pre>
+
+    <h3>Step 3: Compare Versions</h3>
+    <p>A semantic version comparison determines whether an update is available and its severity:</p>
+    <pre># Compare local vs remote
+if [ "$LOCAL_VERSION" = "$REMOTE_VERSION" ]; then
+  echo "You are up to date (v$LOCAL_VERSION)"
+elif [ "$(printf '%s\n' "$LOCAL_VERSION" "$REMOTE_VERSION" | sort -V | head -1)" = "$LOCAL_VERSION" ]; then
+  echo "Update available: v$LOCAL_VERSION -> v$REMOTE_VERSION"
+else
+  echo "Local version is ahead of remote"
+fi</pre>
+
+    <div class="callout">
+      <p><strong>Tip:</strong> Run <code>/sasam-update check</code> periodically to stay informed about new features, bug fixes, and skill additions.</p>
+    </div>
+
+    <!-- ── View Changelog ────────────────────────── -->
+    <h2 id="changelog"><i class="fas fa-scroll"></i> View Changelog</h2>
+    <p>Before applying an update, you can review the changelog to understand what has changed:</p>
+
+    <pre># Fetch the remote changelog
+CHANGELOG=$(curl -s \
+  "https://raw.githubusercontent.com/marcov-workshop/SASAMClaudeCodeSkills/main/CHANGELOG.md")
+
+# Display the changelog
+echo "$CHANGELOG"</pre>
+
+    <p>The changelog follows <a href="https://keepachangelog.com/" style="color:var(--accent);">Keep a Changelog</a> format and is organised by version, with entries grouped under <strong>Added</strong>, <strong>Changed</strong>, <strong>Fixed</strong>, and <strong>Removed</strong> headings.</p>
+
+    <!-- ── Apply Updates ─────────────────────────── -->
+    <h2 id="apply-updates"><i class="fas fa-download"></i> Apply Updates</h2>
+    <p>The apply workflow is the most comprehensive operation. It performs seven steps to safely update your installation:</p>
+
+    <h3>Step 1: Check for Local Modifications</h3>
+    <p>Scan the working tree for any locally modified files that might conflict with the update:</p>
+    <pre># Detect locally modified files
+MODIFIED=$(git -C "$SASAM_ROOT" diff --name-only)
+if [ -n "$MODIFIED" ]; then
+  echo "Local modifications detected:"
+  echo "$MODIFIED"
+fi</pre>
+
+    <h3>Step 2: Backup Modified Files</h3>
+    <p>Create a timestamped backup of any locally modified files before pulling:</p>
+    <pre># Create backup directory
+BACKUP_DIR="$SASAM_ROOT/.sasam-backups/$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$BACKUP_DIR"
+
+# Copy modified files to backup
+echo "$MODIFIED" | while read -r file; do
+  mkdir -p "$BACKUP_DIR/$(dirname "$file")"
+  cp "$SASAM_ROOT/$file" "$BACKUP_DIR/$file"
+done
+echo "Backup saved to: $BACKUP_DIR"</pre>
+
+    <h3>Step 3: Pull Latest Changes</h3>
+    <p>Fetch and merge the latest changes from the remote repository:</p>
+    <pre># Pull latest from origin/main
+git -C "$SASAM_ROOT" pull origin main</pre>
+
+    <h3>Step 4: Re-register Skills</h3>
+    <p>Run the registration script to update all skill symlinks and Claude Code configuration:</p>
+    <pre># Re-register all skills
+bash "$SASAM_ROOT/register-commands.sh"</pre>
+
+    <h3>Step 5: Update Marketplace Clone</h3>
+    <p>Ensure the local marketplace directory reflects the latest skill catalogue:</p>
+    <pre># Sync marketplace metadata
+rsync -a --delete "$SASAM_ROOT/" "$MARKETPLACE_DIR/" \
+  --exclude='.git' --exclude='.sasam-backups'</pre>
+
+    <h3>Step 6: Regenerate Manifest</h3>
+    <p>Rebuild the <code>sasam-file-manifest.json</code> with updated SHA-256 hashes for all tracked files:</p>
+    <pre># Regenerate file manifest with SHA-256 hashes
+find "$SASAM_ROOT" -type f \
+  -not -path '*/.git/*' \
+  -not -path '*/.sasam-backups/*' \
+  -exec sha256sum {} \; | sort > "$SASAM_ROOT/sasam-file-manifest.json"</pre>
+
+    <h3>Step 7: Display Success</h3>
+    <pre># Confirm update
+NEW_VERSION=$(cat "$SASAM_ROOT/VERSION")
+echo "Successfully updated to v$NEW_VERSION"
+echo "All skills re-registered and manifest regenerated."</pre>
+
+    <div class="callout callout-warn">
+      <p><strong>Warning:</strong> If a git merge conflict occurs during Step 3, the update will pause and display the conflicting files. Resolve conflicts manually, then run <code>/sasam-update apply</code> again.</p>
+    </div>
+
+    <!-- ── Manifest Verification ─────────────────── -->
+    <h2 id="manifest"><i class="fas fa-shield-halved"></i> Manifest Verification</h2>
+    <p>The skill uses <code>sasam-file-manifest.json</code> to verify file integrity after updates. Each entry contains a file path and its expected SHA-256 hash.</p>
+
+    <h3>How Verification Works</h3>
+    <p>After pulling updates, the skill iterates over every entry in the manifest and compares the computed hash against the expected value:</p>
+
+    <pre># Verify file integrity against manifest
+MANIFEST="$SASAM_ROOT/sasam-file-manifest.json"
+ERRORS=0
+
+while IFS= read -r entry; do
+  FILE_PATH=$(echo "$entry" | jq -r '.path')
+  EXPECTED_HASH=$(echo "$entry" | jq -r '.sha256')
+
+  if [ -f "$SASAM_ROOT/$FILE_PATH" ]; then
+    ACTUAL_HASH=$(sha256sum "$SASAM_ROOT/$FILE_PATH" | awk '{print $1}')
+    if [ "$ACTUAL_HASH" != "$EXPECTED_HASH" ]; then
+      echo "MISMATCH: $FILE_PATH"
+      echo "  Expected: $EXPECTED_HASH"
+      echo "  Actual:   $ACTUAL_HASH"
+      ERRORS=$((ERRORS + 1))
+    fi
+  else
+    echo "MISSING: $FILE_PATH"
+    ERRORS=$((ERRORS + 1))
+  fi
+done < <(jq -c '.files[]' "$MANIFEST")
+
+if [ "$ERRORS" -eq 0 ]; then
+  echo "All files verified successfully."
+else
+  echo "$ERRORS file(s) failed verification."
+fi</pre>
+
+    <div class="callout">
+      <p><strong>Integrity guarantee:</strong> If any file fails hash verification, the skill reports the mismatch immediately. This catches corrupted downloads, incomplete transfers, and unexpected local changes.</p>
+    </div>
+
+    <!-- ── Auto-Registration ─────────────────────── -->
+    <h2 id="auto-registration"><i class="fas fa-gear"></i> Auto-Registration</h2>
+    <p>Skills are automatically registered via <code>register-commands.sh</code>, which is triggered both manually and by git hooks.</p>
+
+    <h3>register-commands.sh</h3>
+    <p>This script scans the repository for skill directories, creates the necessary symlinks, and updates Claude Code's configuration to recognise each skill:</p>
+    <pre># register-commands.sh scans for SKILL.md files
+# and registers each skill with Claude Code
+find "$SASAM_ROOT" -name "SKILL.md" -type f | while read -r skill_file; do
+  SKILL_DIR=$(dirname "$skill_file")
+  SKILL_NAME=$(basename "$SKILL_DIR")
+  echo "Registering: $SKILL_NAME"
+  # Create symlink and update config...
+done</pre>
+
+    <h3>Git Hooks</h3>
+    <p>Two git hooks ensure skills are re-registered automatically whenever the repository changes:</p>
+
+    <table>
+      <thead>
+        <tr><th>Hook</th><th>Trigger</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>post-checkout</code></td><td>After <code>git checkout</code> or <code>git switch</code></td><td>Runs <code>register-commands.sh</code> to sync skills with the checked-out branch</td></tr>
+        <tr><td><code>post-merge</code></td><td>After <code>git pull</code> or <code>git merge</code></td><td>Runs <code>register-commands.sh</code> to register any new or updated skills</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p><strong>No manual steps required:</strong> After <code>git pull</code>, the post-merge hook automatically re-registers all skills. The <code>/sasam-update apply</code> command also calls <code>register-commands.sh</code> explicitly as a safety net.</p>
+    </div>
+
+    <!-- ── Error Handling ────────────────────────── -->
+    <h2 id="errors"><i class="fas fa-triangle-exclamation"></i> Error Handling</h2>
+    <p>The update skill handles common failure scenarios gracefully and provides clear error messages:</p>
+
+    <div class="callout callout-critical">
+      <p><strong>Network Error</strong></p>
+      <p>If the remote GitHub URL is unreachable (no internet, DNS failure, or repository moved):</p>
+      <pre style="margin-top:10px; margin-bottom:0;">ERROR: Unable to fetch remote VERSION from GitHub.
+  URL: https://raw.githubusercontent.com/marcov-workshop/SASAMClaudeCodeSkills/main/VERSION
+  Check your network connection and try again.
+  If the problem persists, verify the repository URL has not changed.</pre>
+    </div>
+
+    <div class="callout callout-warn">
+      <p><strong>Git Conflict</strong></p>
+      <p>If <code>git pull</code> encounters merge conflicts during the apply workflow:</p>
+      <pre style="margin-top:10px; margin-bottom:0;">WARNING: Merge conflict detected in the following files:
+  - sasam-core/1.0.0/skills/sasam-update/SKILL.md
+  - register-commands.sh
+
+Your local modifications have been backed up to:
+  .sasam-backups/20260309-143022/
+
+Resolve the conflicts manually, then run:
+  /sasam-update apply</pre>
+    </div>
+
+    <!-- ── GitHub URLs ───────────────────────────── -->
+    <h2 id="github-urls"><i class="fas fa-link"></i> GitHub URLs</h2>
+    <p>The update skill uses the following GitHub URLs to fetch remote data:</p>
+
+    <table>
+      <thead>
+        <tr><th>Resource</th><th>URL</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>VERSION</td><td><code>https://raw.githubusercontent.com/marcov-workshop/SASAMClaudeCodeSkills/main/VERSION</code></td></tr>
+        <tr><td>CHANGELOG</td><td><code>https://raw.githubusercontent.com/marcov-workshop/SASAMClaudeCodeSkills/main/CHANGELOG.md</code></td></tr>
+        <tr><td>Repository</td><td><code>https://github.com/marcov-workshop/SASAMClaudeCodeSkills</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p><strong>Note:</strong> All URLs point to the <code>main</code> branch. If you are working from a fork or a different branch, update the URLs in your local configuration accordingly.</p>
+    </div>
+
+    <!-- ── Version Display ───────────────────────── -->
+    <h2 id="version-display"><i class="fas fa-info-circle"></i> Version Display</h2>
+    <p>Running <code>/sasam-update version</code> displays the current installation version along with all registered skills and their individual versions:</p>
+
+    <pre>SASAMClaudeCodeSkills Marketplace
+Version: 1.0.0
+
+Installed Skills:
+  sasam-update       v1.0.0  &#x2714; registered
+  sas-presentation   v1.0.0  &#x2714; registered
+  sasam-core         v1.0.0  &#x2714; registered
+
+Manifest Status: verified (42 files, 0 mismatches)
+Last Updated: 2026-03-09 14:30:22 AEST</pre>
+
+    <p>This output confirms that all skills are properly registered and the file manifest has been verified. Any unregistered or missing skills will be flagged with a warning indicator.</p>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      SASAM Update Skill v1.0.0 &mdash; SASAMClaudeCodeSkills marketplace
+    </p>
+
+  </main>
+
+  <!-- ═══ Scroll-to-top ═══ -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    /* ── Theme Toggle ─── */
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    /* ── Active Sidebar Link ─── */
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    /* ── Scroll-to-top ─── */
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

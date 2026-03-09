@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the Data Quality Analysis Skill — a Claude Code skill for analysing data against the ABS Data Quality Framework">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>Data Quality Analysis Skill — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* ── Reset & Base ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --sas-green: #69BE28; --sas-blue: #002244; --bg-primary: #ffffff; --bg-secondary: #f7f7f7; --bg-tertiary: #ededed; --text-primary: #002244; --text-secondary: #334466; --text-muted: #6b7280; --accent: #69BE28; --accent-hover: #5AA822; --card-bg: rgba(255,255,255,0.95); --card-border: rgba(0,34,68,0.12); --shadow-sm: 0 2px 8px rgba(0,34,68,0.06); --shadow-md: 0 4px 16px rgba(0,34,68,0.10); --shadow-lg: 0 8px 24px rgba(0,34,68,0.14); --focus-ring: 0 0 0 3px rgba(105,190,40,0.5); --code-bg: #f0f4f8; --code-text: #1e3a5f; --sidebar-w: 260px; --header-h: 64px; }
+    :root[data-theme="dark"] { --sas-green: #7AD33B; --sas-blue: #1a4d7a; --bg-primary: #0a0f1a; --bg-secondary: #141d2b; --bg-tertiary: #1e2a3d; --text-primary: #f4fbff; --text-secondary: #d1e3ed; --text-muted: #8ba3b5; --accent: #69BE28; --accent-hover: #7AD33B; --card-bg: rgba(20,29,43,0.9); --card-border: rgba(255,255,255,0.08); --shadow-sm: 0 2px 8px rgba(0,10,28,0.3); --shadow-md: 0 4px 16px rgba(0,10,28,0.4); --shadow-lg: 0 8px 24px rgba(0,10,28,0.5); --focus-ring: 0 0 0 3px rgba(105,190,40,0.4); --code-bg: #1a2332; --code-text: #d1e3ed; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+
+    /* ── Header ───────────────────────────────────── */
+    .wiki-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-h); background: var(--sas-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .wiki-header .logo-area { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px; }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button { background: rgba(255,255,255,0.12); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+    /* ── Sidebar ──────────────────────────────────── */
+    .wiki-sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: var(--bg-secondary); border-right: 1px solid var(--card-border); overflow-y: auto; padding: 20px 0; z-index: 50; transition: transform 0.3s ease; }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding: 16px 20px 6px; margin: 0; }
+    .wiki-sidebar a { display: block; padding: 7px 20px 7px 28px; color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; font-weight: 400; border-left: 3px solid transparent; transition: all 0.15s; }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active { color: var(--accent); font-weight: 600; border-left-color: var(--accent); background: var(--bg-tertiary); }
+
+    /* ── Main Content ─────────────────────────────── */
+    .wiki-main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 48px 80px; max-width: 960px; transition: margin-left 0.3s ease; }
+    .wiki-main.expanded { margin-left: 0; }
+
+    /* ── Typography ───────────────────────────────── */
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 { font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 10px; }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+
+    /* ── Tables ───────────────────────────────────── */
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+    thead th { background: var(--sas-blue); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    tbody td { padding: 9px 14px; border-bottom: 1px solid var(--card-border); vertical-align: top; }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; font-family: 'Source Code Pro', monospace; font-size: 0.82rem; }
+
+    /* ── Code ─────────────────────────────────────── */
+    pre { background: var(--code-bg); color: var(--code-text); border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px; overflow-x: auto; font-family: 'Source Code Pro', monospace; font-size: 0.85rem; line-height: 1.5; border: 1px solid var(--card-border); }
+    code { font-family: 'Source Code Pro', monospace; font-size: 0.88em; }
+    :not(pre) > code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; }
+
+    /* ── Cards ────────────────────────────────────── */
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s; }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+
+    /* ── Badges ───────────────────────────────────── */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    .badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    :root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+
+    /* ── Callouts ─────────────────────────────────── */
+    .callout { border-left: 4px solid var(--accent); background: var(--bg-secondary); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px; }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+
+    /* ── Checklist ────────────────────────────────── */
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li { padding: 5px 0 5px 28px; position: relative; font-size: 0.9rem; color: var(--text-secondary); }
+    .checklist li::before { content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400; position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem; }
+
+    /* ── Decision Rows ────────────────────────────── */
+    .decision-row { display: flex; align-items: stretch; gap: 0; margin: 6px 0; font-size: 0.88rem; }
+    .decision-if { flex: 0 0 45%; padding: 8px 14px; background: var(--bg-tertiary); border-radius: 8px 0 0 8px; display: flex; align-items: center; gap: 8px; }
+    .decision-then { flex: 1; padding: 8px 14px; background: var(--card-bg); border: 1px solid var(--card-border); border-left: none; border-radius: 0 8px 8px 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .decision-if i { color: var(--accent); min-width: 16px; text-align: center; }
+
+    /* ── Swatches ─────────────────────────────────── */
+    .swatch-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+    .swatch { display: flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 14px; }
+    .swatch-dot { width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1); }
+    .swatch-label { font-size: 0.82rem; }
+    .swatch-label strong { display: block; font-size: 0.78rem; }
+
+    /* ── Scroll-to-top ────────────────────────────── */
+    .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 42px; height: 42px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; z-index: 90; }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+
+    /* ── Responsive ───────────────────────────────── */
+    @media (max-width: 900px) { .wiki-sidebar { transform: translateX(-100%); } .wiki-sidebar.open { transform: translateX(0); } .wiki-main { margin-left: 0; padding: 28px 20px 60px; } .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } h2 { font-size: 1.3rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+    @media print { .wiki-header, .wiki-sidebar, .scroll-top { display: none; } .wiki-main { margin-left: 0; max-width: 100%; } }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Header ═══ -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-microscope"></i>
+      <span>Data Quality Analysis Skill Wiki</span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../wiki.html" style="color:#fff;text-decoration:none;font-size:0.85rem;font-weight:600;opacity:0.85;"><i class="fas fa-arrow-left"></i>&nbsp; All Skills</a>
+      <button id="themeToggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+      <button onclick="document.querySelector('.wiki-sidebar').classList.toggle('open')" aria-label="Toggle sidebar"><i class="fas fa-bars"></i></button>
+    </div>
+  </header>
+
+  <!-- ═══ Sidebar ═══ -->
+  <nav class="wiki-sidebar" aria-label="Wiki navigation">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#how-it-works">How It Works</a>
+
+    <h3>Discovery</h3>
+    <a href="#discovery">Discovery Process</a>
+
+    <h3>Analysis</h3>
+    <a href="#profiling">Data Profiling</a>
+    <a href="#scorecard">Column Scorecard</a>
+
+    <h3>Framework</h3>
+    <a href="#dimensions">The 7 Dimensions</a>
+    <a href="#ratings">Rating System</a>
+
+    <h3>Metrics</h3>
+    <a href="#scorecard">Six Column Metrics</a>
+    <a href="#thresholds">Quality Thresholds</a>
+
+    <h3>Output</h3>
+    <a href="#report">Report Format</a>
+    <a href="#references">Reference Files</a>
+
+    <h3>Quality</h3>
+    <a href="#checklist">Pre-Delivery Checklist</a>
+  </nav>
+
+  <!-- ═══ Main Content ═══ -->
+  <main class="wiki-main">
+
+    <!-- ── Overview ── -->
+    <h1 id="overview">Data Quality Analysis Skill <span class="version">v1.0.0</span></h1>
+    <p class="lead">Analyse raw data against the ABS Data Quality Framework (Catalogue No.&nbsp;1520.0) and produce structured quality reports with column-level scorecards, seven-dimension assessments, and colour-coded ratings.</p>
+
+    <div class="card-grid card-grid-4">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-layer-group"></i></div>
+        <h4>7 Dimensions</h4>
+        <p>Full assessment against the ABS Data Quality Framework&rsquo;s seven quality dimensions.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-table-columns"></i></div>
+        <h4>Column Scorecard</h4>
+        <p>Per-column metrics covering completeness, validity, consistency, uniqueness, timeliness, and accuracy.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-traffic-light"></i></div>
+        <h4>Colour-Coded Ratings</h4>
+        <p>HIGH, ADEQUATE, and LOW ratings with green, amber, and red visual indicators.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-code"></i></div>
+        <h4>HTML Reports</h4>
+        <p>Branded, self-contained HTML reports alongside Markdown for maximum portability.</p>
+      </div>
+    </div>
+
+    <!-- ── How It Works ── -->
+    <h2 id="how-it-works"><i class="fas fa-gears"></i> How It Works</h2>
+    <p>The skill follows a five-step pipeline from initial engagement to final deliverable:</p>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Step</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Discovery Interview</strong></td><td>Gather context about the data source, intended use, ownership, known issues, and quality expectations through guided questions.</td></tr>
+        <tr><td>2</td><td><strong>Data Ingestion &amp; Profiling</strong></td><td>Read the dataset, inspect schema, compute row/column counts, descriptive statistics, value distributions, missing-data patterns, and sample records.</td></tr>
+        <tr><td>3</td><td><strong>Column-Level Quality Scorecard</strong></td><td>Evaluate each column across six quality metrics (completeness, validity, consistency, uniqueness, timeliness, accuracy) and assign per-column ratings.</td></tr>
+        <tr><td>4</td><td><strong>Seven-Dimension Assessment</strong></td><td>Assess the full dataset against all seven ABS Data Quality Framework dimensions, producing narrative findings and ratings for each.</td></tr>
+        <tr><td>5</td><td><strong>Generate Report</strong></td><td>Produce a structured quality report in both Markdown and HTML formats, including executive summary, detailed findings, and recommendations.</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ── Discovery Process ── -->
+    <h2 id="discovery"><i class="fas fa-comments"></i> Discovery Process</h2>
+    <p>Before profiling begins, the skill conducts a discovery interview to gather essential context. Questions are organised into five categories:</p>
+
+    <h3>Data Source &amp; Ownership</h3>
+    <ul class="checklist">
+      <li>What system or process generated this data?</li>
+      <li>Who is the data owner or custodian?</li>
+      <li>Under what authority was it collected?</li>
+      <li>What is the data classification (public, internal, confidential)?</li>
+      <li>How was the data extracted or exported?</li>
+    </ul>
+
+    <h3>Purpose &amp; Intended Use</h3>
+    <ul class="checklist">
+      <li>What decisions will this data inform?</li>
+      <li>Who are the primary consumers of this data?</li>
+      <li>Will the data feed into downstream systems or reports?</li>
+      <li>Are there regulatory or compliance requirements?</li>
+    </ul>
+
+    <h3>Data Context</h3>
+    <ul class="checklist">
+      <li>What time period does this data cover?</li>
+      <li>What is the expected row count or record volume?</li>
+      <li>Is there a data dictionary or schema documentation?</li>
+      <li>What are the key/identifier columns?</li>
+    </ul>
+
+    <h3>Known Issues</h3>
+    <ul class="checklist">
+      <li>Are there known data quality problems?</li>
+      <li>Have there been recent system changes or migrations?</li>
+      <li>Are there known gaps or missing periods?</li>
+      <li>Have previous quality assessments been performed?</li>
+    </ul>
+
+    <h3>Quality Expectations</h3>
+    <ul class="checklist">
+      <li>What level of quality is acceptable for the intended use?</li>
+      <li>Are there specific columns or fields of concern?</li>
+      <li>What are the critical data elements?</li>
+      <li>Are there reference datasets to validate against?</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <p><strong><i class="fas fa-triangle-exclamation"></i> Note:</strong> If the user provides a file without context, proceed with what can be determined from the data itself and mark unknowns as &ldquo;Unable to Assess&rdquo; in the final report. Document all assumptions made.</p>
+    </div>
+
+    <!-- ── Data Profiling ── -->
+    <h2 id="profiling"><i class="fas fa-chart-bar"></i> Data Profiling</h2>
+    <p>Phase 1 of the analysis pipeline focuses on understanding the raw structure and statistical properties of the dataset. The following steps are performed in order:</p>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>Step</th><th>Detail</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Read Data</strong></td><td>Load the dataset from CSV, Excel, Parquet, or other supported format. Detect encoding and delimiters automatically.</td></tr>
+        <tr><td>2</td><td><strong>Schema Inspection</strong></td><td>Identify column names, data types (numeric, categorical, datetime, boolean), and inferred semantic types.</td></tr>
+        <tr><td>3</td><td><strong>Row Counts</strong></td><td>Total rows, duplicate rows, completely empty rows, and effective (non-empty) row count.</td></tr>
+        <tr><td>4</td><td><strong>Descriptive Statistics</strong></td><td>For numeric columns: mean, median, std dev, min, max, quartiles. For categorical columns: unique count, top values, frequency distribution.</td></tr>
+        <tr><td>5</td><td><strong>Value Distributions</strong></td><td>Histogram-style frequency analysis per column. Identify outliers, skewness, and unusual concentrations.</td></tr>
+        <tr><td>6</td><td><strong>Missing Data Analysis</strong></td><td>Count and percentage of nulls, blanks, and placeholder values (e.g., &ldquo;N/A&rdquo;, &ldquo;TBD&rdquo;, &ldquo;-&rdquo;) per column. Identify patterns of missingness (random vs. systematic).</td></tr>
+        <tr><td>7</td><td><strong>Sample Records</strong></td><td>Display first 5, last 5, and 5 random rows for visual inspection and sanity checking.</td></tr>
+      </tbody>
+    </table>
+
+    <pre><code># Example: Basic profiling with pandas
+import pandas as pd
+
+df = pd.read_csv("data.csv")
+print(f"Shape: {df.shape}")
+print(f"Duplicates: {df.duplicated().sum()}")
+print(df.dtypes)
+print(df.describe(include='all'))
+print(df.isnull().sum() / len(df) * 100)</code></pre>
+
+    <!-- ── Column Scorecard ── -->
+    <h2 id="scorecard"><i class="fas fa-table-columns"></i> Column Scorecard</h2>
+    <p>Each column is evaluated against six quality metrics. Together these form the <strong>Column Quality Scorecard</strong>, which provides a granular view of data quality at the field level.</p>
+
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Definition</th><th>Scale</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Completeness</strong></td>
+          <td>Percentage of non-null, non-blank values in the column. Measures whether data is present where expected.</td>
+          <td>0 &ndash; 100%</td>
+        </tr>
+        <tr>
+          <td><strong>Validity</strong></td>
+          <td>Percentage of values that conform to expected format, type, range, or domain rules (e.g., valid email format, date in range).</td>
+          <td>0 &ndash; 100%</td>
+        </tr>
+        <tr>
+          <td><strong>Consistency</strong></td>
+          <td>Degree to which values are uniform and free of contradictions across the dataset (e.g., consistent casing, consistent units).</td>
+          <td>0 &ndash; 100%</td>
+        </tr>
+        <tr>
+          <td><strong>Uniqueness</strong></td>
+          <td>Proportion of distinct values relative to total, or absence of unintended duplicates in identifier columns.</td>
+          <td>0 &ndash; 100%</td>
+        </tr>
+        <tr>
+          <td><strong>Timeliness</strong></td>
+          <td>How current the data values are relative to the expected recency. Measures staleness of temporal fields.</td>
+          <td>0 &ndash; 100%</td>
+        </tr>
+        <tr>
+          <td><strong>Accuracy</strong></td>
+          <td>How closely values represent the real-world entities they describe. Assessed via cross-referencing, domain rules, or statistical plausibility.</td>
+          <td>0 &ndash; 100%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Completeness</h3>
+    <pre><code># Completeness: percentage of non-null values
+completeness = (df[col].notna().sum() / len(df)) * 100</code></pre>
+
+    <h3>Validity</h3>
+    <pre><code># Validity: percentage matching expected pattern
+import re
+pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+validity = (df[col].astype(str).str.match(pattern).sum() / len(df)) * 100</code></pre>
+
+    <h3>Consistency</h3>
+    <pre><code># Consistency: detect mixed casing or format variations
+unique_formats = df[col].astype(str).str.strip().str.lower().nunique()
+raw_unique = df[col].nunique()
+consistency = (unique_formats / raw_unique) * 100 if raw_unique > 0 else 100</code></pre>
+
+    <h3>Uniqueness</h3>
+    <pre><code># Uniqueness: ratio of distinct values to total
+uniqueness = (df[col].nunique() / len(df)) * 100</code></pre>
+
+    <h3>Timeliness</h3>
+    <pre><code># Timeliness: percentage of dates within acceptable recency window
+from datetime import datetime, timedelta
+cutoff = datetime.now() - timedelta(days=90)
+timeliness = (pd.to_datetime(df[col], errors='coerce') >= cutoff).sum() / len(df) * 100</code></pre>
+
+    <h3>Accuracy</h3>
+    <pre><code># Accuracy: cross-reference against known valid values
+valid_set = set(reference_df['valid_values'])
+accuracy = (df[col].isin(valid_set).sum() / len(df)) * 100</code></pre>
+
+    <!-- ── The 7 Dimensions ── -->
+    <h2 id="dimensions"><i class="fas fa-layer-group"></i> The 7 Dimensions</h2>
+    <p>The ABS Data Quality Framework (Catalogue No.&nbsp;1520.0) defines seven dimensions for assessing the quality of statistical information. Each dimension is evaluated with a narrative finding and an overall rating.</p>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>Dimension</th><th>Key Question</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Institutional Environment</strong></td><td>Who collected the data and under what authority? Are there governance frameworks, legislation, or standards that apply?</td></tr>
+        <tr><td>2</td><td><strong>Relevance</strong></td><td>Does the data measure what we need? How well do the concepts, scope, and classifications align with user requirements?</td></tr>
+        <tr><td>3</td><td><strong>Timeliness</strong></td><td>How current is the data? What is the lag between the reference period and availability? Is the release schedule adequate?</td></tr>
+        <tr><td>4</td><td><strong>Accuracy</strong></td><td>How well does the data describe reality? What are the sources of error (sampling, non-sampling, coverage, measurement)?</td></tr>
+        <tr><td>5</td><td><strong>Coherence</strong></td><td>Is the data internally consistent? Can it be reliably combined with other datasets? Are there breaks in time series?</td></tr>
+        <tr><td>6</td><td><strong>Interpretability</strong></td><td>Can users understand and correctly use the data? Is there adequate metadata, documentation, and definitional clarity?</td></tr>
+        <tr><td>7</td><td><strong>Accessibility</strong></td><td>Can authorised users find and access the data? Is it available in appropriate formats with adequate dissemination channels?</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p><strong><i class="fas fa-circle-info"></i> Framework Source:</strong> Australian Bureau of Statistics, <em>ABS Data Quality Framework</em>, Catalogue No.&nbsp;1520.0. Each dimension is assessed independently, and the overall quality profile is presented as a set of seven individual ratings rather than a single composite score.</p>
+    </div>
+
+    <!-- ── Quality Thresholds ── -->
+    <h2 id="thresholds"><i class="fas fa-sliders"></i> Quality Thresholds</h2>
+    <p>Each column metric is classified against the following threshold bands. These thresholds determine the colour-coded rating assigned in the scorecard.</p>
+
+    <table>
+      <thead>
+        <tr><th>Metric</th><th><span class="badge badge-green">HIGH</span></th><th><span class="badge badge-amber">ADEQUATE</span></th><th><span class="badge badge-red">LOW</span></th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Completeness</strong></td>
+          <td>&ge; 95%</td>
+          <td>80 &ndash; 94%</td>
+          <td>&lt; 80%</td>
+        </tr>
+        <tr>
+          <td><strong>Validity</strong></td>
+          <td>&ge; 98%</td>
+          <td>90 &ndash; 97%</td>
+          <td>&lt; 90%</td>
+        </tr>
+        <tr>
+          <td><strong>Consistency</strong></td>
+          <td>&ge; 95%</td>
+          <td>80 &ndash; 94%</td>
+          <td>&lt; 80%</td>
+        </tr>
+        <tr>
+          <td><strong>Timeliness</strong></td>
+          <td>&ge; 80%</td>
+          <td>50 &ndash; 79%</td>
+          <td>&lt; 50%</td>
+        </tr>
+        <tr>
+          <td><strong>Accuracy</strong></td>
+          <td>&ge; 95%</td>
+          <td>85 &ndash; 94%</td>
+          <td>&lt; 85%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn">
+      <p><strong><i class="fas fa-triangle-exclamation"></i> Threshold Adjustment:</strong> These default thresholds may be adjusted based on the specific use case and quality expectations gathered during discovery. Any adjustments should be documented in the report.</p>
+    </div>
+
+    <!-- ── Rating System ── -->
+    <h2 id="ratings"><i class="fas fa-traffic-light"></i> Rating System</h2>
+    <p>Ratings are assigned at both the column level (per metric) and the dimension level (per ABS framework dimension). The four possible ratings are:</p>
+
+    <div class="swatch-row">
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#69BE28;"></div>
+        <div class="swatch-label"><strong>HIGH</strong> Meets or exceeds quality expectations</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#f59e0b;"></div>
+        <div class="swatch-label"><strong>ADEQUATE</strong> Acceptable with noted limitations</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#ef4444;"></div>
+        <div class="swatch-label"><strong>LOW</strong> Significant quality concerns identified</div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-dot" style="background:#9ca3af;"></div>
+        <div class="swatch-label"><strong>UNABLE TO ASSESS</strong> Insufficient information to rate</div>
+      </div>
+    </div>
+
+    <h3>Rating Interpretation</h3>
+    <table>
+      <thead>
+        <tr><th>Rating</th><th>Meaning</th><th>Action Required</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-green">HIGH</span></td>
+          <td>Data quality is strong. The metric or dimension meets established thresholds and supports reliable use.</td>
+          <td>No immediate action. Continue monitoring.</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-amber">ADEQUATE</span></td>
+          <td>Data quality is acceptable but has limitations. Users should be aware of caveats when using this data.</td>
+          <td>Review noted limitations. Consider remediation for critical fields.</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-red">LOW</span></td>
+          <td>Significant quality issues that may impact the reliability of analysis or decisions based on this data.</td>
+          <td>Remediation recommended before use in critical processes.</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">UNABLE TO ASSESS</span></td>
+          <td>Insufficient context, metadata, or reference data to evaluate this metric or dimension.</td>
+          <td>Gather additional information. Re-assess when context is available.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Report Format ── -->
+    <h2 id="report"><i class="fas fa-file-lines"></i> Report Format</h2>
+    <p>The skill produces a structured quality report in both Markdown and HTML formats. The report follows a consistent template structure:</p>
+
+    <pre><code># Data Quality Assessment Report
+
+## Executive Summary
+- Dataset: [name]
+- Records: [count]
+- Columns: [count]
+- Overall Quality: [HIGH / ADEQUATE / LOW]
+- Assessment Date: [date]
+
+## 1. Data Profile
+### 1.1 Schema Overview
+### 1.2 Descriptive Statistics
+### 1.3 Missing Data Analysis
+
+## 2. Column Quality Scorecard
+| Column | Completeness | Validity | Consistency | Uniqueness | Timeliness | Accuracy | Overall |
+|--------|-------------|----------|-------------|------------|------------|----------|---------|
+| col_1  | HIGH        | HIGH     | ADEQUATE    | HIGH       | N/A        | HIGH     | HIGH    |
+
+## 3. ABS Data Quality Framework Assessment
+### 3.1 Institutional Environment
+### 3.2 Relevance
+### 3.3 Timeliness
+### 3.4 Accuracy
+### 3.5 Coherence
+### 3.6 Interpretability
+### 3.7 Accessibility
+
+## 4. Recommendations
+### 4.1 Critical Issues
+### 4.2 Improvement Opportunities
+### 4.3 Monitoring Suggestions
+
+## 5. Appendices
+### 5.1 Methodology Notes
+### 5.2 Threshold Definitions
+### 5.3 Data Dictionary</code></pre>
+
+    <p>The HTML version uses the same SAS branding and includes interactive features such as collapsible sections, colour-coded badges, and sortable tables.</p>
+
+    <!-- ── Reference Files ── -->
+    <h2 id="references"><i class="fas fa-folder-open"></i> Reference Files</h2>
+    <p>The skill ships with the following reference files in the <code>references/</code> directory:</p>
+
+    <table>
+      <thead>
+        <tr><th>File</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>report-template.html</code></td>
+          <td>Self-contained HTML report template with SAS branding, colour-coded ratings, and interactive elements. Used as the base for generated HTML reports.</td>
+        </tr>
+        <tr>
+          <td><code>report-template.md</code></td>
+          <td>Markdown report template following the standard structure. Compatible with GitHub, GitLab, and static site generators.</td>
+        </tr>
+        <tr>
+          <td><code>sample-report.md</code></td>
+          <td>A complete example report demonstrating all sections, scorecard format, dimension assessments, and recommendations. Use as a reference for expected output quality.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ── Pre-Delivery Checklist ── -->
+    <h2 id="checklist"><i class="fas fa-clipboard-check"></i> Pre-Delivery Checklist</h2>
+    <p>Before delivering any data quality report, verify the following items are complete and accurate.</p>
+
+    <h3>Analysis Quality</h3>
+    <ul class="checklist">
+      <li>Discovery interview completed (or unknowns documented)</li>
+      <li>All columns profiled with descriptive statistics</li>
+      <li>Missing data analysis performed (nulls, blanks, placeholders)</li>
+      <li>All six column metrics calculated for each relevant column</li>
+      <li>Column scorecard ratings assigned using defined thresholds</li>
+      <li>All seven ABS dimensions assessed with narrative findings</li>
+      <li>Dimension ratings assigned (HIGH / ADEQUATE / LOW / UNABLE TO ASSESS)</li>
+      <li>Recommendations are specific, actionable, and prioritised</li>
+      <li>Assumptions and limitations explicitly documented</li>
+      <li>Python code or methodology notes included in appendix</li>
+    </ul>
+
+    <h3>Report Quality</h3>
+    <ul class="checklist">
+      <li>Executive summary accurately reflects detailed findings</li>
+      <li>All sections of the report template are populated</li>
+      <li>Column scorecard table is complete and correctly formatted</li>
+      <li>Colour-coded badges match assigned ratings</li>
+      <li>Threshold values documented in appendix</li>
+      <li>Dataset metadata (name, date, row count, column count) is accurate</li>
+      <li>HTML report renders correctly and is self-contained</li>
+      <li>Markdown report renders correctly in standard viewers</li>
+      <li>No placeholder text or TODO items remain</li>
+      <li>Spelling and grammar reviewed</li>
+      <li>Report filename follows naming convention</li>
+    </ul>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      Data Quality Analysis Skill v1.0.0 &mdash; ABS Data Quality Framework compliant
+    </p>
+
+  </main>
+
+  <!-- ═══ Scroll-to-top ═══ -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    /* ── Theme Toggle ─── */
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    /* ── Active Sidebar Link ─── */
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    /* ── Scroll-to-top ─── */
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

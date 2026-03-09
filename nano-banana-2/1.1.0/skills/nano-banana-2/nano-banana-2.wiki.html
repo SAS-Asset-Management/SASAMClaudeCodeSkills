@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nano Banana 2 — Skill Wiki</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --sas-green: #69BE28; --sas-blue: #002244; --bg-primary: #ffffff; --bg-secondary: #f7f7f7; --bg-tertiary: #ededed; --text-primary: #002244; --text-secondary: #334466; --text-muted: #6b7280; --accent: #69BE28; --accent-hover: #5AA822; --card-bg: rgba(255,255,255,0.95); --card-border: rgba(0,34,68,0.12); --shadow-sm: 0 2px 8px rgba(0,34,68,0.06); --shadow-md: 0 4px 16px rgba(0,34,68,0.10); --shadow-lg: 0 8px 24px rgba(0,34,68,0.14); --focus-ring: 0 0 0 3px rgba(105,190,40,0.5); --code-bg: #f0f4f8; --code-text: #1e3a5f; --sidebar-w: 260px; --header-h: 64px;
+}
+:root[data-theme="dark"] {
+  --sas-green: #7AD33B; --sas-blue: #1a4d7a; --bg-primary: #0a0f1a; --bg-secondary: #141d2b; --bg-tertiary: #1e2a3d; --text-primary: #f4fbff; --text-secondary: #d1e3ed; --text-muted: #8ba3b5; --accent: #69BE28; --accent-hover: #7AD33B; --card-bg: rgba(20,29,43,0.9); --card-border: rgba(255,255,255,0.08); --shadow-sm: 0 2px 8px rgba(0,10,28,0.3); --shadow-md: 0 4px 16px rgba(0,10,28,0.4); --shadow-lg: 0 8px 24px rgba(0,10,28,0.5); --focus-ring: 0 0 0 3px rgba(105,190,40,0.4); --code-bg: #1a2332; --code-text: #d1e3ed;
+}
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+.wiki-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-h); background: var(--sas-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+.wiki-header .logo-area { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px; }
+.wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+.wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+.wiki-header button { background: rgba(255,255,255,0.12); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
+.wiki-header button:hover { background: rgba(255,255,255,0.22); }
+.wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.wiki-sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: var(--bg-secondary); border-right: 1px solid var(--card-border); overflow-y: auto; padding: 20px 0; z-index: 50; transition: transform 0.3s ease; }
+.wiki-sidebar.collapsed { transform: translateX(-100%); }
+.wiki-sidebar h3 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding: 16px 20px 6px; margin: 0; }
+.wiki-sidebar a { display: block; padding: 7px 20px 7px 28px; color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; font-weight: 400; border-left: 3px solid transparent; transition: all 0.15s; }
+.wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+.wiki-sidebar a.active { color: var(--accent); font-weight: 600; border-left-color: var(--accent); background: var(--bg-tertiary); }
+.wiki-main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 48px 80px; max-width: 960px; transition: margin-left 0.3s ease; }
+.wiki-main.expanded { margin-left: 0; }
+h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+.lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+h2 { font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 10px; }
+h2 i { color: var(--accent); font-size: 1.1rem; }
+h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+p { margin-bottom: 14px; }
+table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+thead th { background: var(--sas-blue); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+tbody td { padding: 9px 14px; border-bottom: 1px solid var(--card-border); vertical-align: top; }
+tbody tr:hover { background: var(--bg-secondary); }
+td code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; font-family: 'Source Code Pro', monospace; font-size: 0.82rem; }
+pre { background: var(--code-bg); color: var(--code-text); border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px; overflow-x: auto; font-family: 'Source Code Pro', monospace; font-size: 0.85rem; line-height: 1.5; border: 1px solid var(--card-border); }
+code { font-family: 'Source Code Pro', monospace; font-size: 0.88em; }
+:not(pre) > code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; }
+.card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+.card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s; }
+.card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+.card h4 { margin-top: 0; margin-bottom: 6px; }
+.card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+.badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+.badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+.badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+.badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+:root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+:root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+:root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+:root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+.callout { border-left: 4px solid var(--accent); background: var(--bg-secondary); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px; }
+.callout.callout-warn { border-left-color: #f59e0b; }
+.callout.callout-critical { border-left-color: #ef4444; }
+.callout p:last-child { margin-bottom: 0; }
+.callout strong { color: var(--text-primary); }
+.checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+.checklist li { padding: 5px 0 5px 28px; position: relative; font-size: 0.9rem; color: var(--text-secondary); }
+.checklist li::before { content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400; position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem; }
+.decision-row { display: flex; align-items: stretch; gap: 0; margin: 6px 0; font-size: 0.88rem; }
+.decision-if { flex: 0 0 45%; padding: 8px 14px; background: var(--bg-tertiary); border-radius: 8px 0 0 8px; display: flex; align-items: center; gap: 8px; }
+.decision-then { flex: 1; padding: 8px 14px; background: var(--card-bg); border: 1px solid var(--card-border); border-left: none; border-radius: 0 8px 8px 0; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.decision-if i { color: var(--accent); min-width: 16px; text-align: center; }
+.swatch-row { display: flex; gap: 12px; margin: 12px 0 20px; flex-wrap: wrap; }
+.swatch { display: flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 8px 14px; }
+.swatch-dot { width: 28px; height: 28px; border-radius: 6px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1); }
+.swatch-label { font-size: 0.82rem; }
+.swatch-label strong { display: block; font-size: 0.78rem; }
+.scroll-top { position: fixed; bottom: 24px; right: 24px; width: 42px; height: 42px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; z-index: 90; }
+.scroll-top.visible { opacity: 1; transform: translateY(0); }
+.scroll-top:hover { background: var(--accent-hover); }
+@media (max-width: 900px) { .wiki-sidebar { transform: translateX(-100%); } .wiki-sidebar.open { transform: translateX(0); } .wiki-main { margin-left: 0; padding: 28px 20px 60px; } .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } h2 { font-size: 1.3rem; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+@media print { .wiki-header, .wiki-sidebar, .scroll-top { display: none; } .wiki-main { margin-left: 0; max-width: 100%; } }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-image"></i>
+      <span>Nano Banana 2 Skill Wiki</span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../wiki.html" style="color:#fff;text-decoration:none;font-size:0.85rem;font-weight:600;padding:6px 14px;background:rgba(255,255,255,0.12);border-radius:6px;">
+        <i class="fas fa-arrow-left"></i> All Skills
+      </a>
+      <button id="themeToggle"><i class="fas fa-moon"></i></button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="wiki-sidebar">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#commands">Commands</a>
+
+    <h3>Generation</h3>
+    <a href="#generation">Image Generation</a>
+    <a href="#prompts">Prompt Engineering</a>
+    <a href="#sizes">Aspect Ratios &amp; Sizes</a>
+
+    <h3>Post-Processing</h3>
+    <a href="#post-processing">Mandatory Post-Processing</a>
+
+    <h3>Configuration</h3>
+    <a href="#setup">Setup</a>
+    <a href="#config">Config File</a>
+
+    <h3>Integration</h3>
+    <a href="#integration">Other Skills</a>
+
+    <h3>Reference</h3>
+    <a href="#errors">Error Handling</a>
+    <a href="#references">Reference Files</a>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="wiki-main">
+
+    <!-- Overview -->
+    <section id="overview">
+      <h1>Nano Banana 2 <span class="version">v1.1.0</span></h1>
+      <p class="lead">Generate images from text using Google's Gemini API with web search grounding. Create production-ready visuals with automatic SAS watermarking and post-processing.</p>
+
+      <div class="card-grid card-grid-4">
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+          <h4>Text-to-Image</h4>
+          <p>Generate images from natural language descriptions using Gemini's multimodal capabilities.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-globe"></i></div>
+          <h4>Web Grounding</h4>
+          <p>Leverage web search grounding for more accurate and contextually relevant image generation.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-crop-simple"></i></div>
+          <h4>Post-Processing</h4>
+          <p>Automatic SAS watermark overlay, JPG optimisation, and size targeting for every generated image.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i class="fas fa-expand"></i></div>
+          <h4>Multi-Size</h4>
+          <p>Support for multiple aspect ratios and output sizes from 512px thumbnails to 4K exports.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works">
+      <h2><i class="fas fa-diagram-project"></i> How It Works</h2>
+      <p>Nano Banana 2 follows a five-step pipeline from prompt to final deliverable:</p>
+
+      <div class="card-grid card-grid-1" style="grid-template-columns:1fr;">
+        <div class="card">
+          <h4>1. Check Configuration</h4>
+          <p>Verify the Gemini API key is configured and the skill environment is ready.</p>
+        </div>
+        <div class="card">
+          <h4>2. Parse Prompt</h4>
+          <p>Interpret the user's text prompt, extract any size/aspect ratio modifiers, and prepare the generation request.</p>
+        </div>
+        <div class="card">
+          <h4>3. Call Gemini API</h4>
+          <p>Send the prompt to the <code>gemini-3.1-flash-image-preview</code> model with web search grounding enabled.</p>
+        </div>
+        <div class="card">
+          <h4>4. Save Raw PNG</h4>
+          <p>Write the raw generated image to disk as a PNG file in the working directory.</p>
+        </div>
+        <div class="card">
+          <h4>5. Post-Process &amp; Deliver</h4>
+          <p>Apply the SAS watermark, optimise to JPG (target 1000px, &lt;200KB), and deliver the final image to the user.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Commands -->
+    <section id="commands">
+      <h2><i class="fas fa-terminal"></i> Commands</h2>
+      <p>Nano Banana 2 responds to the following commands:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Command</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>setup</code></td>
+            <td>Configure the Gemini API key and initialise the skill</td>
+            <td><code>/nano-banana-2 setup</code></td>
+          </tr>
+          <tr>
+            <td><code>status</code></td>
+            <td>Check current configuration and API connectivity</td>
+            <td><code>/nano-banana-2 status</code></td>
+          </tr>
+          <tr>
+            <td><code>generate [prompt]</code></td>
+            <td>Generate an image from the given text prompt</td>
+            <td><code>/nano-banana-2 generate a futuristic city skyline at sunset</code></td>
+          </tr>
+          <tr>
+            <td><code>history</code></td>
+            <td>View previously generated images in the current session</td>
+            <td><code>/nano-banana-2 history</code></td>
+          </tr>
+          <tr>
+            <td><code>[prompt]</code></td>
+            <td>Shorthand — any unrecognised input is treated as a generation prompt</td>
+            <td><code>/nano-banana-2 a cat wearing a top hat</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Invocation Examples</h3>
+<pre><code># Explicit generate command
+/nano-banana-2 generate a professional headshot with blue background
+
+# Shorthand — directly provide the prompt
+/nano-banana-2 an isometric illustration of a data centre
+
+# Setup the skill for first use
+/nano-banana-2 setup
+
+# Check if everything is configured
+/nano-banana-2 status</code></pre>
+    </section>
+
+    <!-- Image Generation -->
+    <section id="generation">
+      <h2><i class="fas fa-wand-magic-sparkles"></i> Image Generation</h2>
+      <p>Image generation is powered by Google's Gemini API. The skill uses the <code>gemini-3.1-flash-image-preview</code> model, which supports multimodal text-to-image generation with high quality results.</p>
+
+      <h3>Web Search Grounding</h3>
+      <p>Web search grounding is <strong>enabled by default</strong>. This means the model can search the web during generation to produce more accurate, up-to-date, and contextually relevant images. For example, if you ask for a logo of a real company or a landmark, grounding helps the model reference actual visual information.</p>
+
+      <div class="callout">
+        <p><strong>How grounding works:</strong> When enabled, the Gemini API performs a web search related to your prompt before generating the image. This provides the model with real-world visual context, resulting in more accurate depictions of real subjects.</p>
+      </div>
+
+      <h3>Generation Pipeline</h3>
+      <p>The API returns a raw PNG image which is saved locally. This raw output must then go through the mandatory post-processing step (see <a href="#post-processing">Mandatory Post-Processing</a>) before being delivered to the user.</p>
+    </section>
+
+    <!-- Prompt Engineering -->
+    <section id="prompts">
+      <h2><i class="fas fa-lightbulb"></i> Prompt Engineering</h2>
+      <p>Effective prompts lead to better image results. Here are guidelines for crafting prompts that work well with Nano Banana 2.</p>
+
+      <h3>Tips for Effective Prompts</h3>
+      <ul class="checklist">
+        <li>Be specific about the subject, setting, and visual style</li>
+        <li>Include lighting and mood descriptors (e.g. "warm golden hour lighting")</li>
+        <li>Mention the perspective or camera angle if relevant</li>
+        <li>Specify artistic style: photorealistic, illustration, watercolour, isometric, etc.</li>
+        <li>Use adjectives for quality: "high detail", "professional", "clean background"</li>
+        <li>Reference colour palettes when brand consistency matters</li>
+      </ul>
+
+      <h3>What Works Well</h3>
+      <div class="card-grid card-grid-2">
+        <div class="card">
+          <h4>Good Prompt</h4>
+          <p>"A professional isometric illustration of a modern office building with glass facades, surrounded by green trees, clean white background, corporate style"</p>
+        </div>
+        <div class="card">
+          <h4>Good Prompt</h4>
+          <p>"A photorealistic close-up of a circuit board with glowing blue traces, shallow depth of field, dark background, tech aesthetic"</p>
+        </div>
+      </div>
+
+      <h3>Common Pitfalls</h3>
+      <div class="callout callout-warn">
+        <p><strong>Avoid these mistakes:</strong></p>
+        <p>Do not include text like "add a SAS watermark" in your prompt — the watermark is applied automatically during post-processing. Do not request specific file formats in the prompt. Avoid overly vague prompts like "something nice" — be descriptive.</p>
+      </div>
+    </section>
+
+    <!-- Aspect Ratios & Sizes -->
+    <section id="sizes">
+      <h2><i class="fas fa-expand"></i> Aspect Ratios &amp; Sizes</h2>
+      <p>Nano Banana 2 supports multiple aspect ratios and output sizes to match your use case.</p>
+
+      <h3>Aspect Ratios</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Ratio</th>
+            <th>Use Case</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>1:1</code></td>
+            <td>Social media profiles, thumbnails</td>
+            <td>Square format, ideal for avatars and icons</td>
+          </tr>
+          <tr>
+            <td><code>16:9</code></td>
+            <td>Presentations, hero banners</td>
+            <td>Widescreen landscape format</td>
+          </tr>
+          <tr>
+            <td><code>4:5</code></td>
+            <td>Instagram posts, portraits</td>
+            <td>Slightly taller than square, popular on social</td>
+          </tr>
+          <tr>
+            <td><code>9:16</code></td>
+            <td>Stories, mobile-first content</td>
+            <td>Vertical format for mobile screens</td>
+          </tr>
+          <tr>
+            <td><code>3:2</code></td>
+            <td>Photography, print</td>
+            <td>Classic photo ratio</td>
+          </tr>
+          <tr>
+            <td><code>21:9</code></td>
+            <td>Ultra-wide banners</td>
+            <td>Cinematic ultra-wide format</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Output Sizes</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Size</th>
+            <th>Resolution (1:1)</th>
+            <th>Typical Use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>512px</code></td>
+            <td>512 x 512</td>
+            <td>Thumbnails, quick previews</td>
+          </tr>
+          <tr>
+            <td><code>1K</code></td>
+            <td>1024 x 1024</td>
+            <td>Standard web use, social media</td>
+          </tr>
+          <tr>
+            <td><code>2K</code></td>
+            <td>2048 x 2048</td>
+            <td>High-quality web, presentations</td>
+          </tr>
+          <tr>
+            <td><code>4K</code></td>
+            <td>4096 x 4096</td>
+            <td>Print, large displays, hero images</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Mandatory Post-Processing -->
+    <section id="post-processing">
+      <h2><i class="fas fa-crop-simple"></i> Mandatory Post-Processing</h2>
+
+      <div class="callout callout-critical">
+        <p><strong>CRITICAL: Every generated image MUST be post-processed before delivery.</strong></p>
+        <p>Raw PNG files from the Gemini API must never be delivered directly to the user. All images must pass through the post-processing script to add the SAS watermark and optimise the output.</p>
+      </div>
+
+      <h3>Post-Processing Command</h3>
+<pre><code>node ~/.claude/SASAMClaudeCodeSkills/nano-banana-2/1.1.0/scripts/post-process.js &lt;input.png&gt; &lt;output_final.jpg&gt;</code></pre>
+
+      <h3>What Post-Processing Does</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Step</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>SAS Logo Watermark</strong></td>
+            <td>Overlays the SAS logo watermark on the generated image</td>
+          </tr>
+          <tr>
+            <td><strong>JPG Optimisation</strong></td>
+            <td>Converts the raw PNG to an optimised JPG format</td>
+          </tr>
+          <tr>
+            <td><strong>Size Targeting</strong></td>
+            <td>Resizes to target 1000px on the longest edge, &lt;200KB file size</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout callout-warn">
+        <p><strong>DO NOT</strong> add watermark text to the generation prompt — the watermark is applied programmatically during post-processing.</p>
+      </div>
+
+      <div class="callout callout-warn">
+        <p><strong>DO NOT</strong> deliver the raw PNG file to the user. Always deliver the post-processed <code>_final.jpg</code> output.</p>
+      </div>
+    </section>
+
+    <!-- Setup -->
+    <section id="setup">
+      <h2><i class="fas fa-gear"></i> Setup</h2>
+      <p>Before using Nano Banana 2, you need to configure your Gemini API key.</p>
+
+      <h3>Getting a Gemini API Key</h3>
+      <ol style="margin:10px 0 20px 20px;color:var(--text-secondary);font-size:0.9rem;">
+        <li style="margin-bottom:8px;">Visit <strong>Google AI Studio</strong> at <code>https://aistudio.google.com/</code></li>
+        <li style="margin-bottom:8px;">Sign in with your Google account</li>
+        <li style="margin-bottom:8px;">Navigate to <strong>API Keys</strong> and create a new key</li>
+        <li style="margin-bottom:8px;">Copy the API key for use in setup</li>
+      </ol>
+
+      <h3>First-Time Configuration</h3>
+      <p>Run the setup command to store your API key:</p>
+<pre><code>/nano-banana-2 setup</code></pre>
+      <p>The API key is stored at:</p>
+<pre><code>~/.claude/skills/nano-banana-2/config.json</code></pre>
+
+      <div class="callout">
+        <p><strong>Security note:</strong> The config file is stored in your local <code>~/.claude/skills/</code> directory and is not committed to version control. Keep your API key confidential.</p>
+      </div>
+    </section>
+
+    <!-- Config File -->
+    <section id="config">
+      <h2><i class="fas fa-file-code"></i> Config File</h2>
+      <p>The configuration file is a JSON document stored at <code>~/.claude/skills/nano-banana-2/config.json</code>.</p>
+
+      <h3>Config Structure</h3>
+<pre><code>{
+  "geminiApiKey": "YOUR_GEMINI_API_KEY",
+  "model": "gemini-3.1-flash-image-preview",
+  "webGrounding": true,
+  "defaultSize": "1K",
+  "defaultAspectRatio": "1:1",
+  "outputFormat": "jpg",
+  "postProcess": {
+    "addWatermark": true,
+    "targetWidth": 1000,
+    "maxFileSize": "200KB"
+  }
+}</code></pre>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>geminiApiKey</code></td>
+            <td>string</td>
+            <td>Your Google Gemini API key (required)</td>
+          </tr>
+          <tr>
+            <td><code>model</code></td>
+            <td>string</td>
+            <td>Gemini model identifier for image generation</td>
+          </tr>
+          <tr>
+            <td><code>webGrounding</code></td>
+            <td>boolean</td>
+            <td>Enable web search grounding for generation</td>
+          </tr>
+          <tr>
+            <td><code>defaultSize</code></td>
+            <td>string</td>
+            <td>Default output size (512px, 1K, 2K, 4K)</td>
+          </tr>
+          <tr>
+            <td><code>defaultAspectRatio</code></td>
+            <td>string</td>
+            <td>Default aspect ratio for generated images</td>
+          </tr>
+          <tr>
+            <td><code>outputFormat</code></td>
+            <td>string</td>
+            <td>Final output format after post-processing</td>
+          </tr>
+          <tr>
+            <td><code>postProcess</code></td>
+            <td>object</td>
+            <td>Post-processing configuration block</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Integration -->
+    <section id="integration">
+      <h2><i class="fas fa-puzzle-piece"></i> Integration</h2>
+      <p>Nano Banana 2 integrates with other skills in the SASAMClaudeCodeSkills marketplace to enhance your workflows.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Skill</th>
+            <th>Use Case</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>sas-presentation</code></td>
+            <td>Presentation Visuals</td>
+            <td>Generate custom slide images, diagrams, and hero graphics for SAS-branded presentations</td>
+          </tr>
+          <tr>
+            <td><code>linkedin-post-generator</code></td>
+            <td>Social Graphics</td>
+            <td>Create eye-catching images for LinkedIn posts and social media campaigns</td>
+          </tr>
+          <tr>
+            <td><code>b2b-research-agent</code></td>
+            <td>Infographics</td>
+            <td>Generate visual infographics and data illustrations for research deliverables</td>
+          </tr>
+          <tr>
+            <td><code>beam-selling</code></td>
+            <td>Proposal Visuals</td>
+            <td>Create professional visuals for sales proposals and customer-facing documents</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Example: Generating a Presentation Image</h3>
+<pre><code># Generate an image with nano-banana-2
+/nano-banana-2 generate a modern data analytics dashboard with SAS blue theme
+
+# Then use it in a sas-presentation slide
+# The post-processed JPG is ready for direct embedding</code></pre>
+    </section>
+
+    <!-- Error Handling -->
+    <section id="errors">
+      <h2><i class="fas fa-triangle-exclamation"></i> Error Handling</h2>
+      <p>Common errors and how to resolve them:</p>
+
+      <div class="callout callout-critical">
+        <p><strong>API Key Missing</strong></p>
+        <p>If you see "API key not configured", run <code>/nano-banana-2 setup</code> to enter your Gemini API key. The key must be stored in <code>~/.claude/skills/nano-banana-2/config.json</code> before generation can proceed.</p>
+      </div>
+
+      <div class="callout callout-warn">
+        <p><strong>Rate Limit Exceeded</strong></p>
+        <p>The Gemini API has rate limits. If you encounter a rate limit error, wait a few moments before retrying. Consider reducing the frequency of generation requests or upgrading your API tier for higher limits.</p>
+      </div>
+
+      <div class="callout callout-warn">
+        <p><strong>Generation Failed</strong></p>
+        <p>If image generation fails, check the following: ensure your prompt does not violate content policies, verify your API key is valid and has sufficient quota, and confirm network connectivity. Try simplifying or rephrasing your prompt.</p>
+      </div>
+    </section>
+
+    <!-- Reference Files -->
+    <section id="references">
+      <h2><i class="fas fa-folder-open"></i> Reference Files</h2>
+      <p>Key files in the Nano Banana 2 skill directory:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>File</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>skill.md</code></td>
+            <td>Main skill instruction file read by Claude Code</td>
+          </tr>
+          <tr>
+            <td><code>nano-banana-2.wiki.html</code></td>
+            <td>This wiki documentation page</td>
+          </tr>
+          <tr>
+            <td><code>scripts/post-process.js</code></td>
+            <td>Post-processing script for watermark and JPG optimisation</td>
+          </tr>
+          <tr>
+            <td><code>config.json</code></td>
+            <td>User configuration file (stored in <code>~/.claude/skills/</code>)</td>
+          </tr>
+          <tr>
+            <td><code>assets/sas-logo.png</code></td>
+            <td>SAS logo watermark asset used during post-processing</td>
+          </tr>
+          <tr>
+            <td><code>CHANGELOG.md</code></td>
+            <td>Version history and release notes</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Footer -->
+    <footer style="margin-top:60px;padding-top:20px;border-top:1px solid var(--card-border);text-align:center;color:var(--text-muted);font-size:0.85rem;">
+      <p>Nano Banana 2 v1.1.0 — SASAMClaudeCodeSkills marketplace</p>
+    </footer>
+
+  </main>
+
+  <!-- Scroll to top button -->
+  <button class="scroll-top" id="scrollTop"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+const toggle = document.getElementById('themeToggle');
+const icon = toggle.querySelector('i');
+const stored = localStorage.getItem('wiki-theme');
+if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+toggle.addEventListener('click', () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+});
+const links = document.querySelectorAll('.wiki-sidebar a');
+const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+function updateActive() {
+  let current = '';
+  for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+  links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+}
+window.addEventListener('scroll', updateActive, { passive: true });
+updateActive();
+const btn = document.getElementById('scrollTop');
+window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>
