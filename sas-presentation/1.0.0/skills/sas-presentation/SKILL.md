@@ -119,6 +119,88 @@ Once the type is determined, confirm with the user: _"Based on what you've descr
    - What are the key sections or topics to cover?
    - (Show the user the section list for the selected type and ask if they want to add/remove/reorder any)
 
+### Phase 3: Data & Visualisation Planning
+
+If the presentation includes data, metrics, or KPIs, walk the user through chart selection and data sourcing. This phase should happen after content details are gathered but before building begins.
+
+#### Step A: Identify What Needs Visualising
+
+For each slide or section that involves data, ask:
+
+10. **What are you trying to show with this data?**
+
+    Use the answer to suggest chart types from this decision tree:
+
+    | You want to show… | Recommended charts |
+    |---|---|
+    | **Ranking** — which is biggest/smallest | Horizontal Bar, Treemap |
+    | **Comparison** — side by side across categories | Grouped Bar, Radar/Spider |
+    | **Composition** — parts of a whole | Stacked Bar, Donut, Treemap |
+    | **Trend over time** — how something changes | Line, Area, Sparkline |
+    | **Correlation** — relationship between two things | Scatter, Bubble |
+    | **Distribution** — how data is spread | Distribution, Violin, Histogram (Stacked Bar) |
+    | **Flow / process** — how things move between stages | Sankey, Funnel |
+    | **Relationships / dependencies** — what connects to what | Network, Chord Diagram |
+    | **Status / health** — where things stand right now | RAG Grid, Gauge, Progress Bars, Circular Bar |
+    | **Strategic positioning** — classify into quadrants | Quadrant Chart |
+    | **Cumulative change** — what added up or eroded a total | Waterfall |
+    | **Intensity across two dimensions** — where are the hotspots | Heatmap / Matrix |
+    | **Single KPI headline** — one big number with context | Gauge, Sparkline (inline), Circular Bar |
+
+    Present the recommendation: _"To show [what they described], I'd suggest a **[Chart Type]** — it works well because [reason]. Here's what it looks like…"_ (describe or reference the pattern in `chart-components.html`).
+
+    If they're unsure, offer 2-3 options with a brief explanation of the visual difference.
+
+#### Step B: Determine the Data Source
+
+11. **Where is the data coming from?**
+
+    Classify into one of three source types:
+
+    | Source Type | Description | How to Handle |
+    |---|---|---|
+    | **Structured file** | CSV, Excel, JSON, database export — real numbers exist in a file | Ask the user to provide or point to the file. Read it, extract relevant columns/rows, and map values to the SVG chart coordinates. Always cite the source on the slide (e.g. "Source: FY24 Asset Register extract"). |
+    | **Anecdotal / estimated** | The user knows rough numbers or proportions from experience but has no file | Ask them to provide the values conversationally (e.g. "About 60% roads, 25% bridges, 15% other"). Use their estimates directly. Label the chart appropriately (e.g. "Indicative" or "Estimated based on [context]"). |
+    | **Mixed** | Some data is from files, some is estimated or contextual | Handle each data series independently — structured data gets precise values, anecdotal gets estimates. Clearly distinguish sourced vs estimated in footnotes or labels. |
+
+12. **For structured data — ask:**
+    - _"Can you share the file, or tell me where it is?"_ (path, URL, or paste)
+    - _"Which columns or fields should I use?"_
+    - _"Is there a specific time period, filter, or subset?"_
+    - _"Should I aggregate or summarise (e.g. sum by category, average by year)?"_
+
+13. **For anecdotal data — ask:**
+    - _"What are the categories or labels?"_
+    - _"Can you give me rough numbers, percentages, or relative sizes?"_ (e.g. "Roads is about twice as big as bridges")
+    - _"Is this based on a specific year, project, or experience?"_ (for the source attribution)
+    - If the user can only describe proportions qualitatively (e.g. "most of the budget goes to roads"), suggest approximate splits and confirm: _"Would something like 55% Roads, 25% Bridges, 20% Other feel right?"_
+
+14. **For both — confirm the visual:**
+    - _"Here's what I'll put on the chart: [list the labels and values]. Does that look right?"_
+    - _"Should I add a source line? Something like 'Source: FY24 Asset Register' or 'Indicative estimates, March 2026'?"_
+
+#### Step C: Map Data to Chart
+
+Once the data and chart type are confirmed:
+
+- **Structured data**: Read the file, extract values, calculate SVG coordinates (pixel positions, arc lengths, path points) proportional to the data range. Ensure axis labels, grid lines, and tooltips reflect actual values.
+- **Anecdotal data**: Convert the user's estimates into concrete numbers if they provided percentages/proportions. Map to SVG coordinates the same way. Use softer language in labels where appropriate ("~45%" or "Est. $2.3M").
+- **Multiple charts on one slide**: If a slide needs several charts (e.g. a dashboard), confirm layout (side by side, stacked, grid) before building.
+
+#### Chart Source Attribution Rules
+
+Every chart MUST include a source attribution, either:
+- **Below the chart**: `<text class="chart-axis-label" x="..." y="[bottom]" text-anchor="start">Source: [attribution]</text>`
+- **In a slide footnote**: Small text at the bottom of the slide content area
+
+| Data Source | Attribution Format |
+|---|---|
+| File / database | "Source: [File name or system], [date/period]" |
+| Anecdotal (from user) | "Source: [User's role/name] estimates, [month year]" |
+| Anecdotal (general) | "Indicative only — based on operational experience" |
+| Published / external | "Source: [Publication/org], [year]" |
+| Mixed | Cite each series separately in a footnote |
+
 ### Default Narrative Structure (for "Presentation" type)
 
 The default **Presentation** type uses this proven 7-section structure:
@@ -768,6 +850,7 @@ Conduct the discovery interview to:
 2. **Confirm the type** with the user
 3. **Gather content details** using Phase 2 questions (topic, delivery context, branding, assets, outline)
 4. **Review the section structure** for the selected type (from `references/presentation-types.md`) and confirm any additions or removals
+5. **Plan data visualisations** using Phase 3 questions — for each data-driven slide, identify chart type, data source (file vs anecdotal), and confirm values before building
 
 ### Step 2: Create Presentation Structure
 
@@ -994,8 +1077,20 @@ Example (Yarra Trams):
 - [ ] Australian English spelling used
 - [ ] PDF export tested (if needed)
 
+### Data Visualisations
+- [ ] Chart type appropriate for the data story (checked against decision tree)
+- [ ] Data source identified (structured file, anecdotal, or mixed)
+- [ ] Data values confirmed with user before building
+- [ ] All charts have `role="img"` and `aria-label`
+- [ ] All charts use `.chart-interactive` for hover effects
+- [ ] Chart colours use `--chart-1` through `--chart-6` (no hardcoded values)
+- [ ] Tooltips present (SVG fallback or JS-enhanced)
+- [ ] Source attribution present on every chart
+- [ ] Anecdotal data clearly labelled as estimated/indicative
+- [ ] Axis labels, legends, and values are accurate and readable
+
 ### Content
-- [ ] Discovery interview completed
+- [ ] Discovery interview completed (Phases 1, 2, and 3)
 - [ ] Presentation type identified and confirmed
 - [ ] Section structure follows the type definition
 - [ ] Tone matches the type (formal, punchy, narrative, etc.)
