@@ -47,6 +47,18 @@
   /* Code */
   --code-bg: #f0f4f8;
   --code-text: #1e3a5f;
+
+  /* Chart Palette (6 categorical colours) */
+  --chart-1: #69BE28;
+  --chart-2: #002244;
+  --chart-3: #3B82F6;
+  --chart-4: #F59E0B;
+  --chart-5: #EF4444;
+  --chart-6: #8B5CF6;
+  --chart-grid: rgba(0, 34, 68, 0.08);
+  --chart-axis: rgba(0, 34, 68, 0.25);
+  --chart-tooltip-bg: #002244;
+  --chart-tooltip-text: #ffffff;
 }
 
 /* ============================
@@ -90,6 +102,18 @@
   /* Code */
   --code-bg: #1a2332;
   --code-text: #d1e3ed;
+
+  /* Chart Palette (dark mode) */
+  --chart-1: #7AD33B;
+  --chart-2: #5B9BD5;
+  --chart-3: #60A5FA;
+  --chart-4: #FBBF24;
+  --chart-5: #F87171;
+  --chart-6: #A78BFA;
+  --chart-grid: rgba(255, 255, 255, 0.06);
+  --chart-axis: rgba(255, 255, 255, 0.2);
+  --chart-tooltip-bg: #f4fbff;
+  --chart-tooltip-text: #0a0f1a;
 }
 
 /* ============================
@@ -960,6 +984,871 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ============================
+   CHART COMPONENTS
+   ============================ */
+
+/* --- Chart Container --- */
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.chart-container svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.chart-container .chart-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.chart-container .chart-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.chart-container .chart-source {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 12px;
+  font-style: italic;
+}
+
+/* --- Axis & Grid --- */
+.chart-axis line,
+.chart-axis path {
+  stroke: var(--chart-axis);
+  stroke-width: 1;
+  fill: none;
+}
+
+.chart-grid line {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.chart-axis text,
+.chart-label {
+  fill: var(--text-muted);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 12px;
+}
+
+.chart-value {
+  fill: var(--text-primary);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* --- Interactive Elements --- */
+.chart-bar,
+.chart-segment,
+.chart-point,
+.chart-slice,
+.chart-cell,
+.chart-node,
+.chart-bubble,
+.chart-treemap-cell,
+.chart-funnel-segment,
+.chart-sankey-node,
+.chart-chord-arc,
+.chart-chord-ribbon,
+.chart-network-node,
+.chart-circular-bar {
+  transition: opacity 150ms ease, filter 150ms ease, transform 150ms ease;
+  cursor: pointer;
+}
+
+.chart-bar:hover,
+.chart-segment:hover,
+.chart-point:hover,
+.chart-slice:hover,
+.chart-cell:hover,
+.chart-node:hover,
+.chart-bubble:hover,
+.chart-treemap-cell:hover,
+.chart-funnel-segment:hover,
+.chart-sankey-node:hover,
+.chart-chord-arc:hover,
+.chart-chord-ribbon:hover,
+.chart-network-node:hover,
+.chart-circular-bar:hover {
+  filter: brightness(1.15);
+}
+
+/* Dim siblings on hover (apply .chart-interactive to parent SVG) */
+.chart-interactive:hover .chart-bar,
+.chart-interactive:hover .chart-segment,
+.chart-interactive:hover .chart-slice,
+.chart-interactive:hover .chart-cell,
+.chart-interactive:hover .chart-treemap-cell,
+.chart-interactive:hover .chart-funnel-segment,
+.chart-interactive:hover .chart-sankey-node,
+.chart-interactive:hover .chart-chord-arc,
+.chart-interactive:hover .chart-chord-ribbon,
+.chart-interactive:hover .chart-network-node,
+.chart-interactive:hover .chart-circular-bar {
+  opacity: 0.35;
+}
+
+.chart-interactive:hover .chart-bar:hover,
+.chart-interactive:hover .chart-segment:hover,
+.chart-interactive:hover .chart-slice:hover,
+.chart-interactive:hover .chart-cell:hover,
+.chart-interactive:hover .chart-treemap-cell:hover,
+.chart-interactive:hover .chart-funnel-segment:hover,
+.chart-interactive:hover .chart-sankey-node:hover,
+.chart-interactive:hover .chart-chord-arc:hover,
+.chart-interactive:hover .chart-chord-ribbon:hover,
+.chart-interactive:hover .chart-network-node:hover,
+.chart-interactive:hover .chart-circular-bar:hover {
+  opacity: 1;
+}
+
+/* Sankey flow highlight */
+.chart-sankey-link {
+  transition: opacity 150ms ease;
+  cursor: pointer;
+}
+
+.chart-interactive:hover .chart-sankey-link {
+  opacity: 0.15;
+}
+
+.chart-interactive:hover .chart-sankey-node:hover ~ .chart-sankey-link,
+.chart-interactive:hover .chart-sankey-link:hover {
+  opacity: 0.7;
+}
+
+/* Line chart hover point */
+.chart-point {
+  r: 5;
+}
+
+.chart-point:hover {
+  r: 8;
+  filter: brightness(1.15);
+}
+
+/* --- Tooltip --- */
+.chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--chart-tooltip-bg);
+  color: var(--chart-tooltip-text);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 150ms ease, transform 150ms ease;
+  z-index: 200;
+}
+
+.chart-tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chart-tooltip .tooltip-label {
+  font-weight: 400;
+  font-size: 12px;
+  opacity: 0.75;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.chart-tooltip .tooltip-value {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* SVG-based tooltip (fallback for no-JS) */
+.chart-svg-tooltip {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.chart-bar:hover + .chart-svg-tooltip,
+.chart-segment:hover + .chart-svg-tooltip,
+.chart-point:hover + .chart-svg-tooltip,
+.chart-slice:hover + .chart-svg-tooltip,
+.chart-cell:hover + .chart-svg-tooltip,
+.chart-treemap-cell:hover + .chart-svg-tooltip,
+.chart-bubble:hover + .chart-svg-tooltip,
+.chart-funnel-segment:hover + .chart-svg-tooltip,
+.chart-sankey-node:hover + .chart-svg-tooltip,
+.chart-chord-arc:hover + .chart-svg-tooltip,
+.chart-chord-ribbon:hover + .chart-svg-tooltip,
+.chart-network-node:hover + .chart-svg-tooltip,
+.chart-circular-bar:hover + .chart-svg-tooltip,
+.chart-distribution-area:hover + .chart-svg-tooltip,
+.chart-violin-half:hover + .chart-svg-tooltip {
+  opacity: 1;
+}
+
+/* --- Legend --- */
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.chart-legend-item:hover {
+  opacity: 0.7;
+}
+
+.chart-legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* --- Bar Charts (Horizontal, Grouped, Stacked) --- */
+.chart-bar {
+  rx: 4;
+  ry: 4;
+}
+
+/* --- Line & Area Charts --- */
+.chart-line {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-area {
+  opacity: 0.15;
+}
+
+/* --- Sparkline --- */
+.chart-sparkline {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.chart-sparkline svg {
+  width: 120px;
+  height: 32px;
+}
+
+.chart-sparkline .chart-line {
+  stroke-width: 2;
+}
+
+.chart-sparkline .chart-area {
+  opacity: 0.1;
+}
+
+/* --- Donut Chart --- */
+.chart-donut-label {
+  text-anchor: middle;
+  fill: var(--text-primary);
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.chart-donut-value {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.chart-donut-caption {
+  font-size: 14px;
+  font-weight: 400;
+  fill: var(--text-muted);
+}
+
+/* --- Waterfall Chart --- */
+.chart-waterfall-connector {
+  stroke: var(--chart-axis);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+}
+
+.chart-waterfall-positive { fill: var(--chart-1); }
+.chart-waterfall-negative { fill: var(--chart-5); }
+.chart-waterfall-total { fill: var(--chart-2); }
+
+/* --- Treemap --- */
+.chart-treemap {
+  display: grid;
+  width: 100%;
+  gap: 2px;
+}
+
+.chart-treemap-cell {
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-treemap-cell:hover {
+  filter: brightness(1.1);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.chart-treemap-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.chart-treemap-value {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* --- Radar / Spider Chart --- */
+.chart-radar-ring {
+  fill: none;
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+
+.chart-radar-spoke {
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+
+.chart-radar-area {
+  fill-opacity: 0.2;
+  stroke-width: 2;
+  transition: fill-opacity 150ms ease;
+}
+
+.chart-radar-area:hover {
+  fill-opacity: 0.35;
+}
+
+.chart-radar-label {
+  fill: var(--text-secondary);
+  font-size: 12px;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* --- Heatmap / Matrix --- */
+.chart-heatmap {
+  display: grid;
+  gap: 3px;
+}
+
+.chart-cell {
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  min-height: 44px;
+  position: relative;
+}
+
+.chart-heatmap-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* --- Gauge Chart --- */
+.chart-gauge-track {
+  fill: none;
+  stroke: var(--bg-tertiary);
+  stroke-linecap: round;
+}
+
+.chart-gauge-fill {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 800ms ease;
+}
+
+.chart-gauge-value {
+  text-anchor: middle;
+  fill: var(--text-primary);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.chart-gauge-label {
+  text-anchor: middle;
+  fill: var(--text-muted);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+}
+
+/* --- Scatter & Bubble --- */
+.chart-bubble {
+  transition: r 150ms ease, opacity 150ms ease;
+}
+
+.chart-bubble:hover {
+  stroke-width: 2;
+  stroke: var(--text-primary);
+}
+
+/* --- Quadrant Chart --- */
+.chart-quadrant-bg {
+  fill: var(--bg-secondary);
+  stroke: var(--chart-grid);
+  stroke-width: 1;
+}
+
+.chart-quadrant-label {
+  fill: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* --- Funnel Chart --- */
+.chart-funnel-segment {
+  transition: opacity 150ms ease;
+}
+
+.chart-funnel-label {
+  fill: #ffffff;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.chart-funnel-value {
+  fill: #ffffff;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* --- RAG Status Grid --- */
+.chart-rag-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.chart-rag-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  transition: box-shadow 150ms ease;
+}
+
+.chart-rag-cell:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-rag-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chart-rag-red { background: #EF4444; }
+.chart-rag-amber { background: #F59E0B; }
+.chart-rag-green { background: #69BE28; }
+
+.chart-rag-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.chart-rag-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* --- Progress Bar Set --- */
+.chart-progress-set {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.chart-progress-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.chart-progress-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.chart-progress-track {
+  flex: 1;
+  height: 10px;
+  background: var(--bg-tertiary);
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.chart-progress-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 800ms ease;
+}
+
+.chart-progress-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  min-width: 48px;
+  text-align: right;
+}
+
+/* --- Sankey Diagram --- */
+.chart-sankey-node {
+  rx: 4;
+  ry: 4;
+}
+
+.chart-sankey-link {
+  fill-opacity: 0.35;
+  stroke: none;
+}
+
+.chart-sankey-link:hover {
+  fill-opacity: 0.6;
+}
+
+.chart-sankey-label {
+  fill: var(--text-secondary);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ============================
+   DISTRIBUTION / VIOLIN PLOTS
+   ============================ */
+
+.chart-distribution-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.chart-distribution-area {
+  fill: var(--chart-1);
+  fill-opacity: 0.5;
+  stroke: var(--chart-1);
+  stroke-width: 2;
+  transition: fill-opacity 0.2s ease;
+}
+
+.chart-distribution-area:hover {
+  fill-opacity: 0.75;
+}
+
+.chart-interactive:hover .chart-distribution-area {
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+
+.chart-interactive:hover .chart-distribution-area:hover {
+  opacity: 1;
+}
+
+.chart-distribution-mean {
+  stroke: var(--text-primary);
+  stroke-width: 2;
+  stroke-dasharray: 6 4;
+}
+
+.chart-distribution-median {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.chart-violin-half {
+  fill-opacity: 0.5;
+  stroke-width: 1.5;
+  transition: fill-opacity 0.2s ease;
+}
+
+.chart-violin-half:hover {
+  fill-opacity: 0.75;
+}
+
+.chart-violin-left {
+  fill: var(--chart-1);
+  stroke: var(--chart-1);
+}
+
+.chart-violin-right {
+  fill: var(--chart-2);
+  stroke: var(--chart-2);
+}
+
+.chart-violin-box {
+  fill: var(--bg-primary);
+  stroke: var(--text-secondary);
+  stroke-width: 1.5;
+}
+
+.chart-violin-median {
+  fill: var(--accent);
+}
+
+.chart-violin-whisker {
+  stroke: var(--text-secondary);
+  stroke-width: 1.5;
+}
+
+.chart-interactive:hover .chart-violin-half {
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+
+.chart-interactive:hover .chart-violin-half:hover {
+  opacity: 1;
+}
+
+.chart-violin-half:hover + .chart-svg-tooltip {
+  opacity: 1;
+}
+
+/* ============================
+   CIRCULAR BAR CHART
+   ============================ */
+
+.chart-circular-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.chart-circular-track {
+  fill: none;
+  stroke: var(--bg-tertiary);
+  stroke-width: 18;
+  stroke-linecap: round;
+}
+
+.chart-circular-bar {
+  fill: none;
+  stroke-width: 18;
+  stroke-linecap: round;
+  transition: opacity 0.2s ease, stroke-width 0.2s ease;
+}
+
+.chart-circular-bar:hover {
+  stroke-width: 22;
+}
+
+.chart-interactive:hover .chart-circular-bar {
+  opacity: 0.35;
+}
+
+.chart-interactive:hover .chart-circular-bar:hover {
+  opacity: 1;
+}
+
+.chart-circular-bar:hover + .chart-svg-tooltip {
+  opacity: 1;
+}
+
+.chart-circular-label {
+  fill: var(--text-secondary);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.chart-circular-value {
+  fill: var(--text-primary);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chart-circular-center-value {
+  fill: var(--text-primary);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.chart-circular-center-label {
+  fill: var(--text-muted);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  text-anchor: middle;
+}
+
+/* ============================
+   CHORD DIAGRAM
+   ============================ */
+
+.chart-chord-container {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.chart-chord-arc {
+  stroke: var(--bg-primary);
+  stroke-width: 1;
+  transition: opacity 0.2s ease;
+}
+
+.chart-chord-arc:hover {
+  opacity: 1 !important;
+}
+
+.chart-chord-ribbon {
+  fill-opacity: 0.45;
+  stroke: none;
+  transition: fill-opacity 0.2s ease, opacity 0.2s ease;
+}
+
+.chart-chord-ribbon:hover {
+  fill-opacity: 0.75;
+}
+
+.chart-interactive:hover .chart-chord-arc,
+.chart-interactive:hover .chart-chord-ribbon {
+  opacity: 0.35;
+}
+
+.chart-interactive:hover .chart-chord-arc:hover,
+.chart-interactive:hover .chart-chord-ribbon:hover {
+  opacity: 1;
+}
+
+.chart-chord-ribbon:hover + .chart-svg-tooltip {
+  opacity: 1;
+}
+
+.chart-chord-label {
+  fill: var(--text-secondary);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ============================
+   NETWORK DIAGRAM
+   ============================ */
+
+.chart-network-container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.chart-network-link {
+  stroke: var(--chart-grid);
+  stroke-width: 1.5;
+  stroke-opacity: 0.5;
+  transition: stroke-opacity 0.2s ease, stroke-width 0.2s ease;
+}
+
+.chart-network-link:hover {
+  stroke-opacity: 1;
+  stroke-width: 2.5;
+}
+
+.chart-network-node {
+  stroke: var(--bg-primary);
+  stroke-width: 2;
+  transition: opacity 0.2s ease, r 0.15s ease;
+  cursor: pointer;
+}
+
+.chart-network-node:hover {
+  opacity: 1 !important;
+}
+
+.chart-interactive:hover .chart-network-node {
+  opacity: 0.35;
+}
+
+.chart-interactive:hover .chart-network-node:hover {
+  opacity: 1;
+}
+
+.chart-network-node:hover + .chart-svg-tooltip {
+  opacity: 1;
+}
+
+.chart-network-label {
+  fill: var(--text-secondary);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.chart-network-node-primary {
+  r: 18;
+}
+
+.chart-network-node-secondary {
+  r: 12;
+}
+
+.chart-network-node-tertiary {
+  r: 8;
 }
 
 /* ============================

@@ -720,6 +720,43 @@ These CSS components are available in `base-styles.css` for use across all prese
 | Small Text | `.ref-small` | Fine print / captions (16px) |
 | Screen Reader | `.sr-only` | Visually hidden but accessible text |
 
+### Chart & Data Visualisation Components
+
+A full library of inline SVG chart patterns is available in `references/chart-components.html`. All charts are theme-aware (light/dark), accessible (`role="img"` + `aria-label`), and interactive (hover highlights with sibling dimming via `.chart-interactive`).
+
+| # | Chart Type | CSS Classes | Best For |
+|---|-----------|-------------|----------|
+| 1 | Horizontal Bar | `.chart-bar` | Ranked categorical comparisons |
+| 2 | Grouped Bar | `.chart-bar` + legend | Side-by-side multi-series comparison |
+| 3 | Stacked Bar | `.chart-bar` | Composition of totals |
+| 4 | Line Chart | `.chart-line`, `.chart-point` | Trends over time |
+| 5 | Area Chart | `.chart-area`, `.chart-line` | Volume/magnitude trends |
+| 6 | Sparkline | `.chart-sparkline`, `.chart-sparkline-line` | Inline KPI trend indicators |
+| 7 | Donut | `.chart-slice` | Proportions of a whole (max 6 segments) |
+| 8 | Waterfall | `.chart-bar` | Cumulative positive/negative changes |
+| 9 | Treemap | `.chart-treemap-cell` | Hierarchical proportional data |
+| 10 | Radar / Spider | `.chart-radar-*`, `.chart-point` | Multi-dimension comparison (5-8 axes) |
+| 11 | Heatmap / Matrix | `.chart-cell` | Two-dimension intensity mapping |
+| 12 | Gauge | `.chart-gauge-bg`, `.chart-gauge-fill` | Single KPI vs target |
+| 13 | Scatter | `.chart-point` | Correlation between two variables |
+| 14 | Bubble | `.chart-bubble` | Three-variable comparison (x, y, size) |
+| 15 | RAG Status Grid | `.chart-rag-grid`, `.rag-item` | Red/Amber/Green health dashboards |
+| 16 | Progress Bars | `.chart-progress-*` | Completion / utilisation rates |
+| 17 | Quadrant | `.chart-quadrant-*`, `.chart-point` | Strategic classification (2x2) |
+| 18 | Funnel | `.chart-funnel-segment` | Sequential stage drop-off |
+| 19 | Sankey | `.chart-sankey-node`, `.chart-sankey-link` | Flow and transformation between stages |
+| 20 | Distribution | `.chart-distribution-area` | Probability density / frequency curves |
+| 21 | Violin Plot | `.chart-violin-half`, `.chart-violin-box` | Distribution shape + box plot combined |
+| 22 | Circular Bar | `.chart-circular-bar`, `.chart-circular-track` | Radial KPI completion with centre value |
+| 23 | Chord Diagram | `.chart-chord-arc`, `.chart-chord-ribbon` | Relationship flow between entities |
+| 24 | Network Diagram | `.chart-network-node`, `.chart-network-link` | Entity relationship / dependency mapping |
+
+**Chart interactivity pattern:**
+- Add `class="chart-interactive"` to the parent `<svg>` to enable sibling dimming on hover
+- Place `<g class="chart-svg-tooltip">` immediately after each data element for no-JS tooltip fallback
+- Use `--chart-1` through `--chart-6` for the categorical colour palette (theme-aware)
+- Always include `role="img"` and `aria-label` on the SVG element
+
 ---
 
 ## Workflow
@@ -750,6 +787,7 @@ Work through slides incrementally:
 5. Apply any type-specific Reveal.js overrides
 6. Include dual-theme images where needed
 7. Use the appropriate reusable components (cards, tables, badges, etc.) for the type
+8. Add charts and data visualisations from `references/chart-components.html` where needed — copy the inline SVG pattern and adjust data values
 
 ### Step 4: Review and Refine
 
