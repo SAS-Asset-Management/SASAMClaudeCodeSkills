@@ -5,6 +5,20 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-03-09
+
+### Wiki Documentation
+- **Added** master wiki hub (`wiki.html`) with skill catalogue and navigation
+- **Added** wiki page for sas-presentation skill
+- **Added** wiki page for data-quality-analysis skill
+- **Added** wiki page for b2b-research-agent skill
+- **Added** wiki page for beam-selling skill
+- **Added** wiki page for linkedin-post-generator skill
+- **Added** wiki page for tender-assessment skill
+- **Added** wiki page for push-notifications skill
+- **Added** wiki page for nano-banana-2 skill
+- **Added** wiki page for sasam-update (sasam-core) skill
+
 ## [1.1.0] - 2026-02-27
 
 ### nano-banana-2
