@@ -1,7 +1,8 @@
 /*
- * SAS-AM Presentation Theme
+ * marcov / SAS-AM Presentation Theme
  * Reveal.js Presentation Styles
  * Light/Dark mode with SAS brand colours
+ * Standards: marcov-revealjs-standards v1.0.0
  */
 
 /* ============================
@@ -39,6 +40,13 @@
   --shadow-sm: 0 2px 8px rgba(0, 34, 68, 0.08);
   --shadow-md: 0 4px 16px rgba(0, 34, 68, 0.12);
   --shadow-lg: 0 8px 24px rgba(0, 34, 68, 0.15);
+
+  /* Focus */
+  --focus-ring: 0 0 0 3px rgba(105, 190, 40, 0.5);
+
+  /* Code */
+  --code-bg: #f0f4f8;
+  --code-text: #1e3a5f;
 }
 
 /* ============================
@@ -75,19 +83,31 @@
   --shadow-sm: 0 2px 8px rgba(0, 10, 28, 0.3);
   --shadow-md: 0 4px 16px rgba(0, 10, 28, 0.4);
   --shadow-lg: 0 14px 30px rgba(0, 10, 28, 0.5);
+
+  /* Focus */
+  --focus-ring: 0 0 0 3px rgba(105, 190, 40, 0.4);
+
+  /* Code */
+  --code-bg: #1a2332;
+  --code-text: #d1e3ed;
 }
 
 /* ============================
-   BASE STYLES
+   RESETS
    ============================ */
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -95,7 +115,7 @@ html, body {
 }
 
 body {
-  font-family: "Source Sans Pro", Helvetica, sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
 }
@@ -223,13 +243,20 @@ body {
   letter-spacing: 1.5px;
   color: var(--text-muted);
   text-transform: uppercase;
-  transition: color 0.3s ease;
+  transition: color 150ms ease;
   position: relative;
-  cursor: default;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.nav-item:hover {
+  color: var(--text-primary);
 }
 
 .nav-item.active {
   color: var(--accent);
+  background: rgba(105, 190, 40, 0.1);
 }
 
 .nav-item.active::after {
@@ -270,6 +297,11 @@ body {
   background: var(--bg-tertiary);
   border-color: var(--accent);
   color: var(--accent);
+}
+
+.theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 /* Show/hide sun/moon icons based on theme */
@@ -666,6 +698,261 @@ body {
 }
 
 /* ============================
+   REUSABLE COMPONENTS
+   ============================ */
+
+/* --- Cards --- */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card p, .card li {
+  font-size: 18px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.card ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.card li {
+  margin-bottom: 6px;
+}
+
+/* --- Card Grids --- */
+.card-grid {
+  display: grid;
+  gap: 20px;
+  flex: 1;
+}
+
+.card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* --- Tables --- */
+.ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 17px;
+  margin: 16px 0;
+}
+
+.ref-table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--accent);
+  padding: 10px 14px;
+  border-bottom: 2px solid var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 13px;
+}
+
+.ref-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.ref-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* --- Code Blocks --- */
+.code-block {
+  background: var(--code-bg);
+  color: var(--code-text);
+  font-family: 'Source Code Pro', monospace;
+  font-size: 16px;
+  padding: 20px 24px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  overflow-x: auto;
+  line-height: 1.7;
+  white-space: pre;
+  margin: 16px 0;
+}
+
+.code-inline {
+  background: var(--code-bg);
+  color: var(--code-text);
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.85em;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* --- Badges --- */
+.badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+
+.badge-required {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.badge-recommended {
+  background: rgba(105, 190, 40, 0.15);
+  color: var(--accent);
+}
+
+.badge-optional {
+  background: rgba(107, 114, 128, 0.15);
+  color: var(--text-muted);
+}
+
+/* --- Checklists --- */
+.checklist {
+  list-style: none;
+  padding: 0;
+}
+
+.checklist li {
+  font-size: 19px;
+  color: var(--text-secondary);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checklist li:last-child {
+  border-bottom: none;
+}
+
+.check-icon {
+  color: var(--accent);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* --- Keyboard Shortcut Badges --- */
+.kbd {
+  display: inline-block;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--card-border);
+  border-radius: 5px;
+  padding: 3px 10px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 32px;
+  text-align: center;
+  box-shadow: 0 2px 0 var(--card-border);
+}
+
+/* --- Scroll Container --- */
+.scroll-y {
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 8px;
+}
+
+.scroll-y::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scroll-y::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 2px;
+}
+
+/* --- Split Layout --- */
+.split-layout {
+  display: flex;
+  gap: 40px;
+  flex: 1;
+}
+
+.split-layout > * {
+  flex: 1;
+}
+
+/* --- Reference Typography --- */
+.ref-header {
+  margin-bottom: 20px;
+}
+
+.ref-section-tag {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 16px;
+}
+
+.ref-title {
+  font-size: 56px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.ref-subtitle {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.ref-body {
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.ref-small {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* --- Screen Reader Only --- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================
    REVEAL.JS OVERRIDES
    ============================ */
 
@@ -755,6 +1042,18 @@ html.reveal-viewport {
   .title-slide h2 {
     font-size: 28px;
   }
+
+  .ref-title {
+    font-size: 44px;
+  }
+
+  .ref-subtitle {
+    font-size: 24px;
+  }
+
+  .card-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media screen and (max-width: 1000px) {
@@ -776,6 +1075,14 @@ html.reveal-viewport {
 
   .static-footer {
     padding: 12px 20px;
+  }
+
+  .split-layout {
+    flex-direction: column;
+  }
+
+  .card-grid-2, .card-grid-3, .card-grid-4 {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -810,9 +1117,10 @@ html.reveal-viewport {
    ============================ */
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

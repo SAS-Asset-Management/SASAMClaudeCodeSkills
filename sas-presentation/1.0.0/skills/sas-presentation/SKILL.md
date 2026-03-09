@@ -1,6 +1,6 @@
 ---
 name: sas-presentation
-description: Create polished SAS-AM branded Reveal.js presentations. Use when the user asks to create slides, a presentation, a deck, or a slideshow. Implements SAS brand guidelines with light/dark mode, narrative structure, and professional layouts. Generates standalone HTML + CSS with no build step required.
+description: Create polished marcov / SAS-AM branded Reveal.js presentations. Use when the user asks to create slides, a presentation, a deck, or a slideshow. Supports 17 presentation types — from standard narrative decks to dashboards, proposals, and meeting minutes. Implements SAS brand guidelines with light/dark mode and professional layouts. Generates standalone HTML + CSS with no build step required. Complies with marcov-revealjs-standards v1.0.0.
 ---
 
 # SAS-AM Presentation Skill
@@ -9,53 +9,113 @@ Create professional HTML presentations using Reveal.js with SAS-AM brand guideli
 
 ## Overview
 
-This skill creates presentations following the SAS-AM communication style, which features:
+This skill creates presentations following the marcov / SAS-AM communication style, which features:
 
+- **17 Presentation Types**: Standard presentations, reports, dashboards, proposals, pitch decks, and more
 - **SAS Brand Colours**: SAS Blue (#002244) and SAS Green (#69BE28)
 - **Light/Dark Mode Toggle**: Built-in theme switching with localStorage persistence
-- **Narrative Structure**: A proven 7-section storytelling arc
-- **Professional Typography**: Source Sans Pro font family
-- **Static Footer Navigation**: Section progress indicator with theme toggle
+- **Type-Specific Structures**: Each type has its own section layout, tone, and component set
+- **Professional Typography**: Source Sans Pro + Source Code Pro font families
+- **Static Footer Navigation**: Section progress indicator with keyboard-accessible theme toggle
 - **Dual-Theme Assets**: Support for light/dark image variants
-- **Subtle Animations**: Binary background, animated SVG diagrams
+- **WCAG 2.1 AA Compliance**: Focus indicators, reduced motion, screen reader support
+- **marcov Standards Compliant**: All output follows marcov-revealjs-standards v1.0.0
+
+## Supported Presentation Types
+
+| Type | Slides | Layout | Best For |
+|------|--------|--------|----------|
+| **Presentation** | 10–20 | Mixed (split / full-bleed) | Conference talks, workshops, strategy sessions |
+| **Report** | 15–30 | Text-heavy with charts | Maturity assessments, audit findings, deep-dives |
+| **One Pager** | 1–3 | Dense single-slide | Service summaries, leave-behinds, handouts |
+| **Dashboard** | 3–8 | Grid / Card-based | Monthly reporting, operational reviews |
+| **Chart** | 1–3 | Centred visual | LinkedIn posts, data storytelling |
+| **Resume / CV** | 3–6 | Split (sidebar + main) | Tender submissions, team profiles |
+| **Proposal** | 10–15 | Mixed (narrative + structured) | Client proposals, tender responses |
+| **Capability Brochure** | 8–12 | Visual-heavy / Magazine | Business development, conference handouts |
+| **Case Study** | 6–10 | Storytelling arc | BD meetings, tender evidence |
+| **Pitch Deck** | 8–12 | Full-bleed / High-impact | Investor pitches, partnership discussions |
+| **Executive Briefing** | 4–7 | Clean / Sparse | Board updates, sponsor briefings |
+| **Workshop / Training** | 10–25 | Mixed (instructional) | Client workshops, training, tutorials |
+| **Project Status Update** | 5–8 | Structured / Tabular | Weekly/monthly project reporting |
+| **Technical Architecture** | 6–12 | Diagram-centric | Solution design reviews, system docs |
+| **Roadmap / Timeline** | 5–10 | Horizontal timeline | Product roadmaps, transformation plans |
+| **Comparison Matrix** | 4–8 | Grid / Table-centric | Technology selection, vendor evaluation |
+| **Meeting Minutes** | 3–6 | Structured / List-based | Post-meeting distribution, governance |
+
+For full type definitions including sections, components, and Reveal.js overrides, see `references/presentation-types.md`.
 
 ## Discovery Process (CRITICAL)
 
-**Before creating any presentation, you MUST conduct a discovery interview to understand:**
+**Before creating any presentation, you MUST conduct a discovery interview. The goal is to identify the right presentation type and gather content requirements.**
 
-### Questions to Ask
+### Phase 1: Identify the Presentation Type
 
-1. **Topic & Purpose**
-   - What is the presentation about?
-   - What is the key message you want the audience to remember?
+Ask these questions to determine the best type:
+
+1. **What is the primary purpose of this document?**
+   - Telling a story / persuading → **Presentation**, **Pitch Deck**, **Case Study**
+   - Presenting data or findings → **Report**, **Dashboard**, **Chart**
+   - Proposing or selling → **Proposal**, **Capability Brochure**
+   - Tracking or reporting → **Project Status Update**, **Meeting Minutes**
+   - Teaching or training → **Workshop / Training**
+   - Documenting or comparing → **Technical Architecture**, **Comparison Matrix**, **Roadmap / Timeline**
+   - Profiling people or services → **Resume / CV**, **One Pager**
+   - Briefing leadership → **Executive Briefing**
+
+2. **Who is the primary audience?**
+   - Senior executives / board → **Executive Briefing**, **Dashboard**
+   - Investors or partners → **Pitch Deck**
+   - Clients (commercial) → **Proposal**, **Capability Brochure**, **Case Study**
+   - Internal team → **Project Status Update**, **Meeting Minutes**, **Workshop**
+   - Conference / public → **Presentation**, **One Pager**
+   - Technical reviewers → **Technical Architecture**, **Comparison Matrix**
+
+3. **How many slides do you expect? (or how much content do you have?)**
+   - 1–3 slides → **One Pager**, **Chart**, **Executive Briefing**
+   - 5–10 slides → **Dashboard**, **Case Study**, **Pitch Deck**, **Roadmap**
+   - 10–20 slides → **Presentation**, **Proposal**, **Capability Brochure**
+   - 15–30 slides → **Report**, **Workshop / Training**
+
+4. **What is the dominant content format?**
+   - Narrative text with visuals → **Presentation**, **Case Study**, **Pitch Deck**
+   - Tables, metrics, KPIs → **Dashboard**, **Report**, **Project Status Update**
+   - Diagrams and architecture → **Technical Architecture**
+   - Comparison grids → **Comparison Matrix**
+   - Lists, actions, decisions → **Meeting Minutes**
+   - Timeline / phases → **Roadmap / Timeline**
+
+Once the type is determined, confirm with the user: _"Based on what you've described, I'd recommend a **[Type]** format — it uses [key characteristic]. Does that sound right?"_
+
+### Phase 2: Gather Content Details
+
+5. **Topic & Key Message**
+   - What is this about?
+   - What is the single most important takeaway?
    - Is there a specific call-to-action?
 
-2. **Audience**
-   - Who is the audience? (executives, technical team, clients, conference)
-   - What do they already know about this topic?
-   - What concerns or objections might they have?
-
-3. **Context**
-   - Where will this be presented? (conference, boardroom, webinar, USB for sharing)
-   - How much time do you have? (affects number of slides)
+6. **Delivery Context**
+   - Where will this be presented? (conference, boardroom, webinar, shared via USB/email)
+   - How much time do you have? (affects slide count)
    - Will you be presenting live or is it for self-navigation?
 
-4. **Branding**
-   - Should we use SAS-AM branding (default) or a client's brand?
+7. **Branding**
+   - Should we use marcov / SAS-AM branding (default) or a client's brand?
    - If client branding, what are their brand colours?
 
-5. **Visual Assets**
+8. **Visual Assets**
    - Do you have specific images, diagrams, or visualisations to include?
    - Should I create conceptual SVG diagrams?
    - Do you need a QR code for the closing slide?
 
-6. **Content Outline**
+9. **Content Outline**
    - Do you have existing content, bullet points, or a rough outline?
    - What are the key sections or topics to cover?
+   - (Show the user the section list for the selected type and ask if they want to add/remove/reorder any)
 
-### Suggested Narrative Structure
+### Default Narrative Structure (for "Presentation" type)
 
-Guide users toward this proven 7-section structure (adjustable based on content):
+The default **Presentation** type uses this proven 7-section structure:
 
 | Section | Purpose | Example |
 |---------|---------|---------|
@@ -66,6 +126,8 @@ Guide users toward this proven 7-section structure (adjustable based on content)
 | **THE IMPLEMENTATION** | Show how it works practically | "Start small. One asset class. One location." |
 | **THE FUTURE** | Vision and possibilities | "Maintenance schedules that write themselves" |
 | **THE CONNECTION** | Call to action | "Ready to make your assets intelligent?" |
+
+Other types have their own section structures — see `references/presentation-types.md` for the full mapping.
 
 ---
 
@@ -112,7 +174,17 @@ Or reference them directly in your HTML using the bundled paths during developme
 
 ## Technical Specifications
 
-### HTML Document Structure
+### HTML Document Structure (marcov Standards)
+
+Every presentation MUST include these required elements:
+
+- `<!DOCTYPE html>` declaration
+- `lang="en-AU"` on `<html>`
+- `data-theme="light"` default attribute
+- `charset="UTF-8"`
+- Viewport meta tag
+- Description and author meta tags
+- Title with `| marcov` suffix
 
 ```html
 <!DOCTYPE html>
@@ -120,131 +192,100 @@ Or reference them directly in your HTML using the bundled paths during developme
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Presentation Title | SAS-AM</title>
+  <meta name="description" content="Description of the presentation">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>Presentation Title | marcov</title>
 
   <!-- Reveal.js -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
 
-  <!-- Font Awesome for icons -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Custom Styles -->
+  <!-- marcov Styles -->
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <div class="presentation-wrapper">
-    <!-- Subtle binary background -->
-    <div class="binary-background" id="binaryBg"></div>
-
-    <!-- Reveal.js container -->
-    <div class="reveal">
-      <div class="slides">
-        <!-- Slides go here -->
-      </div>
-    </div>
-
-    <!-- Static footer (outside reveal.js) -->
-    <footer class="static-footer">
-      <div class="footer-content">
-        <div class="nav-items">
-          <span class="nav-item" data-section="opening">OPENING</span>
-          <span class="nav-item" data-section="context">THE CONTEXT</span>
-          <!-- ... more sections ... -->
-        </div>
-        <div class="footer-controls">
-          <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode">
-            <i class="fas fa-sun light-icon"></i>
-            <i class="fas fa-moon dark-icon"></i>
-          </button>
-        </div>
-      </div>
-    </footer>
-  </div>
-
-  <!-- Reveal.js -->
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-
-  <!-- Theme & Navigation Scripts -->
-  <script>
-    // Theme management
-    const STORAGE_KEY = 'sas-presentation-theme';
-
-    function getSystemTheme() {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-
-    function setTheme(theme) {
-      const resolved = theme === 'system' ? getSystemTheme() : theme;
-      document.documentElement.setAttribute('data-theme', resolved);
-      document.body.setAttribute('data-theme', resolved);
-      const viewport = document.querySelector('.reveal-viewport');
-      if (viewport) viewport.setAttribute('data-theme', resolved);
-      localStorage.setItem(STORAGE_KEY, theme);
-    }
-
-    function toggleTheme() {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      setTheme(current === 'light' ? 'dark' : 'light');
-    }
-
-    // Initialize theme
-    setTheme(localStorage.getItem(STORAGE_KEY) || 'light');
-
-    // Reveal.js initialization
-    Reveal.initialize({
-      hash: true,
-      slideNumber: 'c/t',
-      showSlideNumber: 'speaker',
-      transition: 'slide',
-      transitionSpeed: 'default',
-      backgroundTransition: 'fade',
-      center: false,
-      width: 1920,
-      height: 1080,
-      margin: 0,
-      minScale: 0.2,
-      maxScale: 2.0,
-    });
-
-    // Update footer navigation
-    function updateNavigation() {
-      const currentSlide = Reveal.getCurrentSlide();
-      const currentSection = currentSlide?.getAttribute('data-section');
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.toggle('active', item.getAttribute('data-section') === currentSection);
-      });
-    }
-    Reveal.on('slidechanged', updateNavigation);
-    updateNavigation();
-
-    // Binary background animation
-    (function() {
-      const container = document.getElementById('binaryBg');
-      for (let i = 0; i < 50; i++) {
-        const column = document.createElement('div');
-        column.className = 'binary-column';
-        let str = '';
-        for (let j = 0; j < 150; j++) {
-          str += Math.random() > 0.5 ? '1' : '0';
-          if (j < 149) str += '<br>';
-        }
-        column.innerHTML = str;
-        column.style.left = (i * 2) + '%';
-        const duration = 45 + Math.random() * 30;
-        column.style.animationDuration = duration + 's';
-        column.style.animationDelay = (Math.random() * -duration) + 's';
-        container.appendChild(column);
-      }
-    })();
-  </script>
-</body>
-</html>
 ```
+
+See `references/scaffold-template.html` for the complete scaffold including JavaScript.
+
+### Structural Rules
+
+- Each slide is a `<section>` element
+- Every `<section>` requires a unique `id`
+- Every `<section>` requires a `data-section` attribute
+- Horizontal slides: top-level `<section>`. Vertical sub-slides: nested `<section>` within parent
+- `<h1>` — title slide only (one per deck)
+- `<h2>` — slide titles. `<h3>` — card/section headings. `<h4>` — sub-headings. Never skip heading levels
+- All `<img>` tags must have `alt` text. Decorative images: `alt="" role="presentation"`
+- Inline SVGs preferred over image files
+- CSS variables for all theme-aware colours — no hardcoded values
+- All JS at bottom of `<body>`
+- No build step — open-in-browser ready
+
+### Reveal.js Configuration
+
+All types inherit this base configuration:
+
+```javascript
+Reveal.initialize({
+  hash: true,
+  hashOneBasedIndex: false,
+  respondToHashChanges: true,
+  history: false,
+  slideNumber: 'c/t',
+  showSlideNumber: 'speaker',
+  center: false,
+  width: 1920,
+  height: 1080,
+  margin: 0,
+  minScale: 0.2,
+  maxScale: 2.0,
+  transition: 'slide',
+  transitionSpeed: 'default',
+  backgroundTransition: 'fade',
+  keyboard: true,
+  touch: true,
+  loop: false,
+  embedded: false,
+  help: true,
+  mouseWheel: false,
+  hideInactiveCursor: true,
+  hideCursorTime: 3000,
+  fragments: true,
+  fragmentInURL: true,
+  pdfMaxPagesPerSlide: 1,
+  pdfSeparateFragments: false,
+});
+```
+
+**Per-Type Overrides** (apply only when the type specifies them):
+
+| Type | Override |
+|------|----------|
+| Dashboard | `transition: 'fade'` |
+| Workshop / Training | `help: true`, `showSlideNumber: 'all'` |
+| One Pager | `loop: true` (kiosk mode) |
+| Project Status Update | `transition: 'fade'` |
+
+### Theme Management
+
+Three states: `light` (default), `dark`, `system` (follows OS preference). Storage key: `marcov-presentation-theme`.
+
+The `data-theme` attribute is applied to `<html>`, `<body>`, and `.reveal-viewport`. All colours use CSS custom properties.
+
+### Footer Navigation
+
+- Section map built once on Reveal `ready` event
+- Active section highlighted with accent colour
+- Click any section to jump to its first slide
+- Keyboard accessible: `tabindex="0"`, `role="button"`, Enter/Space activation
+- Footer positioned `fixed` outside Reveal container
 
 ---
 
@@ -458,6 +499,13 @@ Call-to-action with QR code and branding.
   --shadow-sm: 0 2px 8px rgba(0, 34, 68, 0.08);
   --shadow-md: 0 4px 16px rgba(0, 34, 68, 0.12);
   --shadow-lg: 0 8px 24px rgba(0, 34, 68, 0.15);
+
+  /* Focus */
+  --focus-ring: 0 0 0 3px rgba(105, 190, 40, 0.5);
+
+  /* Code */
+  --code-bg: #f0f4f8;
+  --code-text: #1e3a5f;
 }
 ```
 
@@ -495,6 +543,13 @@ Call-to-action with QR code and branding.
   --shadow-sm: 0 2px 8px rgba(0, 10, 28, 0.3);
   --shadow-md: 0 4px 16px rgba(0, 10, 28, 0.4);
   --shadow-lg: 0 14px 30px rgba(0, 10, 28, 0.5);
+
+  /* Focus */
+  --focus-ring: 0 0 0 3px rgba(105, 190, 40, 0.4);
+
+  /* Code */
+  --code-bg: #1a2332;
+  --code-text: #d1e3ed;
 }
 ```
 
@@ -512,7 +567,9 @@ Call-to-action with QR code and branding.
 | Slide Subtitle | 36px | 300 | text-secondary | line-height 1.4 |
 | Footer Nav | 11px | 600 | text-muted | uppercase, letter-spacing 1.5px |
 
-**Font Family:** Source Sans Pro (300, 400, 600, 700 weights)
+**Font Families:**
+- Source Sans Pro (300, 400, 600, 700 weights) — body text, headings
+- Source Code Pro (400, 600 weights) — code blocks, inline code, keyboard badges
 
 ---
 
@@ -634,30 +691,59 @@ Use `<animate>` elements for data flow visualisations:
 
 ---
 
+## Reusable Components
+
+These CSS components are available in `base-styles.css` for use across all presentation types:
+
+| Component | CSS Class | Use For |
+|-----------|-----------|---------|
+| Card | `.card` | Content container with border and shadow |
+| Card Grid | `.card-grid` + `.card-grid-2/3/4` | Responsive grid of cards |
+| Table | `.ref-table` | Styled data table with accent headers |
+| Checklist | `.checklist` + `.check-icon` | Lists with check/square icons |
+| Badge | `.badge` + `.badge-required/recommended/optional` | Status indicator labels (RAG) |
+| Code Block | `.code-block` | Monospace code display |
+| Inline Code | `.code-inline` | Inline monospace text |
+| Keyboard Key | `.kbd` | Keyboard shortcut badge |
+| Split Layout | `.split-layout` | Two-column responsive layout |
+| Scroll Container | `.scroll-y` | Scrollable content area for overflow |
+| Section Tag | `.ref-section-tag` | Section label (uppercase, accent colour) |
+| Title | `.ref-title` | Large slide heading (56px) |
+| Subtitle | `.ref-subtitle` | Secondary heading (28px) |
+| Body Text | `.ref-body` | Standard body copy (22px) |
+| Small Text | `.ref-small` | Fine print / captions (16px) |
+| Screen Reader | `.sr-only` | Visually hidden but accessible text |
+
+---
+
 ## Workflow
 
 ### Step 1: Discovery Interview
 
-Conduct the discovery interview to understand:
-- Topic, audience, context
-- Key message and call-to-action
-- Content outline
-- Visual requirements
+Conduct the discovery interview to:
+1. **Identify the presentation type** using Phase 1 questions (purpose, audience, slide count, content format)
+2. **Confirm the type** with the user
+3. **Gather content details** using Phase 2 questions (topic, delivery context, branding, assets, outline)
+4. **Review the section structure** for the selected type (from `references/presentation-types.md`) and confirm any additions or removals
 
 ### Step 2: Create Presentation Structure
 
 1. Create a new directory for the presentation
 2. Copy `base-styles.css` from references as `styles.css`
-3. Create `presentation.html` with the scaffold
+3. Create `presentation.html` using the scaffold template — adapt the sections and footer nav items to match the selected presentation type
 4. Create `assets/` directory
+5. Copy logo assets from `references/assets/`
 
 ### Step 3: Build Content Slides
 
 Work through slides incrementally:
 1. Create title slide
-2. Build out each section following the narrative arc
-3. Add section-appropriate `data-section` attributes
-4. Include dual-theme images where needed
+2. Build out each section following the type's section structure
+3. Add section-appropriate `data-section` attributes (matching `references/presentation-types.md`)
+4. Update footer nav items to match the sections
+5. Apply any type-specific Reveal.js overrides
+6. Include dual-theme images where needed
+7. Use the appropriate reusable components (cards, tables, badges, etc.) for the type
 
 ### Step 4: Review and Refine
 
@@ -665,6 +751,7 @@ Work through slides incrementally:
 2. Verify light/dark mode toggle
 3. Check all images load correctly
 4. Ensure footer navigation tracks correctly
+5. Run the pre-delivery checklist (see below)
 
 ### Step 5: Export (Optional)
 
@@ -716,6 +803,9 @@ npx decktape reveal "presentation.html" output.pdf --screenshots --screenshots-d
   .slide-subtitle { font-size: 28px; }
   .title-slide h1 { font-size: 48px; }
   .title-slide h2 { font-size: 28px; }
+  .ref-title { font-size: 44px; }
+  .ref-subtitle { font-size: 24px; }
+  .card-grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media screen and (max-width: 1000px) {
@@ -723,6 +813,8 @@ npx decktape reveal "presentation.html" output.pdf --screenshots --screenshots-d
   .slide-image { max-height: 300px; }
   .nav-items { gap: 15px; }
   .nav-item { font-size: 10px; }
+  .split-layout { flex-direction: column; }
+  .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
 }
 ```
 
@@ -740,32 +832,68 @@ npx decktape reveal "presentation.html" output.pdf --screenshots --screenshots-d
 
 ---
 
-## Accessibility
+## Accessibility (WCAG 2.1 AA)
 
-- **Language**: `lang="en-AU"` on `<html>`
-- **Alt text**: All images must have descriptive alt text
-- **ARIA labels**: Theme toggle and interactive elements
-- **Reduced motion**: Respect `prefers-reduced-motion`
+All presentations must meet these minimum standards:
+
+### Colour Contrast
+- **Normal text:** 4.5:1 minimum ratio
+- **Large text (≥24px / 18.67px bold):** 3:1 minimum
+- **UI components:** 3:1 against adjacent colours
+- Test both light and dark themes independently
+
+### Keyboard Access
+- All interactive elements focusable via Tab
+- Visible focus indicators using `--focus-ring` variable
+- Never use `outline: none` without a replacement
+- Custom buttons: `role="button"` + `tabindex="0"`
+- Enter and Space activate custom controls
+
+### Screen Readers
+- `lang="en-AU"` on `<html>`
+- Descriptive `alt` on all images
+- Decorative images: `alt="" role="presentation"`
+- `aria-label` on icon-only buttons
+- Use `.sr-only` class for visually hidden labels
+- `aria-hidden="true"` on binary background columns
+
+### Typography Access
+- Minimum body text: 16px (24px on slides)
+- Line height ≥ 1.4 for body copy
+- Max line length: ~75 characters
+- No justified text — use left-aligned
+
+### Reduced Motion (Mandatory)
+
+This rule MUST appear in every stylesheet:
 
 ```css
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 ```
+
+### Semantic HTML
+- Use `<nav>`, `<main>`, `<footer>` landmarks
+- Headings in sequential order (h1 → h2 → h3)
+- Lists for list content (`<ul>`/`<ol>`)
+- Tables for tabular data (with `<th>` headers)
+- `<button>` for actions, `<a>` for navigation
 
 ---
 
 ## Dependencies (CDN)
 
-All loaded from CDN - no npm install required:
+All loaded from CDN — no npm install required:
 
 - **Reveal.js 5.1.0**: Presentation framework
 - **Font Awesome 6.5.1**: Icons
-- **Google Fonts**: Source Sans Pro
+- **Google Fonts**: Source Sans Pro (300, 400, 600, 700) + Source Code Pro (400, 600)
 
 ---
 
@@ -789,16 +917,41 @@ Example (Yarra Trams):
 
 ---
 
-## Checklist
+## Pre-Delivery Checklist
 
-Before delivering a presentation, verify:
-
-- [ ] Discovery interview completed
-- [ ] Narrative structure follows 7-section arc
+### HTML Compliance
+- [ ] `<!DOCTYPE html>` declared
+- [ ] `lang="en-AU"` set
+- [ ] UTF-8 charset
+- [ ] Viewport meta present
+- [ ] Description and author meta tags present
+- [ ] Title with `| marcov` suffix
 - [ ] All slides have unique IDs
 - [ ] All slides have `data-section` attributes
-- [ ] Light/dark mode toggle works
+- [ ] Heading hierarchy correct (h1 → h2 → h3, no skips)
+- [ ] No hardcoded colours (all via CSS variables)
+
+### Accessibility
 - [ ] All images have alt text
-- [ ] Footer navigation updates correctly
-- [ ] PDF export works (if required)
+- [ ] Colour contrast passes 4.5:1
+- [ ] Focus indicators visible
+- [ ] ARIA labels on icon-only buttons
+- [ ] Reduced motion rule present in stylesheet
+- [ ] Keyboard navigation works
+- [ ] Binary background columns have `aria-hidden="true"`
+
+### Functionality
+- [ ] Light/dark toggle works
+- [ ] Footer nav tracks correctly
+- [ ] Footer nav items match the presentation type's sections
+- [ ] All fragments animate
+- [ ] Hash URLs resolve
+- [ ] Opens standalone in browser
 - [ ] Australian English spelling used
+- [ ] PDF export tested (if needed)
+
+### Content
+- [ ] Discovery interview completed
+- [ ] Presentation type identified and confirmed
+- [ ] Section structure follows the type definition
+- [ ] Tone matches the type (formal, punchy, narrative, etc.)
