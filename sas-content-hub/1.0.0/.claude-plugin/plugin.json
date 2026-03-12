@@ -1,0 +1,25 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/@anthropic-ai/claude-code-plugins@latest/schemas/plugin-schema.json",
+  "name": "sas-content-hub",
+  "description": "SAS-AM content campaign orchestrator. Draft articles, generate LinkedIn posts, create gated download artefacts, and publish to Webflow — all from Claude Code. Orchestrates the full pipeline: artefact creation (sas-presentation) → email-gated download (Cortex4 lead capture) → Webflow article publishing → LinkedIn promotion. Dependencies: sas-presentation, nano-banana-2.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "license": "MIT",
+  "keywords": [
+    "content",
+    "webflow",
+    "linkedin",
+    "marketing",
+    "email-gate",
+    "lead-capture",
+    "campaign",
+    "cms",
+    "publishing",
+    "asset-management"
+  ],
+  "engines": {
+    "claude-code": ">=1.0.0"
+  }
+}
