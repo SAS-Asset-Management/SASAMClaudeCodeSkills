@@ -96,6 +96,46 @@
       "keywords": ["sasam", "update", "version", "management", "core", "utilities"],
       "category": "utilities",
       "tags": ["update", "version", "management", "core"]
+    },
+    {
+      "name": "sas-content-hub",
+      "source": "./sas-content-hub/1.0.0",
+      "description": "SAS-AM content campaign orchestrator. Draft articles, generate LinkedIn posts, create gated download artefacts, and publish to Webflow. Orchestrates the full pipeline: artefact creation → email-gated download → Webflow article publishing → LinkedIn promotion.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["content", "webflow", "linkedin", "marketing", "email-gate", "lead-capture", "campaign", "cms", "publishing", "asset-management"],
+      "category": "content-marketing",
+      "tags": ["content", "campaign", "webflow", "publishing", "lead-capture"]
+    },
+    {
+      "name": "webflow-content-creator",
+      "source": "./webflow-content-creator/1.0.0",
+      "description": "Create and publish SAS-AM branded blog articles and case studies to Webflow CMS. Integrates with b2b-research-agent for research, nano-banana-2 for hero images, and the Webflow MCP for direct publishing.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["webflow", "cms", "content", "blog", "case-study", "article", "asset-management", "publishing"],
+      "category": "content-marketing",
+      "tags": ["webflow", "cms", "blog", "publishing", "content"]
+    },
+    {
+      "name": "analytics",
+      "source": "./analytics/1.0.0",
+      "description": "Website Analytics system integration for SAS-AM. Provides access to GA4 and Search Console data via Grafana dashboards, data collection scripts, and database queries.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["analytics", "ga4", "search-console", "grafana", "website", "seo", "reporting"],
+      "category": "data-analysis",
+      "tags": ["analytics", "ga4", "grafana", "seo", "reporting"]
+    },
+    {
+      "name": "fmeca",
+      "source": "./fmeca",
+      "description": "Analyse, author, review, generate, and extract context for FMEA and FMECA documents for asset-intensive organisations. Supports 5 workflows, 4 sector taxonomies, and standards-aligned scoring scales.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["fmea", "fmeca", "failure-mode", "reliability", "rcm", "criticality", "risk", "asset-management"],
+      "category": "engineering",
+      "tags": ["fmea", "fmeca", "reliability", "risk", "asset-management"]
     }
   ]
 }
