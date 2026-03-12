@@ -434,7 +434,7 @@ echo "Local version: $LOCAL_VERSION"</pre>
     <p>The latest published version is fetched from GitHub using the raw content URL:</p>
     <pre># Fetch remote version from GitHub
 REMOTE_VERSION=$(curl -s \
-  "https://raw.githubusercontent.com/marcov-workshop/SASAMClaudeCodeSkills/main/VERSION")
+  "https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/VERSION")
 echo "Remote version: $REMOTE_VERSION"</pre>
 
     <h3>Step 3: Compare Versions</h3>
@@ -458,7 +458,7 @@ fi</pre>
 
     <pre># Fetch the remote changelog
 CHANGELOG=$(curl -s \
-  "https://raw.githubusercontent.com/marcov-workshop/SASAMClaudeCodeSkills/main/CHANGELOG.md")
+  "https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/CHANGELOG.md")
 
 # Display the changelog
 echo "$CHANGELOG"</pre>
@@ -604,7 +604,7 @@ done</pre>
       <p><strong>Network Error</strong></p>
       <p>If the remote GitHub URL is unreachable (no internet, DNS failure, or repository moved):</p>
       <pre style="margin-top:10px; margin-bottom:0;">ERROR: Unable to fetch remote VERSION from GitHub.
-  URL: https://raw.githubusercontent.com/marcov-workshop/SASAMClaudeCodeSkills/main/VERSION
+  URL: https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/VERSION
   Check your network connection and try again.
   If the problem persists, verify the repository URL has not changed.</pre>
     </div>
@@ -632,9 +632,9 @@ Resolve the conflicts manually, then run:
         <tr><th>Resource</th><th>URL</th></tr>
       </thead>
       <tbody>
-        <tr><td>VERSION</td><td><code>https://raw.githubusercontent.com/marcov-workshop/SASAMClaudeCodeSkills/main/VERSION</code></td></tr>
-        <tr><td>CHANGELOG</td><td><code>https://raw.githubusercontent.com/marcov-workshop/SASAMClaudeCodeSkills/main/CHANGELOG.md</code></td></tr>
-        <tr><td>Repository</td><td><code>https://github.com/marcov-workshop/SASAMClaudeCodeSkills</code></td></tr>
+        <tr><td>VERSION</td><td><code>https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/VERSION</code></td></tr>
+        <tr><td>CHANGELOG</td><td><code>https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/CHANGELOG.md</code></td></tr>
+        <tr><td>Repository</td><td><code>https://github.com/SAS-Asset-Management/SASAMClaudeCodeSkills</code></td></tr>
       </tbody>
     </table>
 

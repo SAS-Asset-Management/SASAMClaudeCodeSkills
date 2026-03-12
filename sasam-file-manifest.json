@@ -1,6 +1,6 @@
 {
   "version": "1.4.0",
-  "generated_at": "2026-03-12T03:54:11Z",
+  "generated_at": "2026-03-12T03:56:05Z",
   "files": {
     ".claude-plugin/marketplace.json": "3e51c4c33b0d5dacbbd709ab50c37ceb8882ae637be1a652d0ed5fbf2a12cb95",
     ".notifications/config.json": "065619f497ad745bfd9cb48b6c452c2dd7e880fc8c9021f1f691fbd955db1db3",
@@ -99,7 +99,7 @@
     "sas-presentation/1.0.0/skills/sas-presentation/references/presentation-types.md": "c6e3896bfe1d3ceb5dbf7f23a0f6b63028a084ff375bc99fc70ca50d7b51ed81",
     "sas-presentation/1.0.0/skills/sas-presentation/SKILL.md": "c28d557065e9f6f3859f4e0a44dbcc90315fdd765ccbf56bcdc4de4b5f8721a4",
     "sasam-core/1.0.0/.claude-plugin/plugin.json": "3e085023debcd90a42d4db89c32febe6cb3eb27d14027fe918b45c31e1a84262",
-    "sasam-core/1.0.0/skills/sasam-update/SKILL.md": "a9c3cfea8711039a3285630a8e5c7800b67ced373b5e519cf357c20bf744018d",
+    "sasam-core/1.0.0/skills/sasam-update/SKILL.md": "3ce381e5f9cbfe983f50776869fa901d8343c35f306be25b2fc95e2ace825073",
     "sasam-local-patches/20260310_114436/marketplace.json": "1c0860110c593d698c943c8fb6557a59cd672a952951b4eff9e58422644080c2",
     "setup.sh": "93d6ffc0f41066d6c86fa89f481a12e20ff7122b9c23317de2fa89e8eb981a99",
     "vicTenders/tender-assessment/1.0.0/.claude-plugin/plugin.json": "842ec911a05d28af82e1b8d57889712714df1fa9ce2bf5022123497032cbf06e",

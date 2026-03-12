@@ -44,7 +44,7 @@ echo "Local version: $LOCAL_VERSION"
 ### Step 2: Fetch Remote Version
 
 ```bash
-REMOTE_VERSION=$(curl -s "https://raw.githubusercontent.com/scrivo21/SASAMClaudeCodeSkills/main/VERSION" 2>/dev/null || echo "error")
+REMOTE_VERSION=$(curl -s "https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/VERSION" 2>/dev/null || echo "error")
 echo "Remote version: $REMOTE_VERSION"
 ```
 
@@ -66,7 +66,7 @@ fi
 
 ```bash
 # Fetch changelog from GitHub
-CHANGELOG=$(curl -s "https://raw.githubusercontent.com/scrivo21/SASAMClaudeCodeSkills/main/CHANGELOG.md")
+CHANGELOG=$(curl -s "https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/CHANGELOG.md")
 
 # Display recent entries (first 50 lines)
 echo "$CHANGELOG" | head -50
@@ -224,6 +224,6 @@ To resolve:
 
 | Resource | URL |
 |----------|-----|
-| VERSION | https://raw.githubusercontent.com/scrivo21/SASAMClaudeCodeSkills/main/VERSION |
-| CHANGELOG | https://raw.githubusercontent.com/scrivo21/SASAMClaudeCodeSkills/main/CHANGELOG.md |
-| Repository | https://github.com/scrivo21/SASAMClaudeCodeSkills |
+| VERSION | https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/VERSION |
+| CHANGELOG | https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/CHANGELOG.md |
+| Repository | https://github.com/SAS-Asset-Management/SASAMClaudeCodeSkills |
