@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the Website Analytics Skill — a Claude Code skill for SAS-AM website analytics with GA4, Search Console, and Grafana dashboards">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>Website Analytics — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --sas-green: #69BE28; --sas-blue: #002244; --bg-primary: #ffffff; --bg-secondary: #f7f7f7; --bg-tertiary: #ededed; --text-primary: #002244; --text-secondary: #334466; --text-muted: #6b7280; --accent: #69BE28; --accent-hover: #5AA822; --card-bg: rgba(255,255,255,0.95); --card-border: rgba(0,34,68,0.12); --shadow-sm: 0 2px 8px rgba(0,34,68,0.06); --shadow-md: 0 4px 16px rgba(0,34,68,0.10); --shadow-lg: 0 8px 24px rgba(0,34,68,0.14); --focus-ring: 0 0 0 3px rgba(105,190,40,0.5); --code-bg: #f0f4f8; --code-text: #1e3a5f; --sidebar-w: 260px; --header-h: 64px; }
+    :root[data-theme="dark"] { --sas-green: #7AD33B; --sas-blue: #1a4d7a; --bg-primary: #0a0f1a; --bg-secondary: #141d2b; --bg-tertiary: #1e2a3d; --text-primary: #f4fbff; --text-secondary: #d1e3ed; --text-muted: #8ba3b5; --accent: #69BE28; --accent-hover: #7AD33B; --card-bg: rgba(20,29,43,0.9); --card-border: rgba(255,255,255,0.08); --shadow-sm: 0 2px 8px rgba(0,10,28,0.3); --shadow-md: 0 4px 16px rgba(0,10,28,0.4); --shadow-lg: 0 8px 24px rgba(0,10,28,0.5); --focus-ring: 0 0 0 3px rgba(105,190,40,0.4); --code-bg: #1a2332; --code-text: #d1e3ed; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+    .wiki-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-h); background: var(--sas-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .wiki-header .logo-area { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px; }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button { background: rgba(255,255,255,0.12); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .wiki-sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: var(--bg-secondary); border-right: 1px solid var(--card-border); overflow-y: auto; padding: 20px 0; z-index: 50; transition: transform 0.3s ease; }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding: 16px 20px 6px; margin: 0; }
+    .wiki-sidebar a { display: block; padding: 7px 20px 7px 28px; color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; font-weight: 400; border-left: 3px solid transparent; transition: all 0.15s; }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active { color: var(--accent); font-weight: 600; border-left-color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 48px 80px; max-width: 960px; transition: margin-left 0.3s ease; }
+    .wiki-main.expanded { margin-left: 0; }
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 { font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 10px; }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+    thead th { background: var(--sas-blue); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    tbody td { padding: 9px 14px; border-bottom: 1px solid var(--card-border); vertical-align: top; }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; font-family: 'Source Code Pro', monospace; font-size: 0.82rem; }
+    pre { background: var(--code-bg); color: var(--code-text); border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px; overflow-x: auto; font-family: 'Source Code Pro', monospace; font-size: 0.85rem; line-height: 1.5; border: 1px solid var(--card-border); }
+    code { font-family: 'Source Code Pro', monospace; font-size: 0.88em; }
+    :not(pre) > code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; }
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card-grid-5 { grid-template-columns: repeat(5, 1fr); }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s; }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    .callout { border-left: 4px solid var(--accent); background: var(--bg-secondary); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px; }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li { padding: 5px 0 5px 28px; position: relative; font-size: 0.9rem; color: var(--text-secondary); }
+    .checklist li::before { content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400; position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem; }
+    .arch-diagram { background: var(--code-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 20px 24px; margin: 16px 0 24px; font-family: 'Source Code Pro', monospace; font-size: 0.85rem; line-height: 1.8; white-space: pre; overflow-x: auto; }
+    .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 42px; height: 42px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; z-index: 90; }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+    @media (max-width: 900px) { .wiki-sidebar { transform: translateX(-100%); } .wiki-sidebar.open { transform: translateX(0); } .wiki-main { margin-left: 0; padding: 28px 20px 60px; } .card-grid-2, .card-grid-3, .card-grid-4, .card-grid-5 { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } h2 { font-size: 1.3rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+    @media print { .wiki-header, .wiki-sidebar, .scroll-top { display: none; } .wiki-main { margin-left: 0; max-width: 100%; } }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-chart-line"></i>
+      <span>Website Analytics Wiki</span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../wiki.html" style="color:#fff;text-decoration:none;font-size:0.85rem;font-weight:600;opacity:0.85;">
+        <i class="fas fa-arrow-left" style="margin-right:4px;"></i> All Skills
+      </a>
+      <button id="themeToggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="wiki-sidebar" id="sidebar">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#architecture">Architecture</a>
+
+    <h3>Dashboards</h3>
+    <a href="#dashboards">Available Dashboards</a>
+    <a href="#traffic">Traffic Overview</a>
+    <a href="#search">Search Performance</a>
+    <a href="#pages">Page Performance</a>
+    <a href="#ux">User Experience</a>
+    <a href="#campaigns">Campaign Performance</a>
+
+    <h3>Database</h3>
+    <a href="#schema">Database Schema</a>
+    <a href="#queries">Query Formats</a>
+
+    <h3>Data Collection</h3>
+    <a href="#collection">Collection Pipeline</a>
+    <a href="#cron">Cron Schedule</a>
+
+    <h3>Commands</h3>
+    <a href="#commands">Available Commands</a>
+
+    <h3>Reference</h3>
+    <a href="#metrics">Key Metrics</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+    <a href="#integrations">Integrations</a>
+    <a href="#files">Files Reference</a>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="wiki-main" id="main">
+
+    <h1 id="overview">Website Analytics <span class="version">v1.0.0</span></h1>
+    <p class="lead">Expert guidance for the SAS-AM Website Analytics system. Collects data from Google Analytics 4 and Google Search Console, stores it in SQLite, and visualises it through Docker-based Grafana dashboards.</p>
+
+    <div class="card-grid card-grid-4">
+      <div class="card">
+        <div class="card-icon"><i class="fab fa-google"></i></div>
+        <h4>GA4 Integration</h4>
+        <p>User behaviour, traffic sources, engagement metrics, and session data from Google Analytics 4.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-magnifying-glass"></i></div>
+        <h4>Search Console</h4>
+        <p>Keyword rankings, click-through rates, impressions, and SERP position tracking.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-database"></i></div>
+        <h4>SQLite Storage</h4>
+        <p>~160k rows across 4 tables with full query access via CLI or Grafana.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+        <h4>Grafana Dashboards</h4>
+        <p>5 interactive dashboards running in Docker at localhost:8000.</p>
+      </div>
+    </div>
+
+    <!-- Architecture -->
+    <h2 id="architecture"><i class="fas fa-sitemap"></i> System Architecture</h2>
+
+    <div class="arch-diagram">Google APIs        Python Scripts      SQLite Database
+(GA4 + Console)  &rarr;  (Data Collection)  &rarr;  (website_analytics.db)
+                                                    &darr;
+Grafana           Docker Container
+Dashboards      &larr;  (localhost:8000)   &larr;────────┘</div>
+
+    <p>Data flows from Google APIs through Python collection scripts into a local SQLite database. Grafana runs in a Docker container, reading directly from the SQLite file via the frser-sqlite-datasource plugin.</p>
+
+    <!-- Dashboards -->
+    <h2 id="dashboards"><i class="fas fa-gauge-high"></i> Available Dashboards</h2>
+    <p>Access Grafana at <code>http://localhost:8000</code> (credentials: admin / admin123).</p>
+
+    <table>
+      <thead>
+        <tr><th>Dashboard</th><th>URL Path</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr id="traffic">
+          <td><strong>Traffic Overview</strong></td>
+          <td><code>/d/traffic-overview</code></td>
+          <td>User metrics, device breakdown, geographic data, source/medium analysis</td>
+        </tr>
+        <tr id="search">
+          <td><strong>Search Performance</strong></td>
+          <td><code>/d/search-performance</code></td>
+          <td>Keyword rankings, CTR, search trends, impression tracking</td>
+        </tr>
+        <tr id="pages">
+          <td><strong>Page Performance</strong></td>
+          <td><code>/d/page-performance</code></td>
+          <td>Page views, session data, referrer analysis, top content</td>
+        </tr>
+        <tr id="ux">
+          <td><strong>User Experience</strong></td>
+          <td><code>/d/user-experience</code></td>
+          <td>Engagement metrics, bounce rate, session duration, user flow</td>
+        </tr>
+        <tr id="campaigns">
+          <td><strong>Campaign Performance</strong></td>
+          <td><code>/d/campaign-performance</code></td>
+          <td>LinkedIn/Google Ads tracking, UTM analysis, conversion attribution</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Database Schema -->
+    <h2 id="schema"><i class="fas fa-database"></i> Database Schema</h2>
+    <p>The SQLite database (<code>website_analytics.db</code>) contains four data tables plus a metadata table.</p>
+
+    <h3>console_data (~120k rows)</h3>
+    <p>Google Search Console metrics for keyword and page performance.</p>
+    <table>
+      <thead>
+        <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>Date</code></td><td>TEXT</td><td>Date of the search data</td></tr>
+        <tr><td><code>Page</code></td><td>TEXT</td><td>URL of the page</td></tr>
+        <tr><td><code>Query</code></td><td>TEXT</td><td>Search query that triggered the impression</td></tr>
+        <tr><td><code>Device</code></td><td>TEXT</td><td>Device type (DESKTOP, MOBILE, TABLET)</td></tr>
+        <tr><td><code>Country</code></td><td>TEXT</td><td>Country code</td></tr>
+        <tr><td><code>Clicks</code></td><td>INTEGER</td><td>Number of clicks from search</td></tr>
+        <tr><td><code>Impressions</code></td><td>INTEGER</td><td>Number of search impressions</td></tr>
+        <tr><td><code>CTR</code></td><td>REAL</td><td>Click-through rate</td></tr>
+        <tr><td><code>Position</code></td><td>REAL</td><td>Average search position</td></tr>
+      </tbody>
+    </table>
+
+    <h3>user_data (~21k rows)</h3>
+    <p>Google Analytics user behaviour and traffic sources.</p>
+    <table>
+      <thead>
+        <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>Date</code></td><td>TEXT</td><td>Date of the session data</td></tr>
+        <tr><td><code>Source</code>, <code>Medium</code>, <code>Campaign</code></td><td>TEXT</td><td>Traffic source attribution</td></tr>
+        <tr><td><code>Country</code>, <code>Device Category</code></td><td>TEXT</td><td>Visitor segments</td></tr>
+        <tr><td><code>Total Users</code>, <code>New Users</code>, <code>Sessions</code></td><td>INTEGER</td><td>User and session counts</td></tr>
+        <tr><td><code>Engagement Rate</code>, <code>Bounce Rate</code></td><td>REAL</td><td>Engagement metrics (0&ndash;1 scale)</td></tr>
+        <tr><td><code>Average Session Duration (secs)</code></td><td>REAL</td><td>Time on site</td></tr>
+      </tbody>
+    </table>
+
+    <h3>page_data (~11k rows)</h3>
+    <p>Page-level performance metrics.</p>
+    <table>
+      <thead>
+        <tr><th>Column</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>Date</code></td><td>TEXT</td><td>Date of the page data</td></tr>
+        <tr><td><code>Page Title</code>, <code>Page Path</code></td><td>TEXT</td><td>Page identification</td></tr>
+        <tr><td><code>Referrer</code></td><td>TEXT</td><td>Traffic source for page</td></tr>
+        <tr><td><code>Page Views</code>, <code>Sessions</code></td><td>INTEGER</td><td>View and session counts</td></tr>
+        <tr><td><code>Engagement Time</code></td><td>REAL</td><td>Time spent on page</td></tr>
+      </tbody>
+    </table>
+
+    <h3>website_data (~7k rows)</h3>
+    <p>Consolidated analytics combining all sources into a unified view.</p>
+
+    <!-- Query Formats -->
+    <h2 id="queries"><i class="fas fa-code"></i> Grafana Query Formats</h2>
+    <p>The frser-sqlite-datasource plugin requires specific query formatting. Use <code>timeColumns: ["time"]</code> in the target configuration.</p>
+
+    <h3>Time Series</h3>
+    <pre>SELECT
+  strftime('%Y-%m-%dT%H:%M:%SZ', Date) as time,
+  SUM("Page Views") as "Page Views"
+FROM page_data
+WHERE Date &gt;= date('now', '-${period}')
+GROUP BY DATE(Date)
+ORDER BY time;</pre>
+
+    <h3>Stat Panel</h3>
+    <pre>SELECT SUM("Total Users") as value
+FROM user_data
+WHERE Date &gt;= date('now', '-${period}');</pre>
+
+    <h3>Table Query</h3>
+    <pre>SELECT Country, SUM("Total Users") as Users
+FROM user_data
+WHERE Date &gt;= date('now', '-30 days')
+GROUP BY Country
+ORDER BY Users DESC
+LIMIT 10;</pre>
+
+    <!-- Data Collection -->
+    <h2 id="collection"><i class="fas fa-download"></i> Data Collection Pipeline</h2>
+
+    <h3>Manual Collection</h3>
+    <pre>cd "/Users/sasreliability/Documents/Repos/Website Analytics"
+python3 "automated data pull.py"</pre>
+
+    <h3 id="cron">Automated Collection</h3>
+    <p>A cron job runs daily at 5:28 AM to collect fresh data from both Google APIs.</p>
+    <pre>./scripts/run-data-collection.sh</pre>
+
+    <h3>Dashboard Management</h3>
+    <pre># Start Grafana
+docker compose up -d
+
+# Restart after changes
+docker compose restart grafana
+
+# View logs
+docker compose logs -f grafana</pre>
+
+    <!-- Commands -->
+    <h2 id="commands"><i class="fas fa-terminal"></i> Available Commands</h2>
+
+    <table>
+      <thead>
+        <tr><th>Command</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>/website-analytics status</code></td><td>Check system health &mdash; database row counts, data freshness, Grafana status</td></tr>
+        <tr><td><code>/website-analytics collect</code></td><td>Trigger manual data collection from GA4 and Search Console</td></tr>
+        <tr><td><code>/website-analytics dashboard</code></td><td>Open Grafana dashboards, check configuration, troubleshoot display issues</td></tr>
+        <tr><td><code>/website-analytics report</code></td><td>Generate analytics summary report for a specified period</td></tr>
+        <tr><td><code>/website-analytics seo</code></td><td>Analyse SEO performance &mdash; keyword rankings, CTR, position trends</td></tr>
+        <tr><td><code>/website-analytics campaigns</code></td><td>Review campaign performance &mdash; LinkedIn posts, Google Ads, UTM attribution</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Key Metrics -->
+    <h2 id="metrics"><i class="fas fa-chart-pie"></i> Key Metrics Explained</h2>
+
+    <table>
+      <thead>
+        <tr><th>Metric</th><th>Description</th><th>Good Value</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Engagement Rate</strong></td>
+          <td>% of sessions with engagement (&gt;10s, conversion, or 2+ pages)</td>
+          <td><span class="badge badge-green">&gt;50%</span></td>
+        </tr>
+        <tr>
+          <td><strong>Bounce Rate</strong></td>
+          <td>% of single-page sessions with no engagement</td>
+          <td><span class="badge badge-green">&lt;50%</span></td>
+        </tr>
+        <tr>
+          <td><strong>CTR</strong></td>
+          <td>Search Console click-through rate from search results</td>
+          <td><span class="badge badge-green">&gt;3%</span></td>
+        </tr>
+        <tr>
+          <td><strong>Average Position</strong></td>
+          <td>Average search ranking position for tracked queries</td>
+          <td><span class="badge badge-green">&lt;10</span></td>
+        </tr>
+        <tr>
+          <td><strong>Session Duration</strong></td>
+          <td>Average time spent on site per session (in seconds)</td>
+          <td><span class="badge badge-green">&gt;60s</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Troubleshooting -->
+    <h2 id="troubleshooting"><i class="fas fa-wrench"></i> Troubleshooting</h2>
+
+    <h3>No Data in Dashboards</h3>
+    <ul class="checklist">
+      <li>Check Grafana is running: <code>docker compose ps</code></li>
+      <li>Verify database has recent data: <code>sqlite3 website_analytics.db "SELECT MAX(Date) FROM user_data;"</code></li>
+      <li>Test queries: <code>python3 scripts/test-queries.py</code></li>
+      <li>Check datasource UID matches: <code>website-analytics-sqlite</code></li>
+    </ul>
+
+    <h3>API Authentication Errors</h3>
+    <ul class="checklist">
+      <li>Verify <code>SAS.json</code> service account file exists</li>
+      <li>Check Google API quotas in Cloud Console</li>
+      <li>Ensure service account has access to GA4 property and Search Console</li>
+    </ul>
+
+    <h3>Grafana Login Issues</h3>
+    <pre># Reset admin password
+docker compose exec grafana grafana cli admin reset-admin-password newpassword
+
+# Restart to clear lockouts
+docker compose restart grafana</pre>
+
+    <!-- Integrations -->
+    <h2 id="integrations"><i class="fas fa-plug"></i> Integrations</h2>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fab fa-linkedin"></i></div>
+        <h4>linkedin-post-generator</h4>
+        <p>Track which LinkedIn posts drive traffic via UTM parameters: <code>utm_source=linkedin</code></p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-building"></i></div>
+        <h4>b2b-research-agent</h4>
+        <p>Identify high-traffic pages that indicate prospect interest areas.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-bell"></i></div>
+        <h4>push-notifications</h4>
+        <p>Set up alerts for traffic anomalies or milestone achievements.</p>
+      </div>
+    </div>
+
+    <!-- Analytics Advisor Agent -->
+    <h2 id="advisor"><i class="fas fa-robot"></i> Analytics Advisor Agent</h2>
+    <p>The plugin includes a specialised <strong>analytics-advisor</strong> agent that proactively assists with diagnostics, data interpretation, and optimisation recommendations. It activates automatically when you mention analytics issues, dashboard problems, SEO questions, or campaign performance.</p>
+
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-stethoscope"></i></div>
+        <h4>Diagnose Issues</h4>
+        <p>Checks database connectivity, row counts, data freshness, and Grafana datasource health.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+        <h4>Interpret Data</h4>
+        <p>Explains metrics, identifies trends and anomalies, compares periods, and segments analysis.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-screwdriver-wrench"></i></div>
+        <h4>Troubleshoot Infrastructure</h4>
+        <p>Docker container status, Grafana configuration, API authentication, cron job failures.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+        <h4>Provide Recommendations</h4>
+        <p>SEO improvements, content strategy, campaign optimisation, and data quality fixes.</p>
+      </div>
+    </div>
+
+    <!-- Files Reference -->
+    <h2 id="files"><i class="fas fa-folder-open"></i> Files Reference</h2>
+
+    <table>
+      <thead>
+        <tr><th>File</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>automated data pull.py</code></td><td>Main data collection orchestrator</td></tr>
+        <tr><td><code>Website_Analytics.py</code></td><td>SEO analysis tools</td></tr>
+        <tr><td><code>website_analytics.db</code></td><td>SQLite database (~160k rows)</td></tr>
+        <tr><td><code>grafana/dashboards/*.json</code></td><td>Dashboard definitions (5 dashboards)</td></tr>
+        <tr><td><code>grafana/provisioning/</code></td><td>Grafana auto-provisioning configuration</td></tr>
+        <tr><td><code>scripts/setup.sh</code></td><td>Initial setup script</td></tr>
+        <tr><td><code>scripts/update-data.sh</code></td><td>Data refresh with Grafana restart</td></tr>
+        <tr><td><code>docker-compose.yml</code></td><td>Docker configuration for Grafana</td></tr>
+        <tr><td><code>Dockerfile</code></td><td>Grafana container build</td></tr>
+      </tbody>
+    </table>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      Website Analytics v1.0.0 &mdash; GA4 + Search Console + Grafana dashboards
+    </p>
+
+  </main>
+
+  <!-- Scroll-to-top -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

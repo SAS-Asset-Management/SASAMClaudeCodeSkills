@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SAS-AM Webflow CMS Schema",
+  "description": "Field mapping for blog articles and case studies on www.sas-am.com/resources",
+  "version": "1.0.0",
+  "collections": {
+    "resources": {
+      "slug": "resources",
+      "display_name": "Resources",
+      "description": "Blog articles, case studies, tools, and downloads",
+      "fields": {
+        "name": {
+          "type": "PlainText",
+          "required": true,
+          "max_length": 100,
+          "help_text": "Article or case study title",
+          "webflow_field": "name"
+        },
+        "slug": {
+          "type": "PlainText",
+          "required": true,
+          "pattern": "^[a-z0-9-]+$",
+          "help_text": "URL-friendly version of title",
+          "webflow_field": "slug"
+        },
+        "sector": {
+          "type": "Option",
+          "required": true,
+          "options": [
+            "Local Government",
+            "Water",
+            "Resources & Minerals",
+            "Transport",
+            "Health",
+            "Defence"
+          ],
+          "help_text": "Primary sector for filtering",
+          "webflow_field": "sector"
+        },
+        "content-type": {
+          "type": "Option",
+          "required": true,
+          "options": [
+            "Article",
+            "Case Study",
+            "Download",
+            "Tools"
+          ],
+          "help_text": "Content type badge",
+          "webflow_field": "content-type"
+        },
+        "topic-tags": {
+          "type": "Set",
+          "required": true,
+          "options": [
+            "AI",
+            "Asset Management System",
+            "Technical",
+            "Insight",
+            "Asset Condition",
+            "Machine Learning",
+            "Advisory"
+          ],
+          "help_text": "Topic tags for filtering and display",
+          "webflow_field": "topic-tags"
+        },
+        "featured-image": {
+          "type": "ImageRef",
+          "required": true,
+          "help_text": "Hero image for card display (16:9 aspect ratio recommended)",
+          "webflow_field": "featured-image"
+        },
+        "featured-image-alt": {
+          "type": "PlainText",
+          "required": true,
+          "max_length": 125,
+          "help_text": "Alt text for hero image (accessibility + SEO)",
+          "webflow_field": "featured-image-alt"
+        },
+        "description": {
+          "type": "PlainText",
+          "required": true,
+          "max_length": 200,
+          "help_text": "Brief description for card display",
+          "webflow_field": "description"
+        },
+        "body-content": {
+          "type": "RichText",
+          "required": true,
+          "help_text": "Full article or case study content",
+          "webflow_field": "body-content"
+        },
+        "seo-title": {
+          "type": "PlainText",
+          "required": true,
+          "max_length": 60,
+          "help_text": "Title tag for SEO (max 60 characters)",
+          "webflow_field": "seo-title"
+        },
+        "seo-description": {
+          "type": "PlainText",
+          "required": true,
+          "max_length": 160,
+          "help_text": "Meta description for SEO (max 160 characters)",
+          "webflow_field": "seo-description"
+        },
+        "publish-date": {
+          "type": "Date",
+          "required": true,
+          "help_text": "Publication date",
+          "webflow_field": "publish-date"
+        },
+        "author": {
+          "type": "PlainText",
+          "required": false,
+          "default": "SAS-AM",
+          "help_text": "Author name (defaults to SAS-AM)",
+          "webflow_field": "author"
+        },
+        "featured": {
+          "type": "Switch",
+          "required": false,
+          "default": false,
+          "help_text": "Feature on homepage or top of resources",
+          "webflow_field": "featured"
+        },
+        "reading-time": {
+          "type": "Number",
+          "required": false,
+          "help_text": "Estimated reading time in minutes",
+          "webflow_field": "reading-time"
+        }
+      }
+    }
+  },
+  "sectors": [
+    {
+      "value": "Local Government",
+      "display": "Local Government",
+      "description": "Councils, municipalities, community infrastructure"
+    },
+    {
+      "value": "Water",
+      "display": "Water",
+      "description": "Utilities, treatment plants, distribution networks"
+    },
+    {
+      "value": "Resources & Minerals",
+      "display": "Resources & Minerals",
+      "description": "Mining, processing, extraction"
+    },
+    {
+      "value": "Transport",
+      "display": "Transport",
+      "description": "Rail, roads, ports, fleet"
+    },
+    {
+      "value": "Health",
+      "display": "Health",
+      "description": "Hospitals, medical equipment, facilities"
+    },
+    {
+      "value": "Defence",
+      "display": "Defence",
+      "description": "Military, security, sovereign capability"
+    }
+  ],
+  "tags": [
+    {
+      "value": "AI",
+      "display": "AI",
+      "description": "Artificial Intelligence applications"
+    },
+    {
+      "value": "Asset Management System",
+      "display": "Asset Management System",
+      "description": "CMMS, EAM, asset registers"
+    },
+    {
+      "value": "Technical",
+      "display": "Technical",
+      "description": "Technical deep dives"
+    },
+    {
+      "value": "Insight",
+      "display": "Insight",
+      "description": "Thought leadership, industry trends"
+    },
+    {
+      "value": "Asset Condition",
+      "display": "Asset Condition",
+      "description": "Condition monitoring, assessment"
+    },
+    {
+      "value": "Machine Learning",
+      "display": "Machine Learning",
+      "description": "ML models, predictive analytics"
+    },
+    {
+      "value": "Advisory",
+      "display": "Advisory",
+      "description": "Strategic consulting, maturity"
+    }
+  ],
+  "brand": {
+    "colors": {
+      "sas_blue": "#002244",
+      "sas_green": "#69BE28"
+    },
+    "language": "Australian English"
+  },
+  "validation": {
+    "seo_title_max": 60,
+    "seo_description_max": 160,
+    "description_max": 200,
+    "alt_text_max": 125,
+    "slug_pattern": "^[a-z0-9-]+$"
+  }
+}

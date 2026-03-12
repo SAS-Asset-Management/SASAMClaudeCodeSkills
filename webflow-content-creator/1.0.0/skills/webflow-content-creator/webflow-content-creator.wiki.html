@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the Webflow Content Creator Skill — a Claude Code skill for creating and publishing SAS-AM articles and case studies to Webflow CMS">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>Webflow Content Creator — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --sas-green: #69BE28; --sas-blue: #002244; --bg-primary: #ffffff; --bg-secondary: #f7f7f7; --bg-tertiary: #ededed; --text-primary: #002244; --text-secondary: #334466; --text-muted: #6b7280; --accent: #69BE28; --accent-hover: #5AA822; --card-bg: rgba(255,255,255,0.95); --card-border: rgba(0,34,68,0.12); --shadow-sm: 0 2px 8px rgba(0,34,68,0.06); --shadow-md: 0 4px 16px rgba(0,34,68,0.10); --shadow-lg: 0 8px 24px rgba(0,34,68,0.14); --focus-ring: 0 0 0 3px rgba(105,190,40,0.5); --code-bg: #f0f4f8; --code-text: #1e3a5f; --sidebar-w: 260px; --header-h: 64px; }
+    :root[data-theme="dark"] { --sas-green: #7AD33B; --sas-blue: #1a4d7a; --bg-primary: #0a0f1a; --bg-secondary: #141d2b; --bg-tertiary: #1e2a3d; --text-primary: #f4fbff; --text-secondary: #d1e3ed; --text-muted: #8ba3b5; --accent: #69BE28; --accent-hover: #7AD33B; --card-bg: rgba(20,29,43,0.9); --card-border: rgba(255,255,255,0.08); --shadow-sm: 0 2px 8px rgba(0,10,28,0.3); --shadow-md: 0 4px 16px rgba(0,10,28,0.4); --shadow-lg: 0 8px 24px rgba(0,10,28,0.5); --focus-ring: 0 0 0 3px rgba(105,190,40,0.4); --code-bg: #1a2332; --code-text: #d1e3ed; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+    .wiki-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-h); background: var(--sas-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .wiki-header .logo-area { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px; }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button { background: rgba(255,255,255,0.12); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .wiki-sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: var(--bg-secondary); border-right: 1px solid var(--card-border); overflow-y: auto; padding: 20px 0; z-index: 50; transition: transform 0.3s ease; }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding: 16px 20px 6px; margin: 0; }
+    .wiki-sidebar a { display: block; padding: 7px 20px 7px 28px; color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; font-weight: 400; border-left: 3px solid transparent; transition: all 0.15s; }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active { color: var(--accent); font-weight: 600; border-left-color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 48px 80px; max-width: 960px; transition: margin-left 0.3s ease; }
+    .wiki-main.expanded { margin-left: 0; }
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 { font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 10px; }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+    thead th { background: var(--sas-blue); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    tbody td { padding: 9px 14px; border-bottom: 1px solid var(--card-border); vertical-align: top; }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; font-family: 'Source Code Pro', monospace; font-size: 0.82rem; }
+    pre { background: var(--code-bg); color: var(--code-text); border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px; overflow-x: auto; font-family: 'Source Code Pro', monospace; font-size: 0.85rem; line-height: 1.5; border: 1px solid var(--card-border); }
+    code { font-family: 'Source Code Pro', monospace; font-size: 0.88em; }
+    :not(pre) > code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; }
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s; }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    .callout { border-left: 4px solid var(--accent); background: var(--bg-secondary); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px; }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li { padding: 5px 0 5px 28px; position: relative; font-size: 0.9rem; color: var(--text-secondary); }
+    .checklist li::before { content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400; position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem; }
+    .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 42px; height: 42px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; z-index: 90; }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+    @media (max-width: 900px) { .wiki-sidebar { transform: translateX(-100%); } .wiki-sidebar.open { transform: translateX(0); } .wiki-main { margin-left: 0; padding: 28px 20px 60px; } .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } h2 { font-size: 1.3rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+    @media print { .wiki-header, .wiki-sidebar, .scroll-top { display: none; } .wiki-main { margin-left: 0; max-width: 100%; } }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-globe"></i>
+      <span>Webflow Content Creator Wiki</span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../wiki.html" style="color:#fff;text-decoration:none;font-size:0.85rem;font-weight:600;opacity:0.85;">
+        <i class="fas fa-arrow-left" style="margin-right:4px;"></i> All Skills
+      </a>
+      <button id="themeToggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="wiki-sidebar" id="sidebar">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#invocation">Invocation</a>
+
+    <h3>Interview</h3>
+    <a href="#interview">Mandatory Interview</a>
+    <a href="#article-questions">Article Questions</a>
+    <a href="#case-study-questions">Case Study Questions</a>
+
+    <h3>Voice &amp; Brand</h3>
+    <a href="#voice">Voice &amp; Tone</a>
+    <a href="#language">Language Rules</a>
+    <a href="#positioning">Brand Positioning</a>
+
+    <h3>Content Formats</h3>
+    <a href="#article-format">Article Format</a>
+    <a href="#case-study-format">Case Study Format</a>
+    <a href="#seo">SEO Guidelines</a>
+
+    <h3>Publishing</h3>
+    <a href="#webflow-mcp">Webflow MCP</a>
+    <a href="#cms-fields">CMS Fields</a>
+    <a href="#workflow">Publishing Workflow</a>
+
+    <h3>Integrations</h3>
+    <a href="#nano-banana">nano-banana-2</a>
+    <a href="#b2b-research">b2b-research-agent</a>
+
+    <h3>Reference</h3>
+    <a href="#commands">Commands</a>
+    <a href="#checklist">Quality Checklist</a>
+    <a href="#references">Reference Files</a>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="wiki-main" id="main">
+
+    <h1 id="overview">Webflow Content Creator <span class="version">v1.0.0</span></h1>
+    <p class="lead">Create compelling, SEO-optimised content for the SAS-AM website and publish directly to Webflow CMS. Write like a knowledgeable peer who understands asset management realities and can translate complex concepts into actionable insights.</p>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-microphone"></i></div>
+        <h4>Interview First</h4>
+        <p>Gather real stories, evidence, and outcomes before writing. No fabrication &mdash; ever.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-pen-nib"></i></div>
+        <h4>Two Content Types</h4>
+        <p>Articles (thought leadership, technical insight) and case studies (STAR framework).</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+        <h4>Direct Publishing</h4>
+        <p>Publish directly to Webflow CMS via MCP integration &mdash; draft or live.</p>
+      </div>
+    </div>
+
+    <!-- Invocation -->
+    <h2 id="invocation"><i class="fas fa-terminal"></i> Invocation</h2>
+
+    <pre>/webflow-content-creator Write an article about AI readiness for asset managers
+/webflow-content-creator Case study: Mining company predictive maintenance success
+/webflow-content-creator Article based on b2b-research-agent research for [company]
+/webflow-content-creator Promote our new risk assessment service
+/webflow-content-creator Technical article on Power Law Process for reliability</pre>
+
+    <!-- Interview -->
+    <h2 id="interview"><i class="fas fa-clipboard-question"></i> Mandatory Interview</h2>
+    <p>The skill <strong>must</strong> interview the user before drafting any content. Every claim, number, and narrative element must come directly from the user&rsquo;s interview answers or verified research.</p>
+
+    <div class="callout callout-critical">
+      <p><strong>No fabrication.</strong> The skill never invents stories, quotes, statistics, outcomes, or client experiences. If the user hasn&rsquo;t provided evidence, the skill does not fabricate it.</p>
+    </div>
+
+    <h3>Common Questions (Both Types)</h3>
+    <table>
+      <thead>
+        <tr><th>Question</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Core topic</td><td>Main topic or insight for the content</td></tr>
+        <tr><td>Primary sector</td><td>Local Government, Water, Resources &amp; Minerals, Transport, Health, Defence</td></tr>
+        <tr><td>Topic tags</td><td>AI, Asset Management System, Technical, Insight, Asset Condition, ML, Advisory</td></tr>
+        <tr><td>Target audience</td><td>Executives, technical practitioners, asset managers, decision-makers</td></tr>
+        <tr><td>Key takeaway</td><td>Single insight readers should remember</td></tr>
+        <tr><td>CTA goal</td><td>Contact us, download resource, explore related content</td></tr>
+        <tr><td>Research available</td><td>Existing b2b-research-agent dossier to incorporate?</td></tr>
+        <tr><td>Hero image</td><td>Existing image or generate via nano-banana-2?</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="article-questions">Article-Specific Questions</h3>
+    <table>
+      <thead>
+        <tr><th>Question</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Content angle</td><td>Educational (how-to), opinion (thought leadership), analytical (data-driven), or news?</td></tr>
+        <tr><td>Supporting evidence</td><td>Data, studies, or sources &mdash; the skill will not fabricate statistics</td></tr>
+        <tr><td>Related content</td><td>Existing SAS-AM articles to link to</td></tr>
+        <tr><td>Technical depth</td><td>Accessible to all or deep technical content</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="case-study-questions">Case Study-Specific Questions</h3>
+    <table>
+      <thead>
+        <tr><th>Question</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Client identification</td><td>Named or anonymised (&ldquo;a major water utility&rdquo;)</td></tr>
+        <tr><td>The challenge</td><td>Specific problem before engagement</td></tr>
+        <tr><td>The solution</td><td>What SAS-AM did, which services applied</td></tr>
+        <tr><td>The outcomes</td><td>Measurable results (%, $, timeframes)</td></tr>
+        <tr><td>Client testimonial</td><td>Quote from client (skipped if none provided)</td></tr>
+        <tr><td>Publication permission</td><td>Required for named case studies</td></tr>
+        <tr><td>Timeline</td><td>Project timeline</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Voice & Tone -->
+    <h2 id="voice"><i class="fas fa-comment-dots"></i> Voice &amp; Tone</h2>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-face-smile"></i></div>
+        <h4>Upbeat</h4>
+        <p>Optimistic about technology&rsquo;s potential, energised by solving problems. Not sycophantic.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-bullseye"></i></div>
+        <h4>Clear &amp; Concise</h4>
+        <p>Get to the point, respect the reader&rsquo;s time. Not dumbed down or oversimplified.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-microchip"></i></div>
+        <h4>Tech Forward</h4>
+        <p>Embrace AI/ML grounded in practical application. Not buzzword-heavy or hype-driven.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+        <h4>Insightful</h4>
+        <p>Offer genuine value, perspectives others haven&rsquo;t considered. Not stating the obvious.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-face-grin-wink"></i></div>
+        <h4>Playful</h4>
+        <p>Occasional wit, relatable analogies. Not unprofessional or undermining credibility.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-mug-hot"></i></div>
+        <h4>Conversational</h4>
+        <p>Like explaining to a smart colleague over coffee. Not overly formal or academic.</p>
+      </div>
+    </div>
+
+    <h3 id="language">Language Rules</h3>
+    <table>
+      <thead>
+        <tr><th>Rule</th><th>Examples</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Australian English</strong></td><td>organisation, favour, analyse, colour, centre, behaviour</td></tr>
+        <tr><td><strong>Active voice</strong></td><td>&ldquo;AI identifies failure patterns&rdquo; not &ldquo;Failure patterns are identified by AI&rdquo;</td></tr>
+        <tr><td><strong>Plain language</strong></td><td>&ldquo;fix&rdquo; not &ldquo;remediate&rdquo;, &ldquo;use&rdquo; not &ldquo;utilise&rdquo;, &ldquo;help&rdquo; not &ldquo;facilitate&rdquo;</td></tr>
+        <tr><td><strong>Contractions welcome</strong></td><td>you&rsquo;ll, we&rsquo;ve, it&rsquo;s, don&rsquo;t</td></tr>
+        <tr><td><strong>Metric system</strong></td><td>kilometres, tonnes, degrees Celsius</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Phrases to Use</h3>
+    <p><code>Here's the thing...</code> &middot; <code>In practice...</code> &middot; <code>What we've found is...</code> &middot; <code>The honest answer is...</code> &middot; <code>Let's be real...</code> &middot; <code>Worth noting...</code> &middot; <code>Quick win:</code> &middot; <code>Pro tip:</code></p>
+
+    <h3>Phrases to Avoid</h3>
+    <p><code>Leverage</code> &middot; <code>Synergy</code> &middot; <code>Cutting-edge</code> &middot; <code>Best-in-class</code> &middot; <code>Holistic</code> &middot; <code>Journey</code> &middot; <code>Solutions</code> &middot; <code>Stakeholders</code> &middot; <code>Going forward</code> &middot; <code>Learnings</code></p>
+
+    <!-- Brand Positioning -->
+    <h2 id="positioning"><i class="fas fa-bullhorn"></i> Brand Positioning</h2>
+
+    <h3>Who We Are</h3>
+    <ul class="checklist">
+      <li><strong>Advanced Analytics &amp; AI/ML</strong> for predictive maintenance and decision support</li>
+      <li><strong>Maturity Assessments</strong> aligned to ISO 55001, AI/ML and GFMAM frameworks</li>
+      <li><strong>Reliability Engineering</strong> including RCM, FMEA, root cause analysis</li>
+      <li><strong>Edge/Sovereign AI Solutions</strong> via the AMiPU platform</li>
+      <li><strong>Risk &amp; Resilience</strong> including supply chain risk and climate adaptation</li>
+    </ul>
+
+    <h3>Our Differentiators</h3>
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <h4>Practitioner-led</h4>
+        <p>We&rsquo;ve worked on the tools, not just in boardrooms.</p>
+      </div>
+      <div class="card">
+        <h4>AI with Purpose</h4>
+        <p>Technology that solves real problems, not innovation theatre.</p>
+      </div>
+      <div class="card">
+        <h4>Sovereign Capability</h4>
+        <p>Offline AI that keeps sensitive data where it belongs.</p>
+      </div>
+      <div class="card">
+        <h4>Vendor-neutral</h4>
+        <p>We recommend what works, not what pays commission.</p>
+      </div>
+      <div class="card">
+        <h4>Community Focus</h4>
+        <p>Better assets mean better services for Australians.</p>
+      </div>
+    </div>
+
+    <!-- Article Format -->
+    <h2 id="article-format"><i class="fas fa-newspaper"></i> Article Format</h2>
+
+    <table>
+      <thead>
+        <tr><th>Section</th><th>Word Count</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>The Hook</strong></td><td>50&ndash;100</td><td>Capture attention &mdash; provocative question, surprising fact, or common frustration</td></tr>
+        <tr><td><strong>The Context</strong></td><td>100&ndash;200</td><td>Why this matters now, what&rsquo;s changing in the industry</td></tr>
+        <tr><td><strong>The Core Content</strong></td><td>400&ndash;800</td><td>Key points with evidence &mdash; 2&ndash;3 sections with H3 headings</td></tr>
+        <tr><td><strong>The Practical Application</strong></td><td>150&ndash;250</td><td>Actionable takeaways &mdash; &ldquo;Do this tomorrow&rdquo; not &ldquo;consider this eventually&rdquo;</td></tr>
+        <tr><td><strong>The Connection</strong></td><td>50&ndash;100</td><td>Call to action, related resources, next step</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Article Length Guidelines</h3>
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Words</th><th>When to Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Short insight</td><td>500&ndash;800</td><td>Single focused idea, quick read</td></tr>
+        <tr><td>Standard article</td><td>800&ndash;1,200</td><td>Full exploration of topic</td></tr>
+        <tr><td>Deep dive</td><td>1,200&ndash;2,000</td><td>Technical content, comprehensive guides</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Case Study Format -->
+    <h2 id="case-study-format"><i class="fas fa-trophy"></i> Case Study Format (STAR Framework)</h2>
+
+    <table>
+      <thead>
+        <tr><th>Section</th><th>Word Count</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Executive Summary</strong></td><td>50&ndash;100</td><td>Who, what challenge, what outcome &mdash; lead with the result</td></tr>
+        <tr><td><strong>The Challenge</strong></td><td>150&ndash;250</td><td>Specific problem with pain points and business impact</td></tr>
+        <tr><td><strong>The Approach</strong></td><td>200&ndash;300</td><td>Methodology, phased delivery, key differentiators</td></tr>
+        <tr><td><strong>The Outcomes</strong></td><td>150&ndash;250</td><td>Before/after metrics table, client quote if available</td></tr>
+        <tr><td><strong>Key Learnings</strong></td><td>100&ndash;150</td><td>Transferable insights for other organisations</td></tr>
+        <tr><td><strong>CTA</strong></td><td>50&ndash;75</td><td>Next step for the reader</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn">
+      <p><strong>Case study rules:</strong> Never fabricate outcomes. Anonymous is fine. No quotes without permission. Specific beats impressive (&ldquo;reduced downtime by 23%&rdquo; beats &ldquo;significantly reduced downtime&rdquo;). Show the method &mdash; readers want to understand HOW.</p>
+    </div>
+
+    <!-- SEO Guidelines -->
+    <h2 id="seo"><i class="fas fa-magnifying-glass"></i> SEO Guidelines</h2>
+
+    <table>
+      <thead>
+        <tr><th>Element</th><th>Limit</th><th>Requirements</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Title tag</strong></td><td>60 chars</td><td>Primary keyword + sector + &ldquo;SAS-AM&rdquo;</td></tr>
+        <tr><td><strong>Meta description</strong></td><td>160 chars</td><td>Value proposition + CTA</td></tr>
+        <tr><td><strong>H1</strong></td><td>One per page</td><td>Primary keyword in first paragraph</td></tr>
+        <tr><td><strong>H2s</strong></td><td>3&ndash;5 per article</td><td>Secondary keywords naturally</td></tr>
+        <tr><td><strong>Internal links</strong></td><td>2&ndash;4 per article</td><td>Descriptive anchor text (not &ldquo;click here&rdquo;)</td></tr>
+        <tr><td><strong>Image alt text</strong></td><td>125 chars</td><td>Describe the image, include keyword if natural</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Webflow MCP -->
+    <h2 id="webflow-mcp"><i class="fas fa-plug"></i> Webflow MCP Integration</h2>
+
+    <h3>Prerequisites</h3>
+    <ul class="checklist">
+      <li><code>WEBFLOW_TOKEN</code> environment variable set</li>
+      <li>Webflow MCP enabled in Claude Code settings</li>
+      <li>Access to the SAS-AM Webflow site</li>
+    </ul>
+
+    <h3>Available MCP Tools</h3>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>sites_list</code></td><td>List available Webflow sites</td></tr>
+        <tr><td><code>collections_list</code></td><td>List CMS collections for a site</td></tr>
+        <tr><td><code>collections_items_list_items</code></td><td>List existing items in a collection</td></tr>
+        <tr><td><code>collections_items_create_item</code></td><td>Create new CMS item (draft)</td></tr>
+        <tr><td><code>collections_items_create_item_live</code></td><td>Create and publish immediately</td></tr>
+        <tr><td><code>assets</code></td><td>Upload images and media</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="cms-fields">CMS Field Mapping</h3>
+    <table>
+      <thead>
+        <tr><th>Field</th><th>Type</th><th>Required</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>name</code></td><td>Text</td><td>Yes</td></tr>
+        <tr><td><code>slug</code></td><td>Text</td><td>Yes</td></tr>
+        <tr><td><code>sector</code></td><td>Single select</td><td>Yes</td></tr>
+        <tr><td><code>content-type</code></td><td>Select (Article/Case Study)</td><td>Yes</td></tr>
+        <tr><td><code>topic-tags</code></td><td>Multi-select</td><td>Yes</td></tr>
+        <tr><td><code>featured-image</code></td><td>Image</td><td>Yes</td></tr>
+        <tr><td><code>description</code></td><td>Text (160 chars)</td><td>Yes</td></tr>
+        <tr><td><code>body-content</code></td><td>Rich Text</td><td>Yes</td></tr>
+        <tr><td><code>seo-title</code></td><td>Text (60 chars)</td><td>Yes</td></tr>
+        <tr><td><code>seo-description</code></td><td>Text (160 chars)</td><td>Yes</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Publishing Workflow -->
+    <h2 id="workflow"><i class="fas fa-list-check"></i> Publishing Workflow</h2>
+
+    <table>
+      <thead>
+        <tr><th>Phase</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="badge badge-blue">1</span> Site Discovery</td><td>Call <code>sites_list</code> to find sas-am.com, extract site_id</td></tr>
+        <tr><td><span class="badge badge-blue">2</span> Collection Discovery</td><td>Call <code>collections_list</code>, identify Resources collection, note schema</td></tr>
+        <tr><td><span class="badge badge-blue">3</span> Asset Upload</td><td>Upload hero image, retrieve asset URL</td></tr>
+        <tr><td><span class="badge badge-blue">4</span> Create Draft</td><td>Call <code>create_item</code> with <code>isDraft: true</code>, return preview URL</td></tr>
+        <tr><td><span class="badge badge-green">5</span> Publish</td><td>After user confirmation, call <code>publish_items</code>, confirm live URL</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Integrations -->
+    <h2 id="nano-banana"><i class="fas fa-image"></i> nano-banana-2 Integration</h2>
+    <p>Generate hero images when the user doesn&rsquo;t have an existing image. The skill analyses the content to derive an image prompt, then calls <code>/nano-banana-2</code> with 16:9 aspect ratio.</p>
+
+    <table>
+      <thead>
+        <tr><th>Content Topic</th><th>Image Prompt Example</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Water utility AI implementation</td><td>Water treatment facility control room with digital monitoring displays, professional engineer analysing data</td></tr>
+        <tr><td>Mining maintenance success</td><td>Heavy mining equipment with modern sensors, Australian outback setting, golden hour lighting</td></tr>
+        <tr><td>Asset management maturity</td><td>Professional team reviewing analytics dashboard in modern boardroom, collaborative atmosphere</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="b2b-research"><i class="fas fa-building"></i> b2b-research-agent Integration</h2>
+    <p>Invoke when user requests research-backed content or content about a specific company or sector. All research-sourced content must include source attribution, publication date, and links where available.</p>
+
+    <!-- Commands -->
+    <h2 id="commands"><i class="fas fa-terminal"></i> Commands</h2>
+
+    <table>
+      <thead>
+        <tr><th>Command</th><th>Action</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>interview</code></td><td>Run the discovery interview</td></tr>
+        <tr><td><code>article</code></td><td>Create a new article</td></tr>
+        <tr><td><code>case-study</code></td><td>Create a new case study</td></tr>
+        <tr><td><code>research [topic]</code></td><td>Invoke b2b-research-agent</td></tr>
+        <tr><td><code>draft</code></td><td>Generate content without publishing</td></tr>
+        <tr><td><code>image</code></td><td>Generate hero image via nano-banana-2</td></tr>
+        <tr><td><code>seo</code></td><td>Generate/regenerate SEO metadata</td></tr>
+        <tr><td><code>preview</code></td><td>Show formatted content preview</td></tr>
+        <tr><td><code>checklist</code></td><td>Run quality checklist</td></tr>
+        <tr><td><code>publish-draft</code></td><td>Create draft in Webflow CMS</td></tr>
+        <tr><td><code>publish-live</code></td><td>Publish directly to live site</td></tr>
+        <tr><td><code>sectors</code></td><td>List available sectors</td></tr>
+        <tr><td><code>tags</code></td><td>List available topic tags</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Quality Checklist -->
+    <h2 id="checklist"><i class="fas fa-clipboard-check"></i> Quality Checklist</h2>
+
+    <h3>Content Quality</h3>
+    <ul class="checklist">
+      <li>Australian English spelling (organisation, behaviour, analyse, colour, centre)</li>
+      <li>Active voice predominant</li>
+      <li>Opening hook is compelling</li>
+      <li>No banned words or phrases used</li>
+      <li>Tone is conversational, not corporate</li>
+      <li>Every story, quote, and statistic traces to user interview</li>
+    </ul>
+
+    <h3>SEO Quality</h3>
+    <ul class="checklist">
+      <li>SEO title under 60 characters</li>
+      <li>Meta description under 160 characters</li>
+      <li>Primary keyword in H1 and first paragraph</li>
+      <li>Heading hierarchy is logical (H1 &gt; H2 &gt; H3)</li>
+      <li>Alt text prepared for hero image</li>
+      <li>Internal links to related content included</li>
+    </ul>
+
+    <h3>CMS Readiness</h3>
+    <ul class="checklist">
+      <li>Sector selected (single)</li>
+      <li>Topic tags selected (multiple)</li>
+      <li>Content type set (Article or Case Study)</li>
+      <li>Hero image ready (provided or generated)</li>
+      <li>Slug is URL-friendly</li>
+      <li>All required fields populated</li>
+    </ul>
+
+    <!-- Reference Files -->
+    <h2 id="references"><i class="fas fa-book"></i> Reference Files</h2>
+
+    <table>
+      <thead>
+        <tr><th>File</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>references/article-template.md</code></td><td>Article structure template</td></tr>
+        <tr><td><code>references/case-study-template.md</code></td><td>Case study STAR framework template</td></tr>
+        <tr><td><code>references/cms-schema.json</code></td><td>Webflow CMS field mapping</td></tr>
+        <tr><td><code>references/seo-checklist.md</code></td><td>SEO optimisation checklist</td></tr>
+        <tr><td><code>references/sector-guidelines.md</code></td><td>Sector-specific messaging guidelines</td></tr>
+      </tbody>
+    </table>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      Webflow Content Creator v1.0.0 &mdash; Interview-first content for sas-am.com
+    </p>
+
+  </main>
+
+  <!-- Scroll-to-top -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

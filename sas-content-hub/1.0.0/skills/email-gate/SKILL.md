@@ -152,17 +152,58 @@ Follow camelCase naming conventions per the global rules. For example:
 - `benchmarkingScorecardGate.html`
 - `pmChecklistGate.html`
 
-### Step 4: Confirm and Advise
+### Step 4: Deploy Asset to Server
 
-After writing the file, confirm to the user and provide integration guidance:
+After generating the gate HTML, deploy the downloadable artefact to the Cortex4 server using the automated deployment script. This uploads the asset, registers it in `resources.json`, and restarts the container.
 
-> "Gate form created at `[path]`.
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/email-gate/scripts/deployGate.py deploy \
+  <path-to-artefact-file> \
+  <resource-slug> \
+  "<Human-Readable Label>"
+```
+
+Example:
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/email-gate/scripts/deployGate.py deploy \
+  ./maintenanceBusinessCase.html \
+  maintenance-business-case \
+  "Maintenance Improvement Business Case Template"
+```
+
+The script performs 5 steps automatically:
+1. Tests SSH connectivity to cortext4
+2. SCPs the asset file to `/home/cortext4/docker/clientDatabase/app/assets/`
+3. Reads `resources.json`, adds/updates the entry, writes it back
+4. Restarts the `sas-gate` Docker container
+5. Verifies the container is running
+
+**Prerequisites:** `sshpass` must be installed (`brew install hudochenkov/sshpass/sshpass`) and Tailscale must be connected so `cortext-t4` is reachable.
+
+Use `--dry-run` to preview without making changes.
+
+You can also list registered resources and check downloads:
+```bash
+# List all registered resources
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/email-gate/scripts/deployGate.py list
+
+# Check recent downloads
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/email-gate/scripts/deployGate.py downloads
+
+# Verify server status
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/email-gate/scripts/deployGate.py verify
+```
+
+### Step 5: Confirm and Advise
+
+After deployment, confirm to the user:
+
+> "Gate form created at `[path]`. Asset deployed to Cortex4 as `[slug]`.
 >
-> **To deploy:**
-> 1. Ensure the resource slug `[slug]` is registered on the Cortex4 server.
-> 2. In Webflow, add a Custom Code Embed element to your page.
-> 3. Paste the entire contents of the generated file into the embed.
-> 4. Publish the page.
+> **To embed in Webflow:**
+> 1. In Webflow, add a Custom Code Embed element to your page.
+> 2. Paste the entire contents of `[gate file]` into the embed.
+> 3. Publish the page.
 >
 > **The form captures:** name, role, and email address.
 > **On success:** the visitor sees a download button linked to the Cortex4-generated token URL.

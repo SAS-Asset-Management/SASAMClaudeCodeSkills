@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the FMEA/FMECA Skill — a Claude Code skill for consulting-grade failure mode and effects analysis across industrial sectors">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>FMEA/FMECA — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --sas-green: #69BE28; --sas-blue: #002244; --bg-primary: #ffffff; --bg-secondary: #f7f7f7; --bg-tertiary: #ededed; --text-primary: #002244; --text-secondary: #334466; --text-muted: #6b7280; --accent: #69BE28; --accent-hover: #5AA822; --card-bg: rgba(255,255,255,0.95); --card-border: rgba(0,34,68,0.12); --shadow-sm: 0 2px 8px rgba(0,34,68,0.06); --shadow-md: 0 4px 16px rgba(0,34,68,0.10); --shadow-lg: 0 8px 24px rgba(0,34,68,0.14); --focus-ring: 0 0 0 3px rgba(105,190,40,0.5); --code-bg: #f0f4f8; --code-text: #1e3a5f; --sidebar-w: 260px; --header-h: 64px; }
+    :root[data-theme="dark"] { --sas-green: #7AD33B; --sas-blue: #1a4d7a; --bg-primary: #0a0f1a; --bg-secondary: #141d2b; --bg-tertiary: #1e2a3d; --text-primary: #f4fbff; --text-secondary: #d1e3ed; --text-muted: #8ba3b5; --accent: #69BE28; --accent-hover: #7AD33B; --card-bg: rgba(20,29,43,0.9); --card-border: rgba(255,255,255,0.08); --shadow-sm: 0 2px 8px rgba(0,10,28,0.3); --shadow-md: 0 4px 16px rgba(0,10,28,0.4); --shadow-lg: 0 8px 24px rgba(0,10,28,0.5); --focus-ring: 0 0 0 3px rgba(105,190,40,0.4); --code-bg: #1a2332; --code-text: #d1e3ed; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+    .wiki-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-h); background: var(--sas-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .wiki-header .logo-area { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px; }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button { background: rgba(255,255,255,0.12); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .wiki-sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: var(--bg-secondary); border-right: 1px solid var(--card-border); overflow-y: auto; padding: 20px 0; z-index: 50; transition: transform 0.3s ease; }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding: 16px 20px 6px; margin: 0; }
+    .wiki-sidebar a { display: block; padding: 7px 20px 7px 28px; color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; font-weight: 400; border-left: 3px solid transparent; transition: all 0.15s; }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active { color: var(--accent); font-weight: 600; border-left-color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 48px 80px; max-width: 960px; transition: margin-left 0.3s ease; }
+    .wiki-main.expanded { margin-left: 0; }
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 { font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 10px; }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+    thead th { background: var(--sas-blue); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    tbody td { padding: 9px 14px; border-bottom: 1px solid var(--card-border); vertical-align: top; }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; font-family: 'Source Code Pro', monospace; font-size: 0.82rem; }
+    pre { background: var(--code-bg); color: var(--code-text); border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px; overflow-x: auto; font-family: 'Source Code Pro', monospace; font-size: 0.85rem; line-height: 1.5; border: 1px solid var(--card-border); }
+    code { font-family: 'Source Code Pro', monospace; font-size: 0.88em; }
+    :not(pre) > code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; }
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-5 { grid-template-columns: repeat(5, 1fr); }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s; }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    .badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    :root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .callout { border-left: 4px solid var(--accent); background: var(--bg-secondary); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px; }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li { padding: 5px 0 5px 28px; position: relative; font-size: 0.9rem; color: var(--text-secondary); }
+    .checklist li::before { content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400; position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem; }
+    .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 42px; height: 42px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; z-index: 90; }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+    @media (max-width: 900px) { .wiki-sidebar { transform: translateX(-100%); } .wiki-sidebar.open { transform: translateX(0); } .wiki-main { margin-left: 0; padding: 28px 20px 60px; } .card-grid-2, .card-grid-3, .card-grid-5 { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } h2 { font-size: 1.3rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+    @media print { .wiki-header, .wiki-sidebar, .scroll-top { display: none; } .wiki-main { margin-left: 0; max-width: 100%; } }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-triangle-exclamation"></i>
+      <span>FMEA/FMECA Wiki</span>
+    </div>
+    <div class="header-controls">
+      <a href="wiki.html" style="color:#fff;text-decoration:none;font-size:0.85rem;font-weight:600;opacity:0.85;">
+        <i class="fas fa-arrow-left" style="margin-right:4px;"></i> All Skills
+      </a>
+      <button id="themeToggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="wiki-sidebar" id="sidebar">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#concepts">Core Concepts</a>
+    <a href="#hierarchy">The Hierarchy</a>
+    <a href="#distinctions">Key Distinctions</a>
+
+    <h3>Discovery</h3>
+    <a href="#discovery">Discovery Interview</a>
+    <a href="#standards">Standards Selection</a>
+
+    <h3>Workflows</h3>
+    <a href="#wf1">WF1: Interpret &amp; Explain</a>
+    <a href="#wf2">WF2: Author from Scratch</a>
+    <a href="#wf3">WF3: Review &amp; Critique</a>
+    <a href="#wf4">WF4: Generate Outputs</a>
+    <a href="#wf5">WF5: Parse Documents</a>
+
+    <h3>Sector Taxonomies</h3>
+    <a href="#sectors">Supported Sectors</a>
+
+    <h3>Reference</h3>
+    <a href="#pitfalls">Common Pitfalls</a>
+    <a href="#references">Reference Files</a>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="wiki-main" id="main">
+
+    <h1 id="overview">FMEA/FMECA <span class="version">Consulting-grade</span></h1>
+    <p class="lead">Produce consulting-grade Failure Mode and Effects Analysis (FMEA) and Failure Mode, Effects, and Criticality Analysis (FMECA) outputs. Five workflows: interpret existing analyses, author new ones, review quality, generate formatted deliverables, and parse technical documents into reusable context files.</p>
+
+    <div class="card-grid card-grid-5">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-magnifying-glass"></i></div>
+        <h4>Interpret</h4>
+        <p>Explain existing FMEA/FMECA data in plain language.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-pen-ruler"></i></div>
+        <h4>Author</h4>
+        <p>Build new analyses from scratch with full hierarchy.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-clipboard-check"></i></div>
+        <h4>Review</h4>
+        <p>Score and critique existing analyses across 6 dimensions.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-export"></i></div>
+        <h4>Generate</h4>
+        <p>Produce .xlsx, risk matrices, reports, and registers.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-import"></i></div>
+        <h4>Parse</h4>
+        <p>Extract context from OEM manuals, BOMs, and P&amp;IDs.</p>
+      </div>
+    </div>
+
+    <!-- Core Concepts -->
+    <h2 id="concepts"><i class="fas fa-book-open"></i> Core Concepts</h2>
+
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-triangle-exclamation"></i></div>
+        <h4>FMEA</h4>
+        <p>Identifies failure modes, their effects on system performance, and existing controls. Uses Risk Priority Number (RPN = Severity &times; Occurrence &times; Detection) to prioritise action.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-scale-balanced"></i></div>
+        <h4>FMECA</h4>
+        <p>Extends FMEA with formal criticality assessment &mdash; either qualitative (criticality ranking matrix) or quantitative (criticality number per MIL-STD-1629A). Standard in defence and heavy industry.</p>
+      </div>
+    </div>
+
+    <!-- The Hierarchy -->
+    <h2 id="hierarchy"><i class="fas fa-sitemap"></i> The Hierarchy</h2>
+    <p>Every FMEA/FMECA is built on a consistent decomposition. This hierarchy is non-negotiable &mdash; every analysis must trace from system context down to failure modes.</p>
+
+    <pre>System (e.g. Tram Braking System)
+  &rarr; Sub-system (e.g. Friction Brake)
+      &rarr; Component / Maintainable Item (e.g. Brake Pad Assembly)
+          &rarr; Function (e.g. Convert kinetic energy to heat via friction)
+              &rarr; Functional Failure (e.g. Unable to generate braking force)
+                  &rarr; Failure Mode (e.g. Brake pad worn below minimum thickness)
+                      &rarr; Failure Effect (local / system / end effect)
+                      &rarr; Failure Cause/Mechanism (e.g. Normal abrasive wear)</pre>
+
+    <div class="callout callout-warn">
+      <p><strong>Gap detection:</strong> If a user provides data that skips levels in this hierarchy, flag the gaps. Incomplete hierarchies produce incomplete analyses.</p>
+    </div>
+
+    <!-- Key Distinctions -->
+    <h2 id="distinctions"><i class="fas fa-arrows-left-right"></i> Key Distinctions</h2>
+
+    <table>
+      <thead>
+        <tr><th>Concept A</th><th>vs</th><th>Concept B</th><th>How to Tell Them Apart</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Failure mode</strong></td>
+          <td>vs</td>
+          <td><strong>Failure cause</strong></td>
+          <td>Mode = observable manner (&ldquo;bearing seized&rdquo;). Cause = why (&ldquo;loss of lubrication due to seal degradation&rdquo;). Many poor FMEAs conflate these.</td>
+        </tr>
+        <tr>
+          <td><strong>Local effect</strong></td>
+          <td>vs</td>
+          <td><strong>End effect</strong></td>
+          <td>Local = at the component. System = at the sub-system. End = what operator/customer/public experiences. Effects cascade upward.</td>
+        </tr>
+        <tr>
+          <td><strong>Evident failure</strong></td>
+          <td>vs</td>
+          <td><strong>Hidden failure</strong></td>
+          <td>Evident = apparent to operators under normal conditions. Hidden = only apparent when demanded (typically protective devices).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Discovery -->
+    <h2 id="discovery"><i class="fas fa-clipboard-question"></i> Discovery Interview</h2>
+    <p>Before starting any workflow, conduct a discovery interview tailored to the workflow depth.</p>
+
+    <h3>Essential Questions (All Workflows)</h3>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Question</th><th>Details</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1</strong></td>
+          <td>What asset/system?</td>
+          <td>Equipment type, make/model, operating context (where, how, how hard), sector</td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td>
+          <td>Purpose of analysis?</td>
+          <td>Regulatory/compliance, maintenance strategy (RCM), design review (DFMEA), risk assessment, insurance/safety case</td>
+        </tr>
+        <tr>
+          <td><strong>3</strong></td>
+          <td>Which standard?</td>
+          <td>IEC 60812 (default), SAE J1739 (automotive/rolling stock), MIL-STD-1629A (defence), ISO 14224 (petroleum/gas)</td>
+        </tr>
+        <tr>
+          <td><strong>4</strong></td>
+          <td>Available data?</td>
+          <td>Existing FMEAs, asset registers, failure history, OEM manuals, P&amp;IDs, schematics</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Standards -->
+    <h2 id="standards"><i class="fas fa-gavel"></i> Supported Standards</h2>
+
+    <table>
+      <thead>
+        <tr><th>Standard</th><th>Best For</th><th>Key Feature</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-green">IEC 60812</span></td>
+          <td>Broadest applicability &mdash; default choice</td>
+          <td>Flexible RPN-based approach, widely recognised</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">SAE J1739</span></td>
+          <td>Automotive, rolling stock, design-focused</td>
+          <td>Separate prevention and detection controls, revised RPN</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-amber">MIL-STD-1629A</span></td>
+          <td>Defence, quantitative criticality required</td>
+          <td>Criticality number using failure rate and mode ratio data</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-red">ISO 14224</span></td>
+          <td>Petroleum, gas, failure taxonomy alignment</td>
+          <td>Standardised equipment and failure classification</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Workflow 1 -->
+    <h2 id="wf1"><i class="fas fa-magnifying-glass"></i> Workflow 1: Interpret &amp; Explain</h2>
+    <p>When a user uploads or pastes FMEA/FMECA data and wants to understand it.</p>
+
+    <ul class="checklist">
+      <li><strong>Parse the input</strong> &mdash; Identify structure, columns, scoring method, hierarchy depth, standard alignment</li>
+      <li><strong>Summarise the scope</strong> &mdash; System/asset, failure mode count, scoring method, standard alignment</li>
+      <li><strong>Explain the findings</strong> &mdash; Highest-risk items, score meanings, hidden failures, common-cause failures</li>
+      <li><strong>Flag quality issues</strong> &mdash; Missing data, inconsistent scoring, vague descriptions, hierarchy gaps</li>
+      <li><strong>Provide context</strong> &mdash; Relate findings to operating context and real-world urgency</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Lead with the &ldquo;so what&rdquo;</strong> &mdash; what should the reader care about and do next.</p>
+    </div>
+
+    <!-- Workflow 2 -->
+    <h2 id="wf2"><i class="fas fa-pen-ruler"></i> Workflow 2: Author from Scratch</h2>
+    <p>Building a new FMEA/FMECA from available data. Follow these 10 steps in sequence.</p>
+
+    <table>
+      <thead>
+        <tr><th>Step</th><th>Action</th><th>Quality Test</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Establish system boundary</td><td>What&rsquo;s in scope and out? Interfaces defined?</td></tr>
+        <tr><td>2</td><td>Build the hierarchy</td><td>Decomposed to maintainable item level?</td></tr>
+        <tr><td>3</td><td>Define functions</td><td>Quantified where possible? Every item has &ge;1 function?</td></tr>
+        <tr><td>4</td><td>Identify functional failures</td><td>Total loss, partial loss, intermittent, degraded, unintended, over-function?</td></tr>
+        <tr><td>5</td><td>Determine failure modes</td><td>Specific and observable? Could a technician picture it?</td></tr>
+        <tr><td>6</td><td>Describe failure effects</td><td>Three levels (local, system, end)? Safety/environmental?</td></tr>
+        <tr><td>7</td><td>Identify failure causes</td><td>Distinct from failure modes? Linked to operating context?</td></tr>
+        <tr><td>8</td><td>Assess S, O, D scores</td><td>Consistent? Assumptions documented?</td></tr>
+        <tr><td>9</td><td>Calculate RPN / criticality</td><td>Per selected standard?</td></tr>
+        <tr><td>10</td><td>Recommend actions</td><td>High-priority items addressed? Intervals specified?</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Failure Mode Quality</h3>
+    <div class="card-grid card-grid-2">
+      <div class="card" style="border-left: 4px solid #69BE28;">
+        <h4>Good</h4>
+        <p>&ldquo;Impeller blades eroded reducing flow by &gt;20%&rdquo;</p>
+      </div>
+      <div class="card" style="border-left: 4px solid #ef4444;">
+        <h4>Bad</h4>
+        <p>&ldquo;Pump degraded&rdquo;</p>
+      </div>
+    </div>
+
+    <!-- Workflow 3 -->
+    <h2 id="wf3"><i class="fas fa-clipboard-check"></i> Workflow 3: Review &amp; Critique</h2>
+    <p>Score each dimension 1&ndash;5 and provide specific findings with examples.</p>
+
+    <table>
+      <thead>
+        <tr><th>Dimension</th><th>What to Assess</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>1. Structural completeness</strong></td><td>Hierarchy complete? Functions stated? Orphaned entries?</td></tr>
+        <tr><td><strong>2. Failure mode quality</strong></td><td>Specific and observable? Common modes covered? Cause-mode confusion?</td></tr>
+        <tr><td><strong>3. Effects analysis quality</strong></td><td>All three levels? Safety/environmental? Cascading effects?</td></tr>
+        <tr><td><strong>4. Scoring consistency</strong></td><td>Scale documented? Similar modes scored consistently? Detection based on current controls?</td></tr>
+        <tr><td><strong>5. Recommendations</strong></td><td>High-RPN items have actions? Actions specific? Clear failure-to-task link?</td></tr>
+        <tr><td><strong>6. Standard alignment</strong></td><td>Format matches standard? Mandatory fields present? Methodology correct?</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Review Output Structure</h3>
+    <ul class="checklist">
+      <li>Executive summary (overall quality rating, key concerns)</li>
+      <li>Findings by dimension (with specific examples)</li>
+      <li>Priority recommendations (what to fix first)</li>
+      <li>Positive observations (what&rsquo;s done well)</li>
+    </ul>
+
+    <!-- Workflow 4 -->
+    <h2 id="wf4"><i class="fas fa-file-export"></i> Workflow 4: Generate Outputs</h2>
+
+    <h3>Spreadsheet Formats</h3>
+    <table>
+      <thead>
+        <tr><th>Standard</th><th>Key Columns</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-green">IEC 60812</span></td>
+          <td>Item, Function, Functional Failure, Failure Mode, Cause, Local/System/End Effect, S, O, D, RPN, Recommended Action</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-amber">MIL-STD-1629A</span></td>
+          <td>Item ID, Name, Function, Failure Mode, Cause, Mission Phase, Effects (3 levels), Severity Class, Failure Rate, Mode Ratio, Criticality Number</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">SAE J1739</span></td>
+          <td>Item/Function, Failure Mode, Effects, Severity, Class, Causes, Occurrence, Prevention Controls, Detection Controls, Detection, RPN</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Other Output Formats</h3>
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-table-cells"></i></div>
+        <h4>Risk Matrix</h4>
+        <p>HTML artefact: severity &times; occurrence heat map showing failure mode distribution.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-word"></i></div>
+        <h4>Summary Report</h4>
+        <p>Executive-level: scope, methodology, findings, risk profile, recommendations.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-excel"></i></div>
+        <h4>FMECA Register</h4>
+        <p>Full register with filtering, conditional formatting, and summary dashboard.</p>
+      </div>
+    </div>
+
+    <h3>Formatting Standards</h3>
+    <ul class="checklist">
+      <li>Conditional formatting on RPN/criticality (Red/Amber/Green thresholds)</li>
+      <li>Legend/key sheet explaining scoring scales</li>
+      <li>Summary sheet with counts by risk category</li>
+      <li>Frozen headers, auto-filter enabled</li>
+    </ul>
+
+    <!-- Workflow 5 -->
+    <h2 id="wf5"><i class="fas fa-file-import"></i> Workflow 5: Parse Document into Context File</h2>
+    <p>Extract FMECA-relevant information from technical documents into structured markdown files for reuse in future sessions. This is foundational work that dramatically improves subsequent analysis quality.</p>
+
+    <h3>Supported Document Types</h3>
+    <table>
+      <thead>
+        <tr><th>Document Type</th><th>What to Extract</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>OEM/Maintenance Manual</td><td>Equipment hierarchy, functions, specs, recommended maintenance, operating limits, OEM failure modes</td></tr>
+        <tr><td>Asset Register / BOM</td><td>Hierarchy, naming conventions, parent-child relationships, quantities, criticality tags</td></tr>
+        <tr><td>Maintenance Plan</td><td>Current PM tasks, intervals, condition monitoring, shutdown scope, maintenance philosophy</td></tr>
+        <tr><td>P&amp;ID / System Diagram</td><td>System boundaries, equipment arrangement, process flow, instrumentation, protective devices</td></tr>
+        <tr><td>Inspection / Condition Report</td><td>Current condition, defects, degradation rates, remaining life estimates</td></tr>
+        <tr><td>Failure History / Work Orders</td><td>Actual failure modes, frequency, root causes, downtime, repair actions, repeats</td></tr>
+        <tr><td>Existing FMEA/FMECA</td><td>Previous scope, scoring, identified failure modes, recommendations, gaps</td></tr>
+        <tr><td>Safety Case / HAZOP</td><td>Hazards, consequences, safeguards, SIL ratings, safety-critical items</td></tr>
+        <tr><td>Reliability Data</td><td>Failure rates, MTBF, MTTR, availability, Weibull parameters</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Context File Naming</h3>
+    <pre>{client}-{asset}-{doctype}-context.md
+
+Examples:
+  yarratrams-bclass-oem-context.md
+  geelongport-shiploader1-condition-context.md
+  santos-compressor-fmea-context.md</pre>
+
+    <h3>Extraction Rules</h3>
+    <ul class="checklist">
+      <li><strong>Equipment hierarchy</strong> &mdash; Decompose to maintainable item level, preserve document numbering</li>
+      <li><strong>Functions</strong> &mdash; Verb + object + quantified performance, cite source section</li>
+      <li><strong>Operating context</strong> &mdash; Environment, duty cycle, loading, temperature, utilisation</li>
+      <li><strong>Maintenance context</strong> &mdash; Tasks, intervals, basis (OEM/regulatory/experience)</li>
+      <li><strong>Failure information</strong> &mdash; Record exactly as described, map to taxonomy, preserve quantitative data</li>
+      <li><strong>Protective devices</strong> &mdash; List every device, what it protects, test interval, last test result</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <p><strong>Protective devices are the most commonly missed items in FMEAs.</strong> Extracting them upfront during document parsing is high-value work that prevents gaps in the analysis.</p>
+    </div>
+
+    <!-- Sector Taxonomies -->
+    <h2 id="sectors"><i class="fas fa-industry"></i> Supported Sectors</h2>
+    <p>The skill includes sector-specific failure mode taxonomies that serve as starting points for analysis. Always read the relevant taxonomy before authoring.</p>
+
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-train"></i></div>
+        <h4>Rolling Stock</h4>
+        <p>Rail, tram, and train assets. Covers traction, braking, doors, HVAC, bogies, couplers, and signalling interfaces.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-anchor"></i></div>
+        <h4>Ports &amp; Marine</h4>
+        <p>Wharves, ship loaders, cranes, conveyor systems, fenders, and marine navigation aids.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-helmet-safety"></i></div>
+        <h4>Mining &amp; Resources</h4>
+        <p>Crushers, mills, conveyors, processing plants, heavy mobile equipment, and dewatering systems.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-gear"></i></div>
+        <h4>General Industrial</h4>
+        <p>Cross-sector: pumps, motors, valves, HVAC, electrical distribution, civil structures, and instrumentation.</p>
+      </div>
+    </div>
+
+    <!-- Common Pitfalls -->
+    <h2 id="pitfalls"><i class="fas fa-circle-exclamation"></i> Common Pitfalls to Flag</h2>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>Pitfall</th><th>What to Look For</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Vague failure modes</strong></td><td>&ldquo;Component fails&rdquo; is not a failure mode</td></tr>
+        <tr><td>2</td><td><strong>Cause-mode confusion</strong></td><td>&ldquo;Corrosion&rdquo; is usually a cause, not a mode</td></tr>
+        <tr><td>3</td><td><strong>Inconsistent scoring</strong></td><td>Same failure type scored differently without justification</td></tr>
+        <tr><td>4</td><td><strong>Missing hidden failures</strong></td><td>Protective devices frequently missed</td></tr>
+        <tr><td>5</td><td><strong>Single-point-of-failure blindness</strong></td><td>Not identifying absent redundancy</td></tr>
+        <tr><td>6</td><td><strong>Copy-paste syndrome</strong></td><td>Generic descriptions reused without adaptation</td></tr>
+        <tr><td>7</td><td><strong>Detection score confusion</strong></td><td>Rates current controls, not theoretical capability</td></tr>
+        <tr><td>8</td><td><strong>Severity creep</strong></td><td>Everything rated 9&ndash;10 makes analysis useless for prioritisation</td></tr>
+        <tr><td>9</td><td><strong>Missing operating context</strong></td><td>Same equipment, different environment = different failure behaviour</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <p><strong>When data is insufficient:</strong> Be transparent. State assumptions clearly. Flag where engineering judgement has been applied vs data-supported assessment. Never fabricate failure rate data &mdash; use qualitative ranges and state the basis.</p>
+    </div>
+
+    <!-- Reference Files -->
+    <h2 id="references"><i class="fas fa-book"></i> Reference Files</h2>
+
+    <table>
+      <thead>
+        <tr><th>File</th><th>When to Read</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>references/standards-guide.md</code></td><td>Always read first &mdash; covers IEC 60812, SAE J1739, MIL-STD-1629A, ISO 14224</td></tr>
+        <tr><td><code>references/scoring-scales.md</code></td><td>When assigning or reviewing severity, occurrence, detection, or criticality scores</td></tr>
+        <tr><td><code>references/rolling-stock-taxonomy.md</code></td><td>Rail, tram, and train assets</td></tr>
+        <tr><td><code>references/ports-marine-taxonomy.md</code></td><td>Port, wharf, marine, and shipping assets</td></tr>
+        <tr><td><code>references/mining-resources-taxonomy.md</code></td><td>Mining, processing, and resources assets</td></tr>
+        <tr><td><code>references/general-industrial-taxonomy.md</code></td><td>Cross-sector equipment (pumps, motors, valves, HVAC, electrical, civil)</td></tr>
+        <tr><td><code>references/context-file-template.md</code></td><td>When parsing a document into a context file (Workflow 5)</td></tr>
+      </tbody>
+    </table>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      FMEA/FMECA Skill &mdash; Consulting-grade failure analysis across industrial sectors
+    </p>
+
+  </main>
+
+  <!-- Scroll-to-top -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://cdn.jsdelivr.net/npm/@anthropic-ai/claude-code-plugins@latest/schemas/plugin-schema.json",
+  "name": "webflow-content-creator",
+  "description": "Create and publish SAS-AM branded blog articles and case studies to Webflow CMS. Integrates with b2b-research-agent for research, nano-banana-2 for hero images, and the Webflow MCP for direct publishing. Supports Local Government, Water, Resources & Minerals, Transport, Health, and Defence sectors.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "license": "MIT",
+  "keywords": [
+    "webflow",
+    "cms",
+    "content",
+    "blog",
+    "case-study",
+    "article",
+    "asset-management",
+    "publishing"
+  ],
+  "engines": {
+    "claude-code": ">=1.0.0"
+  }
+}

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Wiki guide for the SAS Content Hub — a Claude Code skill for end-to-end content campaign orchestration from artefact to LinkedIn promotion">
+  <meta name="author" content="marcov / SAS Asset Management">
+  <title>SAS Content Hub — Wiki Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --sas-green: #69BE28; --sas-blue: #002244; --bg-primary: #ffffff; --bg-secondary: #f7f7f7; --bg-tertiary: #ededed; --text-primary: #002244; --text-secondary: #334466; --text-muted: #6b7280; --accent: #69BE28; --accent-hover: #5AA822; --card-bg: rgba(255,255,255,0.95); --card-border: rgba(0,34,68,0.12); --shadow-sm: 0 2px 8px rgba(0,34,68,0.06); --shadow-md: 0 4px 16px rgba(0,34,68,0.10); --shadow-lg: 0 8px 24px rgba(0,34,68,0.14); --focus-ring: 0 0 0 3px rgba(105,190,40,0.5); --code-bg: #f0f4f8; --code-text: #1e3a5f; --sidebar-w: 260px; --header-h: 64px; }
+    :root[data-theme="dark"] { --sas-green: #7AD33B; --sas-blue: #1a4d7a; --bg-primary: #0a0f1a; --bg-secondary: #141d2b; --bg-tertiary: #1e2a3d; --text-primary: #f4fbff; --text-secondary: #d1e3ed; --text-muted: #8ba3b5; --accent: #69BE28; --accent-hover: #7AD33B; --card-bg: rgba(20,29,43,0.9); --card-border: rgba(255,255,255,0.08); --shadow-sm: 0 2px 8px rgba(0,10,28,0.3); --shadow-md: 0 4px 16px rgba(0,10,28,0.4); --shadow-lg: 0 8px 24px rgba(0,10,28,0.5); --focus-ring: 0 0 0 3px rgba(105,190,40,0.4); --code-bg: #1a2332; --code-text: #d1e3ed; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body { font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+    .wiki-header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-h); background: var(--sas-blue); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .wiki-header .logo-area { display: flex; align-items: center; gap: 14px; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.5px; }
+    .wiki-header .logo-area i { color: var(--sas-green); font-size: 1.4rem; }
+    .wiki-header .header-controls { display: flex; align-items: center; gap: 12px; }
+    .wiki-header button { background: rgba(255,255,255,0.12); border: none; color: #fff; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; transition: background 0.2s; }
+    .wiki-header button:hover { background: rgba(255,255,255,0.22); }
+    .wiki-header button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+    .wiki-sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: var(--bg-secondary); border-right: 1px solid var(--card-border); overflow-y: auto; padding: 20px 0; z-index: 50; transition: transform 0.3s ease; }
+    .wiki-sidebar.collapsed { transform: translateX(-100%); }
+    .wiki-sidebar h3 { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding: 16px 20px 6px; margin: 0; }
+    .wiki-sidebar a { display: block; padding: 7px 20px 7px 28px; color: var(--text-secondary); text-decoration: none; font-size: 0.88rem; font-weight: 400; border-left: 3px solid transparent; transition: all 0.15s; }
+    .wiki-sidebar a:hover { color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-sidebar a.active { color: var(--accent); font-weight: 600; border-left-color: var(--accent); background: var(--bg-tertiary); }
+    .wiki-main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 48px 80px; max-width: 960px; transition: margin-left 0.3s ease; }
+    .wiki-main.expanded { margin-left: 0; }
+    h1 { font-size: 2.4rem; font-weight: 700; margin-bottom: 8px; }
+    h1 .version { font-size: 0.9rem; font-weight: 400; color: var(--text-muted); vertical-align: middle; margin-left: 10px; }
+    .lead { font-size: 1.15rem; color: var(--text-secondary); margin-bottom: 36px; line-height: 1.5; }
+    h2 { font-size: 1.6rem; font-weight: 700; margin-top: 52px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 10px; }
+    h2 i { color: var(--accent); font-size: 1.1rem; }
+    h3 { font-size: 1.2rem; font-weight: 700; margin-top: 28px; margin-bottom: 10px; color: var(--text-primary); }
+    h4 { font-size: 1rem; font-weight: 700; margin-top: 20px; margin-bottom: 8px; }
+    p { margin-bottom: 14px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.9rem; }
+    thead th { background: var(--sas-blue); color: #fff; text-align: left; padding: 10px 14px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    tbody td { padding: 9px 14px; border-bottom: 1px solid var(--card-border); vertical-align: top; }
+    tbody tr:hover { background: var(--bg-secondary); }
+    td code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; font-family: 'Source Code Pro', monospace; font-size: 0.82rem; }
+    pre { background: var(--code-bg); color: var(--code-text); border-radius: 8px; padding: 16px 20px; margin: 14px 0 20px; overflow-x: auto; font-family: 'Source Code Pro', monospace; font-size: 0.85rem; line-height: 1.5; border: 1px solid var(--card-border); }
+    code { font-family: 'Source Code Pro', monospace; font-size: 0.88em; }
+    :not(pre) > code { background: var(--code-bg); color: var(--code-text); padding: 2px 6px; border-radius: 4px; }
+    .card-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
+    .card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    .card-grid-5 { grid-template-columns: repeat(5, 1fr); }
+    .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s, transform 0.2s; }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .card .card-icon { font-size: 1.6rem; color: var(--accent); margin-bottom: 10px; }
+    .card h4 { margin-top: 0; margin-bottom: 6px; }
+    .card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 0; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; vertical-align: middle; }
+    .badge-green { background: rgba(105,190,40,0.15); color: #3d7a0f; }
+    .badge-blue { background: rgba(0,34,68,0.1); color: var(--sas-blue); }
+    .badge-amber { background: rgba(245,158,11,0.15); color: #92400e; }
+    .badge-red { background: rgba(239,68,68,0.12); color: #991b1b; }
+    :root[data-theme="dark"] .badge-green { background: rgba(105,190,40,0.2); color: #7AD33B; }
+    :root[data-theme="dark"] .badge-blue { background: rgba(26,77,122,0.3); color: #93c5fd; }
+    :root[data-theme="dark"] .badge-amber { background: rgba(245,158,11,0.2); color: #fbbf24; }
+    :root[data-theme="dark"] .badge-red { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .callout { border-left: 4px solid var(--accent); background: var(--bg-secondary); padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0 20px; }
+    .callout.callout-warn { border-left-color: #f59e0b; }
+    .callout.callout-critical { border-left-color: #ef4444; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: var(--text-primary); }
+    .checklist { list-style: none; padding: 0; margin: 10px 0 20px; }
+    .checklist li { padding: 5px 0 5px 28px; position: relative; font-size: 0.9rem; color: var(--text-secondary); }
+    .checklist li::before { content: "\f0c8"; font-family: "Font Awesome 6 Free"; font-weight: 400; position: absolute; left: 0; color: var(--text-muted); font-size: 0.85rem; }
+    .pipeline { display: flex; align-items: center; gap: 0; margin: 24px 0; flex-wrap: wrap; }
+    .pipeline-step { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 16px 20px; text-align: center; flex: 1; min-width: 140px; box-shadow: var(--shadow-sm); }
+    .pipeline-step .step-num { display: inline-block; width: 28px; height: 28px; line-height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.8rem; font-weight: 700; margin-bottom: 8px; }
+    .pipeline-step h4 { margin: 0 0 4px; font-size: 0.9rem; }
+    .pipeline-step p { margin: 0; font-size: 0.78rem; color: var(--text-muted); }
+    .pipeline-arrow { font-size: 1.2rem; color: var(--accent); padding: 0 8px; flex-shrink: 0; }
+    .scroll-top { position: fixed; bottom: 24px; right: 24px; width: 42px; height: 42px; border-radius: 50%; background: var(--accent); color: #fff; border: none; font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-md); opacity: 0; transform: translateY(10px); transition: opacity 0.3s, transform 0.3s; z-index: 90; }
+    .scroll-top.visible { opacity: 1; transform: translateY(0); }
+    .scroll-top:hover { background: var(--accent-hover); }
+    @media (max-width: 900px) { .wiki-sidebar { transform: translateX(-100%); } .wiki-sidebar.open { transform: translateX(0); } .wiki-main { margin-left: 0; padding: 28px 20px 60px; } .card-grid-2, .card-grid-3, .card-grid-4, .card-grid-5 { grid-template-columns: 1fr; } .pipeline { flex-direction: column; } .pipeline-arrow { transform: rotate(90deg); } h1 { font-size: 1.8rem; } h2 { font-size: 1.3rem; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }
+    @media print { .wiki-header, .wiki-sidebar, .scroll-top { display: none; } .wiki-main { margin-left: 0; max-width: 100%; } }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="wiki-header">
+    <div class="logo-area">
+      <i class="fas fa-rocket"></i>
+      <span>SAS Content Hub Wiki</span>
+    </div>
+    <div class="header-controls">
+      <a href="../../../../wiki.html" style="color:#fff;text-decoration:none;font-size:0.85rem;font-weight:600;opacity:0.85;">
+        <i class="fas fa-arrow-left" style="margin-right:4px;"></i> All Skills
+      </a>
+      <button id="themeToggle" aria-label="Toggle dark mode"><i class="fas fa-moon"></i></button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="wiki-sidebar" id="sidebar">
+    <h3>Getting Started</h3>
+    <a href="#overview">Overview</a>
+    <a href="#pipeline">Pipeline Flow</a>
+    <a href="#dependencies">Dependencies</a>
+
+    <h3>Campaign Interview</h3>
+    <a href="#interview">Interview Questions</a>
+    <a href="#brief">Campaign Brief</a>
+
+    <h3>Pipeline Stages</h3>
+    <a href="#stage1">Stage 1 &mdash; Artefact</a>
+    <a href="#stage2">Stage 2 &mdash; Email Gate</a>
+    <a href="#stage3">Stage 3 &mdash; Hero Image</a>
+    <a href="#stage4">Stage 4 &mdash; Article</a>
+    <a href="#stage5">Stage 5 &mdash; Publish</a>
+    <a href="#stage6">Stage 6 &mdash; LinkedIn</a>
+
+    <h3>Integrated Skills</h3>
+    <a href="#email-gate">Email Gate</a>
+    <a href="#webflow-creator">Webflow Creator</a>
+    <a href="#linkedin-gen">LinkedIn Generator</a>
+
+    <h3>Reference</h3>
+    <a href="#gate-checks">Gate Checks</a>
+    <a href="#campaign-summary">Campaign Summary</a>
+    <a href="#references">Reference Files</a>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="wiki-main" id="main">
+
+    <h1 id="overview">SAS Content Hub <span class="version">v1.0.0</span></h1>
+    <p class="lead">Orchestrate the full SAS-AM content pipeline from a single brief &mdash; creating a downloadable artefact, gating it behind email capture, publishing a supporting article to Webflow, and promoting it on LinkedIn.</p>
+
+    <div class="card-grid card-grid-4">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-file-powerpoint"></i></div>
+        <h4>Artefact Creation</h4>
+        <p>Interactive HTML scorecards, checklists, and templates via sas-presentation.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-envelope-open-text"></i></div>
+        <h4>Lead Capture</h4>
+        <p>Email-gated downloads with Cortex4 integration and Cloudflare Turnstile bot protection.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-globe"></i></div>
+        <h4>Webflow Publishing</h4>
+        <p>SEO-optimised articles published directly to sas-am.com/resources via CMS API.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fab fa-linkedin"></i></div>
+        <h4>LinkedIn Promotion</h4>
+        <p>Brand-voice posts promoting the article to drive traffic and downloads.</p>
+      </div>
+    </div>
+
+    <!-- Pipeline Flow -->
+    <h2 id="pipeline"><i class="fas fa-diagram-project"></i> Pipeline Flow</h2>
+    <p>The content hub orchestrates six sequential stages, each with a user approval gate before proceeding to the next.</p>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="step-num">1</div>
+        <h4>Artefact</h4>
+        <p>sas-presentation</p>
+      </div>
+      <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+      <div class="pipeline-step">
+        <div class="step-num">2</div>
+        <h4>Email Gate</h4>
+        <p>Cortex4 lead capture</p>
+      </div>
+      <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+      <div class="pipeline-step">
+        <div class="step-num">3</div>
+        <h4>Hero Image</h4>
+        <p>nano-banana-2</p>
+      </div>
+      <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+      <div class="pipeline-step">
+        <div class="step-num">4</div>
+        <h4>Article</h4>
+        <p>webflow-content-creator</p>
+      </div>
+      <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+      <div class="pipeline-step">
+        <div class="step-num">5</div>
+        <h4>Publish</h4>
+        <p>Webflow CMS</p>
+      </div>
+      <div class="pipeline-arrow"><i class="fas fa-arrow-right"></i></div>
+      <div class="pipeline-step">
+        <div class="step-num">6</div>
+        <h4>LinkedIn</h4>
+        <p>linkedin-post-generator</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Gate-checked workflow.</strong> Each stage presents its output for user approval before the next stage begins. You always have the opportunity to adjust, regenerate, or skip a stage.</p>
+    </div>
+
+    <!-- Dependencies -->
+    <h2 id="dependencies"><i class="fas fa-puzzle-piece"></i> Dependencies</h2>
+    <p>The content hub coordinates multiple skills. Some are bundled within the plugin, others are external dependencies.</p>
+
+    <table>
+      <thead>
+        <tr><th>Skill</th><th>Type</th><th>Purpose</th><th>Required</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>sas-presentation</code></td>
+          <td><span class="badge badge-blue">External</span></td>
+          <td>Creates downloadable artefacts (HTML presentations, scorecards, checklists)</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td><code>nano-banana-2</code></td>
+          <td><span class="badge badge-blue">External</span></td>
+          <td>Generates hero images and social graphics with SAS watermark</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td><code>email-gate</code></td>
+          <td><span class="badge badge-green">Bundled</span></td>
+          <td>Creates email capture forms for gated downloads via Cortex4</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td><code>webflow-content-creator</code></td>
+          <td><span class="badge badge-green">Bundled</span></td>
+          <td>Writes SEO-optimised articles and publishes to Webflow CMS</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td><code>linkedin-post-generator</code></td>
+          <td><span class="badge badge-green">Bundled</span></td>
+          <td>Generates LinkedIn posts in SAS-AM brand voice</td>
+          <td>Yes</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Interview -->
+    <h2 id="interview"><i class="fas fa-clipboard-question"></i> Campaign Interview</h2>
+    <p>The orchestrator conducts a 7-question interview before any production begins. Questions are asked one at a time with multiple-choice options.</p>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>Question</th><th>Options</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Q1</strong></td>
+          <td>Campaign Topic</td>
+          <td>Maintenance strategy, Asset condition, AI/ML, Risk &amp; reliability, Maturity assessment, Custom</td>
+        </tr>
+        <tr>
+          <td><strong>Q2</strong></td>
+          <td>Target Sector</td>
+          <td>Local Government, Water, Resources &amp; Minerals, Transport, Health, Defence, Cross-sector</td>
+        </tr>
+        <tr>
+          <td><strong>Q3</strong></td>
+          <td>Artefact Type</td>
+          <td>Interactive scorecard, Audit checklist, Business case template, Maturity assessment, Technical guide, Custom</td>
+        </tr>
+        <tr>
+          <td><strong>Q4</strong></td>
+          <td>Artefact Details</td>
+          <td>Free text &mdash; what it helps the reader do, sections, methodology</td>
+        </tr>
+        <tr>
+          <td><strong>Q5</strong></td>
+          <td>Key Evidence</td>
+          <td>Client outcomes, industry statistics, personal experience, contrarian viewpoints</td>
+        </tr>
+        <tr>
+          <td><strong>Q6</strong></td>
+          <td>CTA Goal</td>
+          <td>Book diagnostic, Request assessment, Download artefact, Contact for proposal, Custom</td>
+        </tr>
+        <tr>
+          <td><strong>Q7</strong></td>
+          <td>Urgency &amp; Timeline</td>
+          <td>Event-tied, Seasonal, Evergreen, Custom</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="brief">Campaign Brief</h3>
+    <p>After completing the interview, the orchestrator compiles a campaign brief summarising all answers before proceeding to production.</p>
+
+    <!-- Stage 1 -->
+    <h2 id="stage1"><i class="fas fa-file-powerpoint"></i> Stage 1: Create Artefact</h2>
+    <p>Invokes <code>/sas-presentation</code> with the artefact brief from Q3&ndash;Q4. The output is an interactive HTML file &mdash; a scorecard, checklist, template, or other downloadable resource.</p>
+
+    <ul class="checklist">
+      <li>Presentation type mapped from artefact type selection</li>
+      <li>Topic and sector applied from Q1&ndash;Q2</li>
+      <li>Methodology and sections from Q4</li>
+      <li>Output: Interactive HTML file saved to working directory</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Gate check:</strong> &ldquo;Does this artefact look right? Any adjustments before we gate it?&rdquo;</p>
+    </div>
+
+    <!-- Stage 2 -->
+    <h2 id="stage2"><i class="fas fa-envelope-open-text"></i> Stage 2: Generate Email Gate</h2>
+    <p>Invokes the <code>email-gate</code> skill to create a branded lead capture form. The form captures name, role, and email, submits to the Cortex4 gate API, and returns a time-limited download URL.</p>
+
+    <ul class="checklist">
+      <li>Artefact title and description from Q3</li>
+      <li>Resource slug derived from title (kebab-case)</li>
+      <li>Icon type matching artefact category</li>
+      <li>Cloudflare Turnstile bot protection included</li>
+      <li>Output: Self-contained HTML snippet for Webflow embed</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Gate check:</strong> &ldquo;Happy with the gate form? The resource slug will be <code>{slug}</code> and leads go to Cortex4.&rdquo;</p>
+    </div>
+
+    <!-- Stage 3 -->
+    <h2 id="stage3"><i class="fas fa-image"></i> Stage 3: Generate Hero Image</h2>
+    <p>Invokes <code>/nano-banana-2</code> to create a hero image for the article. Uses web search grounding for real-world context and applies the mandatory SAS watermark.</p>
+
+    <ul class="checklist">
+      <li>Prompt derived from campaign topic and sector</li>
+      <li>Aspect ratio: 16:9 (optimal for Webflow cards)</li>
+      <li>Professional style aligned with SAS-AM brand</li>
+      <li>Watermark applied automatically via post-processing</li>
+      <li>Output: Watermarked hero image (JPG)</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Gate check:</strong> &ldquo;Does this hero image work for the article? Want to regenerate or adjust the prompt?&rdquo;</p>
+    </div>
+
+    <!-- Stage 4 -->
+    <h2 id="stage4"><i class="fas fa-pen-nib"></i> Stage 4: Write Article</h2>
+    <p>Invokes the <code>webflow-content-creator</code> skill with full campaign context. The article leads with the problem the artefact solves, provides genuine insight, and embeds the email gate within the body.</p>
+
+    <ul class="checklist">
+      <li>Topic, sector, and evidence from the interview</li>
+      <li>Gate HTML embedded as Webflow Custom Code Embed block</li>
+      <li>SEO-optimised with title tag, meta description, and heading hierarchy</li>
+      <li>Australian English, active voice, SAS-AM brand tone</li>
+      <li>Output: Article content ready for Webflow CMS</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Gate check:</strong> &ldquo;Ready to publish, or want to adjust the content?&rdquo;</p>
+    </div>
+
+    <!-- Stage 5 -->
+    <h2 id="stage5"><i class="fas fa-cloud-arrow-up"></i> Stage 5: Publish to Webflow</h2>
+    <p>Uses <code>webflowPublish.py</code> to create the CMS item and upload the hero image. The article is created as a draft for review before going live.</p>
+
+    <ul class="checklist">
+      <li>Hero image uploaded to Webflow Assets automatically</li>
+      <li>CMS item created with all required fields populated</li>
+      <li>Draft mode by default &mdash; user confirms before publishing live</li>
+      <li>Output: Draft article on Webflow with preview URL</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Gate check:</strong> &ldquo;Article is in draft on Webflow. Publish live now, or review in Webflow first?&rdquo;</p>
+    </div>
+
+    <!-- Stage 6 -->
+    <h2 id="stage6"><i class="fab fa-linkedin"></i> Stage 6: Create LinkedIn Post</h2>
+    <p>Invokes the <code>linkedin-post-generator</code> skill to promote the published article. The skill produces all eligible post formats in parallel, then recommends the strongest.</p>
+
+    <ul class="checklist">
+      <li>Published article URL as the link target</li>
+      <li>Campaign topic and interview material for authentic content</li>
+      <li>CTA: drive traffic to the article (which gates the artefact)</li>
+      <li>Multiple formats evaluated; best recommended</li>
+      <li>Output: LinkedIn post ready to publish</li>
+    </ul>
+
+    <div class="callout">
+      <p><strong>Gate check:</strong> &ldquo;Ready to publish on LinkedIn, or want to switch formats or adjust?&rdquo;</p>
+    </div>
+
+    <!-- Integrated Skills -->
+    <h2 id="email-gate"><i class="fas fa-lock"></i> Email Gate Skill</h2>
+    <p>Generates SAS-AM branded email capture HTML snippets for Webflow Custom Code Embed. The gate pattern captures lead data and sends it to the Cortex4 server, which returns a single-use download URL.</p>
+
+    <div class="card-grid card-grid-3">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-shield-halved"></i></div>
+        <h4>Bot Protection</h4>
+        <p>Cloudflare Turnstile invisible challenge prevents spam submissions.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-database"></i></div>
+        <h4>Lead Storage</h4>
+        <p>Name, role, and email captured and stored in the Cortex4 client database.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-link"></i></div>
+        <h4>Secure Downloads</h4>
+        <p>Time-limited, single-use download URLs prevent link sharing.</p>
+      </div>
+    </div>
+
+    <h3>Icon Options</h3>
+    <table>
+      <thead>
+        <tr><th>Icon</th><th>Best For</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Document</strong></td><td>Templates, reports, guides</td></tr>
+        <tr><td><strong>Chart</strong></td><td>Scorecards, dashboards, analytics tools</td></tr>
+        <tr><td><strong>Checklist</strong></td><td>Checklists, audits, assessments</td></tr>
+        <tr><td><strong>Scorecard</strong></td><td>Comparison matrices, evaluation tools</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="webflow-creator"><i class="fas fa-globe"></i> Webflow Content Creator</h2>
+    <p>Creates SEO-optimised articles and case studies for the SAS-AM website. Supports interview-first content creation, b2b-research-agent integration for data-backed claims, and direct publishing to Webflow CMS.</p>
+
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-newspaper"></i></div>
+        <h4>Articles</h4>
+        <p>Thought leadership, technical insights, and industry analysis with structured SEO.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><i class="fas fa-trophy"></i></div>
+        <h4>Case Studies</h4>
+        <p>STAR framework case studies with measurable outcomes and client testimonials.</p>
+      </div>
+    </div>
+
+    <h2 id="linkedin-gen"><i class="fab fa-linkedin"></i> LinkedIn Post Generator</h2>
+    <p>Generates LinkedIn posts in SAS-AM brand voice. Supports 8 post formats, a 20-hook library, and mandatory interview-first approach to ensure authentic content.</p>
+
+    <!-- Gate Checks -->
+    <h2 id="gate-checks"><i class="fas fa-circle-check"></i> Gate Checks</h2>
+    <p>Every stage includes a mandatory approval gate. The orchestrator pauses and asks for confirmation before proceeding.</p>
+
+    <table>
+      <thead>
+        <tr><th>Stage</th><th>Gate Question</th><th>Options</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Artefact</td><td>Does this artefact look right?</td><td>Approve / Adjust / Regenerate</td></tr>
+        <tr><td>2. Email Gate</td><td>Happy with the gate form?</td><td>Approve / Adjust slug / Adjust copy</td></tr>
+        <tr><td>3. Hero Image</td><td>Does this hero image work?</td><td>Approve / Regenerate / New prompt</td></tr>
+        <tr><td>4. Article</td><td>Ready to publish?</td><td>Approve / Revise / Adjust SEO</td></tr>
+        <tr><td>5. Publish</td><td>Publish live now?</td><td>Publish / Review in Webflow first</td></tr>
+        <tr><td>6. LinkedIn</td><td>Ready to post?</td><td>Approve / Switch format / Adjust</td></tr>
+      </tbody>
+    </table>
+
+    <!-- Campaign Summary -->
+    <h2 id="campaign-summary"><i class="fas fa-flag-checkered"></i> Campaign Summary</h2>
+    <p>After all stages complete, the orchestrator presents a full campaign summary with links to all outputs.</p>
+
+    <pre>
+=== Campaign Complete ===
+
+Topic: [campaign topic]
+Sector: [target sector]
+
+Artefact: [title] &rarr; [file path]
+Gate: [resource slug] &rarr; leads to Cortex4
+Article: [title] &rarr; [Webflow URL or draft status]
+LinkedIn: [format used] &rarr; [ready to post]
+Hero Image: [file path]
+
+Lead Capture: gate.sas-am.com &rarr; Cortex4 client DB
+CTA: [chosen CTA]</pre>
+
+    <!-- Reference Files -->
+    <h2 id="references"><i class="fas fa-book"></i> Reference Files</h2>
+
+    <table>
+      <thead>
+        <tr><th>File</th><th>Purpose</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>references/campaign-checklist.md</code></td>
+          <td>Pre-flight checklist for each campaign stage</td>
+        </tr>
+        <tr>
+          <td><code>references/gate-api.md</code></td>
+          <td>Cortex4 gate API documentation &mdash; endpoints, payload schema, error codes</td>
+        </tr>
+        <tr>
+          <td><code>references/voice-brand-guide.md</code></td>
+          <td>SAS-AM voice and brand guidelines for content</td>
+        </tr>
+        <tr>
+          <td><code>references/sector-guidelines.md</code></td>
+          <td>Sector-specific messaging for Local Gov, Water, Resources, Transport, Health, Defence</td>
+        </tr>
+        <tr>
+          <td><code>references/seo-checklist.md</code></td>
+          <td>SEO optimisation checklist for articles</td>
+        </tr>
+        <tr>
+          <td><code>references/interview-guide.md</code></td>
+          <td>Content interview guide with question bank</td>
+        </tr>
+        <tr>
+          <td><code>assets/gateTemplate.html</code></td>
+          <td>Email gate HTML template with placeholder tokens</td>
+        </tr>
+        <tr>
+          <td><code>scripts/webflowPublish.py</code></td>
+          <td>Python script for Webflow CMS publishing and asset upload</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.85rem;">
+      SAS Content Hub v1.0.0 &mdash; End-to-end content campaign orchestration
+    </p>
+
+  </main>
+
+  <!-- Scroll-to-top -->
+  <button class="scroll-top" id="scrollTop" aria-label="Scroll to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script>
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('i');
+    const stored = localStorage.getItem('wiki-theme');
+    if (stored === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; }
+    toggle.addEventListener('click', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+      localStorage.setItem('wiki-theme', isDark ? 'light' : 'dark');
+    });
+
+    const links = document.querySelectorAll('.wiki-sidebar a');
+    const sections = [...links].map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+    function updateActive() {
+      let current = '';
+      for (const s of sections) { if (s.getBoundingClientRect().top <= 120) current = s.id; }
+      links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + current));
+    }
+    window.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+
+    const btn = document.getElementById('scrollTop');
+    window.addEventListener('scroll', () => btn.classList.toggle('visible', window.scrollY > 400), { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+
+</body>
+</html>

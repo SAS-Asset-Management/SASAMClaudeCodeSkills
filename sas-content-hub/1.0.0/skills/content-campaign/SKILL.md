@@ -132,6 +132,27 @@ Invoke the `email-gate` skill (this plugin) to create the gated download form.
 
 **Gate check:** Present the gate HTML to the user. Ask: "Happy with the gate form? The resource slug will be `{slug}` and leads go to Cortex4."
 
+### Stage 2b: Deploy Asset to Cortex4 Server
+
+After the artefact (Stage 1) and gate form (Stage 2) are approved, deploy the downloadable artefact to the Cortex4 server so the gate API can serve it. Use the automated deployment script:
+
+```bash
+python3 ${CLAUDE_PLUGIN_ROOT}/skills/email-gate/scripts/deployGate.py deploy \
+  <path-to-artefact-from-stage-1> \
+  <resource-slug-from-stage-2> \
+  "<Artefact Title>"
+```
+
+The script automatically:
+1. SCPs the artefact file to the sas-gate assets directory on cortext4
+2. Registers the resource slug in `resources.json`
+3. Restarts the sas-gate container
+4. Verifies the container is running
+
+**Prerequisites:** `sshpass` installed and Tailscale connected.
+
+**Gate check:** Confirm deployment succeeded. Ask: "Asset deployed to Cortex4. Want me to verify with a test download, or proceed to hero image?"
+
 ### Stage 3: Generate Hero Image
 
 Invoke `/nano-banana-2` (external dependency) to create the hero image for the article.
