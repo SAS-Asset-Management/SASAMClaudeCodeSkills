@@ -5,6 +5,23 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-03-12
+
+### Wiki & Documentation
+- **Added** wiki pages for sas-content-hub, webflow-content-creator, website-analytics, fmeca
+- **Updated** master wiki hub from 9 to 13 skills
+
+### Server Deployment Automation
+- **Added** `deployGate.py` — automates SCP, resources.json registration, container restart on cortext4
+- **Added** `server-deployment.md` reference with full architecture and troubleshooting
+- **Updated** email-gate SKILL.md with automated deployment step
+- **Updated** content-campaign SKILL.md with Stage 2b for Cortex4 asset deployment
+
+### New Plugins
+- **Added** analytics plugin (website-analytics skill, analytics-advisor agent, 6 commands)
+- **Added** webflow-content-creator plugin (standalone)
+- **Added** fmeca skill (5 workflows, 4 sector taxonomies)
+
 ## [1.2.0] - 2026-03-09
 
 ### Wiki Documentation
