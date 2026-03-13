@@ -228,35 +228,34 @@ presentation-folder/
 ├── presentation.html    # Main presentation file
 ├── styles.css           # Custom theme styles
 └── assets/              # Images (PNG, JPG, SVG)
-    ├── sas-logo-light.svg   # Light mode logo (transparent background)
-    ├── sas-logo-dark.png    # Dark mode logo
     └── [slide-images]-blue.png / -green.png
 ```
 
-## Bundled Logo Assets
+> **Note:** SAS logos are loaded from the Webflow CDN — no local logo files needed.
 
-This skill includes official SAS-AM logo files in the `references/assets/` directory:
+## Logo Assets (CDN)
 
-- **`sas-logo-light.svg`** - Green arrow logo for **light mode** (transparent background SVG)
-- **`sas-logo-dark.png`** - Green arrow logo for **dark mode**
+SAS-AM logos are hosted on the Webflow CDN. **No local logo files are required.**
+
+| Mode | URL | Description |
+|------|-----|-------------|
+| **Light mode** | `https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg` | Full SAS wordmark (dual arrows + "SAS" text, dark navy on white) |
+| **Dark mode** | `https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png` | Green arrow brandmark on transparent background |
 
 ### Logo Behaviour
 
 The CSS automatically switches logos based on the current theme:
-- **Light mode**: Displays elements with class `logo-light`
-- **Dark mode**: Displays elements with class `logo-dark`
+- **Light mode**: Displays elements with class `logo-light` (full wordmark)
+- **Dark mode**: Displays elements with class `logo-dark` (green brandmark)
 
-### Copying Logos to Your Presentation
+### Usage in HTML
 
-When creating a new presentation, copy the bundled logos to your presentation's `assets/` folder:
-
-```bash
-# From the skill's references/assets directory
-cp sas-logo-light.svg /path/to/your-presentation/assets/
-cp sas-logo-dark.png /path/to/your-presentation/assets/
+```html
+<img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="title-logo logo-light">
+<img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="title-logo logo-dark">
 ```
 
-Or reference them directly in your HTML using the bundled paths during development.
+No local asset copying needed — logos load directly from CDN.
 
 ---
 
@@ -386,8 +385,8 @@ The opening slide with logo, main title, subtitle, and author.
 ```html
 <section id="title" class="title-slide" data-section="opening">
   <div class="title-content">
-    <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="title-logo logo-light">
-    <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="title-logo logo-dark">
+    <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="title-logo logo-light">
+    <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="title-logo logo-dark">
     <h1>From Worthless Data to Intelligent Assets</h1>
     <h2>Edge Federated ML in Real Work Asset Management</h2>
     <p class="author">Shane Scriven – Founder + Managing Director SAS-AM</p>
@@ -410,8 +409,8 @@ Two-column layout with content on left, image/visual on right.
 <section id="unique-id" data-section="opening">
   <div class="slide-layout with-image">
     <!-- Optional: Logo in top-right -->
-    <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="slide-logo logo-light">
-    <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="slide-logo logo-dark">
+    <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="slide-logo logo-light">
+    <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="slide-logo logo-dark">
 
     <div class="slide-header">
       <span class="section-tag">OPENING</span>
@@ -539,8 +538,8 @@ Call-to-action with QR code and branding.
       </div>
 
       <div class="closing-branding">
-        <img src="assets/sas-logo-light.svg" alt="SAS Logo" class="closing-logo logo-light">
-        <img src="assets/sas-logo-dark.png" alt="SAS Logo" class="closing-logo logo-dark">
+        <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="closing-logo logo-light">
+        <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="closing-logo logo-dark">
         <p class="closing-search"><i class="fas fa-search"></i> EDGE AI ASSET MANAGEMENT</p>
       </div>
     </div>
@@ -857,8 +856,7 @@ Conduct the discovery interview to:
 1. Create a new directory for the presentation
 2. Copy `base-styles.css` from references as `styles.css`
 3. Create `presentation.html` using the scaffold template — adapt the sections and footer nav items to match the selected presentation type
-4. Create `assets/` directory
-5. Copy logo assets from `references/assets/`
+4. Create `assets/` directory for slide images (logos load from CDN automatically)
 
 ### Step 3: Build Content Slides
 
