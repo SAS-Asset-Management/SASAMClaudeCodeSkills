@@ -217,6 +217,10 @@ body {
 :root[data-theme="light"] .dark-icon { display: none; }
 :root[data-theme="dark"] .light-icon { display: none; }
 
+/* Logo visibility per theme */
+:root[data-theme="light"] .logo-dark { display: none; }
+:root[data-theme="dark"] .logo-light { display: none; }
+
 /* ============================
    MAIN CONTENT
    ============================ */
@@ -875,6 +879,7 @@ body {
   font-weight: 700;
   line-height: 1;
   margin-bottom: 12px;
+  background: transparent;
 }
 
 .score-card .score-value.score-5 { color: var(--score-5); }

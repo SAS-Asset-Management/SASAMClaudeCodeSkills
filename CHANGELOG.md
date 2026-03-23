@@ -5,6 +5,13 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-03-23
+
+### Fixed
+- **b2b-research-agent** Score number text invisible on score cards — green text on green background from conflicting CSS rules
+- **b2b-research-agent** Logos broken in dossier reports — replaced local asset paths with Webflow CDN URLs
+- **b2b-research-agent** Added logo theme toggling CSS — correct logo shown per light/dark mode
+
 ## [1.4.0] - 2026-03-12
 
 ### Marketplace

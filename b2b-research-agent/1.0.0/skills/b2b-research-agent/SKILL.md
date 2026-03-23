@@ -620,11 +620,12 @@ For preparing engagement strategies around a specific event.
 ```
 report-folder/
 ├── report.html          # Main report file
-├── styles.css           # Report theme styles (from references/report-styles.css)
-└── assets/              # Logos and images
-    ├── sas-logo-light.png
-    └── sas-logo-dark.png
+└── styles.css           # Report theme styles (from references/report-styles.css)
 ```
+
+**Logos** are loaded from the Webflow CDN — no local asset files needed:
+- Light mode: `https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg`
+- Dark mode: `https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png`
 
 #### How to Build
 
@@ -633,7 +634,6 @@ report-folder/
 3. Copy `report-template.html` from references as the scaffold
 4. Replace all `{{PLACEHOLDER}}` values with research findings
 5. Add or remove sections, table rows, cards, and timeline steps as needed
-6. Place logo assets in `assets/`
 
 #### Key Features
 
