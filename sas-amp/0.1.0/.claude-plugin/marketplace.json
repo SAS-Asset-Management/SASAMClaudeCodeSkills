@@ -1,0 +1,12 @@
+{
+  "name": "sas-amp",
+  "description": "Develop comprehensive, ISO 55001:2024-aligned Asset Management Plans through adaptive interviews, data analysis, and autonomous research. Produces both interactive HTML presentations and branded DOCX documents.",
+  "version": "0.1.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "homepage": "https://github.com/SAS-Asset-Management/SASAMClaudeCodeSkills",
+  "repository": "https://github.com/SAS-Asset-Management/SASAMClaudeCodeSkills",
+  "license": "MIT",
+  "keywords": ["asset-management", "AMP", "ISO-55001", "lifecycle-costing", "data-analysis", "presentation", "docx"]
+}

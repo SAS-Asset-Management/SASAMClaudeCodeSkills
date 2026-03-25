@@ -5,6 +5,22 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-03-23
+
+### Added
+- **sas-amp** New plugin — Asset Management Plan development tool (v0.1.0)
+  - Core skill with ISO 55001:2024 alignment, AMP template structure, adaptive interview methodology
+  - `/sas-amp` slash command for starting AMP development sessions
+  - `amp-researcher` agent — regulatory, benchmark, and organisational web research
+  - `amp-data-analyst` agent — data cleaning, LCC/NPV analysis, chart generation (7 chart types)
+  - `amp-asset-context-reviewer` agent (Opus) — per-section review through asset owner perspective
+  - `amp-document-generator` agent — branded DOCX output via python-docx
+  - `generateDocx.py` — SAS-AM branded document generation with cover page, ToC, tables
+  - `generateCharts.py` — matplotlib charts + D3.js specs for dual HTML/DOCX output
+  - `dataUtils.py` — data cleaning, profiling, renewal forecasting, quality assessment CLI
+  - 4 reference files: ISO mapping, AMP template structure, data analysis patterns, interview methodology
+  - Registered in marketplace.json
+
 ## [1.4.1] - 2026-03-23
 
 ### Fixed

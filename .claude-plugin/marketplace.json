@@ -136,6 +136,16 @@
       "keywords": ["fmea", "fmeca", "failure-mode", "reliability", "rcm", "criticality", "risk", "asset-management"],
       "category": "engineering",
       "tags": ["fmea", "fmeca", "reliability", "risk", "asset-management"]
+    },
+    {
+      "name": "sas-amp",
+      "source": "./sas-amp/0.1.0",
+      "description": "Develop comprehensive, ISO 55001:2024-aligned Asset Management Plans through adaptive interviews, data analysis, and autonomous research. Produces both interactive HTML presentations and branded DOCX documents. Sector-agnostic with LCC analysis, D3.js charts, and per-section quality review.",
+      "version": "0.1.0",
+      "license": "MIT",
+      "keywords": ["asset-management", "AMP", "ISO-55001", "lifecycle-costing", "data-analysis", "presentation", "docx"],
+      "category": "engineering",
+      "tags": ["asset-management", "AMP", "ISO-55001", "lifecycle-costing", "planning"]
     }
   ]
 }

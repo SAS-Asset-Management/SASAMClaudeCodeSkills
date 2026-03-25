@@ -838,6 +838,8 @@ A full library of inline SVG chart patterns is available in `references/chart-co
 - Use `--chart-1` through `--chart-6` for the categorical colour palette (theme-aware)
 - Always include `role="img"` and `aria-label` on the SVG element
 
+For additional chart types or custom visualisation components, source them via the `21st` CLI tool (see `~/.claude/CLAUDE.md` § UI Component Sourcing). All fetched components must inherit the CSS variable theming system and meet WCAG 2.1 AA accessibility standards before integration.
+
 ---
 
 ## Workflow
@@ -869,6 +871,12 @@ Work through slides incrementally:
 6. Include dual-theme images where needed
 7. Use the appropriate reusable components (cards, tables, badges, etc.) for the type
 8. Add charts and data visualisations from `references/chart-components.html` where needed — copy the inline SVG pattern and adjust data values
+9. For UI components or chart types not in the reference library, use the `21st` CLI outside Claude Code to search and fetch pre built React/SVG components:
+   ```bash
+   21st search "animated progress bar"
+   21st fetch "data dashboard card"
+   ```
+   Fetched components must be adapted to use SAS CSS variables (`var(--chart-1)` through `var(--chart-6)`, `var(--text-primary)`, etc.) and include `role="img"` with `aria-label` for accessibility
 
 ### Step 4: Review and Refine
 
