@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gate Review Report — marcov.GATE Project Delivery">
+  <title>Gate Review Report | SAS Asset Management</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ============================
+       LIGHT MODE (Default)
+       ============================ */
+    :root,
+    :root[data-theme="light"] {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --text-inverse: #ffffff;
+      --accent: #69BE28;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(0, 34, 68, 0.15);
+      --shadow-sm: 0 2px 8px rgba(0, 34, 68, 0.08);
+      --shadow-md: 0 4px 16px rgba(0, 34, 68, 0.12);
+      --rag-green: #10B981;
+      --rag-green-bg: rgba(16, 185, 129, 0.1);
+      --rag-amber: #F59E0B;
+      --rag-amber-bg: rgba(245, 158, 11, 0.1);
+      --rag-red: #EF4444;
+      --rag-red-bg: rgba(239, 68, 68, 0.1);
+      --table-header-bg: #f7f7f7;
+      --table-border: #ededed;
+      --table-row-hover: rgba(105, 190, 40, 0.05);
+      --verdict-advance: #10B981;
+      --verdict-advance-bg: rgba(16, 185, 129, 0.08);
+      --verdict-advance-border: rgba(16, 185, 129, 0.25);
+      --verdict-hold: #F59E0B;
+      --verdict-hold-bg: rgba(245, 158, 11, 0.08);
+      --verdict-hold-border: rgba(245, 158, 11, 0.25);
+      --verdict-escalate: #EF4444;
+      --verdict-escalate-bg: rgba(239, 68, 68, 0.08);
+      --verdict-escalate-border: rgba(239, 68, 68, 0.25);
+      --donut-track: #ededed;
+      --health-ontrack: #10B981;
+      --health-atrisk: #F59E0B;
+      --health-behind: #EF4444;
+      --health-good: #10B981;
+      --health-fair: #F59E0B;
+      --health-poor: #EF4444;
+      --health-high: #10B981;
+      --health-medium: #F59E0B;
+      --health-low: #EF4444;
+    }
+
+    /* ============================
+       DARK MODE
+       ============================ */
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --text-inverse: #0a0f1a;
+      --accent: #69BE28;
+      --card-bg: rgba(20, 29, 43, 0.9);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --shadow-sm: 0 2px 8px rgba(0, 10, 28, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 10, 28, 0.4);
+      --rag-green: #34D399;
+      --rag-green-bg: rgba(52, 211, 153, 0.15);
+      --rag-amber: #FBBF24;
+      --rag-amber-bg: rgba(251, 191, 36, 0.15);
+      --rag-red: #F87171;
+      --rag-red-bg: rgba(248, 113, 113, 0.15);
+      --table-header-bg: #141d2b;
+      --table-border: #2d3d52;
+      --table-row-hover: rgba(122, 211, 59, 0.1);
+      --verdict-advance: #34D399;
+      --verdict-advance-bg: rgba(52, 211, 153, 0.1);
+      --verdict-advance-border: rgba(52, 211, 153, 0.3);
+      --verdict-hold: #FBBF24;
+      --verdict-hold-bg: rgba(251, 191, 36, 0.1);
+      --verdict-hold-border: rgba(251, 191, 36, 0.3);
+      --verdict-escalate: #F87171;
+      --verdict-escalate-bg: rgba(248, 113, 113, 0.1);
+      --verdict-escalate-border: rgba(248, 113, 113, 0.3);
+      --donut-track: #1e2a3d;
+      --health-ontrack: #34D399;
+      --health-atrisk: #FBBF24;
+      --health-behind: #F87171;
+      --health-good: #34D399;
+      --health-fair: #FBBF24;
+      --health-poor: #F87171;
+      --health-high: #34D399;
+      --health-medium: #FBBF24;
+      --health-low: #F87171;
+    }
+
+    /* ============================
+       RESETS & BASE
+       ============================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* ============================
+       REPORT CONTAINER
+       ============================ */
+    .report-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--bg-primary);
+      min-height: 100vh;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ============================
+       THEME TOGGLE
+       ============================ */
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ============================
+       HEADER
+       ============================ */
+    .report-header {
+      padding: 2rem 2.5rem 1.5rem;
+      border-bottom: 3px solid var(--accent);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .sas-logo {
+      height: 44px;
+      width: auto;
+    }
+
+    .logo-light { display: block; }
+    .logo-dark { display: none; }
+    [data-theme="dark"] .logo-light { display: none; }
+    [data-theme="dark"] .logo-dark { display: block; }
+
+    .gate-label-top {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 0.25rem 0.75rem;
+      border: 1px solid var(--card-border);
+      border-radius: 999px;
+    }
+
+    .header-title {
+      text-align: center;
+    }
+
+    .header-title h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--sas-blue);
+      line-height: 1.2;
+    }
+
+    [data-theme="dark"] .header-title h1 {
+      color: var(--text-primary);
+    }
+
+    .header-title .gate-phase-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .gate-phase-flow .phase-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .gate-phase-flow .flow-arrow {
+      color: var(--accent);
+      font-size: 1.25rem;
+    }
+
+    .header-title .project-info {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      margin-top: 0.375rem;
+    }
+
+    /* ============================
+       VERDICT BANNER
+       ============================ */
+    .verdict-banner {
+      padding: 2rem 2.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .verdict-banner.advance {
+      background: var(--verdict-advance-bg);
+      border-bottom-color: var(--verdict-advance-border);
+    }
+
+    .verdict-banner.hold {
+      background: var(--verdict-hold-bg);
+      border-bottom-color: var(--verdict-hold-border);
+    }
+
+    .verdict-banner.escalate {
+      background: var(--verdict-escalate-bg);
+      border-bottom-color: var(--verdict-escalate-border);
+    }
+
+    .verdict-icon {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .verdict-banner.advance .verdict-icon { color: var(--verdict-advance); }
+    .verdict-banner.hold .verdict-icon { color: var(--verdict-hold); }
+    .verdict-banner.escalate .verdict-icon { color: var(--verdict-escalate); }
+
+    .verdict-text {
+      font-size: 2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .verdict-banner.advance .verdict-text { color: var(--verdict-advance); }
+    .verdict-banner.hold .verdict-text { color: var(--verdict-hold); }
+    .verdict-banner.escalate .verdict-text { color: var(--verdict-escalate); }
+
+    .verdict-subtitle {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    /* ============================
+       BODY
+       ============================ */
+    .report-body {
+      padding: 2rem 2.5rem;
+    }
+
+    .report-section {
+      margin-bottom: 2.5rem;
+      page-break-inside: avoid;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--sas-blue);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    [data-theme="dark"] .section-heading {
+      color: var(--accent);
+    }
+
+    .section-heading i {
+      color: var(--accent);
+      font-size: 1rem;
+      width: 24px;
+      text-align: center;
+    }
+
+    /* ============================
+       EVIDENCE TABLE
+       ============================ */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .data-table th {
+      background: var(--table-header-bg);
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-align: left;
+      padding: 0.625rem 0.75rem;
+      border-bottom: 2px solid var(--table-border);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .data-table td {
+      padding: 0.625rem 0.75rem;
+      border-bottom: 1px solid var(--table-border);
+      color: var(--text-primary);
+      vertical-align: top;
+    }
+
+    .data-table tbody tr:hover {
+      background: var(--table-row-hover);
+    }
+
+    .verdict-cell {
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .verdict-met { color: var(--rag-green); }
+    .verdict-partial { color: var(--rag-amber); }
+    .verdict-not-met { color: var(--rag-red); }
+
+    .verdict-label {
+      display: block;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-top: 0.125rem;
+    }
+
+    .criteria-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .criteria-evidence {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ============================
+       SCORE SUMMARY
+       ============================ */
+    .score-section {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .donut-container {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      flex-shrink: 0;
+    }
+
+    .donut-container svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .donut-track {
+      fill: none;
+      stroke: var(--donut-track);
+      stroke-width: 10;
+    }
+
+    .donut-fill {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.8s ease;
+    }
+
+    .donut-fill.advance { stroke: var(--verdict-advance); }
+    .donut-fill.hold { stroke: var(--verdict-hold); }
+    .donut-fill.escalate { stroke: var(--verdict-escalate); }
+
+    .donut-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .donut-label .score-num {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .donut-label .score-of {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .score-breakdown {
+      flex: 1;
+    }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--table-border);
+    }
+
+    .score-row:last-child {
+      border-bottom: none;
+    }
+
+    .score-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .score-icon.met { background: var(--rag-green-bg); color: var(--rag-green); }
+    .score-icon.partial { background: var(--rag-amber-bg); color: var(--rag-amber); }
+    .score-icon.not-met { background: var(--rag-red-bg); color: var(--rag-red); }
+
+    .score-label {
+      flex: 1;
+      font-size: 0.9375rem;
+      color: var(--text-primary);
+    }
+
+    .score-count {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      min-width: 2rem;
+      text-align: center;
+    }
+
+    /* ============================
+       HEALTH INDICATORS
+       ============================ */
+    .health-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .health-card {
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .health-card .hc-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .health-card .hc-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 0.375rem;
+    }
+
+    .health-card .hc-status {
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .health-card .hc-bar {
+      margin-top: 0.5rem;
+      height: 4px;
+      border-radius: 2px;
+      width: 100%;
+    }
+
+    /* ============================
+       RISK POSITION
+       ============================ */
+    .risk-position-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .risk-count-card {
+      padding: 1.25rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+
+    .risk-count-card .rc-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .risk-count-card .rc-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .rc-critical .rc-value { color: var(--rag-red); }
+    .rc-high .rc-value { color: var(--rag-amber); }
+    .rc-medium .rc-value { color: var(--text-secondary); }
+    .rc-low .rc-value { color: var(--rag-green); }
+
+    .risk-count-card .rc-bar {
+      margin-top: 0.75rem;
+      height: 4px;
+      border-radius: 2px;
+      width: 100%;
+    }
+
+    .rc-critical .rc-bar { background: var(--rag-red); }
+    .rc-high .rc-bar { background: var(--rag-amber); }
+    .rc-medium .rc-bar { background: var(--text-muted); }
+    .rc-low .rc-bar { background: var(--rag-green); }
+
+    /* ============================
+       ACTIONS TABLE
+       ============================ */
+    .no-actions {
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      background: var(--bg-secondary);
+      border: 1px dashed var(--card-border);
+      border-radius: 0.5rem;
+    }
+
+    .no-actions i {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.4;
+      display: block;
+    }
+
+    /* ============================
+       FOOTER
+       ============================ */
+    .report-footer {
+      padding: 1.5rem 2.5rem;
+      border-top: 1px solid var(--card-border);
+      background: var(--bg-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .footer-info {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .footer-info strong {
+      color: var(--text-secondary);
+    }
+
+    .footer-dates {
+      text-align: right;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .footer-dates .fd-label {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+
+    .footer-dates .fd-value {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ============================
+       RESPONSIVE
+       ============================ */
+    @media (max-width: 768px) {
+      .report-header { padding: 1.5rem; }
+      .report-body { padding: 1.5rem; }
+      .verdict-banner { padding: 1.5rem; }
+      .report-footer { padding: 1rem 1.5rem; flex-direction: column; text-align: center; }
+
+      .health-grid { grid-template-columns: repeat(2, 1fr); }
+      .risk-position-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .score-section { flex-direction: column; text-align: center; }
+
+      .header-title h1 { font-size: 1.375rem; }
+      .verdict-text { font-size: 1.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      .health-grid { grid-template-columns: 1fr; }
+      .risk-position-grid { grid-template-columns: repeat(2, 1fr); }
+      .gate-phase-flow { flex-direction: column; gap: 0.25rem; }
+    }
+
+    /* ============================
+       PRINT STYLES
+       ============================ */
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+      body {
+        background: white !important;
+        color: #002244 !important;
+      }
+
+      .report-wrapper {
+        box-shadow: none;
+        max-width: none;
+      }
+
+      .theme-toggle { display: none !important; }
+
+      .report-header { border-bottom-color: #69BE28 !important; }
+      .section-heading { color: #002244 !important; }
+
+      .verdict-banner.advance { background: rgba(16, 185, 129, 0.08) !important; }
+      .verdict-banner.hold { background: rgba(245, 158, 11, 0.08) !important; }
+      .verdict-banner.escalate { background: rgba(239, 68, 68, 0.08) !important; }
+
+      .report-section { page-break-inside: avoid; }
+
+      .health-card, .risk-count-card {
+        background: #f7f7f7 !important;
+        border-color: #ededed !important;
+      }
+
+      .data-table th { background: #f7f7f7 !important; }
+
+      .report-footer {
+        background: #f7f7f7 !important;
+        border-top-color: #ededed !important;
+      }
+
+      .logo-light { display: block !important; }
+      .logo-dark { display: none !important; }
+    }
+
+    /* ============================
+       REDUCED MOTION
+       ============================ */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================
+       HIGH CONTRAST
+       ============================ */
+    @media (prefers-contrast: high) {
+      :root, :root[data-theme="light"] {
+        --card-border: rgba(0, 34, 68, 0.5);
+      }
+      :root[data-theme="dark"] {
+        --card-border: rgba(255, 255, 255, 0.3);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light and dark mode">
+    <i class="fa-solid fa-circle-half-stroke" style="font-size: 1.125rem;"></i>
+  </button>
+
+  <div class="report-wrapper">
+
+    <!-- HEADER -->
+    <header class="report-header">
+      <div class="header-top">
+        <div>
+          <img class="sas-logo logo-light" src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Asset Management logo">
+          <img class="sas-logo logo-dark" src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Asset Management logo">
+        </div>
+        <div class="gate-label-top" id="gateLabelTop">Gate 2</div>
+      </div>
+      <div class="header-title">
+        <h1>Gate Review Report</h1>
+        <div class="gate-phase-flow">
+          <span class="phase-name" id="phaseFrom">Discovery</span>
+          <span class="flow-arrow"><i class="fa-solid fa-arrow-right"></i></span>
+          <span class="phase-name" id="phaseTo">Development</span>
+        </div>
+        <div class="project-info" id="projectInfo">Yarra Trams | MDR Review | Standard Tier</div>
+      </div>
+    </header>
+
+    <!-- VERDICT BANNER -->
+    <div class="verdict-banner" id="verdictBanner">
+      <div class="verdict-icon" id="verdictIcon"></div>
+      <div class="verdict-text" id="verdictText">ADVANCE</div>
+      <div class="verdict-subtitle" id="verdictSubtitle"></div>
+    </div>
+
+    <!-- BODY -->
+    <main class="report-body">
+
+      <!-- Evidence Assessment -->
+      <section class="report-section">
+        <h2 class="section-heading">
+          <i class="fa-solid fa-clipboard-check"></i>
+          Evidence Assessment
+        </h2>
+        <table class="data-table" id="evidenceTable">
+          <thead>
+            <tr>
+              <th style="width: 55%;">Criterion &amp; Evidence</th>
+              <th style="width: 15%; text-align: center;">Verdict</th>
+            </tr>
+          </thead>
+          <tbody id="evidenceBody"></tbody>
+        </table>
+      </section>
+
+      <!-- Score Summary -->
+      <section class="report-section">
+        <h2 class="section-heading">
+          <i class="fa-solid fa-chart-pie"></i>
+          Score Summary
+        </h2>
+        <div class="score-section" id="scoreSection"></div>
+      </section>
+
+      <!-- Project Health Indicators -->
+      <section class="report-section">
+        <h2 class="section-heading">
+          <i class="fa-solid fa-heart-pulse"></i>
+          Project Health Indicators
+        </h2>
+        <div class="health-grid" id="healthGrid"></div>
+      </section>
+
+      <!-- Risk Position -->
+      <section class="report-section">
+        <h2 class="section-heading">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          Risk Position
+        </h2>
+        <div class="risk-position-grid" id="riskGrid"></div>
+      </section>
+
+      <!-- Actions Required -->
+      <section class="report-section" id="actionsSection">
+        <h2 class="section-heading">
+          <i class="fa-solid fa-list-check"></i>
+          Actions Required
+        </h2>
+        <div id="actionsContent"></div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="report-footer">
+      <div class="footer-info">
+        <strong>SAS Asset Management</strong> | We provide advanced analytics, expert asset management services and maturity assessments to help asset owners realise their value.
+      </div>
+      <div class="footer-dates">
+        <div>
+          <span class="fd-label">Review Date</span>
+          <div class="fd-value" id="footerReviewDate">--</div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    /* ========================================
+       THEME TOGGLE
+       ======================================== */
+    (function() {
+      var STORAGE_KEY = 'marcov-gate-theme';
+      function getSystemTheme() {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      function setTheme(theme) {
+        var resolved = theme === 'system' ? getSystemTheme() : theme;
+        document.documentElement.setAttribute('data-theme', resolved);
+        localStorage.setItem(STORAGE_KEY, theme);
+      }
+      function toggleTheme() {
+        var current = document.documentElement.getAttribute('data-theme') || 'light';
+        setTheme(current === 'light' ? 'dark' : 'light');
+      }
+      setTheme(localStorage.getItem(STORAGE_KEY) || 'system');
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+        if (localStorage.getItem(STORAGE_KEY) === 'system') setTheme('system');
+      });
+      window.toggleTheme = toggleTheme;
+    })();
+
+    /* ========================================
+       GATE DATA
+       ======================================== */
+    const GATE_DATA = {
+      project: { client: "Yarra Trams", name: "MDR Review", tier: "standard" },
+      gate: {
+        number: 2,
+        from: "Discovery",
+        to: "Development",
+        date: "2026-03-25",
+        verdict: "advance"
+      },
+      criteria: [
+        { name: "Data collected and validated", evidence: "24 months Maximo work order export received and validated", verdict: "met" },
+        { name: "Gaps/requirements documented", evidence: "Gap analysis report with 7 improvement areas documented", verdict: "met" },
+        { name: "Findings validated by client", evidence: "Meeting 25/03 with Sarah Chen and Michael Torres \u2014 findings confirmed", verdict: "met" },
+        { name: "Approach confirmed", evidence: "MDR review methodology agreed, benchmarking scope added", verdict: "met" },
+        { name: "Discovery report delivered", evidence: "Discovery Report v1.0 emailed 25/03/2026", verdict: "met" }
+      ],
+      health: {
+        schedule: "on-track",
+        budget: "on-track",
+        quality: "good",
+        stakeholder: "high"
+      },
+      risks: { critical: 0, high: 1, medium: 1, low: 0 },
+      actions: []
+    };
+
+    /* ========================================
+       HELPERS
+       ======================================== */
+    function formatDate(isoDate) {
+      if (!isoDate) return '';
+      var parts = isoDate.split('-');
+      if (parts.length !== 3) return isoDate;
+      return parts[2] + '/' + parts[1] + '/' + parts[0];
+    }
+
+    function capitalize(str) {
+      if (!str) return '';
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    /* ========================================
+       RENDER
+       ======================================== */
+    function renderReport() {
+      var d = GATE_DATA;
+
+      // Header
+      document.getElementById('gateLabelTop').textContent = 'Gate ' + d.gate.number;
+      document.getElementById('phaseFrom').textContent = d.gate.from;
+      document.getElementById('phaseTo').textContent = d.gate.to;
+      document.getElementById('projectInfo').textContent = d.project.client + ' | ' + d.project.name + ' | ' + capitalize(d.project.tier) + ' Tier';
+
+      // Verdict Banner
+      var banner = document.getElementById('verdictBanner');
+      var verdict = d.gate.verdict.toLowerCase();
+      banner.className = 'verdict-banner ' + verdict;
+
+      var icons = {
+        advance: '<i class="fa-solid fa-circle-check"></i>',
+        hold: '<i class="fa-solid fa-circle-pause"></i>',
+        escalate: '<i class="fa-solid fa-circle-exclamation"></i>'
+      };
+      var labels = {
+        advance: 'ADVANCE',
+        hold: 'HOLD',
+        escalate: 'ESCALATE'
+      };
+      var subtitles = {
+        advance: 'All criteria met. Project proceeds to ' + d.gate.to + '.',
+        hold: 'Outstanding items require attention before advancing.',
+        escalate: 'Critical blockers identified. Escalation required.'
+      };
+
+      document.getElementById('verdictIcon').innerHTML = icons[verdict] || '';
+      document.getElementById('verdictText').textContent = labels[verdict] || verdict.toUpperCase();
+      document.getElementById('verdictSubtitle').textContent = subtitles[verdict] || '';
+
+      // Evidence Table
+      var evHtml = '';
+      d.criteria.forEach(function(c) {
+        var verdictSymbol = '';
+        var verdictClass = '';
+        var verdictLabel = '';
+
+        if (c.verdict === 'met') {
+          verdictSymbol = '\u2713';
+          verdictClass = 'verdict-met';
+          verdictLabel = 'Met';
+        } else if (c.verdict === 'partial') {
+          verdictSymbol = '\u25D0';
+          verdictClass = 'verdict-partial';
+          verdictLabel = 'Partial';
+        } else {
+          verdictSymbol = '\u2717';
+          verdictClass = 'verdict-not-met';
+          verdictLabel = 'Not Met';
+        }
+
+        evHtml += '<tr>';
+        evHtml += '<td><div class="criteria-name">' + c.name + '</div><div class="criteria-evidence">' + c.evidence + '</div></td>';
+        evHtml += '<td class="verdict-cell ' + verdictClass + '"><span style="font-size: 1.375rem;">' + verdictSymbol + '</span><span class="verdict-label">' + verdictLabel + '</span></td>';
+        evHtml += '</tr>';
+      });
+      document.getElementById('evidenceBody').innerHTML = evHtml;
+
+      // Score Summary
+      var metCount = 0, partialCount = 0, notMetCount = 0;
+      d.criteria.forEach(function(c) {
+        if (c.verdict === 'met') metCount++;
+        else if (c.verdict === 'partial') partialCount++;
+        else notMetCount++;
+      });
+      var total = d.criteria.length;
+      var pct = total > 0 ? (metCount / total) * 100 : 0;
+
+      // Donut chart SVG
+      var radius = 55;
+      var circumference = 2 * Math.PI * radius;
+      var offset = circumference - (pct / 100) * circumference;
+
+      var donutColourClass = verdict;
+
+      var scoreHtml = '';
+      scoreHtml += '<div class="donut-container">';
+      scoreHtml += '<svg viewBox="0 0 140 140">';
+      scoreHtml += '<circle class="donut-track" cx="70" cy="70" r="' + radius + '" />';
+      scoreHtml += '<circle class="donut-fill ' + donutColourClass + '" cx="70" cy="70" r="' + radius + '" stroke-dasharray="' + circumference + '" stroke-dashoffset="' + offset + '" />';
+      scoreHtml += '</svg>';
+      scoreHtml += '<div class="donut-label"><div class="score-num">' + metCount + '</div><div class="score-of">of ' + total + '</div></div>';
+      scoreHtml += '</div>';
+
+      scoreHtml += '<div class="score-breakdown">';
+      scoreHtml += '<div class="score-row"><div class="score-icon met"><i class="fa-solid fa-check"></i></div><div class="score-label">Criteria Met</div><div class="score-count">' + metCount + '</div></div>';
+      scoreHtml += '<div class="score-row"><div class="score-icon partial"><i class="fa-solid fa-minus"></i></div><div class="score-label">Partially Met</div><div class="score-count">' + partialCount + '</div></div>';
+      scoreHtml += '<div class="score-row"><div class="score-icon not-met"><i class="fa-solid fa-xmark"></i></div><div class="score-label">Not Met</div><div class="score-count">' + notMetCount + '</div></div>';
+      scoreHtml += '</div>';
+
+      document.getElementById('scoreSection').innerHTML = scoreHtml;
+
+      // Health Indicators
+      var healthConfig = {
+        schedule: { icon: 'fa-calendar-check', label: 'Schedule', map: { 'on-track': { text: 'On Track', colour: 'var(--health-ontrack)' }, 'at-risk': { text: 'At Risk', colour: 'var(--health-atrisk)' }, 'behind': { text: 'Behind', colour: 'var(--health-behind)' } } },
+        budget: { icon: 'fa-wallet', label: 'Budget', map: { 'on-track': { text: 'On Track', colour: 'var(--health-ontrack)' }, 'at-risk': { text: 'At Risk', colour: 'var(--health-atrisk)' }, 'over-budget': { text: 'Over Budget', colour: 'var(--health-behind)' } } },
+        quality: { icon: 'fa-star', label: 'Quality', map: { 'good': { text: 'Good', colour: 'var(--health-good)' }, 'fair': { text: 'Fair', colour: 'var(--health-fair)' }, 'poor': { text: 'Poor', colour: 'var(--health-poor)' } } },
+        stakeholder: { icon: 'fa-users', label: 'Stakeholder Satisfaction', map: { 'high': { text: 'High', colour: 'var(--health-high)' }, 'medium': { text: 'Medium', colour: 'var(--health-medium)' }, 'low': { text: 'Low', colour: 'var(--health-low)' } } }
+      };
+
+      var hGridHtml = '';
+      ['schedule', 'budget', 'quality', 'stakeholder'].forEach(function(key) {
+        var conf = healthConfig[key];
+        var val = d.health[key];
+        var mapped = conf.map[val] || { text: capitalize(val), colour: 'var(--text-muted)' };
+
+        hGridHtml += '<div class="health-card">';
+        hGridHtml += '<div class="hc-icon"><i class="fa-solid ' + conf.icon + '" style="color: ' + mapped.colour + ';"></i></div>';
+        hGridHtml += '<div class="hc-label">' + conf.label + '</div>';
+        hGridHtml += '<div class="hc-status" style="color: ' + mapped.colour + ';">' + mapped.text + '</div>';
+        hGridHtml += '<div class="hc-bar" style="background: ' + mapped.colour + ';"></div>';
+        hGridHtml += '</div>';
+      });
+      document.getElementById('healthGrid').innerHTML = hGridHtml;
+
+      // Risk Position
+      var riskKeys = [
+        { key: 'critical', label: 'Critical', cls: 'rc-critical' },
+        { key: 'high', label: 'High', cls: 'rc-high' },
+        { key: 'medium', label: 'Medium', cls: 'rc-medium' },
+        { key: 'low', label: 'Low', cls: 'rc-low' }
+      ];
+
+      var rGridHtml = '';
+      riskKeys.forEach(function(r) {
+        var count = d.risks[r.key] || 0;
+        rGridHtml += '<div class="risk-count-card ' + r.cls + '">';
+        rGridHtml += '<div class="rc-value">' + count + '</div>';
+        rGridHtml += '<div class="rc-label">' + r.label + '</div>';
+        rGridHtml += '<div class="rc-bar"></div>';
+        rGridHtml += '</div>';
+      });
+      document.getElementById('riskGrid').innerHTML = rGridHtml;
+
+      // Actions Required
+      var actionsContainer = document.getElementById('actionsContent');
+      if (d.actions && d.actions.length > 0) {
+        var actHtml = '<table class="data-table"><thead><tr><th>Action</th><th>Owner</th><th>Due Date</th></tr></thead><tbody>';
+        d.actions.forEach(function(a) {
+          actHtml += '<tr>';
+          actHtml += '<td>' + a.action + '</td>';
+          actHtml += '<td>' + a.owner + '</td>';
+          actHtml += '<td>' + formatDate(a.dueDate) + '</td>';
+          actHtml += '</tr>';
+        });
+        actHtml += '</tbody></table>';
+        actionsContainer.innerHTML = actHtml;
+      } else {
+        actionsContainer.innerHTML = '<div class="no-actions"><i class="fa-regular fa-circle-check"></i><div>No actions required. All criteria met for this gate.</div></div>';
+      }
+
+      // Footer
+      document.getElementById('footerReviewDate').textContent = formatDate(d.gate.date);
+    }
+
+    /* ========================================
+       INITIALISE
+       ======================================== */
+    document.addEventListener('DOMContentLoaded', renderReport);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "marcov.GATE Project Status",
+  "description": "Per-repo project state file discovered by the portfolio sweep agent",
+  "type": "object",
+  "required": ["schema", "project", "status", "gates"],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "marcov-gate-v1",
+      "description": "Schema version identifier"
+    },
+    "project": {
+      "type": "object",
+      "required": ["id", "client", "name", "type", "tier"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique project identifier (kebab-case)",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "client": {
+          "type": "string",
+          "description": "Client organisation name"
+        },
+        "name": {
+          "type": "string",
+          "description": "Project name"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["advisory", "software", "hybrid"],
+          "description": "Project delivery type"
+        },
+        "tier": {
+          "type": "string",
+          "enum": ["micro", "standard", "major"],
+          "description": "Project scale tier"
+        },
+        "pricingModel": {
+          "type": "string",
+          "enum": ["fixed", "t-and-m", "hybrid"],
+          "description": "Commercial pricing model"
+        },
+        "contractValue": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Contract value in currency units"
+        },
+        "currency": {
+          "type": "string",
+          "default": "AUD",
+          "description": "Currency code (ISO 4217)"
+        },
+        "sector": {
+          "type": "string",
+          "enum": ["rail", "transport", "water", "energy", "mining", "health", "local-government", "defence", "other"],
+          "description": "Industry sector"
+        }
+      }
+    },
+    "status": {
+      "type": "object",
+      "required": ["currentPhase", "phaseName", "phaseStatus", "rag", "lastUpdated"],
+      "properties": {
+        "currentPhase": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Current delivery phase (1=Inception, 2=Discovery, 3=Development, 4=Delivery, 5=Close)"
+        },
+        "phaseName": {
+          "type": "string",
+          "enum": ["Inception", "Discovery", "Development", "Delivery", "Close"],
+          "description": "Human-readable phase name"
+        },
+        "phaseStatus": {
+          "type": "string",
+          "enum": ["not-started", "in-progress", "gate-review", "blocked", "completed"],
+          "description": "Status within the current phase"
+        },
+        "rag": {
+          "type": "string",
+          "enum": ["green", "amber", "red"],
+          "description": "Overall RAG status"
+        },
+        "percentComplete": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Estimated overall project completion percentage"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Project start date (ISO 8601)"
+        },
+        "targetEndDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Target completion date (ISO 8601)"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date",
+          "description": "Date status was last updated (ISO 8601)"
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["phase", "name", "status"],
+        "properties": {
+          "phase": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["not-started", "pending", "passed", "held", "escalated"]
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date gate was passed (if passed)"
+          },
+          "evidence": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Evidence items supporting gate passage"
+          },
+          "notes": {
+            "type": "string",
+            "description": "Gate reviewer notes"
+          }
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "likelihood", "impact", "status"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^R[0-9]+$"
+          },
+          "description": { "type": "string" },
+          "likelihood": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          },
+          "mitigation": { "type": "string" },
+          "owner": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["open", "mitigated", "closed", "accepted"]
+          }
+        }
+      }
+    },
+    "team": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "role"],
+        "properties": {
+          "name": { "type": "string" },
+          "role": { "type": "string" },
+          "allocation": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "FTE allocation (0.0 to 1.0)"
+          }
+        }
+      }
+    },
+    "deliverables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "phase", "status"],
+        "properties": {
+          "name": { "type": "string" },
+          "phase": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "status": {
+            "type": "string",
+            "enum": ["not-started", "in-progress", "draft", "review", "final", "accepted"]
+          },
+          "dueDate": { "type": "string", "format": "date" },
+          "completedDate": { "type": "string", "format": "date" }
+        }
+      }
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "dueDate"],
+        "properties": {
+          "name": { "type": "string" },
+          "dueDate": { "type": "string", "format": "date" },
+          "completedDate": { "type": "string", "format": "date" },
+          "invoiceAmount": { "type": "number" }
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "owner", "status"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^A[0-9]+$" },
+          "description": { "type": "string" },
+          "owner": { "type": "string" },
+          "dueDate": { "type": "string", "format": "date" },
+          "status": {
+            "type": "string",
+            "enum": ["open", "in-progress", "completed", "cancelled"]
+          }
+        }
+      }
+    },
+    "beamSource": {
+      "type": "string",
+      "description": "BEAM engagement ID this project originated from"
+    },
+    "repoPath": {
+      "type": "string",
+      "description": "Absolute path to the project repository"
+    },
+    "stakeholders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "role"],
+        "properties": {
+          "name": { "type": "string" },
+          "role": { "type": "string" },
+          "organisation": { "type": "string" },
+          "influence": {
+            "type": "string",
+            "enum": ["sponsor", "decision-maker", "influencer", "user", "observer"]
+          },
+          "contact": { "type": "string" }
+        }
+      }
+    }
+  }
+}

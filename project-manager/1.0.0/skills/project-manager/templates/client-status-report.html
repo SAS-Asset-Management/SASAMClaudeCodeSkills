@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Client Status Report — marcov.GATE Project Delivery">
+  <title>Client Status Report | SAS Asset Management</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ============================
+       LIGHT MODE (Default)
+       ============================ */
+    :root,
+    :root[data-theme="light"] {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --text-inverse: #ffffff;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(0, 34, 68, 0.15);
+      --shadow-sm: 0 2px 8px rgba(0, 34, 68, 0.08);
+      --shadow-md: 0 4px 16px rgba(0, 34, 68, 0.12);
+      --rag-green: #10B981;
+      --rag-green-bg: rgba(16, 185, 129, 0.1);
+      --rag-amber: #F59E0B;
+      --rag-amber-bg: rgba(245, 158, 11, 0.1);
+      --rag-red: #EF4444;
+      --rag-red-bg: rgba(239, 68, 68, 0.1);
+      --table-header-bg: #f7f7f7;
+      --table-border: #ededed;
+      --table-row-hover: rgba(105, 190, 40, 0.05);
+      --phase-inception: #3B82F6;
+      --phase-discovery: #8B5CF6;
+      --phase-development: #F59E0B;
+      --phase-delivery: #69BE28;
+      --phase-close: #002244;
+      --budget-paid: #10B981;
+      --budget-paid-bg: rgba(16, 185, 129, 0.1);
+      --budget-upcoming: #3B82F6;
+      --budget-upcoming-bg: rgba(59, 130, 246, 0.1);
+    }
+
+    /* ============================
+       DARK MODE
+       ============================ */
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --text-inverse: #0a0f1a;
+      --accent: #69BE28;
+      --accent-hover: #7AD33B;
+      --card-bg: rgba(20, 29, 43, 0.9);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --shadow-sm: 0 2px 8px rgba(0, 10, 28, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 10, 28, 0.4);
+      --rag-green: #34D399;
+      --rag-green-bg: rgba(52, 211, 153, 0.15);
+      --rag-amber: #FBBF24;
+      --rag-amber-bg: rgba(251, 191, 36, 0.15);
+      --rag-red: #F87171;
+      --rag-red-bg: rgba(248, 113, 113, 0.15);
+      --table-header-bg: #141d2b;
+      --table-border: #2d3d52;
+      --table-row-hover: rgba(122, 211, 59, 0.1);
+      --phase-inception: #60A5FA;
+      --phase-discovery: #A78BFA;
+      --phase-development: #FBBF24;
+      --phase-delivery: #7AD33B;
+      --phase-close: #5B9BD5;
+      --budget-paid: #34D399;
+      --budget-paid-bg: rgba(52, 211, 153, 0.15);
+      --budget-upcoming: #60A5FA;
+      --budget-upcoming-bg: rgba(96, 165, 250, 0.15);
+    }
+
+    /* ============================
+       RESETS & BASE
+       ============================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* ============================
+       REPORT CONTAINER
+       ============================ */
+    .report-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--bg-primary);
+      min-height: 100vh;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ============================
+       HEADER
+       ============================ */
+    .report-header {
+      padding: 2rem 2.5rem 1.5rem;
+      border-bottom: 3px solid var(--accent);
+    }
+
+    .header-logos {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .sas-logo {
+      height: 44px;
+      width: auto;
+    }
+
+    .logo-light { display: block; }
+    .logo-dark { display: none; }
+    [data-theme="dark"] .logo-light { display: none; }
+    [data-theme="dark"] .logo-dark { display: block; }
+
+    .client-logo-placeholder {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: 1px dashed var(--card-border);
+      border-radius: 0.375rem;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+    }
+
+    .header-title-block {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 2rem;
+    }
+
+    .header-title-block h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--sas-blue);
+      line-height: 1.2;
+    }
+
+    [data-theme="dark"] .header-title-block h1 {
+      color: var(--text-primary);
+    }
+
+    .header-title-block .report-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-top: 0.25rem;
+    }
+
+    .header-title-block .report-number {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    /* ============================
+       THEME TOGGLE (floating)
+       ============================ */
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .theme-toggle:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ============================
+       REPORT META
+       ============================ */
+    .report-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .meta-item {
+      padding: 0.875rem 1.5rem;
+      border-right: 1px solid var(--card-border);
+    }
+
+    .meta-item:last-child {
+      border-right: none;
+    }
+
+    .meta-label {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.125rem;
+    }
+
+    .meta-value {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* ============================
+       SECTION
+       ============================ */
+    .report-body {
+      padding: 2rem 2.5rem;
+    }
+
+    .report-section {
+      margin-bottom: 2.5rem;
+      page-break-inside: avoid;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--sas-blue);
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    [data-theme="dark"] .section-heading {
+      color: var(--accent);
+    }
+
+    .section-heading .section-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--text-inverse);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    [data-theme="dark"] .section-heading .section-number {
+      color: #0a0f1a;
+    }
+
+    /* ============================
+       OVERVIEW GRID
+       ============================ */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .overview-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-secondary);
+      border-radius: 0.375rem;
+      border: 1px solid var(--card-border);
+    }
+
+    .overview-item .ov-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      min-width: 80px;
+    }
+
+    .overview-item .ov-value {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .overview-item.full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* RAG Badge */
+    .rag-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .rag-green { background: var(--rag-green-bg); color: var(--rag-green); }
+    .rag-amber { background: var(--rag-amber-bg); color: var(--rag-amber); }
+    .rag-red { background: var(--rag-red-bg); color: var(--rag-red); }
+
+    .rag-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* ============================
+       PHASE PIPELINE
+       ============================ */
+    .phase-pipeline {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin: 1rem 0;
+      padding: 0.5rem 0;
+    }
+
+    .phase-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .phase-step::after {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      width: 100%;
+      height: 3px;
+      background: var(--card-border);
+      z-index: 0;
+    }
+
+    .phase-step:last-child::after {
+      display: none;
+    }
+
+    .phase-step.passed::after {
+      background: var(--accent);
+    }
+
+    .phase-step.pending::after {
+      background: linear-gradient(90deg, var(--accent) 50%, var(--card-border) 50%);
+    }
+
+    .phase-node {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+      border: 3px solid var(--card-border);
+      background: var(--bg-primary);
+      color: var(--text-muted);
+      transition: all 0.3s;
+    }
+
+    .phase-step.passed .phase-node {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--text-inverse);
+    }
+
+    [data-theme="dark"] .phase-step.passed .phase-node {
+      color: #0a0f1a;
+    }
+
+    .phase-step.pending .phase-node {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(105, 190, 40, 0.2);
+    }
+
+    .phase-label {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .phase-step.pending .phase-label {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .phase-step.passed .phase-label {
+      color: var(--text-secondary);
+    }
+
+    .phase-date {
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      margin-top: 0.125rem;
+    }
+
+    /* ============================
+       TABLES
+       ============================ */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .data-table th {
+      background: var(--table-header-bg);
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-align: left;
+      padding: 0.625rem 0.75rem;
+      border-bottom: 2px solid var(--table-border);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .data-table td {
+      padding: 0.625rem 0.75rem;
+      border-bottom: 1px solid var(--table-border);
+      color: var(--text-primary);
+    }
+
+    .data-table tbody tr:hover {
+      background: var(--table-row-hover);
+    }
+
+    /* ============================
+       ACHIEVEMENTS LIST
+       ============================ */
+    .achievement-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .achievement-list li {
+      position: relative;
+      padding: 0.5rem 0 0.5rem 1.75rem;
+      border-bottom: 1px solid var(--table-border);
+      font-size: 0.9375rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .achievement-list li:last-child {
+      border-bottom: none;
+    }
+
+    .achievement-list li::before {
+      content: '\f00c';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      left: 0;
+      top: 0.625rem;
+      color: var(--accent);
+      font-size: 0.875rem;
+    }
+
+    /* ============================
+       NEXT STEPS LIST
+       ============================ */
+    .next-steps-list {
+      list-style: none;
+      padding: 0;
+      counter-reset: step-counter;
+    }
+
+    .next-steps-list li {
+      position: relative;
+      padding: 0.5rem 0 0.5rem 2.5rem;
+      border-bottom: 1px solid var(--table-border);
+      font-size: 0.9375rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+      counter-increment: step-counter;
+    }
+
+    .next-steps-list li:last-child {
+      border-bottom: none;
+    }
+
+    .next-steps-list li::before {
+      content: counter(step-counter);
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--sas-blue);
+      color: var(--text-inverse);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    [data-theme="dark"] .next-steps-list li::before {
+      background: var(--accent);
+      color: #0a0f1a;
+    }
+
+    /* ============================
+       RISK TABLE
+       ============================ */
+    .likelihood-badge, .impact-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .likelihood-badge.low, .impact-badge.low { background: var(--rag-green-bg); color: var(--rag-green); }
+    .likelihood-badge.medium, .impact-badge.medium { background: var(--rag-amber-bg); color: var(--rag-amber); }
+    .likelihood-badge.high, .impact-badge.high { background: var(--rag-red-bg); color: var(--rag-red); }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .status-badge.open { background: var(--rag-amber-bg); color: var(--rag-amber); }
+    .status-badge.closed { background: var(--rag-green-bg); color: var(--rag-green); }
+
+    /* ============================
+       MILESTONES
+       ============================ */
+    .milestone-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .milestone-card {
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 0.5rem;
+      border-left: 4px solid var(--accent);
+    }
+
+    .milestone-card .mc-name {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.375rem;
+    }
+
+    .milestone-card .mc-date {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .milestone-card .mc-amount {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .milestone-card .mc-amount strong {
+      color: var(--accent);
+    }
+
+    /* ============================
+       BUDGET
+       ============================ */
+    .budget-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .budget-stat {
+      text-align: center;
+      padding: 1.25rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 0.5rem;
+    }
+
+    .budget-stat .bs-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .budget-stat .bs-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .budget-progress-track {
+      width: 100%;
+      height: 24px;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .budget-progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-inverse);
+      transition: width 0.5s ease;
+    }
+
+    [data-theme="dark"] .budget-progress-fill {
+      color: #0a0f1a;
+    }
+
+    .milestone-status-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--table-border);
+    }
+
+    .milestone-status-row:last-child {
+      border-bottom: none;
+    }
+
+    .ms-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      flex-shrink: 0;
+    }
+
+    .ms-icon.paid {
+      background: var(--budget-paid);
+      color: var(--text-inverse);
+    }
+
+    [data-theme="dark"] .ms-icon.paid {
+      color: #0a0f1a;
+    }
+
+    .ms-icon.upcoming {
+      background: transparent;
+      border: 2px solid var(--budget-upcoming);
+      color: var(--budget-upcoming);
+    }
+
+    .ms-name {
+      flex: 1;
+      font-size: 0.875rem;
+      color: var(--text-primary);
+    }
+
+    .ms-amount {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .ms-status-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.125rem 0.5rem;
+      border-radius: 0.25rem;
+    }
+
+    .ms-status-label.paid {
+      background: var(--budget-paid-bg);
+      color: var(--budget-paid);
+    }
+
+    .ms-status-label.upcoming {
+      background: var(--budget-upcoming-bg);
+      color: var(--budget-upcoming);
+    }
+
+    /* ============================
+       FOOTER
+       ============================ */
+    .report-footer {
+      padding: 1.5rem 2.5rem;
+      border-top: 1px solid var(--card-border);
+      background: var(--bg-secondary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      max-width: 560px;
+    }
+
+    .footer-tagline strong {
+      color: var(--text-secondary);
+    }
+
+    .footer-page {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* ============================
+       RESPONSIVE
+       ============================ */
+    @media (max-width: 768px) {
+      .report-header { padding: 1.5rem; }
+      .report-body { padding: 1.5rem; }
+      .report-footer { padding: 1rem 1.5rem; }
+
+      .report-meta {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .meta-item:nth-child(2) { border-right: none; }
+
+      .header-title-block {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .overview-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .milestone-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .budget-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .report-footer {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .report-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .meta-item { border-right: none; border-bottom: 1px solid var(--card-border); }
+      .meta-item:last-child { border-bottom: none; }
+
+      .phase-label { font-size: 0.625rem; }
+    }
+
+    /* ============================
+       PRINT STYLES
+       ============================ */
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+      body {
+        background: white !important;
+        color: #002244 !important;
+      }
+
+      .report-wrapper {
+        box-shadow: none;
+        max-width: none;
+      }
+
+      .theme-toggle { display: none !important; }
+
+      .report-header { border-bottom-color: #69BE28 !important; }
+
+      .report-section { page-break-inside: avoid; }
+
+      .section-heading { color: #002244 !important; }
+      .section-heading .section-number {
+        background: #69BE28 !important;
+        color: #ffffff !important;
+      }
+
+      .overview-item, .milestone-card, .budget-stat {
+        background: #f7f7f7 !important;
+        border-color: #ededed !important;
+      }
+
+      .data-table th { background: #f7f7f7 !important; }
+
+      .phase-step.passed .phase-node {
+        background: #69BE28 !important;
+        border-color: #69BE28 !important;
+        color: #ffffff !important;
+      }
+
+      .report-footer {
+        background: #f7f7f7 !important;
+        border-top-color: #ededed !important;
+      }
+
+      .logo-light { display: block !important; }
+      .logo-dark { display: none !important; }
+    }
+
+    /* ============================
+       REDUCED MOTION
+       ============================ */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ============================
+       HIGH CONTRAST
+       ============================ */
+    @media (prefers-contrast: high) {
+      :root, :root[data-theme="light"] {
+        --card-border: rgba(0, 34, 68, 0.5);
+      }
+      :root[data-theme="dark"] {
+        --card-border: rgba(255, 255, 255, 0.3);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light and dark mode">
+    <i class="fa-solid fa-circle-half-stroke" style="font-size: 1.125rem;"></i>
+  </button>
+
+  <div class="report-wrapper">
+
+    <!-- HEADER -->
+    <header class="report-header">
+      <div class="header-logos">
+        <div>
+          <img class="sas-logo logo-light" src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Asset Management logo">
+          <img class="sas-logo logo-dark" src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Asset Management logo">
+        </div>
+        <div class="client-logo-placeholder" id="clientLogo">
+          <i class="fa-regular fa-building"></i>
+          <span id="clientLogoText">Client Logo</span>
+        </div>
+      </div>
+      <div class="header-title-block">
+        <div>
+          <h1 id="reportTitle">Project Status Report</h1>
+          <div class="report-subtitle" id="reportSubtitle">Client Name</div>
+        </div>
+        <div class="report-number" id="reportNumber">SR-001</div>
+      </div>
+    </header>
+
+    <!-- REPORT META -->
+    <div class="report-meta">
+      <div class="meta-item">
+        <div class="meta-label">Prepared By</div>
+        <div class="meta-value" id="metaPreparedBy">--</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Report Date</div>
+        <div class="meta-value" id="metaDate">--</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Project Reference</div>
+        <div class="meta-value" id="metaReference">--</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">Period Covered</div>
+        <div class="meta-value" id="metaPeriod">--</div>
+      </div>
+    </div>
+
+    <!-- BODY -->
+    <main class="report-body">
+
+      <!-- Section 1: Project Overview -->
+      <section class="report-section" id="sectionOverview">
+        <h2 class="section-heading">
+          <span class="section-number">1</span>
+          Project Overview
+        </h2>
+        <div class="overview-grid" id="overviewGrid"></div>
+      </section>
+
+      <!-- Section 2: Phase Progress -->
+      <section class="report-section" id="sectionPhases">
+        <h2 class="section-heading">
+          <span class="section-number">2</span>
+          Phase Progress
+        </h2>
+        <div class="phase-pipeline" id="phasePipeline"></div>
+      </section>
+
+      <!-- Section 3: Key Achievements This Period -->
+      <section class="report-section" id="sectionAchievements">
+        <h2 class="section-heading">
+          <span class="section-number">3</span>
+          Key Achievements This Period
+        </h2>
+        <ul class="achievement-list" id="achievementList"></ul>
+      </section>
+
+      <!-- Section 4: Key Decisions -->
+      <section class="report-section" id="sectionDecisions">
+        <h2 class="section-heading">
+          <span class="section-number">4</span>
+          Key Decisions
+        </h2>
+        <table class="data-table" id="decisionsTable">
+          <thead>
+            <tr>
+              <th style="width: 50%;">Decision</th>
+              <th>Made By</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="decisionsBody"></tbody>
+        </table>
+      </section>
+
+      <!-- Section 5: Risk Summary -->
+      <section class="report-section" id="sectionRisks">
+        <h2 class="section-heading">
+          <span class="section-number">5</span>
+          Risk Summary
+        </h2>
+        <table class="data-table" id="risksTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Description</th>
+              <th>Likelihood</th>
+              <th>Impact</th>
+              <th>Mitigation</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="risksBody"></tbody>
+        </table>
+      </section>
+
+      <!-- Section 6: Upcoming Milestones -->
+      <section class="report-section" id="sectionMilestones">
+        <h2 class="section-heading">
+          <span class="section-number">6</span>
+          Upcoming Milestones
+        </h2>
+        <div class="milestone-cards" id="milestoneCards"></div>
+      </section>
+
+      <!-- Section 7: Next Steps -->
+      <section class="report-section" id="sectionNextSteps">
+        <h2 class="section-heading">
+          <span class="section-number">7</span>
+          Next Steps
+        </h2>
+        <ol class="next-steps-list" id="nextStepsList"></ol>
+      </section>
+
+      <!-- Section 8: Budget Summary -->
+      <section class="report-section" id="sectionBudget">
+        <h2 class="section-heading">
+          <span class="section-number">8</span>
+          Budget Summary
+        </h2>
+        <div id="budgetContent"></div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="report-footer">
+      <div class="footer-tagline">
+        <strong>SAS Asset Management</strong> | We provide advanced analytics, expert asset management services and maturity assessments to help asset owners realise their value.
+      </div>
+      <div class="footer-page">Page 1 of 1</div>
+    </footer>
+
+  </div>
+
+  <script>
+    /* ========================================
+       THEME TOGGLE
+       ======================================== */
+    (function() {
+      var STORAGE_KEY = 'marcov-gate-theme';
+      function getSystemTheme() {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      function setTheme(theme) {
+        var resolved = theme === 'system' ? getSystemTheme() : theme;
+        document.documentElement.setAttribute('data-theme', resolved);
+        localStorage.setItem(STORAGE_KEY, theme);
+      }
+      function toggleTheme() {
+        var current = document.documentElement.getAttribute('data-theme') || 'light';
+        setTheme(current === 'light' ? 'dark' : 'light');
+      }
+      setTheme(localStorage.getItem(STORAGE_KEY) || 'system');
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+        if (localStorage.getItem(STORAGE_KEY) === 'system') setTheme('system');
+      });
+      window.toggleTheme = toggleTheme;
+    })();
+
+    /* ========================================
+       REPORT DATA
+       ======================================== */
+    const REPORT_DATA = {
+      project: { client: "Yarra Trams", name: "MDR Review", type: "advisory", tier: "standard", pricingModel: "fixed", contractValue: 24500, sector: "rail" },
+      status: { currentPhase: 3, phaseName: "Development", rag: "green", percentComplete: 65, startDate: "2026-03-15", targetEndDate: "2026-05-30" },
+      gates: [
+        { phase: 1, name: "Inception", status: "passed", date: "2026-03-18" },
+        { phase: 2, name: "Discovery", status: "passed", date: "2026-03-25" },
+        { phase: 3, name: "Development", status: "pending" },
+        { phase: 4, name: "Delivery", status: "not-started" },
+        { phase: 5, name: "Close", status: "not-started" }
+      ],
+      report: {
+        date: "2026-03-31",
+        period: "17/03/2026 \u2013 31/03/2026",
+        preparedBy: "Saxon, Lead Consultant",
+        reportNumber: "SR-003",
+        achievements: [
+          "Completed data collection from Yarra Trams CMMS (Maximo) covering 24 months of work order history",
+          "Gap analysis identified 7 key improvement areas across the MDR framework",
+          "Discovery findings validated by Head of Asset Management and MDR Programme Manager"
+        ],
+        decisions: [
+          { decision: "Focus initial recommendations on top 5 gap areas by impact", madeBy: "Sarah Chen", date: "2026-03-25" },
+          { decision: "Include benchmarking against Victorian rail peers", madeBy: "Michael Torres", date: "2026-03-28" }
+        ],
+        nextSteps: [
+          "Complete draft MDR Review Report (target: 15/04/2026)",
+          "Schedule draft review meeting with YT asset management team",
+          "Prepare executive presentation outline for final delivery"
+        ]
+      },
+      risks: [
+        { id: "R1", description: "Client data access delayed by IT approvals", likelihood: "medium", impact: "high", mitigation: "Escalated to project sponsor", status: "open" },
+        { id: "R3", description: "Scope creep from additional asset classes", likelihood: "medium", impact: "medium", mitigation: "Formal change request process in place", status: "open" }
+      ],
+      milestones: [
+        { name: "Draft Report Delivered", dueDate: "2026-04-15", invoiceAmount: 7350 },
+        { name: "Final Report Accepted", dueDate: "2026-05-15", invoiceAmount: 4900 },
+        { name: "Project Close", dueDate: "2026-05-30" }
+      ],
+      budget: {
+        totalValue: 24500,
+        invoiced: 12250,
+        milestones: [
+          { name: "Kick-off", amount: 7350, status: "paid" },
+          { name: "Discovery", amount: 4900, status: "paid" },
+          { name: "Draft Report", amount: 7350, status: "upcoming" },
+          { name: "Final Report", amount: 4900, status: "upcoming" }
+        ]
+      }
+    };
+
+    /* ========================================
+       HELPER FUNCTIONS
+       ======================================== */
+    function formatDate(isoDate) {
+      if (!isoDate) return '';
+      var parts = isoDate.split('-');
+      if (parts.length !== 3) return isoDate;
+      return parts[2] + '/' + parts[1] + '/' + parts[0];
+    }
+
+    function formatCurrency(amount) {
+      if (amount == null) return '';
+      return '$' + amount.toLocaleString('en-AU');
+    }
+
+    function capitalize(str) {
+      if (!str) return '';
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    /* ========================================
+       RENDER REPORT
+       ======================================== */
+    function renderReport() {
+      var d = REPORT_DATA;
+
+      // Header
+      document.getElementById('reportTitle').textContent = d.project.name + ' \u2014 Status Report';
+      document.getElementById('reportSubtitle').textContent = d.project.client;
+      document.getElementById('reportNumber').textContent = d.report.reportNumber;
+      document.getElementById('clientLogoText').textContent = d.project.client;
+
+      // Meta
+      document.getElementById('metaPreparedBy').textContent = d.report.preparedBy;
+      document.getElementById('metaDate').textContent = formatDate(d.report.date);
+      document.getElementById('metaReference').textContent = d.project.client + ' / ' + d.project.name;
+      document.getElementById('metaPeriod').textContent = d.report.period;
+
+      // Section 1: Overview Grid
+      var overviewItems = [
+        { label: 'Client', value: d.project.client },
+        { label: 'Project', value: d.project.name },
+        { label: 'Type', value: capitalize(d.project.type) },
+        { label: 'Tier', value: capitalize(d.project.tier) },
+        { label: 'Start Date', value: formatDate(d.status.startDate) },
+        { label: 'Target End', value: formatDate(d.status.targetEndDate) },
+        { label: 'Sector', value: capitalize(d.project.sector) },
+        { label: 'Progress', value: d.status.percentComplete + '%' }
+      ];
+
+      var gridHtml = '';
+      overviewItems.forEach(function(item) {
+        gridHtml += '<div class="overview-item"><span class="ov-label">' + item.label + '</span><span class="ov-value">' + item.value + '</span></div>';
+      });
+
+      // RAG row as full width
+      var ragClass = 'rag-' + d.status.rag;
+      gridHtml += '<div class="overview-item full-width"><span class="ov-label">Overall RAG</span><span class="rag-badge ' + ragClass + '"><span class="rag-dot"></span> ' + d.status.rag.toUpperCase() + '</span></div>';
+      document.getElementById('overviewGrid').innerHTML = gridHtml;
+
+      // Section 2: Phase Pipeline
+      var pipelineHtml = '';
+      d.gates.forEach(function(gate) {
+        var stepClass = gate.status;
+        var nodeContent = '';
+        if (gate.status === 'passed') {
+          nodeContent = '<i class="fa-solid fa-check" style="font-size: 0.75rem;"></i>';
+        } else if (gate.status === 'pending') {
+          nodeContent = gate.phase;
+        } else {
+          nodeContent = gate.phase;
+        }
+
+        pipelineHtml += '<div class="phase-step ' + stepClass + '">';
+        pipelineHtml += '<div class="phase-node">' + nodeContent + '</div>';
+        pipelineHtml += '<div class="phase-label">' + gate.name + '</div>';
+        if (gate.date) {
+          pipelineHtml += '<div class="phase-date">' + formatDate(gate.date) + '</div>';
+        }
+        pipelineHtml += '</div>';
+      });
+      document.getElementById('phasePipeline').innerHTML = pipelineHtml;
+
+      // Section 3: Achievements
+      var achHtml = '';
+      d.report.achievements.forEach(function(item) {
+        achHtml += '<li>' + item + '</li>';
+      });
+      document.getElementById('achievementList').innerHTML = achHtml;
+
+      // Section 4: Decisions
+      var decHtml = '';
+      d.report.decisions.forEach(function(item) {
+        decHtml += '<tr>';
+        decHtml += '<td>' + item.decision + '</td>';
+        decHtml += '<td>' + item.madeBy + '</td>';
+        decHtml += '<td>' + formatDate(item.date) + '</td>';
+        decHtml += '</tr>';
+      });
+      document.getElementById('decisionsBody').innerHTML = decHtml;
+
+      // Section 5: Risks
+      var riskHtml = '';
+      d.risks.forEach(function(risk) {
+        riskHtml += '<tr>';
+        riskHtml += '<td><strong>' + risk.id + '</strong></td>';
+        riskHtml += '<td>' + risk.description + '</td>';
+        riskHtml += '<td><span class="likelihood-badge ' + risk.likelihood + '">' + capitalize(risk.likelihood) + '</span></td>';
+        riskHtml += '<td><span class="impact-badge ' + risk.impact + '">' + capitalize(risk.impact) + '</span></td>';
+        riskHtml += '<td>' + risk.mitigation + '</td>';
+        riskHtml += '<td><span class="status-badge ' + risk.status + '">' + capitalize(risk.status) + '</span></td>';
+        riskHtml += '</tr>';
+      });
+      document.getElementById('risksBody').innerHTML = riskHtml;
+
+      // Section 6: Milestones
+      var msHtml = '';
+      d.milestones.forEach(function(ms) {
+        msHtml += '<div class="milestone-card">';
+        msHtml += '<div class="mc-name">' + ms.name + '</div>';
+        msHtml += '<div class="mc-date"><i class="fa-regular fa-calendar"></i> ' + formatDate(ms.dueDate) + '</div>';
+        if (ms.invoiceAmount) {
+          msHtml += '<div class="mc-amount">Invoice: <strong>' + formatCurrency(ms.invoiceAmount) + '</strong></div>';
+        }
+        msHtml += '</div>';
+      });
+      document.getElementById('milestoneCards').innerHTML = msHtml;
+
+      // Section 7: Next Steps
+      var nsHtml = '';
+      d.report.nextSteps.forEach(function(step) {
+        nsHtml += '<li>' + step + '</li>';
+      });
+      document.getElementById('nextStepsList').innerHTML = nsHtml;
+
+      // Section 8: Budget
+      renderBudget(d);
+    }
+
+    function renderBudget(d) {
+      var container = document.getElementById('budgetContent');
+      var pct = d.budget.totalValue > 0 ? Math.round((d.budget.invoiced / d.budget.totalValue) * 100) : 0;
+
+      var html = '';
+
+      // Summary stats
+      html += '<div class="budget-summary">';
+      html += '<div class="budget-stat"><div class="bs-value">' + formatCurrency(d.budget.totalValue) + '</div><div class="bs-label">Contract Value</div></div>';
+      html += '<div class="budget-stat"><div class="bs-value">' + formatCurrency(d.budget.invoiced) + '</div><div class="bs-label">Invoiced to Date (' + pct + '%)</div></div>';
+      html += '</div>';
+
+      // Progress bar
+      html += '<div class="budget-progress-track"><div class="budget-progress-fill" style="width: ' + pct + '%;">' + pct + '%</div></div>';
+
+      // Milestone breakdown
+      html += '<div style="margin-top: 1rem;">';
+      d.budget.milestones.forEach(function(ms) {
+        var iconClass = ms.status === 'paid' ? 'paid' : 'upcoming';
+        var icon = ms.status === 'paid' ? '<i class="fa-solid fa-check" style="font-size: 0.5rem;"></i>' : '<i class="fa-solid fa-ellipsis" style="font-size: 0.5rem;"></i>';
+        html += '<div class="milestone-status-row">';
+        html += '<div class="ms-icon ' + iconClass + '">' + icon + '</div>';
+        html += '<div class="ms-name">' + ms.name + '</div>';
+        html += '<div class="ms-amount">' + formatCurrency(ms.amount) + '</div>';
+        html += '<div class="ms-status-label ' + ms.status + '">' + capitalize(ms.status) + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    /* ========================================
+       INITIALISE
+       ======================================== */
+    document.addEventListener('DOMContentLoaded', renderReport);
+  </script>
+
+</body>
+</html>

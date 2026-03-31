@@ -1,0 +1,2304 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="marcov.GATE Project Dashboard">
+  <title>Project Dashboard | marcov.GATE</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    /* ============================
+       CSS VARIABLES
+       ============================ */
+    :root,
+    :root[data-theme="light"] {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --text-inverse: #ffffff;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(0, 34, 68, 0.15);
+      --card-hover-border: rgba(105, 190, 40, 0.4);
+      --shadow-sm: 0 2px 8px rgba(0, 34, 68, 0.08);
+      --shadow-md: 0 4px 16px rgba(0, 34, 68, 0.12);
+      --shadow-lg: 0 8px 24px rgba(0, 34, 68, 0.15);
+      --rag-green: #10B981;
+      --rag-green-bg: rgba(16, 185, 129, 0.1);
+      --rag-amber: #F59E0B;
+      --rag-amber-bg: rgba(245, 158, 11, 0.1);
+      --rag-red: #EF4444;
+      --rag-red-bg: rgba(239, 68, 68, 0.1);
+      --phase-inception: #3B82F6;
+      --phase-inception-bg: rgba(59, 130, 246, 0.1);
+      --phase-discovery: #8B5CF6;
+      --phase-discovery-bg: rgba(139, 92, 246, 0.1);
+      --phase-development: #F59E0B;
+      --phase-development-bg: rgba(245, 158, 11, 0.1);
+      --phase-delivery: #69BE28;
+      --phase-delivery-bg: rgba(105, 190, 40, 0.1);
+      --phase-close: #002244;
+      --phase-close-bg: rgba(0, 34, 68, 0.08);
+      --risk-low: #10B981;
+      --risk-medium: #F59E0B;
+      --risk-high: #EF4444;
+      --input-bg: #ffffff;
+      --input-border: #d9d9d9;
+      --table-header-bg: #f7f7f7;
+      --table-border: #ededed;
+      --table-row-hover: rgba(105, 190, 40, 0.05);
+    }
+
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --text-inverse: #0a0f1a;
+      --accent: #69BE28;
+      --accent-hover: #7AD33B;
+      --card-bg: rgba(20, 29, 43, 0.9);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover-border: rgba(122, 211, 59, 0.4);
+      --shadow-sm: 0 2px 8px rgba(0, 10, 28, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 10, 28, 0.4);
+      --shadow-lg: 0 14px 30px rgba(0, 10, 28, 0.5);
+      --rag-green: #34D399;
+      --rag-green-bg: rgba(52, 211, 153, 0.15);
+      --rag-amber: #FBBF24;
+      --rag-amber-bg: rgba(251, 191, 36, 0.15);
+      --rag-red: #F87171;
+      --rag-red-bg: rgba(248, 113, 113, 0.15);
+      --phase-inception: #60A5FA;
+      --phase-inception-bg: rgba(96, 165, 250, 0.15);
+      --phase-discovery: #A78BFA;
+      --phase-discovery-bg: rgba(167, 139, 250, 0.15);
+      --phase-development: #FBBF24;
+      --phase-development-bg: rgba(251, 191, 36, 0.15);
+      --phase-delivery: #7AD33B;
+      --phase-delivery-bg: rgba(122, 211, 59, 0.15);
+      --phase-close: #5B9BD5;
+      --phase-close-bg: rgba(91, 155, 213, 0.15);
+      --risk-low: #34D399;
+      --risk-medium: #FBBF24;
+      --risk-high: #F87171;
+      --input-bg: #141d2b;
+      --input-border: #2d3d52;
+      --table-header-bg: #141d2b;
+      --table-border: #2d3d52;
+      --table-row-hover: rgba(122, 211, 59, 0.1);
+    }
+
+    /* ============================
+       RESET & BASE
+       ============================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ============================
+       ACCESSIBILITY
+       ============================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+
+    @media (prefers-contrast: high) {
+      :root, :root[data-theme="light"] {
+        --card-border: rgba(0, 34, 68, 0.5);
+        --input-border: #002244;
+        --table-border: #002244;
+      }
+      :root[data-theme="dark"] {
+        --card-border: rgba(255, 255, 255, 0.3);
+        --input-border: #f4fbff;
+        --table-border: #f4fbff;
+      }
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ============================
+       HEADER
+       ============================ */
+    .dashboard-header {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-logo {
+      height: 36px;
+      width: auto;
+    }
+
+    .header-logo-dark { display: none; }
+    :root[data-theme="dark"] .header-logo-light { display: none; }
+    :root[data-theme="dark"] .header-logo-dark { display: block; }
+
+    .header-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .header-client {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .header-project {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .rag-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .rag-badge.green {
+      background: var(--rag-green-bg);
+      color: var(--rag-green);
+      border: 1px solid var(--rag-green);
+    }
+
+    .rag-badge.amber {
+      background: var(--rag-amber-bg);
+      color: var(--rag-amber);
+      border: 1px solid var(--rag-amber);
+    }
+
+    .rag-badge.red {
+      background: var(--rag-red-bg);
+      color: var(--rag-red);
+      border: 1px solid var(--rag-red);
+    }
+
+    .rag-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .theme-toggle {
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-tertiary);
+      color: var(--accent);
+    }
+
+    .theme-toggle .fa-sun { display: none; }
+    .theme-toggle .fa-moon { display: inline-block; }
+    :root[data-theme="dark"] .theme-toggle .fa-sun { display: inline-block; }
+    :root[data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+    /* ============================
+       TABS
+       ============================ */
+    .tab-bar {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0 1.5rem;
+      position: sticky;
+      top: 57px;
+      z-index: 90;
+    }
+
+    .tab-bar-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 0.75rem 1.25rem;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .tab-panel {
+      display: none;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* ============================
+       CARDS & SECTIONS
+       ============================ */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .card-header h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-header h3 i {
+      color: var(--accent);
+      font-size: 0.875rem;
+    }
+
+    .card-body {
+      padding: 1.25rem;
+    }
+
+    .section-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+    }
+
+    /* ============================
+       KEY METRICS ROW
+       ============================ */
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.1;
+    }
+
+    .metric-value.warning { color: var(--rag-amber); }
+    .metric-value.danger { color: var(--rag-red); }
+
+    .metric-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.25rem;
+    }
+
+    /* ============================
+       PHASE PIPELINE
+       ============================ */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      padding: 1.5rem 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .pipeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      flex: 1;
+      min-width: 120px;
+      max-width: 180px;
+    }
+
+    .pipeline-connector {
+      width: 100%;
+      height: 3px;
+      background: var(--card-border);
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      z-index: 0;
+    }
+
+    .pipeline-step:last-child .pipeline-connector {
+      display: none;
+    }
+
+    .pipeline-connector.completed {
+      background: var(--rag-green);
+    }
+
+    .pipeline-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      z-index: 1;
+      position: relative;
+      border: 3px solid var(--card-border);
+      background: var(--bg-primary);
+      color: var(--text-muted);
+      transition: all 0.3s;
+    }
+
+    .pipeline-step.completed .pipeline-circle {
+      background: var(--rag-green);
+      border-color: var(--rag-green);
+      color: #fff;
+    }
+
+    .pipeline-step.current .pipeline-circle {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(105, 190, 40, 0.25), 0 0 16px rgba(105, 190, 40, 0.2);
+      animation: pipelineGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes pipelineGlow {
+      0%, 100% { box-shadow: 0 0 0 4px rgba(105, 190, 40, 0.25), 0 0 16px rgba(105, 190, 40, 0.15); }
+      50% { box-shadow: 0 0 0 6px rgba(105, 190, 40, 0.35), 0 0 24px rgba(105, 190, 40, 0.3); }
+    }
+
+    .pipeline-label {
+      margin-top: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .pipeline-step.completed .pipeline-label {
+      color: var(--rag-green);
+    }
+
+    .pipeline-step.current .pipeline-label {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* ============================
+       GATE STATUS TABLE
+       ============================ */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .data-table thead th {
+      background: var(--table-header-bg);
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-align: left;
+      padding: 0.625rem 0.75rem;
+      border-bottom: 2px solid var(--table-border);
+      white-space: nowrap;
+    }
+
+    .data-table tbody td {
+      padding: 0.625rem 0.75rem;
+      border-bottom: 1px solid var(--table-border);
+      vertical-align: top;
+    }
+
+    .data-table tbody tr:hover {
+      background: var(--table-row-hover);
+    }
+
+    .gate-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      font-weight: 600;
+    }
+
+    .gate-status.passed { color: var(--rag-green); }
+    .gate-status.pending { color: var(--rag-amber); }
+    .gate-status.not-started { color: var(--text-muted); }
+
+    .evidence-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .evidence-list li {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      padding: 0.125rem 0;
+    }
+
+    .evidence-list li::before {
+      content: "\2022";
+      color: var(--accent);
+      margin-right: 0.5rem;
+    }
+
+    /* ============================
+       RISK HEAT MAP
+       ============================ */
+    .heat-map-container {
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem;
+    }
+
+    .heat-map-wrapper {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .heat-map-y-label {
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-right: 0.5rem;
+    }
+
+    .heat-map-grid-area {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .heat-map-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      grid-template-rows: repeat(3, 60px);
+      gap: 3px;
+    }
+
+    .heat-map-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.375rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-inverse);
+      cursor: default;
+      position: relative;
+    }
+
+    .heat-map-cell.severity-low { background: var(--risk-low); opacity: 0.7; }
+    .heat-map-cell.severity-medium { background: var(--risk-medium); opacity: 0.85; }
+    .heat-map-cell.severity-high { background: var(--risk-high); }
+    .heat-map-cell.severity-very-high { background: var(--risk-high); }
+
+    .heat-map-cell span {
+      font-size: 1.25rem;
+    }
+
+    .heat-map-cell.empty span {
+      opacity: 0.3;
+    }
+
+    .heat-map-x-labels {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      gap: 3px;
+      margin-top: 0.375rem;
+    }
+
+    .heat-map-x-label,
+    .heat-map-row-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .heat-map-row-labels {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding-left: 0;
+      padding-right: 0.375rem;
+    }
+
+    .heat-map-row-label {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .heat-map-x-title {
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.25rem;
+    }
+
+    /* ============================
+       MILESTONES TIMELINE
+       ============================ */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 9px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--card-border);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.25rem;
+      padding-left: 1.5rem;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -2rem;
+      top: 0.25rem;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 3px solid var(--card-border);
+      background: var(--bg-primary);
+      z-index: 1;
+    }
+
+    .timeline-item.completed .timeline-dot {
+      background: var(--rag-green);
+      border-color: var(--rag-green);
+    }
+
+    .timeline-item.upcoming .timeline-dot {
+      background: var(--bg-primary);
+      border-color: var(--text-muted);
+    }
+
+    .timeline-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .timeline-date {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .timeline-amount {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* ============================
+       BUDGET TRACKER
+       ============================ */
+    .budget-bar-group {
+      margin-bottom: 1rem;
+    }
+
+    .budget-bar-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.375rem;
+    }
+
+    .budget-bar-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .budget-bar-amount {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .budget-bar-track {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-tertiary);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .budget-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.6s ease;
+    }
+
+    .budget-bar-fill.invoiced {
+      background: var(--accent);
+    }
+
+    .budget-bar-fill.planned {
+      background: var(--text-muted);
+      opacity: 0.4;
+    }
+
+    .budget-summary {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .budget-summary-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .budget-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .budget-dot.invoiced { background: var(--accent); }
+    .budget-dot.planned { background: var(--text-muted); opacity: 0.4; }
+
+    /* ============================
+       RESOURCE ALLOCATION
+       ============================ */
+    .resource-bar-group {
+      margin-bottom: 0.875rem;
+    }
+
+    .resource-bar-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.25rem;
+    }
+
+    .resource-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .resource-role {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .resource-percent {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .resource-bar-track {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-tertiary);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .resource-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent);
+      transition: width 0.6s ease;
+    }
+
+    /* ============================
+       DELIVERABLES CHECKLIST
+       ============================ */
+    .deliverable-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--table-border);
+    }
+
+    .deliverable-item:last-child {
+      border-bottom: none;
+    }
+
+    .deliverable-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .deliverable-icon.accepted {
+      background: var(--rag-green-bg);
+      color: var(--rag-green);
+    }
+
+    .deliverable-icon.final {
+      background: var(--rag-green-bg);
+      color: var(--rag-green);
+    }
+
+    .deliverable-icon.review {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3B82F6;
+    }
+
+    .deliverable-icon.draft {
+      background: var(--rag-amber-bg);
+      color: var(--rag-amber);
+    }
+
+    .deliverable-icon.in-progress {
+      background: var(--rag-amber-bg);
+      color: var(--rag-amber);
+    }
+
+    .deliverable-icon.not-started {
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+    }
+
+    .deliverable-info {
+      flex: 1;
+    }
+
+    .deliverable-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .deliverable-due {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .phase-tag {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .phase-tag.inception {
+      background: var(--phase-inception-bg);
+      color: var(--phase-inception);
+    }
+
+    .phase-tag.discovery {
+      background: var(--phase-discovery-bg);
+      color: var(--phase-discovery);
+    }
+
+    .phase-tag.development {
+      background: var(--phase-development-bg);
+      color: var(--phase-development);
+    }
+
+    .phase-tag.delivery {
+      background: var(--phase-delivery-bg);
+      color: var(--phase-delivery);
+    }
+
+    .phase-tag.close {
+      background: var(--phase-close-bg);
+      color: var(--phase-close);
+    }
+
+    /* ============================
+       STAKEHOLDER MAP
+       ============================ */
+    .stakeholder-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .stakeholder-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--card-border);
+      border-radius: 0.625rem;
+      padding: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .stakeholder-card:hover {
+      border-color: var(--card-hover-border);
+    }
+
+    .stakeholder-name {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stakeholder-role {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      margin-top: 0.125rem;
+    }
+
+    .stakeholder-org {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.125rem;
+    }
+
+    .influence-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 0.5rem;
+    }
+
+    .influence-badge.sponsor {
+      background: var(--rag-red-bg);
+      color: var(--rag-red);
+    }
+
+    .influence-badge.decision-maker {
+      background: var(--rag-amber-bg);
+      color: var(--rag-amber);
+    }
+
+    .influence-badge.influencer {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3B82F6;
+    }
+
+    .influence-badge.user {
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+    }
+
+    /* ============================
+       ACTION ITEMS TABLE
+       ============================ */
+    .status-pill {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-pill.open {
+      background: var(--rag-amber-bg);
+      color: var(--rag-amber);
+    }
+
+    .status-pill.in-progress {
+      background: rgba(59, 130, 246, 0.1);
+      color: #3B82F6;
+    }
+
+    .status-pill.completed {
+      background: var(--rag-green-bg);
+      color: var(--rag-green);
+    }
+
+    .status-pill.mitigated {
+      background: var(--rag-green-bg);
+      color: var(--rag-green);
+    }
+
+    /* ============================
+       TWO COLUMN LAYOUT
+       ============================ */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .three-col { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .three-col { grid-template-columns: 1fr; }
+    }
+
+    /* ============================
+       CLIENT REPORT (Tab 3)
+       ============================ */
+    .report-wrapper {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .report-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-left: 5px solid var(--accent);
+      border-radius: 0.75rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .report-header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .report-logo {
+      height: 32px;
+      width: auto;
+    }
+
+    .report-logo-dark { display: none; }
+    :root[data-theme="dark"] .report-logo-light { display: none; }
+    :root[data-theme="dark"] .report-logo-dark { display: block; }
+
+    .report-project-name {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 1rem;
+    }
+
+    .report-client-name {
+      font-size: 1rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .report-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .report-meta-item {
+      font-size: 0.8125rem;
+    }
+
+    .report-meta-label {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .report-meta-value {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .report-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .report-section h3 {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+      display: inline-block;
+    }
+
+    .report-text {
+      font-size: 0.9375rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .report-text p {
+      margin-bottom: 0.75rem;
+    }
+
+    .report-next-steps {
+      list-style: none;
+      counter-reset: steps;
+      padding: 0;
+    }
+
+    .report-next-steps li {
+      counter-increment: steps;
+      padding: 0.5rem 0 0.5rem 2.5rem;
+      position: relative;
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--table-border);
+    }
+
+    .report-next-steps li:last-child {
+      border-bottom: none;
+    }
+
+    .report-next-steps li::before {
+      content: counter(steps);
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .report-footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 2rem;
+      border-top: 2px solid var(--accent);
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      line-height: 1.6;
+    }
+
+    .report-footer strong {
+      color: var(--text-primary);
+    }
+
+    /* ============================
+       PRINT STYLES
+       ============================ */
+    @media print {
+      .dashboard-header,
+      .tab-bar,
+      .theme-toggle,
+      #tab-progress,
+      #tab-dashboard {
+        display: none !important;
+      }
+
+      #tab-report {
+        display: block !important;
+      }
+
+      body {
+        background: #fff;
+        color: #002244;
+        font-size: 11pt;
+      }
+
+      .report-wrapper {
+        max-width: 100%;
+      }
+
+      .card, .report-section, .report-header {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .report-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    }
+
+    /* ============================
+       RESPONSIVE
+       ============================ */
+    @media (max-width: 640px) {
+      .header-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .header-right {
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .pipeline {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .pipeline-connector {
+        display: none;
+      }
+
+      .pipeline-step {
+        flex-direction: row;
+        gap: 0.75rem;
+        max-width: 100%;
+      }
+
+      .pipeline-label {
+        margin-top: 0;
+      }
+
+      .metrics-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .heat-map-grid {
+        grid-template-columns: repeat(3, 60px);
+        grid-template-rows: repeat(3, 48px);
+      }
+
+      .heat-map-x-labels {
+        grid-template-columns: repeat(3, 60px);
+      }
+
+      .tab-bar-inner {
+        overflow-x: auto;
+      }
+
+      .data-table {
+        font-size: 0.8125rem;
+      }
+
+      .card-body {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ============================
+       HEADER
+       ============================ -->
+  <header class="dashboard-header" role="banner">
+    <div class="header-inner">
+      <div class="header-left">
+        <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg"
+             alt="SAS Asset Management" class="header-logo header-logo-light" />
+        <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png"
+             alt="SAS Asset Management" class="header-logo header-logo-dark" />
+        <div class="header-title-group">
+          <span class="header-client" id="headerClient"></span>
+          <span class="header-project" id="headerProject"></span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div id="ragBadge" class="rag-badge green">
+          <span class="rag-dot"></span>
+          <span id="ragLabel">GREEN</span>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light and dark mode">
+          <i class="fa-solid fa-moon"></i>
+          <i class="fa-solid fa-sun"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================
+       TAB BAR
+       ============================ -->
+  <nav class="tab-bar" role="tablist" aria-label="Dashboard tabs">
+    <div class="tab-bar-inner">
+      <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-progress" onclick="switchTab('progress', this)">
+        <i class="fa-solid fa-chart-line"></i>&nbsp; Progress
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-dashboard" onclick="switchTab('dashboard', this)">
+        <i class="fa-solid fa-grip"></i>&nbsp; Full Dashboard
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-report" onclick="switchTab('report', this)">
+        <i class="fa-solid fa-file-lines"></i>&nbsp; Client Report
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============================
+       TAB 1: PROGRESS
+       ============================ -->
+  <section id="tab-progress" class="tab-panel active" role="tabpanel">
+
+    <!-- Key Metrics -->
+    <div class="metrics-row" id="metricsRow"></div>
+
+    <!-- Phase Pipeline -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa-solid fa-diagram-project"></i> Phase Pipeline</h3>
+      </div>
+      <div class="card-body">
+        <div class="pipeline" id="pipelineContainer"></div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- Gate Status Table -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-shield-check"></i> Gate Status</h3>
+        </div>
+        <div class="card-body" style="padding: 0;">
+          <div style="overflow-x: auto;">
+            <table class="data-table" id="gateTable">
+              <thead>
+                <tr>
+                  <th>Phase</th>
+                  <th>Gate</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Evidence</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Heat Map -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-triangle-exclamation"></i> Risk Heat Map</h3>
+        </div>
+        <div class="card-body">
+          <div class="heat-map-container" id="heatMapContainer"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Milestones Timeline -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa-solid fa-flag-checkered"></i> Milestones Timeline</h3>
+      </div>
+      <div class="card-body">
+        <div class="timeline" id="timelineContainer"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================
+       TAB 2: FULL DASHBOARD
+       ============================ -->
+  <section id="tab-dashboard" class="tab-panel" role="tabpanel">
+
+    <!-- Key Metrics (duplicated for full dashboard) -->
+    <div class="metrics-row" id="metricsRowFull"></div>
+
+    <!-- Phase Pipeline (compact repeat) -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa-solid fa-diagram-project"></i> Phase Pipeline</h3>
+      </div>
+      <div class="card-body">
+        <div class="pipeline" id="pipelineContainerFull"></div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- Budget Tracker -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-money-bill-trend-up"></i> Budget Tracker</h3>
+          <span style="font-size: 0.8125rem; color: var(--text-muted);" id="budgetTotal"></span>
+        </div>
+        <div class="card-body" id="budgetContainer"></div>
+      </div>
+
+      <!-- Resource Allocation -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-users"></i> Resource Allocation</h3>
+        </div>
+        <div class="card-body" id="resourceContainer"></div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <!-- Gate Status -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-shield-check"></i> Gate Status</h3>
+        </div>
+        <div class="card-body" style="padding: 0;">
+          <div style="overflow-x: auto;">
+            <table class="data-table" id="gateTableFull">
+              <thead>
+                <tr>
+                  <th>Phase</th>
+                  <th>Gate</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Evidence</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Heat Map -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-triangle-exclamation"></i> Risk Heat Map</h3>
+        </div>
+        <div class="card-body">
+          <div class="heat-map-container" id="heatMapContainerFull"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deliverables Checklist -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa-solid fa-list-check"></i> Deliverables Checklist</h3>
+      </div>
+      <div class="card-body" id="deliverablesContainer"></div>
+    </div>
+
+    <div class="two-col">
+      <!-- Stakeholder Map -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-users-rectangle"></i> Stakeholder Map</h3>
+        </div>
+        <div class="card-body">
+          <div class="stakeholder-grid" id="stakeholderContainer"></div>
+        </div>
+      </div>
+
+      <!-- Action Items -->
+      <div class="card">
+        <div class="card-header">
+          <h3><i class="fa-solid fa-clipboard-list"></i> Action Items</h3>
+        </div>
+        <div class="card-body" style="padding: 0;">
+          <div style="overflow-x: auto;">
+            <table class="data-table" id="actionsTable">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Description</th>
+                  <th>Owner</th>
+                  <th>Due</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Milestones Timeline -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa-solid fa-flag-checkered"></i> Milestones Timeline</h3>
+      </div>
+      <div class="card-body">
+        <div class="timeline" id="timelineContainerFull"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================
+       TAB 3: CLIENT REPORT
+       ============================ -->
+  <section id="tab-report" class="tab-panel" role="tabpanel">
+    <div class="report-wrapper">
+
+      <!-- Report Header -->
+      <div class="report-header">
+        <div class="report-header-top">
+          <div>
+            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg"
+                 alt="SAS Asset Management" class="report-logo report-logo-light" />
+            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png"
+                 alt="SAS Asset Management" class="report-logo report-logo-dark" />
+          </div>
+          <div id="reportRagBadge" class="rag-badge green">
+            <span class="rag-dot"></span>
+            <span id="reportRagLabel">GREEN</span>
+          </div>
+        </div>
+        <div class="report-client-name" id="reportClient"></div>
+        <div class="report-project-name" id="reportProject"></div>
+        <div class="report-meta" id="reportMeta"></div>
+      </div>
+
+      <!-- Phase Progress -->
+      <div class="report-section">
+        <h3>Phase Progress</h3>
+        <div class="pipeline" id="pipelineContainerReport" style="padding: 1rem 0;"></div>
+      </div>
+
+      <!-- Period Summary -->
+      <div class="report-section" id="reportSummarySection">
+        <h3>Period Summary</h3>
+        <div class="report-text" id="reportSummary"></div>
+      </div>
+
+      <!-- Risk Summary -->
+      <div class="report-section">
+        <h3>Risk Summary</h3>
+        <div style="overflow-x: auto;">
+          <table class="data-table" id="reportRiskTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Risk</th>
+                <th>Likelihood</th>
+                <th>Impact</th>
+                <th>Mitigation</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Upcoming Milestones -->
+      <div class="report-section">
+        <h3>Upcoming Milestones</h3>
+        <div class="timeline" id="reportMilestones"></div>
+      </div>
+
+      <!-- Next Steps -->
+      <div class="report-section">
+        <h3>Next Steps</h3>
+        <ol class="report-next-steps" id="reportNextSteps"></ol>
+      </div>
+
+      <!-- Report Footer -->
+      <div class="report-footer">
+        <strong>SAS Asset Management</strong><br>
+        We provide advanced analytics, expert asset management services and maturity assessments to help asset owners realise their value.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================
+       JAVASCRIPT
+       ============================ -->
+  <script>
+    /* -------------------------------------------------------
+       THEME TOGGLE
+       ------------------------------------------------------- */
+    (function() {
+      'use strict';
+      var STORAGE_KEY = 'marcov-gate-theme';
+      function getSystemTheme() {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      function setTheme(theme) {
+        var resolved = theme === 'system' ? getSystemTheme() : theme;
+        document.documentElement.setAttribute('data-theme', resolved);
+        localStorage.setItem(STORAGE_KEY, theme);
+      }
+      function toggleTheme() {
+        var current = document.documentElement.getAttribute('data-theme') || 'light';
+        setTheme(current === 'light' ? 'dark' : 'light');
+      }
+      setTheme(localStorage.getItem(STORAGE_KEY) || 'system');
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+        if (localStorage.getItem(STORAGE_KEY) === 'system') setTheme('system');
+      });
+      window.toggleTheme = toggleTheme;
+    })();
+
+    /* -------------------------------------------------------
+       PROJECT DATA (injection point)
+       ------------------------------------------------------- */
+    const PROJECT_DATA = {
+      project: {
+        id: "yt-mdr-review",
+        client: "Yarra Trams",
+        name: "MDR Review",
+        type: "advisory",
+        tier: "standard",
+        pricingModel: "fixed",
+        contractValue: 24500,
+        currency: "AUD",
+        sector: "rail"
+      },
+      status: {
+        currentPhase: 3,
+        phaseName: "Development",
+        phaseStatus: "in-progress",
+        rag: "green",
+        percentComplete: 65,
+        startDate: "2026-03-15",
+        targetEndDate: "2026-05-30",
+        lastUpdated: "2026-03-31"
+      },
+      gates: [
+        { phase: 1, name: "Inception", status: "passed", date: "2026-03-18", evidence: ["Scope document signed", "Stakeholders mapped", "Timeline agreed"] },
+        { phase: 2, name: "Discovery", status: "passed", date: "2026-03-25", evidence: ["Data collected from CMMS", "Gap analysis complete", "Findings validated by client"] },
+        { phase: 3, name: "Development", status: "pending", evidence: ["Draft report in progress"] },
+        { phase: 4, name: "Delivery", status: "not-started", evidence: [] },
+        { phase: 5, name: "Close", status: "not-started", evidence: [] }
+      ],
+      risks: [
+        { id: "R1", description: "Client data access delayed by IT approvals", likelihood: "medium", impact: "high", mitigation: "Escalate to project sponsor, request expedited access", owner: "Saxon", status: "open" },
+        { id: "R2", description: "Subject matter expert availability limited", likelihood: "low", impact: "medium", mitigation: "Schedule interviews 2 weeks in advance", owner: "Saxon", status: "mitigated" },
+        { id: "R3", description: "Scope creep from additional asset classes", likelihood: "medium", impact: "medium", mitigation: "Formal change request process in place", owner: "Saxon", status: "open" }
+      ],
+      team: [
+        { name: "Saxon", role: "Lead Consultant", allocation: 0.6 },
+        { name: "Ben", role: "Consultant", allocation: 0.3 }
+      ],
+      deliverables: [
+        { name: "Inception Document", phase: 1, status: "accepted", dueDate: "2026-03-18", completedDate: "2026-03-18" },
+        { name: "Discovery Report", phase: 2, status: "accepted", dueDate: "2026-03-25", completedDate: "2026-03-25" },
+        { name: "MDR Review Report (Draft)", phase: 3, status: "in-progress", dueDate: "2026-04-15" },
+        { name: "MDR Review Report (Final)", phase: 4, status: "not-started", dueDate: "2026-05-15" },
+        { name: "Presentation to Executive", phase: 4, status: "not-started", dueDate: "2026-05-22" },
+        { name: "Close-out Report", phase: 5, status: "not-started", dueDate: "2026-05-30" }
+      ],
+      milestones: [
+        { name: "Project Kick-off", dueDate: "2026-03-15", completedDate: "2026-03-15", invoiceAmount: 7350 },
+        { name: "Discovery Complete", dueDate: "2026-03-25", completedDate: "2026-03-25", invoiceAmount: 4900 },
+        { name: "Draft Report Delivered", dueDate: "2026-04-15", invoiceAmount: 7350 },
+        { name: "Final Report Accepted", dueDate: "2026-05-15", invoiceAmount: 4900 },
+        { name: "Project Close", dueDate: "2026-05-30" }
+      ],
+      actions: [
+        { id: "A1", description: "Schedule draft review meeting with YT team", owner: "Saxon", dueDate: "2026-04-10", status: "open" },
+        { id: "A2", description: "Request additional CMMS data export", owner: "Saxon", dueDate: "2026-04-05", status: "in-progress" },
+        { id: "A3", description: "Prepare executive presentation outline", owner: "Ben", dueDate: "2026-05-01", status: "open" }
+      ],
+      stakeholders: [
+        { name: "Sarah Chen", role: "Head of Asset Management", organisation: "Yarra Trams", influence: "sponsor", contact: "sarah.chen@yarratrams.com.au" },
+        { name: "Michael Torres", role: "MDR Programme Manager", organisation: "Yarra Trams", influence: "decision-maker", contact: "michael.torres@yarratrams.com.au" },
+        { name: "Lisa Wang", role: "Maintenance Engineering Lead", organisation: "Yarra Trams", influence: "influencer", contact: "lisa.wang@yarratrams.com.au" },
+        { name: "James Patel", role: "Data Analyst", organisation: "Yarra Trams", influence: "user", contact: "james.patel@yarratrams.com.au" }
+      ],
+      beamSource: "yarra-trams-mdr"
+    };
+
+    /* -------------------------------------------------------
+       HELPERS
+       ------------------------------------------------------- */
+    const PHASE_NAMES = ['Inception', 'Discovery', 'Development', 'Delivery', 'Close'];
+    const PHASE_KEYS = ['inception', 'discovery', 'development', 'delivery', 'close'];
+    const PHASE_ICONS = ['fa-lightbulb', 'fa-magnifying-glass', 'fa-gears', 'fa-truck-fast', 'fa-circle-check'];
+
+    function formatDate(isoDate) {
+      if (!isoDate) return '\u2014';
+      var parts = isoDate.split('-');
+      return parts[2] + '/' + parts[1] + '/' + parts[0];
+    }
+
+    function formatCurrency(amount) {
+      if (amount == null) return '\u2014';
+      return '$' + amount.toLocaleString('en-AU');
+    }
+
+    function daysRemaining() {
+      var end = new Date(PROJECT_DATA.status.targetEndDate);
+      var now = new Date(PROJECT_DATA.status.lastUpdated || new Date().toISOString().split('T')[0]);
+      var diff = Math.ceil((end - now) / (1000 * 60 * 60 * 24));
+      return diff;
+    }
+
+    function openRiskCount() {
+      return PROJECT_DATA.risks.filter(function(r) { return r.status === 'open'; }).length;
+    }
+
+    function teamSize() {
+      return PROJECT_DATA.team.length;
+    }
+
+    function getDeliverableIcon(status) {
+      var map = {
+        'accepted': 'fa-circle-check',
+        'final': 'fa-circle-check',
+        'review': 'fa-eye',
+        'draft': 'fa-pen',
+        'in-progress': 'fa-spinner',
+        'not-started': 'fa-circle'
+      };
+      return map[status] || 'fa-circle';
+    }
+
+    function getPhaseKey(phaseNum) {
+      return PHASE_KEYS[phaseNum - 1] || 'inception';
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function statusLabel(status) {
+      return status.split('-').map(capitalize).join(' ');
+    }
+
+    /* -------------------------------------------------------
+       TAB SWITCHING
+       ------------------------------------------------------- */
+    function switchTab(tabId, btnEl) {
+      document.querySelectorAll('.tab-panel').forEach(function(p) {
+        p.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-btn').forEach(function(b) {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      document.getElementById('tab-' + tabId).classList.add('active');
+      btnEl.classList.add('active');
+      btnEl.setAttribute('aria-selected', 'true');
+    }
+
+    /* -------------------------------------------------------
+       RENDER: HEADER
+       ------------------------------------------------------- */
+    function renderHeader() {
+      document.getElementById('headerClient').textContent = PROJECT_DATA.project.client;
+      document.getElementById('headerProject').textContent = PROJECT_DATA.project.name;
+
+      var rag = PROJECT_DATA.status.rag;
+      var ragBadge = document.getElementById('ragBadge');
+      ragBadge.className = 'rag-badge ' + rag;
+      document.getElementById('ragLabel').textContent = rag.toUpperCase();
+
+      var reportRagBadge = document.getElementById('reportRagBadge');
+      reportRagBadge.className = 'rag-badge ' + rag;
+      document.getElementById('reportRagLabel').textContent = rag.toUpperCase();
+    }
+
+    /* -------------------------------------------------------
+       RENDER: KEY METRICS
+       ------------------------------------------------------- */
+    function renderMetrics(containerId) {
+      var container = document.getElementById(containerId);
+      var days = daysRemaining();
+      var pct = PROJECT_DATA.status.percentComplete;
+      var risks = openRiskCount();
+      var team = teamSize();
+
+      var daysClass = days < 14 ? ' danger' : (days < 30 ? ' warning' : '');
+      var riskClass = risks > 3 ? ' danger' : (risks > 1 ? ' warning' : '');
+
+      container.innerHTML =
+        '<div class="metric-card">' +
+          '<div class="metric-value' + daysClass + '">' + days + '</div>' +
+          '<div class="metric-label">Days Remaining</div>' +
+        '</div>' +
+        '<div class="metric-card">' +
+          '<div class="metric-value">' + pct + '%</div>' +
+          '<div class="metric-label">Complete</div>' +
+        '</div>' +
+        '<div class="metric-card">' +
+          '<div class="metric-value' + riskClass + '">' + risks + '</div>' +
+          '<div class="metric-label">Open Risks</div>' +
+        '</div>' +
+        '<div class="metric-card">' +
+          '<div class="metric-value">' + team + '</div>' +
+          '<div class="metric-label">Team Size</div>' +
+        '</div>';
+    }
+
+    /* -------------------------------------------------------
+       RENDER: PHASE PIPELINE
+       ------------------------------------------------------- */
+    function renderPipeline(containerId) {
+      var container = document.getElementById(containerId);
+      var currentPhase = PROJECT_DATA.status.currentPhase;
+      var html = '';
+
+      for (var i = 0; i < 5; i++) {
+        var phaseNum = i + 1;
+        var state = '';
+        if (phaseNum < currentPhase) state = 'completed';
+        else if (phaseNum === currentPhase) state = 'current';
+        else state = 'upcoming';
+
+        var connectorClass = phaseNum < currentPhase ? 'completed' : '';
+
+        html +=
+          '<div class="pipeline-step ' + state + '">' +
+            '<div class="pipeline-connector ' + connectorClass + '"></div>' +
+            '<div class="pipeline-circle">' +
+              (state === 'completed' ? '<i class="fa-solid fa-check"></i>' : '<i class="fa-solid ' + PHASE_ICONS[i] + '"></i>') +
+            '</div>' +
+            '<div class="pipeline-label">' + PHASE_NAMES[i] + '</div>' +
+          '</div>';
+      }
+      container.innerHTML = html;
+    }
+
+    /* -------------------------------------------------------
+       RENDER: GATE STATUS TABLE
+       ------------------------------------------------------- */
+    function renderGateTable(tableId) {
+      var tbody = document.querySelector('#' + tableId + ' tbody');
+      var html = '';
+
+      PROJECT_DATA.gates.forEach(function(gate) {
+        var statusIcon = '';
+        var statusClass = gate.status;
+        if (gate.status === 'passed') statusIcon = '<i class="fa-solid fa-circle-check"></i>';
+        else if (gate.status === 'pending') statusIcon = '<i class="fa-solid fa-circle-dot"></i>';
+        else statusIcon = '<i class="fa-regular fa-circle"></i>';
+
+        var evidenceHtml = '<ul class="evidence-list">';
+        gate.evidence.forEach(function(e) {
+          evidenceHtml += '<li>' + e + '</li>';
+        });
+        evidenceHtml += '</ul>';
+        if (gate.evidence.length === 0) evidenceHtml = '<span style="color: var(--text-muted); font-size: 0.8125rem;">\u2014</span>';
+
+        html +=
+          '<tr>' +
+            '<td>' + gate.phase + '</td>' +
+            '<td><strong>' + gate.name + '</strong></td>' +
+            '<td><span class="gate-status ' + statusClass + '">' + statusIcon + ' ' + statusLabel(gate.status) + '</span></td>' +
+            '<td>' + formatDate(gate.date) + '</td>' +
+            '<td>' + evidenceHtml + '</td>' +
+          '</tr>';
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    /* -------------------------------------------------------
+       RENDER: RISK HEAT MAP
+       ------------------------------------------------------- */
+    function renderHeatMap(containerId) {
+      var container = document.getElementById(containerId);
+
+      // Build counts grid: rows = impact (high, medium, low from top), cols = likelihood (low, medium, high from left)
+      var levels = ['low', 'medium', 'high'];
+      var grid = [[0,0,0],[0,0,0],[0,0,0]]; // [impactIndex][likelihoodIndex]
+
+      PROJECT_DATA.risks.forEach(function(r) {
+        var li = levels.indexOf(r.likelihood);
+        var ii = levels.indexOf(r.impact);
+        if (li >= 0 && ii >= 0) {
+          grid[2 - ii][li]++; // Flip impact so high is at top
+        }
+      });
+
+      // Severity classes for each cell position
+      var severityMap = [
+        ['severity-low',    'severity-medium',     'severity-high'],      // high impact row
+        ['severity-low',    'severity-medium',     'severity-medium'],    // medium impact row
+        ['severity-low',    'severity-low',        'severity-medium']     // low impact row
+      ];
+
+      var impactLabels = ['High', 'Medium', 'Low'];
+      var likelihoodLabels = ['Low', 'Medium', 'High'];
+
+      var html =
+        '<div class="heat-map-wrapper">' +
+          '<div class="heat-map-y-label">Impact</div>' +
+          '<div class="heat-map-row-labels">';
+
+      impactLabels.forEach(function(label) {
+        html += '<div class="heat-map-row-label">' + label + '</div>';
+      });
+
+      html +=
+          '</div>' +
+          '<div class="heat-map-grid-area">' +
+            '<div class="heat-map-grid">';
+
+      for (var row = 0; row < 3; row++) {
+        for (var col = 0; col < 3; col++) {
+          var count = grid[row][col];
+          var emptyClass = count === 0 ? ' empty' : '';
+          html += '<div class="heat-map-cell ' + severityMap[row][col] + emptyClass + '"><span>' + count + '</span></div>';
+        }
+      }
+
+      html +=
+            '</div>' +
+            '<div class="heat-map-x-labels">';
+
+      likelihoodLabels.forEach(function(label) {
+        html += '<div class="heat-map-x-label">' + label + '</div>';
+      });
+
+      html +=
+            '</div>' +
+            '<div class="heat-map-x-title">Likelihood</div>' +
+          '</div>' +
+        '</div>';
+
+      container.innerHTML = html;
+    }
+
+    /* -------------------------------------------------------
+       RENDER: MILESTONES TIMELINE
+       ------------------------------------------------------- */
+    function renderTimeline(containerId, limit) {
+      var container = document.getElementById(containerId);
+      var milestones = PROJECT_DATA.milestones;
+      if (limit) milestones = milestones.slice(0, limit);
+
+      var html = '';
+      milestones.forEach(function(m) {
+        var isComplete = !!m.completedDate;
+        var stateClass = isComplete ? 'completed' : 'upcoming';
+        var dateStr = isComplete ? formatDate(m.completedDate) : 'Due ' + formatDate(m.dueDate);
+        var amountStr = m.invoiceAmount ? ' \u00B7 ' + formatCurrency(m.invoiceAmount) : '';
+
+        html +=
+          '<div class="timeline-item ' + stateClass + '">' +
+            '<div class="timeline-dot"></div>' +
+            '<div class="timeline-title">' + m.name + '</div>' +
+            '<div class="timeline-date">' + dateStr +
+              (m.invoiceAmount ? ' <span class="timeline-amount">' + formatCurrency(m.invoiceAmount) + '</span>' : '') +
+            '</div>' +
+          '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    /* -------------------------------------------------------
+       RENDER: BUDGET TRACKER
+       ------------------------------------------------------- */
+    function renderBudget() {
+      var container = document.getElementById('budgetContainer');
+      var totalEl = document.getElementById('budgetTotal');
+      var contractValue = PROJECT_DATA.project.contractValue;
+      totalEl.textContent = 'Contract: ' + formatCurrency(contractValue) + ' ' + PROJECT_DATA.project.currency;
+
+      if (PROJECT_DATA.project.pricingModel === 'fixed') {
+        var totalInvoiced = 0;
+        var html = '';
+
+        PROJECT_DATA.milestones.forEach(function(m) {
+          if (!m.invoiceAmount) return;
+          var isInvoiced = !!m.completedDate;
+          if (isInvoiced) totalInvoiced += m.invoiceAmount;
+          var pctOfContract = (m.invoiceAmount / contractValue) * 100;
+          var fillClass = isInvoiced ? 'invoiced' : 'planned';
+
+          html +=
+            '<div class="budget-bar-group">' +
+              '<div class="budget-bar-label">' +
+                '<span class="budget-bar-name">' + m.name + '</span>' +
+                '<span class="budget-bar-amount">' + formatCurrency(m.invoiceAmount) + (isInvoiced ? ' \u2713' : '') + '</span>' +
+              '</div>' +
+              '<div class="budget-bar-track">' +
+                '<div class="budget-bar-fill ' + fillClass + '" style="width: ' + pctOfContract + '%;"></div>' +
+              '</div>' +
+            '</div>';
+        });
+
+        var invoicedPct = Math.round((totalInvoiced / contractValue) * 100);
+        html +=
+          '<div class="budget-summary">' +
+            '<div class="budget-summary-item"><div class="budget-dot invoiced"></div> Invoiced: ' + formatCurrency(totalInvoiced) + ' (' + invoicedPct + '%)</div>' +
+            '<div class="budget-summary-item"><div class="budget-dot planned"></div> Remaining: ' + formatCurrency(contractValue - totalInvoiced) + '</div>' +
+          '</div>';
+
+        container.innerHTML = html;
+      }
+    }
+
+    /* -------------------------------------------------------
+       RENDER: RESOURCE ALLOCATION
+       ------------------------------------------------------- */
+    function renderResources() {
+      var container = document.getElementById('resourceContainer');
+      var html = '';
+
+      PROJECT_DATA.team.forEach(function(member) {
+        var pct = Math.round(member.allocation * 100);
+        html +=
+          '<div class="resource-bar-group">' +
+            '<div class="resource-bar-label">' +
+              '<div><span class="resource-name">' + member.name + '</span> <span class="resource-role">' + member.role + '</span></div>' +
+              '<span class="resource-percent">' + pct + '%</span>' +
+            '</div>' +
+            '<div class="resource-bar-track">' +
+              '<div class="resource-bar-fill" style="width: ' + pct + '%;"></div>' +
+            '</div>' +
+          '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    /* -------------------------------------------------------
+       RENDER: DELIVERABLES CHECKLIST
+       ------------------------------------------------------- */
+    function renderDeliverables() {
+      var container = document.getElementById('deliverablesContainer');
+      var html = '';
+
+      PROJECT_DATA.deliverables.forEach(function(d) {
+        var icon = getDeliverableIcon(d.status);
+        var statusClass = d.status;
+        var phaseKey = getPhaseKey(d.phase);
+        var dateStr = d.completedDate ? 'Completed ' + formatDate(d.completedDate) : 'Due ' + formatDate(d.dueDate);
+
+        html +=
+          '<div class="deliverable-item">' +
+            '<div class="deliverable-icon ' + statusClass + '"><i class="fa-solid ' + icon + '"></i></div>' +
+            '<div class="deliverable-info">' +
+              '<div class="deliverable-name">' + d.name + '</div>' +
+              '<div class="deliverable-due">' + dateStr + '</div>' +
+            '</div>' +
+            '<span class="phase-tag ' + phaseKey + '">' + PHASE_NAMES[d.phase - 1] + '</span>' +
+            '<span class="status-pill ' + statusClass + '">' + statusLabel(d.status) + '</span>' +
+          '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    /* -------------------------------------------------------
+       RENDER: STAKEHOLDER MAP
+       ------------------------------------------------------- */
+    function renderStakeholders() {
+      var container = document.getElementById('stakeholderContainer');
+      var html = '';
+
+      PROJECT_DATA.stakeholders.forEach(function(s) {
+        var influenceLabel = statusLabel(s.influence);
+        html +=
+          '<div class="stakeholder-card">' +
+            '<div class="stakeholder-name">' + s.name + '</div>' +
+            '<div class="stakeholder-role">' + s.role + '</div>' +
+            '<div class="stakeholder-org">' + s.organisation + '</div>' +
+            '<div class="influence-badge ' + s.influence + '">' + influenceLabel + '</div>' +
+          '</div>';
+      });
+
+      container.innerHTML = html;
+    }
+
+    /* -------------------------------------------------------
+       RENDER: ACTION ITEMS TABLE
+       ------------------------------------------------------- */
+    function renderActions() {
+      var tbody = document.querySelector('#actionsTable tbody');
+      var html = '';
+
+      PROJECT_DATA.actions.forEach(function(a) {
+        html +=
+          '<tr>' +
+            '<td><strong>' + a.id + '</strong></td>' +
+            '<td>' + a.description + '</td>' +
+            '<td>' + a.owner + '</td>' +
+            '<td>' + formatDate(a.dueDate) + '</td>' +
+            '<td><span class="status-pill ' + a.status + '">' + statusLabel(a.status) + '</span></td>' +
+          '</tr>';
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    /* -------------------------------------------------------
+       RENDER: CLIENT REPORT (Tab 3)
+       ------------------------------------------------------- */
+    function renderReport() {
+      // Header details
+      document.getElementById('reportClient').textContent = PROJECT_DATA.project.client;
+      document.getElementById('reportProject').textContent = PROJECT_DATA.project.name;
+
+      // Meta
+      var metaContainer = document.getElementById('reportMeta');
+      metaContainer.innerHTML =
+        '<div class="report-meta-item"><div class="report-meta-label">Report Date</div><div class="report-meta-value">' + formatDate(PROJECT_DATA.status.lastUpdated) + '</div></div>' +
+        '<div class="report-meta-item"><div class="report-meta-label">Phase</div><div class="report-meta-value">' + PROJECT_DATA.status.phaseName + '</div></div>' +
+        '<div class="report-meta-item"><div class="report-meta-label">Target Completion</div><div class="report-meta-value">' + formatDate(PROJECT_DATA.status.targetEndDate) + '</div></div>' +
+        '<div class="report-meta-item"><div class="report-meta-label">Prepared By</div><div class="report-meta-value">SAS Asset Management</div></div>';
+
+      // Period Summary
+      var summaryEl = document.getElementById('reportSummary');
+      var completedGates = PROJECT_DATA.gates.filter(function(g) { return g.status === 'passed'; });
+      var latestGate = completedGates.length > 0 ? completedGates[completedGates.length - 1] : null;
+
+      var summaryHtml = '<p><strong>Key Decisions:</strong> Project scope confirmed and aligned with stakeholder expectations. ' +
+        'Data collection methodology agreed upon during Discovery phase.</p>';
+      summaryHtml += '<p><strong>Achievements:</strong> ';
+      if (latestGate) {
+        summaryHtml += 'Successfully passed the ' + latestGate.name + ' gate on ' + formatDate(latestGate.date) + '. ';
+      }
+      summaryHtml += 'Project is currently ' + PROJECT_DATA.status.percentComplete + '% complete and tracking to schedule.</p>';
+      summaryHtml += '<p><strong>Issues:</strong> ' + openRiskCount() + ' open risk(s) being actively managed. See risk summary below for details.</p>';
+      summaryEl.innerHTML = summaryHtml;
+
+      // Risk Summary Table
+      var riskTbody = document.querySelector('#reportRiskTable tbody');
+      var riskHtml = '';
+      PROJECT_DATA.risks.forEach(function(r) {
+        riskHtml +=
+          '<tr>' +
+            '<td><strong>' + r.id + '</strong></td>' +
+            '<td>' + r.description + '</td>' +
+            '<td>' + capitalize(r.likelihood) + '</td>' +
+            '<td>' + capitalize(r.impact) + '</td>' +
+            '<td>' + r.mitigation + '</td>' +
+            '<td><span class="status-pill ' + r.status + '">' + statusLabel(r.status) + '</span></td>' +
+          '</tr>';
+      });
+      riskTbody.innerHTML = riskHtml;
+
+      // Upcoming Milestones (next 3 incomplete)
+      var upcomingMilestones = PROJECT_DATA.milestones.filter(function(m) { return !m.completedDate; }).slice(0, 3);
+      var msContainer = document.getElementById('reportMilestones');
+      var msHtml = '';
+      upcomingMilestones.forEach(function(m) {
+        msHtml +=
+          '<div class="timeline-item upcoming">' +
+            '<div class="timeline-dot"></div>' +
+            '<div class="timeline-title">' + m.name + '</div>' +
+            '<div class="timeline-date">Due ' + formatDate(m.dueDate) +
+              (m.invoiceAmount ? ' <span class="timeline-amount">' + formatCurrency(m.invoiceAmount) + '</span>' : '') +
+            '</div>' +
+          '</div>';
+      });
+      msContainer.innerHTML = msHtml;
+
+      // Next Steps
+      var stepsContainer = document.getElementById('reportNextSteps');
+      var stepsHtml = '';
+      var openActions = PROJECT_DATA.actions.filter(function(a) { return a.status !== 'completed'; });
+      openActions.forEach(function(a) {
+        stepsHtml += '<li>' + a.description + ' <em>(' + a.owner + ', due ' + formatDate(a.dueDate) + ')</em></li>';
+      });
+      // Add a generic forward looking step
+      if (PROJECT_DATA.status.currentPhase < 5) {
+        var nextPhaseName = PHASE_NAMES[PROJECT_DATA.status.currentPhase];
+        stepsHtml += '<li>Prepare for ' + nextPhaseName + ' phase gate review</li>';
+      }
+      stepsContainer.innerHTML = stepsHtml;
+    }
+
+    /* -------------------------------------------------------
+       INITIALISE DASHBOARD
+       ------------------------------------------------------- */
+    function init() {
+      renderHeader();
+
+      // Tab 1: Progress
+      renderMetrics('metricsRow');
+      renderPipeline('pipelineContainer');
+      renderGateTable('gateTable');
+      renderHeatMap('heatMapContainer');
+      renderTimeline('timelineContainer');
+
+      // Tab 2: Full Dashboard
+      renderMetrics('metricsRowFull');
+      renderPipeline('pipelineContainerFull');
+      renderGateTable('gateTableFull');
+      renderHeatMap('heatMapContainerFull');
+      renderTimeline('timelineContainerFull');
+      renderBudget();
+      renderResources();
+      renderDeliverables();
+      renderStakeholders();
+      renderActions();
+
+      // Tab 3: Client Report
+      renderPipeline('pipelineContainerReport');
+      renderReport();
+    }
+
+    // Run on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>

@@ -5,6 +5,27 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-03-31
+
+### Added
+- **project-manager** New plugin — marcov.GATE project delivery framework (v1.0.0)
+  - Stage-gated hybrid methodology: 5 phases (Inception, Discovery, Development, Delivery, Close) with evidence-gated advancement
+  - GATE = Governed Advancement Through Evidence — extends marcov.BEAM from sales into delivery
+  - `/project-manager` slash command with 9 subcommands (new, status, gate-review, dashboard, portfolio, report, update, close, list)
+  - `portfolio-sweep` agent — discovers `.project-status.json` across all repos, generates master board
+  - `sweepProjects.py` — Python script for repo scanning, validation, and aggregation
+  - 4 interactive HTML dashboard templates (220KB total):
+    - Portfolio kanban board with filters, stats, stale project alerts
+    - Per-project 3-tab dashboard (progress, full dashboard, client report)
+    - Client status report (print-ready, SAS-AM branded)
+    - Gate review report with verdict banner, donut chart, evidence table
+  - 7 reference templates: gate criteria (scaled by tier), inception, discovery, gate-review, closeout, risk register, PRINCE2 mapping
+  - `.project-status.json` schema (marcov-gate-v1) for decentralised project state
+  - BEAM auto-ingest: reads `.beam/` engagement data when creating new projects
+  - Three scaling tiers: micro ($20K–$50K), standard ($50K–$200K), major ($200K–$2M)
+  - PRINCE2 terminology overlay for Victorian Government compatibility
+  - All visuals: light/dark mode, SAS-AM colour palette, WCAG 2.1 AA, print styles
+
 ## [1.5.0] - 2026-03-23
 
 ### Added

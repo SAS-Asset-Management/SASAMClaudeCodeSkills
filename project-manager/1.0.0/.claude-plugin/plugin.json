@@ -1,0 +1,19 @@
+{
+  "name": "project-manager",
+  "description": "marcov.GATE project delivery framework. Stage-gated hybrid methodology for advisory and software projects with visual dashboards, portfolio sweep, and BEAM integration.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "license": "MIT",
+  "keywords": [
+    "project",
+    "delivery",
+    "gate",
+    "portfolio",
+    "dashboard",
+    "status",
+    "advisory",
+    "marcov"
+  ]
+}

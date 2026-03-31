@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="marcov.GATE Portfolio Master Board — visual kanban dashboard for all active projects">
+  <title>marcov.GATE Portfolio | SAS Asset Management</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <style>
+    /* ============================================================
+       CSS VARIABLES
+       ============================================================ */
+    :root,
+    :root[data-theme="light"] {
+      --sas-green: #69BE28;
+      --sas-blue: #002244;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f7f7f7;
+      --bg-tertiary: #ededed;
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --text-inverse: #ffffff;
+      --accent: #69BE28;
+      --accent-hover: #5AA822;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --card-border: rgba(0, 34, 68, 0.15);
+      --card-hover-border: rgba(105, 190, 40, 0.4);
+      --shadow-sm: 0 2px 8px rgba(0, 34, 68, 0.08);
+      --shadow-md: 0 4px 16px rgba(0, 34, 68, 0.12);
+      --rag-green: #10B981;
+      --rag-green-bg: rgba(16, 185, 129, 0.1);
+      --rag-amber: #F59E0B;
+      --rag-amber-bg: rgba(245, 158, 11, 0.1);
+      --rag-red: #EF4444;
+      --rag-red-bg: rgba(239, 68, 68, 0.1);
+      --phase-inception: #3B82F6;
+      --phase-discovery: #8B5CF6;
+      --phase-development: #F59E0B;
+      --phase-delivery: #69BE28;
+      --phase-close: #002244;
+      --kanban-lane-bg: #f7f7f7;
+      --kanban-lane-border: #ededed;
+      --kanban-card-bg: #ffffff;
+      --tier-micro: #3B82F6;
+      --tier-standard: #8B5CF6;
+      --tier-major: #002244;
+      --input-bg: #ffffff;
+      --input-border: #d9d9d9;
+      --input-focus-border: #69BE28;
+      --focus-ring: 0 0 0 3px rgba(105, 190, 40, 0.5);
+      --table-header-bg: #f7f7f7;
+      --table-border: #ededed;
+      --table-row-hover: rgba(105, 190, 40, 0.05);
+      --scrollbar-track: #f7f7f7;
+      --scrollbar-thumb: #002244;
+    }
+
+    :root[data-theme="dark"] {
+      --sas-green: #7AD33B;
+      --sas-blue: #1a4d7a;
+      --bg-primary: #0a0f1a;
+      --bg-secondary: #141d2b;
+      --bg-tertiary: #1e2a3d;
+      --text-primary: #f4fbff;
+      --text-secondary: #d1e3ed;
+      --text-muted: #8ba3b5;
+      --text-inverse: #0a0f1a;
+      --accent: #69BE28;
+      --accent-hover: #7AD33B;
+      --card-bg: rgba(20, 29, 43, 0.9);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover-border: rgba(122, 211, 59, 0.4);
+      --shadow-sm: 0 2px 8px rgba(0, 10, 28, 0.3);
+      --shadow-md: 0 4px 16px rgba(0, 10, 28, 0.4);
+      --rag-green: #34D399;
+      --rag-green-bg: rgba(52, 211, 153, 0.15);
+      --rag-amber: #FBBF24;
+      --rag-amber-bg: rgba(251, 191, 36, 0.15);
+      --rag-red: #F87171;
+      --rag-red-bg: rgba(248, 113, 113, 0.15);
+      --phase-inception: #60A5FA;
+      --phase-discovery: #A78BFA;
+      --phase-development: #FBBF24;
+      --phase-delivery: #7AD33B;
+      --phase-close: #5B9BD5;
+      --kanban-lane-bg: #141d2b;
+      --kanban-lane-border: #1e2a3d;
+      --kanban-card-bg: #1e2a3d;
+      --tier-micro: #60A5FA;
+      --tier-standard: #A78BFA;
+      --tier-major: #5B9BD5;
+      --input-bg: #141d2b;
+      --input-border: #2d3d52;
+      --input-focus-border: #7AD33B;
+      --focus-ring: 0 0 0 3px rgba(105, 190, 40, 0.4);
+      --table-header-bg: #141d2b;
+      --table-border: #2d3d52;
+      --table-row-hover: rgba(122, 211, 59, 0.1);
+      --scrollbar-track: #141d2b;
+      --scrollbar-thumb: #5B9BD5;
+    }
+
+    /* ============================================================
+       RESET & BASE
+       ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* ============================================================
+       REDUCED MOTION
+       ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ============================================================
+       HIGH CONTRAST
+       ============================================================ */
+    @media (prefers-contrast: high) {
+      :root, :root[data-theme="light"] {
+        --card-border: rgba(0, 34, 68, 0.5);
+        --input-border: #002244;
+        --kanban-lane-border: #002244;
+      }
+      :root[data-theme="dark"] {
+        --card-border: rgba(255, 255, 255, 0.3);
+        --input-border: #f4fbff;
+        --kanban-lane-border: #f4fbff;
+      }
+    }
+
+    /* ============================================================
+       CUSTOM SCROLLBARS
+       ============================================================ */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 4px;
+      opacity: 0.6;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      opacity: 1;
+    }
+
+    /* Firefox */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    }
+
+    /* ============================================================
+       FOCUS STYLES
+       ============================================================ */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ============================================================
+       HEADER
+       ============================================================ */
+    .site-header {
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--card-border);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .header-logo {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .header-logo-dark {
+      display: none;
+    }
+
+    [data-theme="dark"] .header-logo-light {
+      display: none;
+    }
+
+    [data-theme="dark"] .header-logo-dark {
+      display: block;
+    }
+
+    .header-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .header-title span {
+      color: var(--accent);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .last-refreshed {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--card-border);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--bg-tertiary);
+    }
+
+    .theme-toggle .fa-sun { display: none; }
+    .theme-toggle .fa-moon { display: inline; }
+
+    [data-theme="dark"] .theme-toggle .fa-sun { display: inline; }
+    [data-theme="dark"] .theme-toggle .fa-moon { display: none; }
+
+    /* ============================================================
+       MAIN CONTENT
+       ============================================================ */
+    .main-content {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* ============================================================
+       STAT CARDS
+       ============================================================ */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s ease;
+    }
+
+    .stat-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--card-hover-border);
+    }
+
+    .stat-card-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.375rem;
+    }
+
+    .stat-card-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .stat-card-subtitle {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .stat-card-value.green { color: var(--rag-green); }
+    .stat-card-value.amber { color: var(--rag-amber); }
+    .stat-card-value.red { color: var(--rag-red); }
+
+    .stat-card-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      font-size: 1.125rem;
+    }
+
+    .stat-card-icon.projects { background: rgba(59, 130, 246, 0.1); color: #3B82F6; }
+    .stat-card-icon.on-track { background: var(--rag-green-bg); color: var(--rag-green); }
+    .stat-card-icon.at-risk { background: var(--rag-amber-bg); color: var(--rag-amber); }
+    .stat-card-icon.utilisation { background: rgba(139, 92, 246, 0.1); color: #8B5CF6; }
+
+    [data-theme="dark"] .stat-card-icon.projects { background: rgba(96, 165, 250, 0.15); color: #60A5FA; }
+    [data-theme="dark"] .stat-card-icon.utilisation { background: rgba(167, 139, 250, 0.15); color: #A78BFA; }
+
+    /* ============================================================
+       FILTER BAR
+       ============================================================ */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem 1.25rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .filter-group-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-right: 0.25rem;
+    }
+
+    .filter-divider {
+      width: 1px;
+      height: 28px;
+      background: var(--card-border);
+      margin: 0 0.5rem;
+    }
+
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      border: 1px solid var(--card-border);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .filter-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .filter-chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--text-inverse);
+    }
+
+    .filter-chip .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .filter-chip .dot.green { background: var(--rag-green); }
+    .filter-chip .dot.amber { background: var(--rag-amber); }
+    .filter-chip .dot.red { background: var(--rag-red); }
+    .filter-chip.active .dot.green,
+    .filter-chip.active .dot.amber,
+    .filter-chip.active .dot.red { background: var(--text-inverse); }
+
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      background: var(--input-bg);
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--input-focus-border);
+      box-shadow: var(--focus-ring);
+    }
+
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .search-wrapper .fa-search {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       KANBAN BOARD
+       ============================================================ */
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      min-height: 400px;
+    }
+
+    .kanban-lane {
+      background: var(--kanban-lane-bg);
+      border: 1px solid var(--kanban-lane-border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      min-height: 400px;
+      overflow: hidden;
+    }
+
+    .kanban-lane-header {
+      padding: 0.875rem 1rem;
+      border-top: 3px solid transparent;
+      border-radius: 12px 12px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .kanban-lane[data-phase="inception"] .kanban-lane-header { border-top-color: var(--phase-inception); }
+    .kanban-lane[data-phase="discovery"] .kanban-lane-header { border-top-color: var(--phase-discovery); }
+    .kanban-lane[data-phase="development"] .kanban-lane-header { border-top-color: var(--phase-development); }
+    .kanban-lane[data-phase="delivery"] .kanban-lane-header { border-top-color: var(--phase-delivery); }
+    .kanban-lane[data-phase="close"] .kanban-lane-header { border-top-color: var(--phase-close); }
+
+    .kanban-lane-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .kanban-lane-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 0.5rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+    }
+
+    .kanban-cards {
+      padding: 0.5rem 0.625rem 0.625rem;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+    }
+
+    .kanban-empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ============================================================
+       PROJECT CARD
+       ============================================================ */
+    .project-card {
+      background: var(--kanban-card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .project-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--card-hover-border);
+      transform: translateY(-1px);
+    }
+
+    .project-card.selected {
+      border-color: var(--accent);
+      box-shadow: var(--focus-ring), var(--shadow-md);
+    }
+
+    .project-card-client {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.25rem;
+    }
+
+    .project-card-name {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-bottom: 0.625rem;
+    }
+
+    .project-card-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.1875rem 0.5rem;
+      border-radius: 20px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-rag-green { background: var(--rag-green-bg); color: var(--rag-green); }
+    .badge-rag-amber { background: var(--rag-amber-bg); color: var(--rag-amber); }
+    .badge-rag-red { background: var(--rag-red-bg); color: var(--rag-red); }
+
+    .badge-tier {
+      background: transparent;
+      border: 1px solid;
+    }
+
+    .badge-tier-micro { border-color: var(--tier-micro); color: var(--tier-micro); }
+    .badge-tier-standard { border-color: var(--tier-standard); color: var(--tier-standard); }
+    .badge-tier-major { border-color: var(--tier-major); color: var(--tier-major); }
+
+    .project-card-progress {
+      margin-bottom: 0.625rem;
+    }
+
+    .progress-bar-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .progress-bar-track {
+      flex: 1;
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-bar-fill.green { background: var(--rag-green); }
+    .progress-bar-fill.amber { background: var(--rag-amber); }
+    .progress-bar-fill.red { background: var(--rag-red); }
+
+    .progress-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    .project-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+    }
+
+    .project-card-date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .project-card-date i {
+      font-size: 0.6875rem;
+    }
+
+    .team-avatars {
+      display: flex;
+      align-items: center;
+    }
+
+    .team-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: var(--text-inverse);
+      border: 2px solid var(--kanban-card-bg);
+      margin-left: -6px;
+      position: relative;
+      cursor: default;
+    }
+
+    .team-avatar:first-child {
+      margin-left: 0;
+    }
+
+    .team-avatar:nth-child(1) { background: var(--sas-blue); z-index: 3; }
+    .team-avatar:nth-child(2) { background: var(--accent); z-index: 2; }
+    .team-avatar:nth-child(3) { background: #8B5CF6; z-index: 1; }
+    .team-avatar:nth-child(4) { background: var(--rag-amber); z-index: 0; }
+
+    .team-avatar[title]::after {
+      content: attr(title);
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      background: var(--text-primary);
+      color: var(--bg-primary);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      white-space: nowrap;
+      z-index: 50;
+      margin-bottom: 4px;
+      pointer-events: none;
+    }
+
+    .team-avatar:hover::after {
+      display: block;
+    }
+
+    /* ============================================================
+       STALE PROJECTS ALERT
+       ============================================================ */
+    .stale-alert {
+      background: var(--rag-amber-bg);
+      border: 1px solid var(--rag-amber);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+
+    .stale-alert.visible {
+      display: block;
+    }
+
+    .stale-alert-header {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stale-alert-icon {
+      color: var(--rag-amber);
+      font-size: 1.25rem;
+    }
+
+    .stale-alert-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .stale-alert-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .stale-alert-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .stale-alert-item:last-child {
+      border-bottom: none;
+    }
+
+    .stale-days {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 60px;
+      padding: 0.1875rem 0.5rem;
+      border-radius: 6px;
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--rag-amber);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    [data-theme="dark"] .stale-days {
+      background: rgba(251, 191, 36, 0.2);
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .site-footer {
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      border-top: 1px solid var(--card-border);
+      margin-top: 2rem;
+    }
+
+    .site-footer strong {
+      color: var(--text-secondary);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1200px) {
+      .kanban-board {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .kanban-board {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .filter-group {
+        flex-wrap: wrap;
+      }
+
+      .filter-divider {
+        width: 100%;
+        height: 1px;
+        margin: 0.25rem 0;
+      }
+
+      .search-wrapper {
+        min-width: unset;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        padding: 0.5rem 1rem;
+      }
+
+      .header-title {
+        font-size: 1rem;
+      }
+
+      .last-refreshed {
+        display: none;
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+
+      .stat-card {
+        padding: 1rem;
+      }
+
+      .stat-card-value {
+        font-size: 1.5rem;
+      }
+
+      .kanban-board {
+        grid-template-columns: 1fr;
+      }
+
+      .kanban-lane {
+        min-height: 200px;
+      }
+
+      .main-content {
+        padding: 1rem;
+      }
+    }
+
+    /* ============================================================
+       PRINT STYLES
+       ============================================================ */
+    @media print {
+      .site-header,
+      .filter-bar,
+      .theme-toggle,
+      .stale-alert {
+        display: none !important;
+      }
+
+      body {
+        background: #fff;
+        color: #000;
+      }
+
+      .main-content {
+        max-width: 100%;
+        padding: 0;
+      }
+
+      .kanban-board {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 0.5rem;
+      }
+
+      .project-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid;
+      }
+
+      .stat-card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+      }
+
+      .kanban-lane {
+        min-height: auto;
+      }
+    }
+
+    /* ============================================================
+       UTILITY
+       ============================================================ */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      grid-column: 1 / -1;
+    }
+
+    .no-results i {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 0.75rem;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       SKIP LINK
+       ============================================================ -->
+  <a href="#main-content" class="sr-only" style="position:absolute;top:0;left:0;z-index:999;padding:1rem;background:var(--accent);color:#fff;clip:auto;width:auto;height:auto;" onfocus="this.style.clip='auto';this.style.width='auto';this.style.height='auto'" onblur="this.style.clip='rect(0,0,0,0)';this.style.width='1px';this.style.height='1px'">
+    Skip to main content
+  </a>
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <div class="header-left">
+        <img
+          src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg"
+          alt="SAS Asset Management Logo"
+          class="header-logo header-logo-light"
+        >
+        <img
+          src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png"
+          alt="SAS Asset Management Logo"
+          class="header-logo header-logo-dark"
+        >
+        <h1 class="header-title">marcov.<span>GATE</span> Portfolio</h1>
+      </div>
+      <div class="header-right">
+        <span class="last-refreshed" id="lastRefreshed" aria-live="polite"></span>
+        <button
+          class="theme-toggle"
+          onclick="toggleTheme()"
+          aria-label="Toggle light and dark mode"
+          title="Toggle theme"
+        >
+          <i class="fa-solid fa-moon"></i>
+          <i class="fa-solid fa-sun"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main class="main-content" id="main-content">
+
+    <!-- Summary Stats -->
+    <section class="stats-row" aria-label="Portfolio summary statistics">
+      <div class="stat-card">
+        <div class="stat-card-icon projects">
+          <i class="fa-solid fa-folder-open"></i>
+        </div>
+        <div class="stat-card-label">Active Projects</div>
+        <div class="stat-card-value" id="statActiveCount">0</div>
+        <div class="stat-card-subtitle" id="statActiveSubtitle">across all phases</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon on-track">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div class="stat-card-label">On Track</div>
+        <div class="stat-card-value green" id="statOnTrack">0</div>
+        <div class="stat-card-subtitle">green RAG status</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon at-risk">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="stat-card-label">At Risk</div>
+        <div class="stat-card-value amber" id="statAtRisk">0</div>
+        <div class="stat-card-subtitle">amber or red RAG status</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon utilisation">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="stat-card-label">Team Utilisation</div>
+        <div class="stat-card-value" id="statUtilisation">0%</div>
+        <div class="stat-card-subtitle" id="statUtilSubtitle">of total capacity</div>
+      </div>
+    </section>
+
+    <!-- Filter Bar -->
+    <section class="filter-bar" aria-label="Project filters">
+
+      <div class="filter-group" role="group" aria-label="Project type filters">
+        <span class="filter-group-label">Type</span>
+        <button class="filter-chip active" data-filter="type" data-value="all" aria-pressed="true">All</button>
+        <button class="filter-chip" data-filter="type" data-value="advisory" aria-pressed="false">Advisory</button>
+        <button class="filter-chip" data-filter="type" data-value="software" aria-pressed="false">Software</button>
+        <button class="filter-chip" data-filter="type" data-value="hybrid" aria-pressed="false">Hybrid</button>
+      </div>
+
+      <div class="filter-divider" aria-hidden="true"></div>
+
+      <div class="filter-group" role="group" aria-label="RAG status filters">
+        <span class="filter-group-label">RAG</span>
+        <button class="filter-chip" data-filter="rag" data-value="green" aria-pressed="false">
+          <span class="dot green" aria-hidden="true"></span>Green
+        </button>
+        <button class="filter-chip" data-filter="rag" data-value="amber" aria-pressed="false">
+          <span class="dot amber" aria-hidden="true"></span>Amber
+        </button>
+        <button class="filter-chip" data-filter="rag" data-value="red" aria-pressed="false">
+          <span class="dot red" aria-hidden="true"></span>Red
+        </button>
+      </div>
+
+      <div class="filter-divider" aria-hidden="true"></div>
+
+      <div class="filter-group" role="group" aria-label="Project tier filters">
+        <span class="filter-group-label">Tier</span>
+        <button class="filter-chip" data-filter="tier" data-value="micro" aria-pressed="false">Micro</button>
+        <button class="filter-chip" data-filter="tier" data-value="standard" aria-pressed="false">Standard</button>
+        <button class="filter-chip" data-filter="tier" data-value="major" aria-pressed="false">Major</button>
+      </div>
+
+      <div class="filter-divider" aria-hidden="true"></div>
+
+      <div class="search-wrapper">
+        <i class="fa-solid fa-search" aria-hidden="true"></i>
+        <input
+          type="search"
+          class="search-input"
+          id="searchInput"
+          placeholder="Search by client or project name..."
+          aria-label="Search projects by client or project name"
+        >
+      </div>
+
+    </section>
+
+    <!-- Kanban Board -->
+    <section class="kanban-board" id="kanbanBoard" aria-label="Project kanban board">
+      <div class="kanban-lane" data-phase="inception">
+        <div class="kanban-lane-header">
+          <span class="kanban-lane-title">Inception</span>
+          <span class="kanban-lane-count" id="countInception">0</span>
+        </div>
+        <div class="kanban-cards" id="laneInception"></div>
+      </div>
+      <div class="kanban-lane" data-phase="discovery">
+        <div class="kanban-lane-header">
+          <span class="kanban-lane-title">Discovery</span>
+          <span class="kanban-lane-count" id="countDiscovery">0</span>
+        </div>
+        <div class="kanban-cards" id="laneDiscovery"></div>
+      </div>
+      <div class="kanban-lane" data-phase="development">
+        <div class="kanban-lane-header">
+          <span class="kanban-lane-title">Development</span>
+          <span class="kanban-lane-count" id="countDevelopment">0</span>
+        </div>
+        <div class="kanban-cards" id="laneDevelopment"></div>
+      </div>
+      <div class="kanban-lane" data-phase="delivery">
+        <div class="kanban-lane-header">
+          <span class="kanban-lane-title">Delivery</span>
+          <span class="kanban-lane-count" id="countDelivery">0</span>
+        </div>
+        <div class="kanban-cards" id="laneDelivery"></div>
+      </div>
+      <div class="kanban-lane" data-phase="close">
+        <div class="kanban-lane-header">
+          <span class="kanban-lane-title">Close</span>
+          <span class="kanban-lane-count" id="countClose">0</span>
+        </div>
+        <div class="kanban-cards" id="laneClose"></div>
+      </div>
+    </section>
+
+    <!-- Stale Projects Alert -->
+    <section class="stale-alert" id="staleAlert" aria-label="Stale projects warning">
+      <div class="stale-alert-header">
+        <i class="fa-solid fa-triangle-exclamation stale-alert-icon" aria-hidden="true"></i>
+        <span class="stale-alert-title">Stale Projects — Not Updated in 14+ Days</span>
+      </div>
+      <ul class="stale-alert-list" id="staleList"></ul>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="site-footer" role="contentinfo">
+    <strong>SAS Asset Management</strong> &mdash;
+    We provide advanced analytics, expert asset management services and maturity assessments to help asset owners realise their value.
+  </footer>
+
+  <!-- ============================================================
+       DATA & LOGIC
+       ============================================================ -->
+  <script>
+    'use strict';
+
+    /* -------------------------------------------------------
+       DATA INJECTION POINT
+       Replace this array with real data when rendering.
+       ------------------------------------------------------- */
+    const PORTFOLIO_DATA = [
+      {
+        project: { id: "yt-mdr-review", client: "Yarra Trams", name: "MDR Review", type: "advisory", tier: "standard", contractValue: 24500, sector: "rail" },
+        status: { currentPhase: 3, phaseName: "Development", rag: "green", percentComplete: 65, startDate: "2026-03-15", targetEndDate: "2026-05-30", lastUpdated: "2026-03-31" },
+        team: [{ name: "Saxon", role: "Lead", allocation: 0.6 }],
+        risks: [{ id: "R1", likelihood: "medium", impact: "high", status: "open" }]
+      },
+      {
+        project: { id: "dept-health-poc", client: "Dept Health", name: "Condition Assessment PoC", type: "software", tier: "major", contractValue: 185000, sector: "health" },
+        status: { currentPhase: 2, phaseName: "Discovery", rag: "amber", percentComplete: 30, startDate: "2026-03-01", targetEndDate: "2026-09-30", lastUpdated: "2026-03-28" },
+        team: [{ name: "Saxon", role: "Lead", allocation: 0.4 }, { name: "Alex", role: "Data Scientist", allocation: 0.8 }],
+        risks: [{ id: "R1", likelihood: "high", impact: "high", status: "open" }, { id: "R2", likelihood: "medium", impact: "medium", status: "open" }]
+      },
+      {
+        project: { id: "bega-maintenance", client: "Bega Group", name: "Maintenance Strategy", type: "advisory", tier: "micro", contractValue: 35000, sector: "other" },
+        status: { currentPhase: 1, phaseName: "Inception", rag: "green", percentComplete: 10, startDate: "2026-04-01", targetEndDate: "2026-04-30", lastUpdated: "2026-03-30" },
+        team: [{ name: "Saxon", role: "Lead", allocation: 0.2 }],
+        risks: []
+      },
+      {
+        project: { id: "transurban-tunnels", client: "SMEC/Transurban", name: "Condition Framework", type: "hybrid", tier: "standard", contractValue: 95000, sector: "transport" },
+        status: { currentPhase: 4, phaseName: "Delivery", rag: "green", percentComplete: 85, startDate: "2026-01-15", targetEndDate: "2026-04-15", lastUpdated: "2026-03-25" },
+        team: [{ name: "Saxon", role: "Lead", allocation: 0.3 }, { name: "Ben", role: "Consultant", allocation: 0.5 }],
+        risks: [{ id: "R1", likelihood: "low", impact: "medium", status: "mitigated" }]
+      },
+      {
+        project: { id: "kairos-bamp", client: "Kairos (LHG)", name: "Building AMP", type: "advisory", tier: "standard", contractValue: 75000, sector: "health" },
+        status: { currentPhase: 3, phaseName: "Development", rag: "green", percentComplete: 55, startDate: "2026-02-15", targetEndDate: "2026-05-15", lastUpdated: "2026-03-24" },
+        team: [{ name: "Saxon", role: "Lead", allocation: 0.3 }],
+        risks: [{ id: "R1", likelihood: "low", impact: "low", status: "open" }]
+      },
+      {
+        project: { id: "deeca-amaf", client: "DEECA (BFS)", name: "AMAF Maturity Assessment", type: "advisory", tier: "standard", contractValue: 120000, sector: "other" },
+        status: { currentPhase: 1, phaseName: "Inception", rag: "green", percentComplete: 5, startDate: "2026-04-15", targetEndDate: "2026-07-31", lastUpdated: "2026-03-10" },
+        team: [{ name: "Saxon", role: "Lead", allocation: 0.2 }],
+        risks: []
+      }
+    ];
+
+    /* -------------------------------------------------------
+       THEME MANAGEMENT
+       ------------------------------------------------------- */
+    (function initTheme() {
+      var STORAGE_KEY = 'portfolio-theme';
+
+      function getSystemTheme() {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function applyTheme(theme) {
+        var resolved = theme === 'system' ? getSystemTheme() : theme;
+        document.documentElement.setAttribute('data-theme', resolved);
+        localStorage.setItem(STORAGE_KEY, theme);
+      }
+
+      var stored = localStorage.getItem(STORAGE_KEY);
+      applyTheme(stored || 'system');
+
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function() {
+        var current = localStorage.getItem(STORAGE_KEY);
+        if (!current || current === 'system') {
+          applyTheme('system');
+        }
+      });
+
+      window.toggleTheme = function() {
+        var current = document.documentElement.getAttribute('data-theme') || 'light';
+        applyTheme(current === 'light' ? 'dark' : 'light');
+      };
+    })();
+
+    /* -------------------------------------------------------
+       DATE FORMATTING
+       ------------------------------------------------------- */
+    function formatDateAU(isoStr) {
+      if (!isoStr) return '';
+      var parts = isoStr.split('-');
+      if (parts.length !== 3) return isoStr;
+      return parts[2] + '/' + parts[1] + '/' + parts[0];
+    }
+
+    function daysBetween(dateA, dateB) {
+      var a = new Date(dateA);
+      var b = new Date(dateB);
+      var diff = Math.abs(b - a);
+      return Math.floor(diff / (1000 * 60 * 60 * 24));
+    }
+
+    function formatTimestamp() {
+      var now = new Date();
+      var dd = String(now.getDate()).padStart(2, '0');
+      var mm = String(now.getMonth() + 1).padStart(2, '0');
+      var yyyy = now.getFullYear();
+      var hh = String(now.getHours()).padStart(2, '0');
+      var min = String(now.getMinutes()).padStart(2, '0');
+      return dd + '/' + mm + '/' + yyyy + ' ' + hh + ':' + min;
+    }
+
+    /* -------------------------------------------------------
+       FILTER STATE
+       ------------------------------------------------------- */
+    var activeFilters = {
+      type: 'all',
+      rag: null,
+      tier: null,
+      search: ''
+    };
+
+    var selectedCardId = null;
+
+    /* -------------------------------------------------------
+       PHASE MAPPING
+       ------------------------------------------------------- */
+    var phaseMap = {
+      1: { key: 'inception', label: 'Inception' },
+      2: { key: 'discovery', label: 'Discovery' },
+      3: { key: 'development', label: 'Development' },
+      4: { key: 'delivery', label: 'Delivery' },
+      5: { key: 'close', label: 'Close' }
+    };
+
+    /* -------------------------------------------------------
+       GET INITIALS
+       ------------------------------------------------------- */
+    function getInitials(name) {
+      if (!name) return '?';
+      var words = name.trim().split(/\s+/);
+      if (words.length === 1) return words[0].charAt(0).toUpperCase();
+      return (words[0].charAt(0) + words[words.length - 1].charAt(0)).toUpperCase();
+    }
+
+    /* -------------------------------------------------------
+       FILTER LOGIC
+       ------------------------------------------------------- */
+    function filterProjects(data) {
+      return data.filter(function(item) {
+        // Type filter
+        if (activeFilters.type !== 'all' && item.project.type !== activeFilters.type) {
+          return false;
+        }
+
+        // RAG filter
+        if (activeFilters.rag && item.status.rag !== activeFilters.rag) {
+          return false;
+        }
+
+        // Tier filter
+        if (activeFilters.tier && item.project.tier !== activeFilters.tier) {
+          return false;
+        }
+
+        // Search filter
+        if (activeFilters.search) {
+          var q = activeFilters.search.toLowerCase();
+          var searchable = (item.project.client + ' ' + item.project.name).toLowerCase();
+          if (searchable.indexOf(q) === -1) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+    }
+
+    /* -------------------------------------------------------
+       RENDER CARD
+       ------------------------------------------------------- */
+    function renderCard(item) {
+      var p = item.project;
+      var s = item.status;
+
+      var ragClass = 'badge-rag-' + s.rag;
+      var ragLabel = s.rag.charAt(0).toUpperCase() + s.rag.slice(1);
+
+      var tierClass = 'badge-tier-' + p.tier;
+      var tierLabel = p.tier.charAt(0).toUpperCase() + p.tier.slice(1);
+
+      var avatarsHtml = item.team.map(function(member) {
+        return '<span class="team-avatar" title="' + member.name + ' (' + Math.round(member.allocation * 100) + '%)">' + getInitials(member.name) + '</span>';
+      }).join('');
+
+      var isSelected = selectedCardId === p.id ? ' selected' : '';
+
+      return '<div class="project-card' + isSelected + '" data-project-id="' + p.id + '" ' +
+        'tabindex="0" role="button" aria-label="' + p.client + ' — ' + p.name + '">' +
+        '<div class="project-card-client">' + escapeHtml(p.client) + '</div>' +
+        '<div class="project-card-name">' + escapeHtml(p.name) + '</div>' +
+        '<div class="project-card-badges">' +
+          '<span class="badge ' + ragClass + '">' + ragLabel + '</span>' +
+          '<span class="badge badge-tier ' + tierClass + '">' + tierLabel + '</span>' +
+        '</div>' +
+        '<div class="project-card-progress">' +
+          '<div class="progress-bar-wrapper">' +
+            '<div class="progress-bar-track">' +
+              '<div class="progress-bar-fill ' + s.rag + '" style="width:' + s.percentComplete + '%"></div>' +
+            '</div>' +
+            '<span class="progress-label">' + s.percentComplete + '%</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="project-card-footer">' +
+          '<span class="project-card-date"><i class="fa-regular fa-calendar" aria-hidden="true"></i> ' + formatDateAU(s.targetEndDate) + '</span>' +
+          '<div class="team-avatars">' + avatarsHtml + '</div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    /* -------------------------------------------------------
+       ESCAPE HTML
+       ------------------------------------------------------- */
+    function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    /* -------------------------------------------------------
+       COMPUTE STATS
+       ------------------------------------------------------- */
+    function computeStats(data) {
+      var activeCount = data.length;
+      var onTrack = 0;
+      var atRisk = 0;
+      var totalAllocation = 0;
+      var teamMembers = {};
+
+      data.forEach(function(item) {
+        if (item.status.rag === 'green') onTrack++;
+        if (item.status.rag === 'amber' || item.status.rag === 'red') atRisk++;
+
+        item.team.forEach(function(member) {
+          totalAllocation += member.allocation;
+          teamMembers[member.name] = true;
+        });
+      });
+
+      var teamSize = Object.keys(teamMembers).length;
+      var utilisation = teamSize > 0 ? Math.round((totalAllocation / teamSize) * 100) : 0;
+
+      return {
+        activeCount: activeCount,
+        onTrack: onTrack,
+        atRisk: atRisk,
+        utilisation: utilisation,
+        teamSize: teamSize
+      };
+    }
+
+    /* -------------------------------------------------------
+       DETECT STALE PROJECTS
+       ------------------------------------------------------- */
+    function getStaleProjects(data) {
+      var today = new Date().toISOString().split('T')[0];
+      return data.filter(function(item) {
+        return daysBetween(item.status.lastUpdated, today) >= 14;
+      }).map(function(item) {
+        var today = new Date().toISOString().split('T')[0];
+        return {
+          client: item.project.client,
+          name: item.project.name,
+          daysSinceUpdate: daysBetween(item.status.lastUpdated, today),
+          lastUpdated: item.status.lastUpdated
+        };
+      }).sort(function(a, b) {
+        return b.daysSinceUpdate - a.daysSinceUpdate;
+      });
+    }
+
+    /* -------------------------------------------------------
+       RENDER DASHBOARD
+       ------------------------------------------------------- */
+    function renderDashboard() {
+      var filtered = filterProjects(PORTFOLIO_DATA);
+
+      // Update stats (always from full data)
+      var stats = computeStats(PORTFOLIO_DATA);
+      document.getElementById('statActiveCount').textContent = stats.activeCount;
+      document.getElementById('statOnTrack').textContent = stats.onTrack;
+      document.getElementById('statAtRisk').textContent = stats.atRisk;
+      document.getElementById('statUtilisation').textContent = stats.utilisation + '%';
+      document.getElementById('statUtilSubtitle').textContent = stats.teamSize + ' team member' + (stats.teamSize !== 1 ? 's' : '') + ' allocated';
+
+      // Group filtered projects by phase
+      var lanes = {
+        inception: [],
+        discovery: [],
+        development: [],
+        delivery: [],
+        close: []
+      };
+
+      filtered.forEach(function(item) {
+        var phase = phaseMap[item.status.currentPhase];
+        if (phase && lanes[phase.key]) {
+          lanes[phase.key].push(item);
+        }
+      });
+
+      // Render lanes
+      Object.keys(lanes).forEach(function(key) {
+        var laneId = 'lane' + key.charAt(0).toUpperCase() + key.slice(1);
+        var countId = 'count' + key.charAt(0).toUpperCase() + key.slice(1);
+        var laneEl = document.getElementById(laneId);
+        var countEl = document.getElementById(countId);
+
+        if (!laneEl || !countEl) return;
+
+        countEl.textContent = lanes[key].length;
+
+        if (lanes[key].length === 0) {
+          laneEl.innerHTML = '<div class="kanban-empty">No projects in this phase</div>';
+        } else {
+          laneEl.innerHTML = lanes[key].map(renderCard).join('');
+        }
+      });
+
+      // Attach card click handlers
+      document.querySelectorAll('.project-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+          handleCardClick(card.getAttribute('data-project-id'));
+        });
+        card.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleCardClick(card.getAttribute('data-project-id'));
+          }
+        });
+      });
+
+      // Stale projects
+      var stale = getStaleProjects(PORTFOLIO_DATA);
+      var staleAlertEl = document.getElementById('staleAlert');
+      var staleListEl = document.getElementById('staleList');
+
+      if (stale.length > 0) {
+        staleAlertEl.classList.add('visible');
+        staleListEl.innerHTML = stale.map(function(s) {
+          return '<li class="stale-alert-item">' +
+            '<span class="stale-days">' + s.daysSinceUpdate + ' days</span>' +
+            '<span><strong>' + escapeHtml(s.client) + '</strong> &mdash; ' + escapeHtml(s.name) + ' (last updated ' + formatDateAU(s.lastUpdated) + ')</span>' +
+          '</li>';
+        }).join('');
+      } else {
+        staleAlertEl.classList.remove('visible');
+      }
+
+      // Timestamp
+      document.getElementById('lastRefreshed').textContent = 'Refreshed: ' + formatTimestamp();
+    }
+
+    /* -------------------------------------------------------
+       CARD CLICK HANDLER
+       ------------------------------------------------------- */
+    function handleCardClick(projectId) {
+      if (selectedCardId === projectId) {
+        selectedCardId = null;
+      } else {
+        selectedCardId = projectId;
+      }
+      // Re-render to update selection state
+      renderDashboard();
+    }
+
+    /* -------------------------------------------------------
+       FILTER CHIP HANDLERS
+       ------------------------------------------------------- */
+    function setupFilters() {
+      document.querySelectorAll('.filter-chip').forEach(function(chip) {
+        chip.addEventListener('click', function() {
+          var filterType = chip.getAttribute('data-filter');
+          var filterValue = chip.getAttribute('data-value');
+
+          if (filterType === 'type') {
+            // Type is exclusive (single selection with "All")
+            activeFilters.type = filterValue;
+            document.querySelectorAll('.filter-chip[data-filter="type"]').forEach(function(c) {
+              c.classList.remove('active');
+              c.setAttribute('aria-pressed', 'false');
+            });
+            chip.classList.add('active');
+            chip.setAttribute('aria-pressed', 'true');
+
+          } else if (filterType === 'rag') {
+            // RAG is toggle (one or none)
+            if (activeFilters.rag === filterValue) {
+              activeFilters.rag = null;
+              chip.classList.remove('active');
+              chip.setAttribute('aria-pressed', 'false');
+            } else {
+              activeFilters.rag = filterValue;
+              document.querySelectorAll('.filter-chip[data-filter="rag"]').forEach(function(c) {
+                c.classList.remove('active');
+                c.setAttribute('aria-pressed', 'false');
+              });
+              chip.classList.add('active');
+              chip.setAttribute('aria-pressed', 'true');
+            }
+
+          } else if (filterType === 'tier') {
+            // Tier is toggle (one or none)
+            if (activeFilters.tier === filterValue) {
+              activeFilters.tier = null;
+              chip.classList.remove('active');
+              chip.setAttribute('aria-pressed', 'false');
+            } else {
+              activeFilters.tier = filterValue;
+              document.querySelectorAll('.filter-chip[data-filter="tier"]').forEach(function(c) {
+                c.classList.remove('active');
+                c.setAttribute('aria-pressed', 'false');
+              });
+              chip.classList.add('active');
+              chip.setAttribute('aria-pressed', 'true');
+            }
+          }
+
+          renderDashboard();
+        });
+      });
+
+      // Search input
+      var searchInput = document.getElementById('searchInput');
+      var debounceTimer;
+      searchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(function() {
+          activeFilters.search = searchInput.value.trim();
+          renderDashboard();
+        }, 250);
+      });
+    }
+
+    /* -------------------------------------------------------
+       INITIALISE
+       ------------------------------------------------------- */
+    document.addEventListener('DOMContentLoaded', function() {
+      setupFilters();
+      renderDashboard();
+    });
+  </script>
+
+</body>
+</html>
