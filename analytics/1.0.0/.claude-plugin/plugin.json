@@ -1,7 +1,7 @@
 {
   "name": "analytics",
   "version": "1.0.0",
-  "description": "Website Analytics system integration for SAS-AM. Provides access to GA4 and Search Console data via Grafana dashboards, data collection scripts, and database queries.",
+  "description": "Website Analytics system integration for SAS-AM. Provides access to GA4, Search Console, and Microsoft Clarity data via Grafana dashboards, data collection scripts, and database queries.",
   "author": "SAS-AM",
   "repository": "https://github.com/sas-am/SASAMClaudeCodeSkills",
   "skills": [
@@ -13,6 +13,7 @@
   "commands": [
     "commands/status.md",
     "commands/collect.md",
+    "commands/clarity.md",
     "commands/dashboard.md",
     "commands/report.md",
     "commands/seo.md",

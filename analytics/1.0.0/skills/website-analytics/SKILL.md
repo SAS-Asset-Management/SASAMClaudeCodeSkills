@@ -2,12 +2,13 @@
 name: website-analytics
 description: Provide expertise for the SAS-AM Website Analytics system. Use when the user asks about:
 - Google Analytics or Search Console data collection
+- Microsoft Clarity UX analytics (heatmaps, rage clicks, dead clicks, session recordings)
 - SQLite database queries for analytics data
 - Grafana dashboard configuration or troubleshooting
 - Data pipeline issues, cron jobs, or automation
 - SEO keyword analysis or SERP ranking
-- API authentication with Google services
-- Analytics metrics interpretation (bounce rate, CTR, impressions)
+- API authentication with Google services or Clarity
+- Analytics metrics interpretation (bounce rate, CTR, impressions, scroll depth)
 - Docker container issues with Grafana
 - LinkedIn or Google Ads campaign tracking
 - UTM parameters and attribution
@@ -24,6 +25,11 @@ You are an expert in the SAS-AM Website Analytics system. This system collects d
 │ Google APIs     │ -> │ Python Scripts  │ -> │ SQLite Database │
 │ (GA4 + Console) │    │ (Data Collection)│    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
+                                                        │
+┌─────────────────┐    ┌─────────────────┐             │
+│ MS Clarity API  │ -> │ clarityCollect  │ ----------->│
+│ (UX Analytics)  │    │    .py          │              │
+└─────────────────┘    └─────────────────┘              │
                                                         │
 ┌─────────────────┐    ┌─────────────────┐             │
 │ Grafana         │ <- │ Docker Container│ <-----------┘
@@ -76,6 +82,22 @@ Consolidated analytics combining all sources.
 ### meta_table
 Update tracking and metadata.
 
+### clarity_traffic
+Microsoft Clarity traffic data by dimension:
+- `collected_date`, `dimension_type`, `dimension_value`
+- `total_sessions`, `bot_sessions`, `distinct_users`, `pages_per_session`
+
+### clarity_engagement
+UX quality signals from Clarity:
+- `collected_date`, `dimension_type`, `dimension_value`
+- `scroll_depth`, `engagement_time`
+- `dead_clicks`, `rage_clicks`, `excessive_scrolls`, `quickbacks`, `script_errors`, `error_clicks`
+
+### clarity_pages
+Per page Clarity metrics:
+- `collected_date`, `page_url`, `page_title`
+- `sessions`, `scroll_depth`, `engagement_time`
+
 ## Key Commands
 
 ### Data Collection
@@ -83,6 +105,9 @@ Update tracking and metadata.
 # Full data collection (GA4 + Search Console)
 cd "/Users/sasreliability/Documents/Repos/Website Analytics"
 python3 "automated data pull.py"
+
+# Microsoft Clarity UX data
+python3 clarityCollect.py
 
 # Via cron job (runs daily at 5:28 AM)
 ./scripts/run-data-collection.sh
