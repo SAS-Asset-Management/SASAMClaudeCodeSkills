@@ -14,37 +14,52 @@ During the discovery interview, determine the presentation type based on:
 
 If the user does not specify a type, default to **Presentation** (standard narrative deck).
 
+**Remote delivery note:** For any type delivered over Microsoft Teams or Zoom (webinars, remote client workshops, investor updates over video), recommend the presenter switch the deck to **share mode** before joining the call — this is a codec friendly theme that compensates for video compression. See the "Sharing over Microsoft Teams or Zoom" section in SKILL.md.
+
 ---
 
 ## Type Definitions
 
 ### 1. Presentation
 
-**Standard narrative deck for conveying ideas or strategies with a story arc.**
+**Standard narrative deck using the Situation → Complication → Resolution arc. TED-style: more talking, less content.**
 
 | Attribute | Value |
 |-----------|-------|
-| Typical Slide Count | 10–20 |
-| Primary Layout | Mixed (full-bleed images / text-heavy / split) |
-| Tone | Professional |
-| Use Case | Conference talks; client workshops; internal strategy sessions |
+| Typical Slide Count | 6–12 |
+| Primary Layout | Mixed (question slides / full-bleed images / split / stat / breather) |
+| Tone | Professional, story-driven |
+| Use Case | Conference talks; client workshops; advisory presentations; strategy sessions |
 | Binary Background | Recommended |
+| Word Limit | 10 words or fewer per slide |
+| Key Points | 3 maximum |
 
 **Sections:**
 
-| Section | data-section | Footer Label |
-|---------|-------------|--------------|
-| Title | `opening` | OPENING |
-| Agenda | `agenda` | AGENDA |
-| Context / Problem | `context` | THE CONTEXT |
-| Key Points (3–5 slides) | `keypoints` | KEY POINTS |
-| Summary | `summary` | SUMMARY |
-| Next Steps | `nextsteps` | NEXT STEPS |
-| Close | `connection` | CLOSE |
+| Section | data-section | Footer Label | Act | Purpose |
+|---------|-------------|--------------|-----|---------|
+| Title | `title` | TITLE | — | Orient. Establish credibility. No agenda. |
+| Situation (Hook) | `situation` | SITUATION | 1 | Earn the next 20 minutes. Open with tension. |
+| Complication | `complication` | COMPLICATION | 2 | Introduce tension — the "but." |
+| Evidence | `evidence` | EVIDENCE | 2 | Prove it with data or imagery. |
+| Decisions | `decisions` | DECISIONS | 3 | Deliver the answer — the "therefore." |
+| Recommendation | `recommendation` | RECOMMENDATION | 3 | What the audience should DO. |
 
-**Key Components:** Speaker notes; progressive reveals (fragments); section dividers; branded footer
+**Slide Type Selection per Section:**
 
-**Reveal.js Overrides:** None — use defaults
+| Section | Recommended Slide Types |
+|---------|------------------------|
+| Title | Title slide (`.title-slide`) |
+| Situation | Question slide (`.slide-question`) or Stat slide (`.slide-stat`) |
+| Complication | Question slide, Breather (`.slide-breather`), or Standard split |
+| Evidence | Stat slide, Full bleed image (`.slide-fullbleed`), or Standard split with chart |
+| Decisions | Standard split or Question slide |
+| Recommendation | Card grid (3 items max) or Standard split |
+| Close | Contributions (`.slide-contributions`) — never "Thank You" or "Questions?" |
+
+**Key Components:** Speaker notes with transition cues (press S); question slides; breather slides; stat slides; full-bleed images; contributions close; progressive reveals (fragments)
+
+**Reveal.js Overrides:** `plugins: [RevealNotes]`
 
 ---
 
@@ -535,12 +550,17 @@ If the user does not specify a type, default to **Presentation** (standard narra
 
 ## Component Reference
 
-All presentation types share these reusable CSS components from `marcov-revealjs-styles.css`:
+All presentation types share these reusable CSS components from `base-styles.css`:
 
 | Component | CSS Class | Purpose |
 |-----------|-----------|---------|
+| Question Slide | `.slide-question` | Provocative question, centred. Tease with slide, tell with voice. |
+| Full Bleed Image | `.slide-fullbleed` | Single powerful image, edge to edge |
+| Breather (Dark Blank) | `.slide-breather` | Pure dark background, focus returns to speaker |
+| Stat / Single Number | `.slide-stat` | One bold number with context label |
+| Contributions (Final) | `.slide-contributions` + `.contributions-list` | What was accomplished. Stays visible during Q&A. |
 | Card | `.card` | Content container with border and shadow |
-| Card Grid | `.card-grid` + `.card-grid-2/3/4` | Responsive grid of cards |
+| Card Grid | `.card-grid` + `.card-grid-2/3/4` | Responsive grid of cards (3 max per slide) |
 | Table | `.ref-table` | Styled data table with accent headers |
 | Checklist | `.checklist` | List with check/square icons |
 | Badge | `.badge` + `.badge-required/recommended/optional` | Status indicator labels |
@@ -559,10 +579,13 @@ All presentation types share these reusable CSS components from `marcov-revealjs
 
 ## Reveal.js Default Configuration
 
-All types inherit this base configuration. Type-specific overrides are noted in each type definition above.
+All types inherit this base configuration. The Notes plugin is always included for speaker view (press S to open). Type-specific overrides are noted in each type definition above.
 
 ```javascript
 Reveal.initialize({
+  // Plugins
+  plugins: [RevealNotes],
+
   // Navigation
   hash: true,
   hashOneBasedIndex: false,

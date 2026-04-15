@@ -13,6 +13,46 @@ Every presentation MUST include the SAS-AM tagline on at least one slide (typica
 
 > "At SAS-AM we help organisations understand their strengths and weaknesses, model and predict the future, and make the right decisions through audit and benchmarking, advanced analytics and deep advisory services."
 
+## Presentation Philosophy
+
+**You are the medium. The slides are optional scenery.**
+
+Every presentation built by this skill follows these non-negotiable rules. They override all other guidance when there is a conflict.
+
+### The Rules
+
+| # | Rule | Enforcement |
+|---|------|-------------|
+| 01 | **One idea per talk** | The entire deck must be summarisable in a single sentence. If it needs three, you have three talks. |
+| 02 | **Three key points maximum** | Human working memory holds three things comfortably. Not four. Not six. Three. |
+| 03 | **10 words or fewer per slide** | Audience should glance and absorb in 3 seconds. If it takes longer, split the slide or move content to speaker notes. |
+| 04 | **No bullet point lists** | Bullet lists make the audience read instead of listen. Use single statements, full bleed images, data charts, or cards (3 max). |
+| 05 | **Tease with slides, tell with your voice** | The slide poses the question or shows the image. The speaker delivers the answer. If the slide contains everything you would say, you do not need to be in the room. |
+| 06 | **Start with something unexpected** | Never open with your name, title, or an agenda slide. Open with tension: a surprising fact, a short personal story, or a question the audience did not know they wanted answered. |
+| 07 | **Situation → Complication → Resolution** | The default B2B arc. Link acts with "but" and "therefore." This maps to: "Most clients do X [situation]. But this means Y [complication]. Therefore, we build Z [resolution]." |
+| 08 | **Closing echoes opening** | The hook and payoff must mirror each other. The audience should feel the circle close. |
+| 09 | **Final slide = Contributions** | Never end with "Thank You" or "Questions?" — those are weak closes. End with what you accomplished. This slide stays visible during Q&A (10+ minutes). |
+| 10 | **Dead laptop test** | Could you deliver this talk if your laptop died on the way in? If not, the slides carry too much weight. Build the talk first; add slides only where they genuinely add something you cannot say with words. |
+
+### Alternate Logic with Emotion
+
+Data earns trust. Stories earn belief. Alternate between the two throughout your talk. A sharp data point followed by a human example, followed by another data point. This is Nancy Duarte's "sparkline": what is vs. what could be.
+
+### Speaker Notes, Not Scripts
+
+Do not memorise word for word — you will sound like a robot reading a teleprompter. Memorise the six or so transitions between ideas. The content fills itself in naturally once you know your transitions cold. Speaker notes in `<aside class="notes">` should contain:
+
+- The transition phrase into this slide (e.g. "Which leads to the real problem...")
+- One key statistic or story beat to deliver verbally
+- Approximate timing
+- Recovery phrase if you lose your place (repeating your last sentence almost always acts as a memory jogger — the audience will think you are emphasising)
+
+### Sensory Storytelling
+
+Do not say "it was a difficult situation." Say "it was 2am, the control room smelled of burnt coffee, and every phone in the building was ringing at once." Sensory detail is the difference between a fact and a memory. During discovery, always ask: "Can you describe a specific moment — time, place, what you saw or heard?"
+
+---
+
 ## Overview
 
 This skill creates presentations following the marcov / SAS-AM communication style, which features:
@@ -24,8 +64,9 @@ This skill creates presentations following the marcov / SAS-AM communication sty
 - **Professional Typography**: Source Sans Pro + Source Code Pro font families
 - **Static Footer Navigation**: Section progress indicator with keyboard-accessible theme toggle
 - **Dual-Theme Assets**: Support for light/dark image variants
+- **Speaker Notes with Presenter View**: Reveal.js Notes plugin with transition cues, timing, and recovery phrases (press S to open)
 - **WCAG 2.1 AA Compliance**: Focus indicators, reduced motion, screen reader support
-- **marcov Standards Compliant**: All output follows marcov-revealjs-standards v1.0.0
+- **marcov Standards Compliant**: All output follows marcov-revealjs-standards v2.0.0
 
 ## Supported Presentation Types
 
@@ -95,29 +136,38 @@ Once the type is determined, confirm with the user: _"Based on what you've descr
 
 ### Phase 2: Gather Content Details
 
-5. **Topic & Key Message**
-   - What is this about?
-   - What is the single most important takeaway?
-   - Is there a specific call-to-action?
+5. **The One Sentence Test** (CRITICAL)
+   - _"What is the ONE sentence summary of your entire talk?"_ — If the answer takes more than two sentences, keep cutting. This enforces Rule 01 (one idea per talk).
 
-6. **Delivery Context**
-   - Where will this be presented? (conference, boardroom, webinar, shared via USB/email)
-   - How much time do you have? (affects slide count)
-   - Will you be presenting live or is it for self-navigation?
+6. **The Rule of Three**
+   - _"Give me three points that support that idea — no more."_ — These become the three content sections. If they give four, ask which one to cut.
 
-7. **Branding**
-   - Should we use marcov / SAS-AM branding (default) or a client's brand?
-   - If client branding, what are their brand colours?
+7. **The Hook**
+   - _"What is the most surprising thing about this topic? Something that would make someone stop scrolling."_ — This becomes the opening slide. It must not be the speaker's name, title, or an agenda.
 
-8. **Visual Assets**
-   - Do you have specific images, diagrams, or visualisations to include?
-   - Should I create conceptual SVG diagrams?
-   - Do you need a QR code for the closing slide?
+8. **Sensory Detail**
+   - _"Can you describe a specific moment — time, place, what you saw or heard?"_ — This feeds the storytelling component. Even data heavy presentations need one human moment.
 
-9. **Content Outline**
-   - Do you have existing content, bullet points, or a rough outline?
-   - What are the key sections or topics to cover?
-   - (Show the user the section list for the selected type and ask if they want to add/remove/reorder any)
+9. **The Ask**
+   - _"What should the audience DO differently after this?"_ — This becomes the Contributions/Recommendation slide. If the answer is vague, push for specifics.
+
+10. **Delivery Context**
+    - Where will this be presented? (conference, boardroom, webinar, shared via USB/email)
+    - How much time do you have? (affects slide count)
+    - Will you be presenting live or is it for self navigation?
+
+11. **Branding**
+    - Should we use marcov / SAS-AM branding (default) or a client's brand?
+    - If client branding, what are their brand colours?
+
+12. **Visual Assets**
+    - Do you have specific images, diagrams, or visualisations to include?
+    - Should I create conceptual SVG diagrams?
+    - Do you have photos from site visits, workshops, or real moments? (these are always better than stock)
+
+13. **Content Outline**
+    - Do you have existing content, bullet points, or a rough outline?
+    - (Show the user the section list for the selected type and ask if they want to add/remove/reorder any)
 
 ### Phase 3: Data & Visualisation Planning
 
@@ -203,17 +253,21 @@ Every chart MUST include a source attribution, either:
 
 ### Default Narrative Structure (for "Presentation" type)
 
-The default **Presentation** type uses this proven 7-section structure:
+The default **Presentation** type uses the Situation → Complication → Resolution arc, structured as three acts with a bold close:
 
-| Section | Purpose | Example |
-|---------|---------|---------|
-| **OPENING** | Hook the audience, reframe the problem | "Your Million-Dollar EAM System Might Just Be A Very Expensive Filing Cabinet" |
-| **THE CONTEXT** | Establish the current situation | "Siloed failures - one truck breaks down but the fleet learns nothing" |
-| **THE PROBLEM** | Identify specific pain points | "Cloud analytics can't make split-second decisions" |
-| **THE SOLUTION** | Present your answer | "Edge Federated Machine Learning" |
-| **THE IMPLEMENTATION** | Show how it works practically | "Start small. One asset class. One location." |
-| **THE FUTURE** | Vision and possibilities | "Maintenance schedules that write themselves" |
-| **THE CONNECTION** | Call to action | "Ready to make your assets intelligent?" |
+| Section | data-section | Act | Purpose | Format | Content Limit |
+|---------|-------------|-----|---------|--------|---------------|
+| **Title** | `title` | — | Orient the audience, establish credibility | Logo + bold heading + green subtitle + audience line | 8 words on h1. No agenda. |
+| **Situation** | `situation` | 1 (Hook) | Earn the next 20 minutes. Open with tension. | Single provocative statement, question, or big stat | One sentence. No name/title/agenda. |
+| **Complication** | `complication` | 2 (Meat) | Introduce the tension — the "but" | Question slide or single stat on dark background | One question or one number. Speaker explains. |
+| **Evidence** | `evidence` | 2 (Meat) | Prove the complication is real with data | Single chart, single metric, or full bleed image | One chart or one image. Source attribution. |
+| **Decisions** | `decisions` | 3 (Payoff) | Deliver the answer — the "therefore" | Split layout or single bold statement | 10 words max. Speaker delivers substance. |
+| **Recommendation** | `recommendation` | 3 (Payoff) | What the audience should DO | Three cards (max) or single recommendation | Three items, each 5 words or fewer. |
+| **Contributions** | `recommendation` | Close | What we accomplished. Stays visible during Q&A. | Numbered list. Never "Thank You" or "Questions?" | 3 items. Echoes the opening hook. |
+
+**Footer nav labels**: TITLE | SITUATION | COMPLICATION | EVIDENCE | DECISIONS | RECOMMENDATION
+
+**Key structural rule**: slides within the same act share a `data-section` value. Multiple slides can belong to the same section — the footer nav highlights the act, not the individual slide.
 
 Other types have their own section structures — see `references/presentation-types.md` for the full mapping.
 
@@ -292,7 +346,7 @@ Every presentation MUST include these required elements:
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- marcov Styles -->
   <link rel="stylesheet" href="styles.css">
@@ -317,10 +371,17 @@ See `references/scaffold-template.html` for the complete scaffold including Java
 
 ### Reveal.js Configuration
 
-All types inherit this base configuration:
+All types inherit this base configuration. The Notes plugin is always included for speaker view (press S to open).
+
+```html
+<!-- CDN scripts (before </body>) -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+```
 
 ```javascript
 Reveal.initialize({
+  plugins: [RevealNotes],
   hash: true,
   hashOneBasedIndex: false,
   respondToHashChanges: true,
@@ -362,9 +423,37 @@ Reveal.initialize({
 
 ### Theme Management
 
-Three states: `light` (default), `dark`, `system` (follows OS preference). Storage key: `marcov-presentation-theme`.
+Four states: `light` (default), `dark`, `share` (codec friendly mode for Teams / Zoom screen sharing), and `system` (follows OS preference). Storage key: `marcov-presentation-theme`. The theme toggle button cycles light → dark → share → light.
 
 The `data-theme` attribute is applied to `<html>`, `<body>`, and `.reveal-viewport`. All colours use CSS custom properties.
+
+### Sharing over Microsoft Teams or Zoom
+
+Screen sharing over Teams and Zoom compresses the slide stream with 4:2:0 chroma subsampling and adaptive bitrate. The common symptoms are washed out greens, faded text, invisible card borders, banded gradients, and muted greys that disappear against white.
+
+**Before joining a call, switch the deck to share mode.** Either:
+
+- Click the theme toggle until the broadcast icon shows, or
+- Open the deck with `?mode=share` appended to the URL (persists via localStorage)
+
+Share mode applies the following codec survival tactics:
+
+- Off white background (`#fafbfc`) instead of pure white — stops saturated colour from bleeding across chroma block boundaries
+- Darker, more saturated accent green (`#4F9A1E`) used for fills only, never text
+- Card borders thickened from 1px to 2px and darkened from 15 percent alpha to 45 percent
+- Shadows doubled in opacity so they survive compression
+- Decorative binary rain background hidden (at 3 percent alpha it becomes noise)
+- Full bleed gradient overlays replaced with solid scrims (gradients band heavily after quantisation)
+- Body font weight bumped from 400 to 500
+- Subpixel antialiasing disabled (chroma subsampling destroys it anyway)
+- Reveal slide canvas shrunk from 1920 by 1080 to 1440 by 810 so text scales up larger on the receiver's screen
+
+**Additional call settings to check:**
+
+- **Microsoft Teams:** untick *Include computer sound* unless playing video. Do NOT enable *Optimize for video clips* for slide only decks (that profile crushes still frame colour fidelity). Share the browser window, not the full screen, when possible.
+- **Zoom:** leave *Optimize for video* OFF unless playing embedded video. Use *Share sound* only if required.
+- Share a windowed 1080p browser rather than the full desktop — the encoder does not have to downscale.
+- Dark mode alone (without share) is also more codec friendly than pure light mode for slide only content (white text on dark navy survives chroma subsampling better than dark text on white).
 
 ### Footer Navigation
 
@@ -380,46 +469,48 @@ The `data-theme` attribute is applied to `<html>`, `<body>`, and `.reveal-viewpo
 
 ### 1. Title Slide
 
-The opening slide with logo, main title, subtitle, and author.
+Bold heading, green subtitle, audience line. No agenda.
 
 ```html
-<section id="title" class="title-slide" data-section="opening">
+<section id="title" class="title-slide" data-section="title">
   <div class="title-content">
     <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="title-logo logo-light">
     <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="title-logo logo-dark">
-    <h1>From Worthless Data to Intelligent Assets</h1>
-    <h2>Edge Federated ML in Real Work Asset Management</h2>
-    <p class="author">Shane Scriven – Founder + Managing Director SAS-AM</p>
+    <h1>Roster & Payroll Risk</h1>
+    <h2>Current State, Exposure & Transition Roadmap</h2>
+    <p class="author">Prepared for RS Leadership — GM, Directors & Depot Managers</p>
+    <p class="tagline">At SAS-AM we help organisations understand their strengths and weaknesses...</p>
   </div>
+  <aside class="notes">
+    Do NOT introduce yourself here. Let the title speak. Move to the hook immediately.
+    Timing: ~15 seconds on the title before advancing.
+  </aside>
 </section>
 ```
 
 **Typography:**
-- `<h1>`: 64px, weight 300, text-primary colour
-- `<h2>`: 36px, weight 400, accent colour (SAS Green)
+- `<h1>`: 96px, weight 700, text-primary colour, letter-spacing -1px
+- `<h2>`: 40px, weight 500, accent colour (SAS Green)
 - `.author`: 24px, text-muted colour
 
 ---
 
 ### 2. Standard Content Slide
 
-Two-column layout with content on left, image/visual on right.
+Two-column split layout. Content left, visual right. 10 words max on the content side.
 
 ```html
-<section id="unique-id" data-section="opening">
+<section id="unique-id" data-section="situation">
   <div class="slide-layout with-image">
-    <!-- Optional: Logo in top-right -->
-    <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="slide-logo logo-light">
-    <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="slide-logo logo-dark">
-
+    <img src="[CDN_LOGO_LIGHT]" alt="SAS Logo" class="slide-logo logo-light">
+    <img src="[CDN_LOGO_DARK]" alt="SAS Logo" class="slide-logo logo-dark">
     <div class="slide-header">
-      <span class="section-tag">OPENING</span>
+      <span class="section-tag">SITUATION</span>
     </div>
-
     <div class="slide-body split">
       <div class="slide-content">
         <h2 class="slide-title">REFRAMING ASSET DATA</h2>
-        <p class="slide-subtitle">Your Million-Dollar EAM System Might Just Be A Very Expensive Filing Cabinet</p>
+        <p class="slide-subtitle">Your EAM Is A Filing Cabinet</p>
       </div>
       <div class="slide-image">
         <img src="assets/visual-blue.png" alt="Description" class="logo-light">
@@ -427,80 +518,182 @@ Two-column layout with content on left, image/visual on right.
       </div>
     </div>
   </div>
+  <aside class="notes">
+    Transition: "Let me show you what we found..."
+    Key stat: [stat to deliver verbally]
+    Timing: ~3 minutes
+  </aside>
 </section>
 ```
 
 **Typography:**
 - `.section-tag`: 14px, weight 600, uppercase, letter-spacing 2px, accent colour
-- `.slide-title`: 72px, weight 700, uppercase, letter-spacing -1px, max-width 50%
+- `.slide-title`: 72px, weight 700, uppercase, letter-spacing -1px
 - `.slide-subtitle`: 36px, weight 300, text-secondary colour
 
 ---
 
-### 3. Slide with SVG Diagram
+### 3. Question Slide
 
-For conceptual diagrams, use inline SVG with CSS variables for theme support.
+Provocative question, centred. The slide teases; the speaker tells. Use for complication slides.
 
 ```html
-<section id="concept" data-section="solution">
-  <div class="slide-layout">
-    <div class="slide-header">
-      <span class="section-tag">THE SOLUTION</span>
-    </div>
-    <div class="slide-body split">
-      <div class="slide-content">
-        <h2 class="slide-title">EDGE FEDERATED ML</h2>
-        <p class="slide-subtitle">Place The Intelligence On The Asset</p>
-      </div>
-      <div class="slide-image">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
-          <!-- Use CSS variables for theme-aware colours -->
-          <rect fill="var(--bg-tertiary)" stroke="var(--card-border)" .../>
-          <circle fill="var(--accent)" .../>
-          <text fill="var(--text-primary)" font-family="Arial, sans-serif">...</text>
+<section id="complication-1" class="slide-question" data-section="complication">
+  <div class="question-text">What happens when <em>every sensor reading</em> is a missed opportunity?</div>
+  <aside class="notes">
+    Transition: "But here is where it breaks down..."
+    Pause after showing the question. Let the audience read it. Then answer verbally.
+    Timing: ~3 minutes.
+  </aside>
+</section>
+```
 
-          <!-- Animated elements -->
-          <circle r="5" fill="var(--accent)">
-            <animate attributeName="cy" values="0;100;0" dur="2s" repeatCount="indefinite"/>
-          </circle>
-        </svg>
-      </div>
-    </div>
+**Typography:**
+- `.question-text`: 72px, weight 700, text-primary colour
+- `em` within question: accent colour (SAS Green), no italic
+
+---
+
+### 4. Full Bleed Image Slide
+
+Single powerful image filling the screen. Optional text overlay at bottom.
+
+```html
+<section id="fullbleed-1" class="slide-fullbleed" data-section="evidence">
+  <img src="assets/site-visit.jpg" alt="Control room at 2am during the incident">
+  <div class="fullbleed-overlay">
+    <h2>The Night It Failed</h2>
+    <p>Depot 3, February 2024</p>
   </div>
+  <aside class="notes">
+    Let this image sit for 5 seconds before speaking.
+    Tell the story of what happened that night — sensory detail.
+    Timing: ~2 minutes.
+  </aside>
 </section>
 ```
 
 ---
 
-### 4. Step Animation Slide (Fragment Transitions)
+### 5. Breather Slide (Dark Blank)
+
+Pure dark background. All focus returns to the speaker. Use between acts.
+
+```html
+<section id="breather-1" class="slide-breather" data-section="evidence">
+  <div class="breather-text">So what changed?</div>
+  <aside class="notes">
+    This is a pause slide. Slow down. Make eye contact.
+    Deliver the transition to your resolution verbally.
+    Timing: ~30 seconds of silence before moving on.
+  </aside>
+</section>
+```
+
+---
+
+### 6. Stat / Single Number Slide
+
+One bold number with context. Use for impact data points.
+
+```html
+<section id="stat-1" class="slide-stat" data-section="evidence">
+  <div>
+    <div class="stat-number">$4.2M</div>
+    <div class="stat-label">Preventable Cost in 2023</div>
+  </div>
+  <aside class="notes">
+    Let the number land. Pause 3 seconds.
+    Then explain: "That is what a single undetected fault cost across the fleet last year."
+    Timing: ~1 minute.
+  </aside>
+</section>
+```
+
+---
+
+### 7. Contributions Slide (Final)
+
+What you accomplished. Stays visible during Q&A. Never "Thank You" or "Questions?"
+
+```html
+<section id="closing" class="slide-contributions" data-section="recommendation">
+  <h2>What We Covered</h2>
+  <ol class="contributions-list">
+    <li>Identified $4.2M in preventable roster exposure</li>
+    <li>Mapped three high risk transition points</li>
+    <li>Proposed a phased remediation roadmap</li>
+  </ol>
+  <div class="closing-branding" style="margin-top: auto;">
+    <img src="[CDN_LOGO_LIGHT]" alt="SAS Logo" class="closing-logo logo-light">
+    <img src="[CDN_LOGO_DARK]" alt="SAS Logo" class="closing-logo logo-dark">
+  </div>
+  <aside class="notes">
+    Close with a salute, not thanks: "And with that, I will conclude."
+    This slide stays up during Q&A. The audience will stare at it for 10+ minutes.
+    If you lose your place during Q&A, repeat your last point — it acts as a memory jogger.
+  </aside>
+</section>
+```
+
+---
+
+### 8. Standard Content Slide with SVG Diagram
+
+For conceptual diagrams, use inline SVG with CSS variables for theme support.
+
+```html
+<section id="concept" data-section="decisions">
+  <div class="slide-layout">
+    <div class="slide-header">
+      <span class="section-tag">DECISIONS</span>
+    </div>
+    <div class="slide-body split">
+      <div class="slide-content">
+        <h2 class="slide-title">EDGE FEDERATED ML</h2>
+        <p class="slide-subtitle">Intelligence On The Asset</p>
+      </div>
+      <div class="slide-image">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+          <rect fill="var(--bg-tertiary)" stroke="var(--card-border)" .../>
+          <circle fill="var(--accent)" .../>
+          <text fill="var(--text-primary)" font-family="Arial, sans-serif">...</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">
+    Walk through the diagram verbally. Do not turn to look at the screen.
+    Timing: ~3 minutes.
+  </aside>
+</section>
+```
+
+---
+
+### 9. Step Animation Slide (Fragment Transitions)
 
 Progressive reveal using Reveal.js fragments.
 
 ```html
-<section id="process" data-section="solution">
+<section id="process" data-section="decisions">
   <div class="slide-layout">
     <div class="slide-header">
-      <span class="section-tag">THE SOLUTION</span>
+      <span class="section-tag">DECISIONS</span>
     </div>
     <div class="slide-body split">
       <div class="slide-content">
-        <h2 class="slide-title">ON-ASSET TRAINING</h2>
-        <p class="slide-subtitle">Train a local ML model where the data is generated</p>
+        <h2 class="slide-title">THREE PHASES</h2>
       </div>
       <div class="slide-image diagram-container">
-        <!-- Step 1: Visible by default, fades out when advancing -->
         <div class="federated-diagram step-1 fragment fade-out" data-fragment-index="1">
           <img src="assets/step-1-blue.png" class="logo-light">
           <img src="assets/step-1-green.png" class="logo-dark">
         </div>
-
-        <!-- Step 2: Fades in, then out -->
         <div class="federated-diagram step-2 fragment fade-in-then-out" data-fragment-index="1">
           <img src="assets/step-2-blue.png" class="logo-light">
           <img src="assets/step-2-green.png" class="logo-dark">
         </div>
-
-        <!-- Step 3: Final state, fades in and stays -->
         <div class="federated-diagram step-3 fragment fade-in" data-fragment-index="2">
           <img src="assets/step-3-blue.png" class="logo-light">
           <img src="assets/step-3-green.png" class="logo-dark">
@@ -508,24 +701,27 @@ Progressive reveal using Reveal.js fragments.
       </div>
     </div>
   </div>
+  <aside class="notes">
+    Advance fragments with arrow keys. Each step builds on the last.
+    Timing: ~1 minute per step.
+  </aside>
 </section>
 ```
 
 ---
 
-### 5. Closing/CTA Slide
+### 10. Closing/CTA Slide (Alternative to Contributions)
 
-Call-to-action with QR code and branding.
+Call to action with QR code. Use when the presentation needs a direct next step rather than a summary.
 
 ```html
-<section id="closing" data-section="connection">
+<section id="closing" data-section="recommendation">
   <div class="slide-layout closing">
     <div class="slide-header">
-      <span class="section-tag">THE CONNECTION</span>
+      <span class="section-tag">RECOMMENDATION</span>
     </div>
     <div class="slide-body centered">
       <h2 class="closing-headline">Ready To Make Your Assets Intelligent?</h2>
-
       <div class="qr-wrapper">
         <div class="qr-container">
           <div class="qr-glow"></div>
@@ -536,14 +732,17 @@ Call-to-action with QR code and branding.
           <p class="qr-label">Learn more about Edge AI in Asset Management</p>
         </div>
       </div>
-
       <div class="closing-branding">
-        <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="closing-logo logo-light">
-        <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="closing-logo logo-dark">
+        <img src="[CDN_LOGO_LIGHT]" alt="SAS Logo" class="closing-logo logo-light">
+        <img src="[CDN_LOGO_DARK]" alt="SAS Logo" class="closing-logo logo-dark">
         <p class="closing-search"><i class="fas fa-search"></i> EDGE AI ASSET MANAGEMENT</p>
       </div>
     </div>
   </div>
+  <aside class="notes">
+    Close with a salute: "And with that, I will conclude."
+    Keep this slide up during Q&A.
+  </aside>
 </section>
 ```
 
@@ -646,16 +845,19 @@ Call-to-action with QR code and branding.
 
 | Element | Font Size | Weight | Colour | Other |
 |---------|-----------|--------|--------|-------|
-| Title Slide h1 | 64px | 300 | text-primary | line-height 1.2 |
-| Title Slide h2 | 36px | 400 | accent | - |
-| Author | 24px | 400 | text-muted | - |
+| Title Slide h1 | 96px | 700 | text-primary | line-height 1.1, letter-spacing -1px |
+| Title Slide h2 | 40px | 500 | accent | — |
+| Author | 24px | 400 | text-muted | — |
 | Section Tag | 14px | 600 | accent | uppercase, letter-spacing 2px |
-| Slide Title | 72px | 700 | text-primary | uppercase, letter-spacing -1px, max-width 50% |
+| Slide Title | 72px | 700 | text-primary | uppercase, letter-spacing -1px |
 | Slide Subtitle | 36px | 300 | text-secondary | line-height 1.4 |
-| Footer Nav | 11px | 600 | text-muted | uppercase, letter-spacing 1.5px |
+| Question Text | 72px | 700 | text-primary | em = accent colour |
+| Stat Number | 160px | 700 | accent | line-height 1 |
+| Stat Label | 36px | 300 | text-secondary | uppercase, letter-spacing 3px |
+| Footer Nav | 13px | 700 | text-secondary | uppercase, letter-spacing 2px |
 
 **Font Families:**
-- Source Sans Pro (300, 400, 600, 700 weights) — body text, headings
+- Source Sans Pro (300, 400, 500, 600, 700 weights) — body text, headings
 - Source Code Pro (400, 600 weights) — code blocks, inline code, keyboard badges
 
 ---
@@ -784,8 +986,13 @@ These CSS components are available in `base-styles.css` for use across all prese
 
 | Component | CSS Class | Use For |
 |-----------|-----------|---------|
+| Question Slide | `.slide-question` | Provocative question, centred. Tease with slide, tell with voice. |
+| Full Bleed Image | `.slide-fullbleed` | Single powerful image, edge to edge |
+| Breather (Dark Blank) | `.slide-breather` | Pure dark background, focus returns to speaker |
+| Stat / Single Number | `.slide-stat` | One bold number with context label |
+| Contributions (Final) | `.slide-contributions` + `.contributions-list` | What was accomplished. Stays visible during Q&A. |
 | Card | `.card` | Content container with border and shadow |
-| Card Grid | `.card-grid` + `.card-grid-2/3/4` | Responsive grid of cards |
+| Card Grid | `.card-grid` + `.card-grid-2/3/4` | Responsive grid of cards (3 max per slide) |
 | Table | `.ref-table` | Styled data table with accent headers |
 | Checklist | `.checklist` + `.check-icon` | Lists with check/square icons |
 | Badge | `.badge` + `.badge-required/recommended/optional` | Status indicator labels (RAG) |
@@ -849,9 +1056,13 @@ For additional chart types or custom visualisation components, source them via t
 Conduct the discovery interview to:
 1. **Identify the presentation type** using Phase 1 questions (purpose, audience, slide count, content format)
 2. **Confirm the type** with the user
-3. **Gather content details** using Phase 2 questions (topic, delivery context, branding, assets, outline)
-4. **Review the section structure** for the selected type (from `references/presentation-types.md`) and confirm any additions or removals
-5. **Plan data visualisations** using Phase 3 questions — for each data-driven slide, identify chart type, data source (file vs anecdotal), and confirm values before building
+3. **Get the one sentence summary** (Phase 2, question 5) — this is the single most important discovery question
+4. **Get the three supporting points** (Phase 2, question 6) — these become the content sections
+5. **Get the hook** (Phase 2, question 7) — this becomes the opening slide
+6. **Get a sensory moment** (Phase 2, question 8) — this feeds into speaker notes
+7. **Get the ask** (Phase 2, question 9) — this becomes the close
+8. **Gather remaining details** (delivery context, branding, assets, outline)
+9. **Plan data visualisations** using Phase 3 questions — for each data-driven slide, identify chart type, data source (file vs anecdotal), and confirm values before building
 
 ### Step 2: Create Presentation Structure
 
@@ -863,30 +1074,39 @@ Conduct the discovery interview to:
 ### Step 3: Build Content Slides
 
 Work through slides incrementally:
-1. Create title slide
-2. Build out each section following the type's section structure
-3. Add section-appropriate `data-section` attributes (matching `references/presentation-types.md`)
-4. Update footer nav items to match the sections
-5. Apply any type-specific Reveal.js overrides
-6. Include dual-theme images where needed
-7. Use the appropriate reusable components (cards, tables, badges, etc.) for the type
-8. Add charts and data visualisations from `references/chart-components.html` where needed — copy the inline SVG pattern and adjust data values
-9. For UI components or chart types not in the reference library, use the `21st` CLI outside Claude Code to search and fetch pre built React/SVG components:
-   ```bash
-   21st search "animated progress bar"
-   21st fetch "data dashboard card"
-   ```
-   Fetched components must be adapted to use SAS CSS variables (`var(--chart-1)` through `var(--chart-6)`, `var(--text-primary)`, etc.) and include `role="img"` with `aria-label` for accessibility
+1. **Title slide** — bold heading (96px/700), green subtitle, audience line. No agenda.
+2. **Hook/Situation slide** — the surprising opening. Question slide, stat slide, or single statement.
+3. **Content slides** — one per key point (max 3). Choose slide type per the Slide Selection Guide. Enforce 10 word limit.
+4. **Breather slides** — insert dark blank slides between acts for emphasis moments.
+5. **Contributions/Close** — echo the opening hook. List what was accomplished.
+6. For each slide, write **speaker notes** in `<aside class="notes">`:
+   - Transition phrase into this slide
+   - One key stat or story beat to deliver verbally
+   - Approximate timing
+7. Update footer nav items to match the sections
+8. Apply any type-specific Reveal.js overrides
+9. Include dual-theme images where needed
+10. Add charts and data visualisations from `references/chart-components.html` where needed
+11. For UI components or chart types not in the reference library, use the `21st` CLI outside Claude Code
 
-### Step 4: Review and Refine
+### Step 4: Word Count Audit
+
+Before finalising, audit every slide against the 10 word rule:
+1. Count visible text elements per slide (headings, subtitles, stat labels, card headings)
+2. If any slide exceeds 10 words, move content to speaker notes
+3. Check that no bullet point lists exist anywhere in the deck
+4. Verify the dead laptop test: could this talk be delivered without the slides?
+
+### Step 5: Review and Refine
 
 1. Test navigation in browser
 2. Verify light/dark mode toggle
 3. Check all images load correctly
 4. Ensure footer navigation tracks correctly
-5. Run the pre-delivery checklist (see below)
+5. Test speaker view (press S) — verify notes display correctly
+6. Run the full pre-delivery checklist (see below)
 
-### Step 5: Export (Optional)
+### Step 6: Export (Optional)
 
 For PDF export:
 ```bash
@@ -902,29 +1122,64 @@ npx decktape reveal "presentation.html" output.pdf --screenshots --screenshots-d
 
 ## Content Writing Guidelines
 
+### The 10 Word Rule
+
+Every slide — including titles, subtitles, questions, and stat labels — must contain **10 words or fewer** of visible text. Speaker notes carry the substance. The slide earns curiosity; your voice delivers the reward.
+
+**Counting words**: count only visible text elements (h1, h2, subtitle, stat label, card headings). Do not count section tags, logos, or speaker notes. Card grids with 3 items: each card heading counts towards the total, so keep each to 2-3 words.
+
 ### Headlines (Slide Titles)
 
 - **Format**: ALL CAPS, punchy, memorable
 - **Length**: 2-5 words
-- **Style**: Action-oriented or provocative
+- **Style**: Action oriented or provocative
 - **Examples**:
   - "REFRAMING ASSET DATA"
   - "SILOED FAILURES"
-  - "REAL-TIME ACTION"
+  - "PREDICTABLE RISK"
 
 ### Subtitles
 
 - **Format**: Title Case, explanatory
-- **Length**: One sentence (10-20 words)
+- **Length**: One sentence, **10 words maximum** (combined with headline)
 - **Style**: Expands on the headline with a specific insight
 - **Examples**:
-  - "Your Million-Dollar EAM System Might Just Be A Very Expensive Filing Cabinet"
-  - "Every Sensor Reading Into Your EAM Represents A Missed Opportunity"
+  - "Your EAM Is A Filing Cabinet"
+  - "Every Sensor Reading Is A Missed Opportunity"
 
 ### Section Tags
 
 - **Format**: ALL CAPS
-- **Options**: OPENING, THE CONTEXT, THE PROBLEM, THE SOLUTION, THE IMPLEMENTATION, THE FUTURE, THE CONNECTION
+- **Default options**: TITLE, SITUATION, COMPLICATION, EVIDENCE, DECISIONS, RECOMMENDATION
+
+### What NOT to Put on a Slide
+
+| Banned | Why | Alternative |
+|--------|-----|-------------|
+| Bullet point lists | Audience reads instead of listens | Single statement, card grid (3 max), or image |
+| Full sentences | Slide becomes a teleprompter | Compress to 3-5 words. Move detail to speaker notes. |
+| Your name / title | Weak opening. Forgettable. | Introduce yourself verbally after the hook, if at all. |
+| Agenda slides | Kill momentum before you start | Jump straight to the hook. |
+| "Thank You" or "Questions?" | Weak close. Implies audience was trapped. | Contributions slide. Salute: "And with that, I will conclude." |
+| White blank slides | Look broken | Dark breather slides (`.slide-breather`) |
+| Animations without meaning | Subtract attention | Only use fade/dissolve. Fragment reveals for progressive build. |
+| Stock images without purpose | Generic and forgettable | Use your own photos (site visits, equipment, real moments). If stock, apply a colour overlay. |
+
+### Slide Selection Guide
+
+When building each slide, choose the type based on what the slide needs to achieve:
+
+| What you need | Slide type | CSS class |
+|--------------|------------|-----------|
+| Open with tension | Question slide | `.slide-question` |
+| Show a single powerful image | Full bleed image | `.slide-fullbleed` |
+| Land a shocking number | Stat slide | `.slide-stat` |
+| Pause between acts | Breather (dark blank) | `.slide-breather` |
+| Explain with a visual | Standard split layout | `.slide-layout .split` |
+| Show three recommendations | Card grid | `.card-grid-3` |
+| Close the talk | Contributions | `.slide-contributions` |
+| Progressive reveal | Fragment transitions | Reveal.js fragments |
+| Direct CTA with QR | Closing/CTA | `.slide-layout.closing` |
 
 ---
 
@@ -934,8 +1189,10 @@ npx decktape reveal "presentation.html" output.pdf --screenshots --screenshots-d
 @media screen and (max-width: 1400px) {
   .slide-title { font-size: 56px; }
   .slide-subtitle { font-size: 28px; }
-  .title-slide h1 { font-size: 48px; }
-  .title-slide h2 { font-size: 28px; }
+  .title-slide h1 { font-size: 72px; }
+  .title-slide h2 { font-size: 32px; }
+  .slide-question .question-text { font-size: 56px; }
+  .slide-stat .stat-number { font-size: 120px; }
   .ref-title { font-size: 44px; }
   .ref-subtitle { font-size: 24px; }
   .card-grid-3 { grid-template-columns: repeat(2, 1fr); }
@@ -944,8 +1201,11 @@ npx decktape reveal "presentation.html" output.pdf --screenshots --screenshots-d
 @media screen and (max-width: 1000px) {
   .slide-body.split { flex-direction: column; }
   .slide-image { max-height: 300px; }
-  .nav-items { gap: 15px; }
-  .nav-item { font-size: 10px; }
+  .title-slide h1 { font-size: 56px; }
+  .slide-question .question-text { font-size: 40px; }
+  .slide-stat .stat-number { font-size: 88px; }
+  .nav-items { gap: 20px; }
+  .nav-item { font-size: 11px; }
   .split-layout { flex-direction: column; }
   .card-grid-2, .card-grid-3, .card-grid-4 { grid-template-columns: 1fr; }
 }
@@ -1052,6 +1312,24 @@ Example (Yarra Trams):
 
 ## Pre-Delivery Checklist
 
+### Presentation Philosophy
+- [ ] Entire talk summarisable in one sentence (one idea)
+- [ ] Three key points or fewer
+- [ ] Every slide has 10 words or fewer of visible text
+- [ ] No bullet point lists anywhere in the deck
+- [ ] First 30 seconds do not contain name, title, or agenda
+- [ ] Closing slide echoes the opening hook
+- [ ] Final slide is Contributions (not "Thank You" or "Questions?")
+- [ ] Dead laptop test passes — could deliver this without slides
+
+### Speaker Notes
+- [ ] Every slide has `<aside class="notes">` with content
+- [ ] Notes contain transition phrase (not a full script)
+- [ ] Notes contain one key stat or story beat
+- [ ] Notes contain approximate timing
+- [ ] RevealNotes plugin loaded and `plugins: [RevealNotes]` in config
+- [ ] Speaker view opens correctly (press S)
+
 ### HTML Compliance
 - [ ] `<!DOCTYPE html>` declared
 - [ ] `lang="en-AU"` set
@@ -1100,4 +1378,6 @@ Example (Yarra Trams):
 - [ ] Presentation type identified and confirmed
 - [ ] Section structure follows the type definition
 - [ ] Tone matches the type (formal, punchy, narrative, etc.)
+- [ ] At least one story with sensory detail
+- [ ] Logic and emotion alternate throughout (data → story → data)
 - [ ] SAS-AM tagline included on at least one slide

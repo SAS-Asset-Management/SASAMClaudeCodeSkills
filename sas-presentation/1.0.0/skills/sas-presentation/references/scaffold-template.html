@@ -16,7 +16,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- marcov Styles -->
   <link rel="stylesheet" href="styles.css">
@@ -32,32 +32,137 @@
 
         <!-- ================================================================
              SLIDE 1 — TITLE
+             Purpose: Orient the audience. Establish credibility.
+             Format: Logo + bold heading + green subtitle + audience line.
+             Content: 8 words max on heading. No agenda. No name.
              ================================================================ -->
-        <section id="title" class="title-slide" data-section="opening">
+        <section id="title" class="title-slide" data-section="title">
           <div class="title-content">
             <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="title-logo logo-light">
             <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="title-logo logo-dark">
             <h1>{{MAIN_TITLE}}</h1>
             <h2>{{SUBTITLE}}</h2>
-            <p class="author">{{AUTHOR}}</p>
+            <p class="author">{{AUDIENCE_LINE}}</p>
             <p class="tagline">At SAS-AM we help organisations understand their strengths and weaknesses, model and predict the future, and make the right decisions through audit and benchmarking, advanced analytics and deep advisory services.</p>
           </div>
+          <aside class="notes">
+            Do NOT introduce yourself here. Let the title speak. Move to the hook immediately.
+            Timing: ~15 seconds on the title before advancing.
+          </aside>
         </section>
 
         <!-- ================================================================
-             SLIDE 2 — OPENING
+             ACT 1 — THE HOOK
              ================================================================ -->
-        <section id="opening-1" data-section="opening">
-          <div class="slide-layout with-image">
+
+        <!-- SLIDE 2 — SITUATION
+             Purpose: Earn the next 20 minutes. Open with tension.
+             Format: Single provocative statement, question, or stat.
+             Content: One sentence. No name, title, or agenda.
+             ================================================================ -->
+        <section id="situation-1" data-section="situation">
+          <div class="slide-layout">
             <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="slide-logo logo-light">
             <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="slide-logo logo-dark">
             <div class="slide-header">
-              <span class="section-tag">OPENING</span>
+              <span class="section-tag">SITUATION</span>
+            </div>
+            <div class="slide-body">
+              <div class="slide-content">
+                <h2 class="slide-title">{{HOOK_STATEMENT}}</h2>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            Transition: Open with this — no preamble.
+            This is your empowerment promise. Tell them what they will know by the end.
+            Timing: ~2 minutes. Deliver the story behind this statement verbally.
+          </aside>
+        </section>
+
+        <!-- ================================================================
+             ACT 2 — THE MEAT (three key ideas maximum)
+             ================================================================ -->
+
+        <!-- SLIDE 3 — COMPLICATION (the "but")
+             Purpose: Introduce the tension. What goes wrong.
+             Format: Question slide or single stat on dark background.
+             Content: One question or one number. Speaker explains.
+             ================================================================ -->
+        <section id="complication-1" class="slide-question" data-section="complication">
+          <div class="question-text">{{COMPLICATION_QUESTION}}</div>
+          <aside class="notes">
+            Transition: "But here is where it breaks down..."
+            Pause after showing the question. Let the audience read it. Then answer verbally.
+            Timing: ~3 minutes. Alternate between the data point and a human example.
+          </aside>
+        </section>
+
+        <!-- SLIDE 4 — EVIDENCE (data point)
+             Purpose: Prove the complication is real.
+             Format: Single chart, single metric, or full bleed image.
+             Content: One chart or one number. Source attribution required.
+             ================================================================ -->
+        <section id="evidence-1" data-section="evidence">
+          <div class="slide-layout">
+            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="slide-logo logo-light">
+            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="slide-logo logo-dark">
+            <div class="slide-header">
+              <span class="section-tag">EVIDENCE</span>
             </div>
             <div class="slide-body split">
               <div class="slide-content">
-                <h2 class="slide-title">SLIDE TITLE HERE</h2>
-                <p class="slide-subtitle">Subtitle explaining the key point of this slide</p>
+                <h2 class="slide-title">{{EVIDENCE_TITLE}}</h2>
+                <p class="slide-subtitle">{{EVIDENCE_INSIGHT}}</p>
+              </div>
+              <div class="slide-image">
+                <!-- Chart or data visual goes here -->
+                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+                  Chart / Data Visual
+                </div>
+              </div>
+            </div>
+          </div>
+          <aside class="notes">
+            Transition: "And the data backs this up..."
+            Narrate the chart — do not read it. Point out the one thing that matters.
+            Timing: ~3 minutes.
+          </aside>
+        </section>
+
+        <!-- SLIDE 5 — BREATHER (optional)
+             Purpose: Pull all focus back to you before the resolution.
+             Format: Dark blank slide. No content.
+             ================================================================ -->
+        <section id="breather-1" class="slide-breather" data-section="evidence">
+          <div class="breather-text">{{OPTIONAL_TRANSITION_PHRASE}}</div>
+          <aside class="notes">
+            This is a pause slide. Slow down. Make eye contact.
+            Deliver the transition to your resolution verbally.
+            Timing: ~30 seconds of silence before moving on.
+          </aside>
+        </section>
+
+        <!-- ================================================================
+             ACT 3 — THE PAYOFF
+             ================================================================ -->
+
+        <!-- SLIDE 6 — RESOLUTION (the "therefore")
+             Purpose: Deliver the answer. Echo the hook.
+             Format: Split layout or single bold statement.
+             Content: 10 words max. Speaker delivers the substance.
+             ================================================================ -->
+        <section id="resolution-1" data-section="decisions">
+          <div class="slide-layout">
+            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="slide-logo logo-light">
+            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="slide-logo logo-dark">
+            <div class="slide-header">
+              <span class="section-tag">DECISIONS</span>
+            </div>
+            <div class="slide-body split">
+              <div class="slide-content">
+                <h2 class="slide-title">{{RESOLUTION_TITLE}}</h2>
+                <p class="slide-subtitle">{{RESOLUTION_INSIGHT}}</p>
               </div>
               <div class="slide-image">
                 <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
@@ -66,160 +171,71 @@
               </div>
             </div>
           </div>
+          <aside class="notes">
+            Transition: "Therefore, what we recommend is..."
+            This is your answer. Link it back to the opening hook — close the circle.
+            Timing: ~3 minutes.
+          </aside>
         </section>
 
-        <!-- ================================================================
-             SLIDE 3 — CONTEXT
+        <!-- SLIDE 7 — RECOMMENDATION
+             Purpose: What the audience should DO. Three items max.
+             Format: Three cards or a single bold recommendation.
+             Content: Three items, each 5 words or fewer.
              ================================================================ -->
-        <section id="context-1" data-section="context">
-          <div class="slide-layout with-image">
+        <section id="recommendation-1" data-section="recommendation">
+          <div class="slide-layout">
             <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="slide-logo logo-light">
             <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="slide-logo logo-dark">
             <div class="slide-header">
-              <span class="section-tag">THE CONTEXT</span>
+              <span class="section-tag">RECOMMENDATION</span>
             </div>
-            <div class="slide-body split">
+            <div class="slide-body">
               <div class="slide-content">
-                <h2 class="slide-title">CONTEXT TITLE</h2>
-                <p class="slide-subtitle">Setting the scene for your audience</p>
-              </div>
-              <div class="slide-image">
-                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
-                  Visual Placeholder
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ================================================================
-             SLIDE 4 — PROBLEM
-             ================================================================ -->
-        <section id="problem-1" data-section="problem">
-          <div class="slide-layout with-image">
-            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="slide-logo logo-light">
-            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="slide-logo logo-dark">
-            <div class="slide-header">
-              <span class="section-tag">THE PROBLEM</span>
-            </div>
-            <div class="slide-body split">
-              <div class="slide-content">
-                <h2 class="slide-title">PROBLEM TITLE</h2>
-                <p class="slide-subtitle">Identifying the specific pain point</p>
-              </div>
-              <div class="slide-image">
-                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
-                  Visual Placeholder
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ================================================================
-             SLIDE 5 — SOLUTION
-             ================================================================ -->
-        <section id="solution-1" data-section="solution">
-          <div class="slide-layout with-image">
-            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="slide-logo logo-light">
-            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="slide-logo logo-dark">
-            <div class="slide-header">
-              <span class="section-tag">THE SOLUTION</span>
-            </div>
-            <div class="slide-body split">
-              <div class="slide-content">
-                <h2 class="slide-title">SOLUTION TITLE</h2>
-                <p class="slide-subtitle">Your answer to the problem</p>
-              </div>
-              <div class="slide-image">
-                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
-                  Visual Placeholder
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ================================================================
-             SLIDE 6 — IMPLEMENTATION
-             ================================================================ -->
-        <section id="implementation-1" data-section="implementation">
-          <div class="slide-layout with-image">
-            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="slide-logo logo-light">
-            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="slide-logo logo-dark">
-            <div class="slide-header">
-              <span class="section-tag">THE IMPLEMENTATION</span>
-            </div>
-            <div class="slide-body split">
-              <div class="slide-content">
-                <h2 class="slide-title">IMPLEMENTATION</h2>
-                <p class="slide-subtitle">How it works in practice</p>
-              </div>
-              <div class="slide-image">
-                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
-                  Visual Placeholder
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ================================================================
-             SLIDE 7 — FUTURE
-             ================================================================ -->
-        <section id="future-1" data-section="future">
-          <div class="slide-layout with-image">
-            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="slide-logo logo-light">
-            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="slide-logo logo-dark">
-            <div class="slide-header">
-              <span class="section-tag">THE FUTURE</span>
-            </div>
-            <div class="slide-body split">
-              <div class="slide-content">
-                <h2 class="slide-title">FUTURE VISION</h2>
-                <p class="slide-subtitle">Where this leads</p>
-              </div>
-              <div class="slide-image">
-                <div style="width: 400px; height: 300px; background: var(--bg-tertiary); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
-                  Visual Placeholder
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ================================================================
-             SLIDE 8 — CLOSING / CTA
-             ================================================================ -->
-        <section id="closing" data-section="connection">
-          <div class="slide-layout closing">
-            <div class="slide-header">
-              <span class="section-tag">THE CONNECTION</span>
-            </div>
-            <div class="slide-body centered">
-              <h2 class="closing-headline">{{CTA_HEADLINE}}</h2>
-
-              <div class="qr-wrapper">
-                <div class="qr-container">
-                  <div class="qr-glow"></div>
-                  <!-- Replace with actual QR code -->
-                  <div class="qr-code" style="display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 14px;">
-                    QR Code
+                <h2 class="slide-title">{{RECOMMENDATION_TITLE}}</h2>
+                <div class="card-grid card-grid-3" style="margin-top: 40px;">
+                  <div class="card">
+                    <h3>{{REC_1_TITLE}}</h3>
+                  </div>
+                  <div class="card">
+                    <h3>{{REC_2_TITLE}}</h3>
+                  </div>
+                  <div class="card">
+                    <h3>{{REC_3_TITLE}}</h3>
                   </div>
                 </div>
-                <div class="qr-cta">
-                  <span class="qr-action">SCAN TO CONNECT</span>
-                  <p class="qr-label">{{QR_LABEL}}</p>
-                </div>
-              </div>
-
-              <div class="closing-branding">
-                <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="closing-logo logo-light">
-                <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="closing-logo logo-dark">
-                <p class="closing-search"><i class="fas fa-search"></i> {{SEARCH_TERM}}</p>
               </div>
             </div>
           </div>
+          <aside class="notes">
+            Transition: "So what does this mean for you? Three things..."
+            Expand on each card verbally. The cards are labels, not explanations.
+            Timing: ~3 minutes.
+          </aside>
+        </section>
+
+        <!-- ================================================================
+             SLIDE 8 — CONTRIBUTIONS (Final Slide)
+             Purpose: What we accomplished. Stays visible during Q&A.
+             Format: Numbered list of contributions.
+             Content: Never "Thank You" or "Questions?" — those are weak closes.
+             ================================================================ -->
+        <section id="closing" class="slide-contributions" data-section="recommendation">
+          <h2>What We Covered</h2>
+          <ol class="contributions-list">
+            <li>{{CONTRIBUTION_1}}</li>
+            <li>{{CONTRIBUTION_2}}</li>
+            <li>{{CONTRIBUTION_3}}</li>
+          </ol>
+          <div class="closing-branding" style="margin-top: auto;">
+            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="closing-logo logo-light">
+            <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="closing-logo logo-dark">
+          </div>
+          <aside class="notes">
+            Close with a salute, not thanks: "And with that, I will conclude."
+            This slide stays up during Q&A. The audience will stare at it for 10+ minutes.
+            If you lose your place during Q&A, repeat your last point — it acts as a memory jogger.
+          </aside>
         </section>
 
       </div>
@@ -229,18 +245,18 @@
     <footer class="static-footer">
       <div class="footer-content">
         <div class="nav-items">
-          <span class="nav-item" data-section="opening">OPENING</span>
-          <span class="nav-item" data-section="context">THE CONTEXT</span>
-          <span class="nav-item" data-section="problem">THE PROBLEM</span>
-          <span class="nav-item" data-section="solution">THE SOLUTION</span>
-          <span class="nav-item" data-section="implementation">THE IMPLEMENTATION</span>
-          <span class="nav-item" data-section="future">THE FUTURE</span>
-          <span class="nav-item" data-section="connection">THE CONNECTION</span>
+          <span class="nav-item" data-section="title">TITLE</span>
+          <span class="nav-item" data-section="situation">SITUATION</span>
+          <span class="nav-item" data-section="complication">COMPLICATION</span>
+          <span class="nav-item" data-section="evidence">EVIDENCE</span>
+          <span class="nav-item" data-section="decisions">DECISIONS</span>
+          <span class="nav-item" data-section="recommendation">RECOMMENDATION</span>
         </div>
         <div class="footer-controls">
-          <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark mode">
+          <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light, dark, or share mode">
             <i class="fas fa-sun light-icon"></i>
             <i class="fas fa-moon dark-icon"></i>
+            <i class="fas fa-tower-broadcast share-icon"></i>
           </button>
         </div>
       </div>
@@ -249,19 +265,24 @@
 
   <!-- Reveal.js -->
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <!-- Reveal.js Speaker Notes Plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
 
   <script>
     // ================================================================
     //  THEME MANAGEMENT
     // ================================================================
     const STORAGE_KEY = 'marcov-presentation-theme';
+    const VALID_THEMES = ['light', 'dark', 'share'];
 
     function getSystemTheme() {
       return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     }
 
     function setTheme(theme) {
-      const resolved = theme === 'system' ? getSystemTheme() : theme;
+      const resolved = theme === 'system'
+        ? getSystemTheme()
+        : (VALID_THEMES.includes(theme) ? theme : 'light');
       document.documentElement.setAttribute('data-theme', resolved);
       document.body.setAttribute('data-theme', resolved);
       const viewport = document.querySelector('.reveal-viewport');
@@ -269,13 +290,25 @@
       localStorage.setItem(STORAGE_KEY, theme);
     }
 
+    // Cycle: light -> dark -> share -> light
     function toggleTheme() {
       const current = document.documentElement.getAttribute('data-theme') || 'light';
-      setTheme(current === 'light' ? 'dark' : 'light');
+      const next = current === 'light' ? 'dark' : (current === 'dark' ? 'share' : 'light');
+      setTheme(next);
+      // Re-sync Reveal dimensions so text scales appropriately for the mode.
+      if (typeof Reveal !== 'undefined' && Reveal.configure) {
+        const shareMode = next === 'share';
+        Reveal.configure({ width: shareMode ? 1440 : 1760, height: shareMode ? 810 : 990 });
+        Reveal.layout();
+      }
     }
 
-    // Initialise theme
-    setTheme(localStorage.getItem(STORAGE_KEY) || 'light');
+    // URL param wins over localStorage. Use ?mode=share to auto-enable share mode.
+    const urlMode = new URLSearchParams(window.location.search).get('mode');
+    const initialTheme = VALID_THEMES.includes(urlMode)
+      ? urlMode
+      : (localStorage.getItem(STORAGE_KEY) || 'light');
+    setTheme(initialTheme);
 
     // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
@@ -286,7 +319,17 @@
     // ================================================================
     //  REVEAL.JS INITIALISATION
     // ================================================================
+    // Share mode shrinks the slide canvas so everything scales up larger
+    // on the receiver's screen. This compensates for the extra downscale
+    // step during Teams/Zoom screen capture.
+    const activeTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const slideWidth = activeTheme === 'share' ? 1440 : 1760;
+    const slideHeight = activeTheme === 'share' ? 810 : 990;
+
     Reveal.initialize({
+      // Plugins
+      plugins: [RevealNotes],
+
       // Navigation
       hash: true,
       hashOneBasedIndex: false,
@@ -298,9 +341,10 @@
       showSlideNumber: 'speaker',
       center: false,
 
-      // Dimensions (16:9)
-      width: 1920,
-      height: 1080,
+      // Dimensions (16:9). Slightly smaller than 1920x1080 so hardcoded
+      // px sizes render proportionally larger after Reveal's fit-scale.
+      width: slideWidth,
+      height: slideHeight,
       margin: 0,
       minScale: 0.2,
       maxScale: 2.0,

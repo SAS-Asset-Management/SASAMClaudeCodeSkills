@@ -5,6 +5,59 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-04-15
+
+### Added
+- **sas-presentation** New `share` theme mode, designed to survive Microsoft Teams and Zoom screen share compression:
+  - Codec friendly colour palette: off white background (`#fafbfc`), darkened accent green (`#4F9A1E`), solid (non alpha) text colours, doubled shadow opacity, 2px borders
+  - Decorative low alpha elements disabled: binary rain background hidden, full bleed gradient overlays replaced with solid scrims, QR radial glow replaced with solid outline
+  - Subpixel antialiasing disabled in share mode (4:2:0 chroma subsampling destroys it anyway)
+  - Reveal canvas shrinks to 1440 by 810 in share mode so text scales larger on the receiver's screen
+  - Theme toggle now cycles light → dark → share → light with dedicated broadcast icon
+  - URL param `?mode=share` auto activates share mode and persists to localStorage
+  - New SKILL.md section "Sharing over Microsoft Teams or Zoom" documents root causes of washout (chroma subsampling, bitrate adaptation, gamut conversion) and call side settings (Teams "Optimize for video clips" off, Zoom "Optimize for video" off)
+
+### Changed
+- **sas-presentation** Default Reveal slide canvas shrunk from 1920 by 1080 to 1760 by 990 — globally increases apparent text size by ~9 percent for better readability in all modes
+- **sas-presentation** Base `.reveal` font size bumped from 24px to 28px, cascading to elements without explicit sizes
+
+## [1.8.0] - 2026-04-13
+
+### Changed
+- **sas-presentation** Major refactor of presentation philosophy and slide guidance (v2.0.0 standards)
+  - Added **Presentation Philosophy** preamble with 10 non-negotiable rules (one idea, rule of three, 10 word limit, no bullet lists, tease don't tell, unexpected opening, S→C→R arc, closing echoes opening, contributions final slide, dead laptop test)
+  - Restructured default Presentation type from 7-section narrative to **Situation → Complication → Resolution** three-act arc
+  - New footer nav labels: TITLE | SITUATION | COMPLICATION | EVIDENCE | DECISIONS | RECOMMENDATION
+  - **Louder headings**: title slide h1 increased from 64px/300 to 96px/700 (bold, commanding)
+  - **Louder nav bar**: footer nav items increased from 11px/600 to 13px/700 with stronger default colour and thicker active underline
+  - Title slide h2 updated from 36px/400 to 40px/500
+  - Google Fonts now loads weight 500 for subtitle typography
+
+### Added
+- **sas-presentation** 5 new slide types with full CSS and HTML templates:
+  - **Question slide** (`.slide-question`) — provocative centred text, tease with slide, tell with voice
+  - **Full bleed image slide** (`.slide-fullbleed`) — edge to edge image with optional gradient overlay
+  - **Breather slide** (`.slide-breather`) — dark blank slide to pull focus back to speaker
+  - **Stat / single number slide** (`.slide-stat`) — bold 160px number with context label
+  - **Contributions slide** (`.slide-contributions`) — numbered list of what was accomplished, replaces "Thank You" close
+- **sas-presentation** Reveal.js **Speaker Notes** fully integrated:
+  - RevealNotes plugin loaded from CDN in scaffold template
+  - Every scaffold slide includes `<aside class="notes">` with transition cues, timing, and recovery phrases
+  - Speaker view opens with S key — shows current slide, next preview, notes, and timer
+  - SKILL.md documents speaker notes structure (transition phrase, key stat, timing, recovery)
+- **sas-presentation** Tighter discovery process with 5 new Phase 2 questions:
+  - One sentence test (enforces single idea)
+  - Rule of three (caps supporting points)
+  - Hook question (feeds opening slide)
+  - Sensory detail request (feeds storytelling)
+  - The ask (feeds close/recommendation)
+- **sas-presentation** Content writing guidelines expanded:
+  - 10 word rule enforcement with counting methodology
+  - Slide selection guide (maps intent to slide type)
+  - "What NOT to put on a slide" table with banned items and alternatives
+  - Word count audit step added to workflow
+- **sas-presentation** Pre-delivery checklist expanded with presentation philosophy and speaker notes sections
+
 ## [1.7.0] - 2026-04-08
 
 ### Added

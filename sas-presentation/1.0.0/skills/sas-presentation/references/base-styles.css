@@ -117,6 +117,73 @@
 }
 
 /* ============================
+   SHARE MODE
+   Codec friendly theme for MS Teams / Zoom screen sharing.
+   Designed to survive 4:2:0 chroma subsampling, low bitrate,
+   and sRGB / BT.709 gamut conversion without washing out.
+
+   Key tactics:
+   * Off white background (#fafbfc) avoids saturated-colour-on-pure-white
+     chroma bleed.
+   * All low alpha tokens replaced with solid or high alpha equivalents.
+   * Accent green darkened (#4F9A1E) so it survives desaturation and is
+     readable as text at WCAG AA.
+   * Borders and shadows boosted; paired with the width overrides at the
+     bottom of this file (border 1px => 2px).
+   ============================ */
+:root[data-theme="share"] {
+  /* SAS Brand Colours (darker, codec resilient) */
+  --sas-green: #4F9A1E;
+  --sas-blue: #002244;
+
+  /* Slide backgrounds (off white stops chroma bleed on pure #fff) */
+  --bg-primary: #fafbfc;
+  --bg-secondary: #eef1f4;
+  --bg-tertiary: #e1e6ec;
+
+  /* Text - all solid, higher contrast */
+  --text-primary: #001a33;
+  --text-secondary: #1a3558;
+  --text-muted: #4a5563;
+
+  /* Accent - fills only; never used as text in share mode */
+  --accent: #4F9A1E;
+  --accent-hover: #3d7a17;
+
+  /* Cards - solid fill, heavy border */
+  --card-bg: #ffffff;
+  --card-border: rgba(0, 34, 68, 0.45);
+
+  /* Footer */
+  --footer-bg: #e1e6ec;
+  --footer-border: rgba(0, 34, 68, 0.55);
+
+  /* Shadows - doubled alpha so they survive compression */
+  --shadow-sm: 0 2px 8px rgba(0, 34, 68, 0.22);
+  --shadow-md: 0 4px 16px rgba(0, 34, 68, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 34, 68, 0.38);
+
+  /* Focus */
+  --focus-ring: 0 0 0 3px rgba(79, 154, 30, 0.6);
+
+  /* Code */
+  --code-bg: #e1e6ec;
+  --code-text: #001a33;
+
+  /* Chart Palette (saturated, codec resilient) */
+  --chart-1: #4F9A1E;
+  --chart-2: #002244;
+  --chart-3: #1E56A8;
+  --chart-4: #C77700;
+  --chart-5: #B8222E;
+  --chart-6: #6339A3;
+  --chart-grid: rgba(0, 34, 68, 0.3);
+  --chart-axis: rgba(0, 34, 68, 0.65);
+  --chart-tooltip-bg: #002244;
+  --chart-tooltip-text: #ffffff;
+}
+
+/* ============================
    RESETS
    ============================ */
 
@@ -205,7 +272,7 @@ body {
   flex: 1;
   width: 100%;
   font-family: "Source Sans Pro", Helvetica, sans-serif;
-  font-size: 24px;
+  font-size: 28px;
   color: var(--text-primary);
   background: var(--bg-primary);
 }
@@ -244,7 +311,7 @@ body {
   width: 100%;
   background: var(--footer-bg);
   border-top: 1px solid var(--footer-border);
-  padding: 16px 40px;
+  padding: 20px 40px;
 }
 
 .footer-content {
@@ -257,41 +324,42 @@ body {
 
 .nav-items {
   display: flex;
-  gap: 30px;
+  gap: 40px;
   flex-wrap: wrap;
 }
 
 .nav-item {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1.5px;
-  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
   text-transform: uppercase;
-  transition: color 150ms ease;
+  transition: color 150ms ease, background 150ms ease;
   position: relative;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 6px 12px;
   border-radius: 4px;
 }
 
 .nav-item:hover {
   color: var(--text-primary);
+  background: rgba(105, 190, 40, 0.06);
 }
 
 .nav-item.active {
   color: var(--accent);
-  background: rgba(105, 190, 40, 0.1);
+  background: rgba(105, 190, 40, 0.12);
 }
 
 .nav-item.active::after {
   content: '';
   position: absolute;
-  bottom: -8px;
+  bottom: -10px;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: var(--accent);
-  border-radius: 1px;
+  border-radius: 2px;
 }
 
 /* Footer controls */
@@ -367,17 +435,18 @@ body {
 }
 
 .title-slide h1 {
-  font-size: 64px;
-  font-weight: 300;
+  font-size: 96px;
+  font-weight: 700;
   color: var(--text-primary);
-  margin: 0 0 20px 0;
-  line-height: 1.2;
+  margin: 0 0 24px 0;
+  line-height: 1.1;
   text-transform: none;
+  letter-spacing: -1px;
 }
 
 .title-slide h2 {
-  font-size: 36px;
-  font-weight: 400;
+  font-size: 40px;
+  font-weight: 500;
   color: var(--accent);
   margin: 0 0 60px 0;
   text-transform: none;
@@ -729,6 +798,185 @@ body {
 
 .closing-search i {
   margin-right: 10px;
+}
+
+/* ============================
+   QUESTION SLIDE
+   Provocative question, centred.
+   The slide teases; the speaker tells.
+   ============================ */
+
+.slide-question {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px;
+}
+
+.slide-question .question-text {
+  font-size: 72px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.15;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.slide-question .question-text em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+/* ============================
+   FULL BLEED IMAGE SLIDE
+   Single powerful image, edge to edge.
+   ============================ */
+
+.slide-fullbleed {
+  padding: 0 !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide-fullbleed img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.slide-fullbleed .fullbleed-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px 60px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  color: #ffffff;
+}
+
+.slide-fullbleed .fullbleed-overlay h2 {
+  font-size: 48px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+}
+
+.slide-fullbleed .fullbleed-overlay p {
+  font-size: 22px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+/* ============================
+   BREATHER SLIDE (Dark Blank)
+   Pure black. All focus returns
+   to the speaker.
+   ============================ */
+
+.slide-breather {
+  background: #0a0a0a !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-breather .breather-text {
+  font-size: 36px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  max-width: 60%;
+  line-height: 1.5;
+}
+
+/* ============================
+   STAT / SINGLE NUMBER SLIDE
+   One bold number with context.
+   ============================ */
+
+.slide-stat {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.slide-stat .stat-number {
+  font-size: 160px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  margin: 0 0 24px 0;
+}
+
+.slide-stat .stat-label {
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--text-secondary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/* ============================
+   CONTRIBUTIONS SLIDE (Final)
+   What we accomplished. Stays
+   visible during Q&A.
+   ============================ */
+
+.slide-contributions {
+  display: flex !important;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 80px;
+}
+
+.slide-contributions h2 {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 60px 0;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+}
+
+.contributions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: contribution;
+}
+
+.contributions-list li {
+  counter-increment: contribution;
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+}
+
+.contributions-list li::before {
+  content: counter(contribution);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 32px;
+}
+
+.contributions-list li:last-child {
+  border-bottom: none;
 }
 
 /* ============================
@@ -1935,11 +2183,19 @@ html.reveal-viewport {
   }
 
   .title-slide h1 {
-    font-size: 48px;
+    font-size: 72px;
   }
 
   .title-slide h2 {
-    font-size: 28px;
+    font-size: 32px;
+  }
+
+  .slide-question .question-text {
+    font-size: 56px;
+  }
+
+  .slide-stat .stat-number {
+    font-size: 120px;
   }
 
   .ref-title {
@@ -1965,15 +2221,27 @@ html.reveal-viewport {
   }
 
   .nav-items {
-    gap: 15px;
+    gap: 20px;
   }
 
   .nav-item {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .static-footer {
-    padding: 12px 20px;
+    padding: 14px 20px;
+  }
+
+  .title-slide h1 {
+    font-size: 56px;
+  }
+
+  .slide-question .question-text {
+    font-size: 40px;
+  }
+
+  .slide-stat .stat-number {
+    font-size: 88px;
   }
 
   .split-layout {
@@ -1983,6 +2251,110 @@ html.reveal-viewport {
   .card-grid-2, .card-grid-3, .card-grid-4 {
     grid-template-columns: 1fr;
   }
+}
+
+/* ============================
+   SHARE MODE OVERRIDES
+   Applied when [data-theme="share"] is active.
+   These overrides compensate for video codec damage to decorative,
+   low alpha, and narrow stroke elements.
+   ============================ */
+
+/* Turn off subpixel antialiasing; 4:2:0 chroma subsampling destroys it
+   anyway and the crisper glyphs survive encoding better. */
+:root[data-theme="share"] {
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+}
+
+/* Heavier body weight survives compression without looking "thin". */
+:root[data-theme="share"] body {
+  font-weight: 500;
+}
+
+/* Hide the binary rain; at 3 to 4 percent alpha it becomes noise. */
+:root[data-theme="share"] .binary-background {
+  display: none !important;
+}
+
+/* Thicken the footer rule. */
+:root[data-theme="share"] .static-footer {
+  border-top-width: 2px;
+}
+
+/* Thicken the theme toggle border. */
+:root[data-theme="share"] .theme-toggle {
+  border-width: 2px;
+}
+
+/* Thicken every card / panel / badge border that uses --card-border.
+   These selectors mirror the ten 1px borders declared elsewhere in
+   this file. */
+:root[data-theme="share"] .card,
+:root[data-theme="share"] .asset-node,
+:root[data-theme="share"] .ref-table th,
+:root[data-theme="share"] .ref-table td,
+:root[data-theme="share"] .checklist li,
+:root[data-theme="share"] .kbd,
+:root[data-theme="share"] pre,
+:root[data-theme="share"] .code-block,
+:root[data-theme="share"] .stat-card,
+:root[data-theme="share"] .panel,
+:root[data-theme="share"] .chip,
+:root[data-theme="share"] .tag,
+:root[data-theme="share"] .callout,
+:root[data-theme="share"] .split-card,
+:root[data-theme="share"] .metric-card,
+:root[data-theme="share"] .resume-card,
+:root[data-theme="share"] .quote-card,
+:root[data-theme="share"] .qr-card {
+  border-width: 2px !important;
+}
+
+/* Replace the bottom fade gradient on full-bleed overlays with a solid
+   scrim; gradients band heavily after quantisation. */
+:root[data-theme="share"] .slide-fullbleed .fullbleed-overlay,
+:root[data-theme="share"] .fullbleed-overlay {
+  background: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Replace the QR radial glow with a solid outline. */
+:root[data-theme="share"] .qr-glow,
+:root[data-theme="share"] .qr-pulse {
+  background: transparent !important;
+  border: 3px solid var(--accent) !important;
+  animation: none !important;
+  opacity: 1 !important;
+}
+
+/* Reduce emphasis on hover background chips so they do not shift under
+   compression. */
+:root[data-theme="share"] .nav-item:hover {
+  background: rgba(79, 154, 30, 0.18);
+}
+:root[data-theme="share"] .nav-item.active {
+  background: rgba(79, 154, 30, 0.28);
+}
+
+/* Slightly larger base text so slides remain legible after downscale
+   and bitrate compression on the receiver. */
+:root[data-theme="share"] .reveal {
+  font-size: 32px;
+}
+
+/* Share mode icon visibility: show the share icon only, hide sun/moon. */
+:root[data-theme="share"] .theme-toggle .light-icon { display: none; }
+:root[data-theme="share"] .theme-toggle .dark-icon { display: none; }
+:root[data-theme="share"] .theme-toggle .share-icon { display: block; }
+:root:not([data-theme="share"]) .theme-toggle .share-icon { display: none; }
+
+/* Share mode uses the light-mode logo against the off-white background. */
+:root[data-theme="share"] .logo-light { display: block !important; }
+:root[data-theme="share"] .logo-dark { display: none !important; }
+
+/* Share mode binary column (should be hidden, but colour for safety). */
+:root[data-theme="share"] .binary-column {
+  color: transparent;
 }
 
 /* ============================
