@@ -295,12 +295,6 @@
       const current = document.documentElement.getAttribute('data-theme') || 'light';
       const next = current === 'light' ? 'dark' : (current === 'dark' ? 'share' : 'light');
       setTheme(next);
-      // Re-sync Reveal dimensions so text scales appropriately for the mode.
-      if (typeof Reveal !== 'undefined' && Reveal.configure) {
-        const shareMode = next === 'share';
-        Reveal.configure({ width: shareMode ? 1440 : 1760, height: shareMode ? 810 : 990 });
-        Reveal.layout();
-      }
     }
 
     // URL param wins over localStorage. Use ?mode=share to auto-enable share mode.
@@ -319,12 +313,9 @@
     // ================================================================
     //  REVEAL.JS INITIALISATION
     // ================================================================
-    // Share mode shrinks the slide canvas so everything scales up larger
-    // on the receiver's screen. This compensates for the extra downscale
-    // step during Teams/Zoom screen capture.
-    const activeTheme = document.documentElement.getAttribute('data-theme') || 'light';
-    const slideWidth = activeTheme === 'share' ? 1440 : 1760;
-    const slideHeight = activeTheme === 'share' ? 810 : 990;
+    // Slide canvas is the same across all theme modes so text sizes match.
+    const slideWidth = 1760;
+    const slideHeight = 990;
 
     Reveal.initialize({
       // Plugins

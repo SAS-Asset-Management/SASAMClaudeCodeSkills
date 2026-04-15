@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] - 2026-04-15
+
+### Changed
+- **sas-presentation** Share mode now uses the same Reveal canvas (1760 by 990) and `.reveal` font size as light/dark — text size matches across all three modes. The earlier 1440 by 810 share canvas made share mode text noticeably larger than the other modes.
+
 ## [1.9.0] - 2026-04-15
 
 ### Added

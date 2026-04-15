@@ -2336,12 +2336,6 @@ html.reveal-viewport {
   background: rgba(79, 154, 30, 0.28);
 }
 
-/* Slightly larger base text so slides remain legible after downscale
-   and bitrate compression on the receiver. */
-:root[data-theme="share"] .reveal {
-  font-size: 32px;
-}
-
 /* Share mode icon visibility: show the share icon only, hide sun/moon. */
 :root[data-theme="share"] .theme-toggle .light-icon { display: none; }
 :root[data-theme="share"] .theme-toggle .dark-icon { display: none; }

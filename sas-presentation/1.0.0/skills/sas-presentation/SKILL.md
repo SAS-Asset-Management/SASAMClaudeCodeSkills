@@ -446,7 +446,6 @@ Share mode applies the following codec survival tactics:
 - Full bleed gradient overlays replaced with solid scrims (gradients band heavily after quantisation)
 - Body font weight bumped from 400 to 500
 - Subpixel antialiasing disabled (chroma subsampling destroys it anyway)
-- Reveal slide canvas shrunk from 1920 by 1080 to 1440 by 810 so text scales up larger on the receiver's screen
 
 **Additional call settings to check:**
 
