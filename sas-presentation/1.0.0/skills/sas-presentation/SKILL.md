@@ -78,6 +78,7 @@ This skill creates presentations following the marcov / SAS-AM communication sty
 | **Dashboard** | 3–8 | Grid / Card-based | Monthly reporting, operational reviews |
 | **Chart** | 1–3 | Centred visual | LinkedIn posts, data storytelling |
 | **Resume / CV** | 3–6 | Split (sidebar + main) | Tender submissions, team profiles |
+| **A4 Document** | 1–4 pages | Single-column print layout | Proposal letters, executive summaries, email PDFs |
 | **Proposal** | 10–15 | Mixed (narrative + structured) | Client proposals, tender responses |
 | **Capability Brochure** | 8–12 | Visual-heavy / Magazine | Business development, conference handouts |
 | **Case Study** | 6–10 | Storytelling arc | BD meetings, tender evidence |
@@ -91,6 +92,8 @@ This skill creates presentations following the marcov / SAS-AM communication sty
 | **Meeting Minutes** | 3–6 | Structured / List-based | Post-meeting distribution, governance |
 
 For full type definitions including sections, components, and Reveal.js overrides, see `references/presentation-types.md`.
+
+> **Case Study → downloadable PDF?** If the user wants a client-facing PDF artefact (website download, email attachment), use the print-first template at `references/case-study-template.md` instead of a Reveal.js deck. Reveal decks are 1760×990 landscape and do not export cleanly to A4 via Chrome headless. The case-study-template delivers an 8-page A4 portrait print document with a full component library (cover, stat tiles, timeline, before/after grid, testimonial card, lessons grid, CTA back cover) and the correct Chrome export command. Logo alignment rules (SVG aspect preservation, `currentColor` client wordmarks, no white-box logo wrappers) are documented there.
 
 ## Discovery Process (CRITICAL)
 

@@ -277,13 +277,17 @@ If the user does not specify a type, default to **Presentation** (standard narra
 
 **Project outcome narrative demonstrating value delivered.**
 
+> **Choose the format before you start:**
+> - **Screen deck** (BD meetings, webinar, live present) → use the Reveal.js scaffold with the sections below
+> - **Downloadable PDF artefact** (website resource, email attachment, tender evidence) → use the **print-first template** at `references/case-study-template.md`. Do NOT try to export a Reveal.js deck via Chrome headless — aspect ratio mismatch produces letterboxed, shrunk output. For Reveal → PDF, use `npx decktape reveal presentation.html output.pdf` instead.
+
 | Attribute | Value |
 |-----------|-------|
-| Typical Slide Count | 6–10 |
+| Typical Slide Count | 6–10 (deck) · 8 pages (print artefact) |
 | Primary Layout | Storytelling (problem → solution → result) |
 | Tone | Narrative / Evidence-based |
 | Use Case | BD meetings; website content; tender evidence |
-| Binary Background | Optional |
+| Binary Background | Optional (deck only — never print) |
 
 **Sections:**
 
@@ -299,9 +303,17 @@ If the user does not specify a type, default to **Presentation** (standard narra
 | Testimonial | `testimonial` | TESTIMONIAL |
 | Lessons Learned | `lessons` | LESSONS |
 
-**Key Components:** Before/after visuals; metric callouts (stat cards); client logo; quote block; timeline
+**Key Components:** Before/after outcomes grid; metric stat tiles (4 up); vertical timeline with numbered phase nodes; testimonial quote card with avatar; 2×2 lessons grid; back-cover CTA with 3-item contact grid.
+
+**SVG Logo Alignment Rules (apply to both deck and print):**
+- Use width-based sizing with `height: auto` — never set both width and height on an SVG (distorts it)
+- SAS primary logo: `viewBox 0 0 371 53` (7:1 horizontal lockup) — load from Webflow CDN
+- For white rendering on dark backgrounds: `filter: brightness(0) invert(1)`
+- For client wordmarks: strip any decorative swoosh/background shapes from the source SVG, set all paths to `fill="currentColor"`, inline the SVG in HTML (not `<img src>`), and tint via CSS `color:`
+- Anti-pattern: `background: white` wrappers around client logos, translucent `rgba(255,255,255,0.08)` logo boxes
 
 **Reveal.js Overrides:** None — use defaults
+**Print template:** See `references/case-study-template.md` for full component CSS blueprints, `@page` rules, and the Chrome headless export command.
 
 ---
 
@@ -545,6 +557,81 @@ If the user does not specify a type, default to **Presentation** (standard narra
 **Key Components:** Attendee list; decision log (`.ref-table`); action table with RAG (`.badge`); agenda checklist (`.checklist`); follow-up dates
 
 **Reveal.js Overrides:** None — use defaults
+
+---
+
+### 18. A4 Document
+
+**Print-ready single-page HTML document formatted for A4 paper. Used when the output needs to be emailed, printed, or saved as a PDF — not presented on a screen.**
+
+> **Critical distinction:** This type does NOT use Reveal.js. It is a standalone HTML document with `@media print` styles and `@page { size: A4 portrait; }`. Use `playwright pdf` to export to PDF. Do NOT attempt to use decktape or Reveal.js export — they produce letterboxed output.
+
+| Attribute | Value |
+|-----------|-------|
+| Typical Page Count | 1–4 A4 pages |
+| Primary Layout | Single-column with numbered sections |
+| Tone | Formal / Professional |
+| Use Case | Proposal letters; executive summaries; leave-behind documents; PDFs for email |
+| Binary Background | None (print document) |
+| Font | Inter (Google Fonts) |
+
+**Sections:**
+
+| Section | Purpose |
+|---------|---------|
+| Cover | Logo, document type pill, title, subtitle, metadata (date, reference, prepared for), tagline |
+| Numbered Sections | Body content with `.section-number` badge and `.section-title` heading |
+| Pricing Table | `.pricing-wrap` — dark header, highlight row, total row |
+| Value Comparison | `.value-compare` — two coloured blocks (navy vs green) with label, amount, sub-label |
+| Signature Block | `.sig-block` — two-column grid with sign-off lines |
+| Document Footer | Brand name, contact, tagline. Separated by green top border. |
+
+**Key CSS Components:**
+
+| Class | Purpose |
+|-------|---------|
+| `.page` | A4 container: `width: 210mm`, `padding: 16mm 18mm`, white background, centred |
+| `.cover` | Header section with green bottom border |
+| `.doc-type` | Green pill badge (e.g. "Partner Proposal") |
+| `.section` | Numbered content block |
+| `.section-number` | Green circle with white number |
+| `.stat-row` / `.stat-card` | Horizontal stat tiles with large green value |
+| `.feature-list` | Checklist with green tick prefix |
+| `.steps` / `.step` | Numbered process steps in light cards |
+| `.two-col` | Two-column grid for lists |
+| `.pricing-wrap` | Full-width bordered pricing table |
+| `.callout` | Green left-border callout box |
+| `.value-compare` | Side-by-side navy/green value blocks |
+| `.terms-list` | Two-column term/value list |
+| `.next-steps` / `.ns-item` | Numbered next steps with green circle |
+| `.sig-block` | Two-column signature grid |
+| `.doc-footer` | Footer with brand and tagline |
+
+**SAS Brand Variables (A4 Document):**
+
+```css
+:root {
+  --sas-navy: #002244;
+  --sas-green: #69BE28;
+  --sas-green-light: rgba(105, 190, 40, 0.1);
+  --sas-green-border: rgba(105, 190, 40, 0.3);
+  --text-primary: #002244;
+  --text-secondary: #334466;
+  --text-muted: #6b7280;
+  --bg-secondary: #f7f8fa;
+  --border: #e2e6ea;
+}
+```
+
+**PDF Export:**
+
+```bash
+playwright pdf "file:///absolute/path/to/document.html" output.pdf --paper-format A4 --wait-for-timeout 3000
+```
+
+**Template Reference:** `references/proposal-a4-template.html` — a complete working A4 proposal document with all components. Copy and adapt content; do not modify the CSS structure.
+
+**Reveal.js Overrides:** Not applicable — this type does not use Reveal.js.
 
 ---
 

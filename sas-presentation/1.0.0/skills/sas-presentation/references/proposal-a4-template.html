@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="marcov.WOclassifier — Work Order Intelligence as a Service. Partner Proposal prepared for Jitesh.">
+  <title>marcov.WOclassifier — Partner Proposal | SAS Asset Management</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===========================
+       VARIABLES — SAS BRAND
+       =========================== */
+    :root {
+      --sas-navy: #002244;
+      --sas-green: #69BE28;
+      --sas-green-light: rgba(105, 190, 40, 0.1);
+      --sas-green-border: rgba(105, 190, 40, 0.3);
+      --text-primary: #002244;
+      --text-secondary: #334466;
+      --text-muted: #6b7280;
+      --bg-page: #ffffff;
+      --bg-secondary: #f7f8fa;
+      --bg-tertiary: #eef0f3;
+      --border: #e2e6ea;
+      --shadow: 0 2px 12px rgba(0, 34, 68, 0.08);
+    }
+
+    /* ===========================
+       RESET & BASE
+       =========================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #e8ecf0;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    /* ===========================
+       A4 PAGE CONTAINER
+       =========================== */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      background: var(--bg-page);
+      margin: 24px auto;
+      padding: 16mm 18mm 18mm 18mm;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    /* ===========================
+       COVER SECTION
+       =========================== */
+    .cover {
+      border-bottom: 3px solid var(--sas-green);
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+    }
+
+    .cover-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 32px;
+    }
+
+    .cover-logo img {
+      height: 36px;
+      width: auto;
+    }
+
+    .cover-meta {
+      text-align: right;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .cover-meta strong {
+      color: var(--text-secondary);
+    }
+
+    .doc-type {
+      display: inline-block;
+      background: var(--sas-green-light);
+      color: var(--sas-green);
+      border: 1px solid var(--sas-green-border);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .cover-title {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--sas-navy);
+      line-height: 1.2;
+      margin-bottom: 10px;
+    }
+
+    .cover-subtitle {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .cover-tagline {
+      font-size: 12px;
+      font-style: italic;
+      color: var(--text-muted);
+      max-width: 480px;
+      line-height: 1.6;
+      border-left: 3px solid var(--sas-green);
+      padding-left: 12px;
+    }
+
+    /* ===========================
+       SECTION HEADINGS
+       =========================== */
+    .section {
+      margin-bottom: 28px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--sas-green);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--sas-navy);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===========================
+       BODY COPY
+       =========================== */
+    p {
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    /* ===========================
+       STAT ROW
+       =========================== */
+    .stat-row {
+      display: flex;
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    .stat-card .stat-val {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--sas-green);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card .stat-lbl {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ===========================
+       FEATURE LIST
+       =========================== */
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feature-list li:last-child { border-bottom: none; }
+
+    .feature-list li::before {
+      content: "✓";
+      color: var(--sas-green);
+      font-weight: 700;
+      font-size: 13px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ===========================
+       PROCESS STEPS
+       =========================== */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px 14px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .step-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--sas-navy);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-body strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .step-body span {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    /* ===========================
+       TWO COLUMN LAYOUT
+       =========================== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 10px 0;
+    }
+
+    /* ===========================
+       PRICING TABLE
+       =========================== */
+    .pricing-wrap {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 14px 0;
+    }
+
+    .pricing-wrap table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .pricing-wrap th {
+      background: var(--sas-navy);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 10px 16px;
+      text-align: left;
+    }
+
+    .pricing-wrap td {
+      padding: 11px 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .pricing-wrap tr:last-child td { border-bottom: none; }
+
+    .pricing-wrap tr.highlight td {
+      background: var(--sas-green-light);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .pricing-wrap tr.total td {
+      background: var(--sas-navy);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    td.price {
+      font-weight: 700;
+      color: var(--sas-navy);
+      white-space: nowrap;
+    }
+
+    td.note {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ===========================
+       CALLOUT BOX
+       =========================== */
+    .callout {
+      background: var(--sas-green-light);
+      border: 1px solid var(--sas-green-border);
+      border-left: 4px solid var(--sas-green);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 14px 0;
+    }
+
+    .callout-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--sas-green);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .callout p {
+      font-size: 13px;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .callout .callout-big {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--sas-green);
+    }
+
+    /* ===========================
+       VALUE COMPARISON BLOCK
+       =========================== */
+    .value-compare {
+      display: flex;
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .value-block {
+      flex: 1;
+      border-radius: 10px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+
+    .value-block.large {
+      background: var(--sas-navy);
+      color: #ffffff;
+    }
+
+    .value-block.small {
+      background: var(--sas-green);
+      color: #ffffff;
+    }
+
+    .value-block .vb-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      opacity: 0.8;
+      margin-bottom: 6px;
+    }
+
+    .value-block .vb-amount {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .value-block .vb-sub {
+      font-size: 12px;
+      opacity: 0.75;
+    }
+
+    .value-vs {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* ===========================
+       TERMS LIST
+       =========================== */
+    .terms-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0;
+    }
+
+    .terms-list li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 8px 0 8px 0;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 12px;
+    }
+
+    .terms-list li:last-child { border-bottom: none; }
+
+    .terms-list li strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ===========================
+       NEXT STEPS
+       =========================== */
+    .next-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      counter-reset: ns;
+    }
+
+    .ns-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .ns-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--sas-green);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .ns-body strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .ns-body span {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    /* ===========================
+       SIGNATURE BLOCK
+       =========================== */
+    .sig-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .sig-party {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .sig-party .party-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .sig-line {
+      border-bottom: 1px solid var(--sas-navy);
+      height: 28px;
+      margin-bottom: 6px;
+    }
+
+    .sig-name {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ===========================
+       FOOTER
+       =========================== */
+    .doc-footer {
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 2px solid var(--sas-green);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .doc-footer .footer-brand {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .doc-footer .footer-brand strong {
+      color: var(--sas-navy);
+      display: block;
+    }
+
+    .doc-footer .footer-tagline {
+      font-size: 10px;
+      font-style: italic;
+      color: var(--text-muted);
+      max-width: 280px;
+      text-align: right;
+      line-height: 1.5;
+    }
+
+    /* ===========================
+       PRINT STYLES
+       =========================== */
+    @media print {
+      body { background: #ffffff; }
+
+      .page {
+        width: 100%;
+        margin: 0;
+        padding: 14mm 16mm;
+        box-shadow: none;
+      }
+
+      .section { page-break-inside: avoid; }
+
+      .pricing-wrap { page-break-inside: avoid; }
+
+      .sig-block { page-break-inside: avoid; }
+
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<main class="page">
+
+  <!-- =============================================
+       COVER
+       ============================================= -->
+  <header class="cover">
+    <div class="cover-top">
+      <div class="cover-logo">
+        <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Asset Management">
+      </div>
+      <div class="cover-meta">
+        <strong>Prepared for:</strong> Jitesh<br>
+        <strong>Date:</strong> 28/05/2026<br>
+        <strong>Valid until:</strong> 30/06/2026<br>
+        <strong>Reference:</strong> marcov.WOclassifier.001
+      </div>
+    </div>
+
+    <span class="doc-type">Partner Proposal</span>
+    <h1 class="cover-title">Work Order Intelligence as a Service</h1>
+    <p class="cover-subtitle">marcov.WOclassifier — Subscription Proposal for Prospective Client</p>
+    <p class="cover-tagline">At SAS-AM we help organisations understand their strengths and weaknesses, model and predict the future, and make the right decisions through audit and benchmarking, advanced analytics and deep advisory services.</p>
+  </header>
+
+  <!-- =============================================
+       1. THE PROBLEM
+       ============================================= -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2 class="section-title">The Problem</h2>
+    </div>
+
+    <p>Asset-intensive organisations generate thousands of work orders every month. Almost none of them are correctly classified against a failure mode taxonomy — because doing so manually is too slow, too inconsistent, and too expensive at scale.</p>
+    <p>Without classification, maintenance data cannot drive reliability improvement. Failure patterns stay hidden. The same asset failures repeat. The FMEA taxonomy becomes a compliance artefact rather than a living operational tool.</p>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-val">20,000</div>
+        <div class="stat-lbl">Work Orders per Month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">3 min</div>
+        <div class="stat-lbl">Manual Time per WO</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">1,000 hrs</div>
+        <div class="stat-lbl">Analyst Time per Month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val">~6 FTE</div>
+        <div class="stat-lbl">Equivalent Headcount</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="callout-label">Cost of manual classification</span>
+      <p>At $80/hr, 1,000 analyst hours per month represents <strong>$80,000 per month in avoided labour cost</strong> — before accounting for inconsistency, fatigue errors, and the opportunity cost of analysts doing higher-value work.</p>
+    </div>
+  </section>
+
+  <!-- =============================================
+       2. THE SOLUTION
+       ============================================= -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2 class="section-title">The Solution</h2>
+    </div>
+
+    <p>marcov.WOclassifier is a purpose-built AI classification engine that reads the full free text of each work order and maps it to the client's FMEA failure mode taxonomy. It returns structured, auditable results for every work order — including multi-attribute confidence scoring, primary and secondary work separation, and automatic FMEA gap detection.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Ingest</strong>
+          <span>Work order history provided as CSV, XLSX, or via direct API connection to IBM Maximo. FMEA taxonomy uploaded as a structured spreadsheet.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Classify</strong>
+          <span>The AI reasoning engine reads each work order's long text and maps it to the closest failure mode, returning per-attribute confidence scores (maintainable item, part, mechanism, cause, failure mode) alongside a written reasoning justification.</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Export</strong>
+          <span>Structured results returned as CSV, XLSX, or via API back to Maximo. Each record includes: failure mode, maintainable item, part, mechanism, cause, confidence level, certainty status, and reasoning. FMEA gap report included.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       3. PROVEN IN THE FIELD
+       ============================================= -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2 class="section-title">Proven in the Field</h2>
+    </div>
+
+    <p>marcov.WOclassifier has been validated against a real water utility CMMS dataset. 3,126 work orders were classified against a plant FMEA taxonomy in a single batch run, producing structured, auditable results across all classification categories.</p>
+
+    <ul class="feature-list">
+      <li>Multi-attribute confidence scoring across five FMEA dimensions per classification</li>
+      <li>Automatic separation of primary work from secondary or opportunistic repairs</li>
+      <li>Automatic FMEA gap detection with suggested taxonomy additions</li>
+      <li>Fuzzy ID matching to correct taxonomy mismatches before output</li>
+      <li>Full written reasoning for every classification — defensible and reviewable</li>
+      <li>Three certainty tiers: High Confidence, Needs Review, and FMEA Gap</li>
+    </ul>
+  </section>
+
+  <!-- =============================================
+       4. SCOPE
+       ============================================= -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2 class="section-title">Scope and Deliverables</h2>
+    </div>
+
+    <p>The subscription covers everything the client needs to classify, review, and integrate work order results — delivered as a managed web application with no infrastructure overhead on the client side.</p>
+
+    <div class="two-col">
+      <div>
+        <ul class="feature-list">
+          <li>FMEA taxonomy upload and validation</li>
+          <li>Up to 20,000 classifications per month</li>
+          <li>Batch processing via file upload</li>
+          <li>Real-time single WO classification</li>
+          <li>Maximo API integration (inbound and outbound)</li>
+        </ul>
+      </div>
+      <div>
+        <ul class="feature-list">
+          <li>CSV and XLSX export with full result set</li>
+          <li>FMEA gap report per batch run</li>
+          <li>Taxonomy update support included</li>
+          <li>Monthly accuracy review</li>
+          <li>Ongoing technical support</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       5. INVESTMENT
+       ============================================= -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <h2 class="section-title">Investment</h2>
+    </div>
+
+    <p>12-month subscription commitment, billed monthly in arrears. The monthly allowance covers up to 20,000 work order classifications per calendar month.</p>
+
+    <div class="pricing-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Amount (AUD)</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight">
+            <td>Monthly Subscription</td>
+            <td class="price">A$2,500 / month</td>
+            <td class="note">Up to 20,000 WO classifications per month</td>
+          </tr>
+          <tr>
+            <td>Onboarding Fee</td>
+            <td class="price">A$3,500</td>
+            <td class="note">One-off. FMEA configuration and initial accuracy review.</td>
+          </tr>
+          <tr>
+            <td>Overage Rate</td>
+            <td class="price">A$15 / 100 WOs</td>
+            <td class="note">Applies to WOs above 20,000 in any given month</td>
+          </tr>
+          <tr>
+            <td>Annual Pre-pay Option</td>
+            <td class="price">A$27,000</td>
+            <td class="note">10% discount applied — save A$3,000 vs monthly billing</td>
+          </tr>
+          <tr class="total">
+            <td>Year 1 Total (monthly billing + onboarding)</td>
+            <td class="price" style="color:#ffffff;">A$33,500</td>
+            <td style="color:rgba(255,255,255,0.75); font-size:12px;">A$2,500 × 12 months + A$3,500 onboarding</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="value-compare">
+      <div class="value-block large">
+        <div class="vb-label">Avoided Labour Cost</div>
+        <div class="vb-amount">A$80k</div>
+        <div class="vb-sub">per month at $80/hr</div>
+      </div>
+      <div class="value-vs">vs</div>
+      <div class="value-block small">
+        <div class="vb-label">Subscription Cost</div>
+        <div class="vb-amount">A$2,500</div>
+        <div class="vb-sub">per month</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <span class="callout-label">Return on investment</span>
+      <p>The subscription represents <span class="callout-big">3%</span> of the monthly avoided labour cost. Every dollar invested returns approximately A$32 in avoided analyst cost — before accounting for improved data quality, faster reliability insights, and reduced repeat failures.</p>
+    </div>
+  </section>
+
+  <!-- =============================================
+       6. COMMERCIAL TERMS
+       ============================================= -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">6</div>
+      <h2 class="section-title">Commercial Terms</h2>
+    </div>
+
+    <ul class="terms-list">
+      <li><strong>Commitment term</strong> <span>12-month minimum. Billed monthly in arrears.</span></li>
+      <li><strong>Monthly allowance</strong> <span>20,000 classifications per month. Unused classifications do not roll over.</span></li>
+      <li><strong>Overage billing</strong> <span>A$15 per 100 WOs above the monthly cap. Billed with the following month's invoice.</span></li>
+      <li><strong>Annual pre-pay</strong> <span>A$27,000 paid upfront for 12 months. 10% discount applied. No overage threshold change.</span></li>
+      <li><strong>Taxonomy updates</strong> <span>FMEA changes accommodated at no additional cost during the subscription term.</span></li>
+      <li><strong>Data sovereignty</strong> <span>Client data is processed in-session only. No data is retained or used for model training.</span></li>
+      <li><strong>Volume scaling</strong> <span>Higher monthly WO allowances available. Contact SAS-AM for enterprise pricing.</span></li>
+      <li><strong>Proposal validity</strong> <span>This proposal is valid until 30/06/2026.</span></li>
+    </ul>
+  </section>
+
+  <!-- =============================================
+       7. NEXT STEPS
+       ============================================= -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-number">7</div>
+      <h2 class="section-title">Next Steps</h2>
+    </div>
+
+    <p>From signed agreement to first classification results in under two weeks.</p>
+
+    <div class="next-steps">
+      <div class="ns-item">
+        <div class="ns-num">1</div>
+        <div class="ns-body">
+          <strong>Agree on commercial terms</strong>
+          <span>Confirm subscription tier, onboarding fee, and billing start date. Execute subscription agreement.</span>
+        </div>
+      </div>
+      <div class="ns-item">
+        <div class="ns-num">2</div>
+        <div class="ns-body">
+          <strong>Provide FMEA taxonomy</strong>
+          <span>Client provides their failure mode spreadsheet. SAS-AM validates structure, completeness, and taxonomy integrity.</span>
+        </div>
+      </div>
+      <div class="ns-item">
+        <div class="ns-num">3</div>
+        <div class="ns-body">
+          <strong>Onboarding session</strong>
+          <span>One-hour configuration session. Sample classification run reviewed. Confidence thresholds tuned to client preferences.</span>
+        </div>
+      </div>
+      <div class="ns-item">
+        <div class="ns-num">4</div>
+        <div class="ns-body">
+          <strong>First batch run</strong>
+          <span>Submit the first month of work orders. Results delivered within 24 hours. FMEA gap report included.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signature block -->
+    <div class="sig-block">
+      <div class="sig-party">
+        <div class="party-label">SAS Asset Management</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Shane Scriven — Founder and Managing Director</div>
+      </div>
+      <div class="sig-party">
+        <div class="party-label">Client Representative</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Name and title</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       DOCUMENT FOOTER
+       ============================================= -->
+  <footer class="doc-footer">
+    <div class="footer-brand">
+      <strong>SAS Asset Management</strong>
+      shane.scriven@sas-am.com &nbsp;·&nbsp; sas-am.com
+    </div>
+    <div class="footer-tagline">
+      We help organisations understand their strengths and weaknesses, model and predict the future, and make the right decisions.
+    </div>
+  </footer>
+
+</main>
+
+</body>
+</html>
