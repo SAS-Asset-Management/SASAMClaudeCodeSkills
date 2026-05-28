@@ -623,6 +623,51 @@ If the user does not specify a type, default to **Presentation** (standard narra
 }
 ```
 
+**Critical Print CSS — Colour Rendering:**
+
+Chromium (used by Playwright) strips background colours, gradients, and fills by default when generating PDFs. Every A4 document MUST include this in the `@media print` block or backgrounds will be lost:
+
+```css
+@media print {
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}
+```
+
+Without this, coloured table headers, stat tiles, callout boxes, and value blocks all render as plain grey or white.
+
+**Page Margin Pattern:**
+
+Use `@page` margins rather than padding on the container. This ensures margins apply consistently on every page — not just page one:
+
+```css
+.page {
+  width: 100%;
+  margin: 0;
+  padding: 0;  /* No padding — margins handled by @page */
+  box-shadow: none;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 16mm 18mm;
+}
+```
+
+**Section Break Control:**
+
+Prevent orphaned headings and broken components:
+
+```css
+.section        { break-inside: avoid; page-break-inside: avoid; }
+.section-header { break-after: avoid;  page-break-after: avoid; }
+.pricing-wrap   { break-inside: avoid; page-break-inside: avoid; }
+.sig-block      { break-inside: avoid; page-break-inside: avoid; }
+```
+
 **PDF Export:**
 
 ```bash
