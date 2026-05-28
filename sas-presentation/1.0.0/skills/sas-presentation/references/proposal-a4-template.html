@@ -599,24 +599,55 @@
        PRINT STYLES
        =========================== */
     @media print {
-      body { background: #ffffff; }
+      /* Force Chromium/Playwright to render background colours */
+      *, *::before, *::after {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      body {
+        background: #ffffff;
+        margin: 0;
+        padding: 0;
+      }
 
       .page {
         width: 100%;
         margin: 0;
-        padding: 14mm 16mm;
+        padding: 0;
         box-shadow: none;
+        min-height: auto;
       }
-
-      .section { page-break-inside: avoid; }
-
-      .pricing-wrap { page-break-inside: avoid; }
-
-      .sig-block { page-break-inside: avoid; }
 
       @page {
         size: A4 portrait;
-        margin: 0;
+        margin: 16mm 18mm;
+      }
+
+      .section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .section-header {
+        break-after: avoid;
+        page-break-after: avoid;
+      }
+
+      .pricing-wrap {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .sig-block {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .stat-row {
+        break-inside: avoid;
+        page-break-inside: avoid;
       }
     }
 
