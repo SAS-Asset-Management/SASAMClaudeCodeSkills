@@ -5,6 +5,37 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2026-05-19
+
+### Changed
+- **nano-banana-2** Restructured the brand prompt architect into a **router** with four mode sub-files. The earlier abstraction-based modes (Node Network, Structured Progression, Order from Chaos) are removed entirely — they produced glowy tech-icon clichés. Subjects are now always **stylised, simplified real objects**, never pure abstraction.
+- **nano-banana-2** New brand frame copy: "clean, sophisticated, intentional — the look of a high-end consultancy report or quality editorial publication. Flat with crisp clean edges; no outer glow, no halo, no soft luminous bloom, no glassy or frosted texture, no glossy 3D render." Green appears only as a precise, deliberate accent — never as a glow, haze, gradient field, starburst, or background light.
+
+### Added
+- **nano-banana-2** Four mode sub-files in `modes/`:
+  - **Mode 1 — Editorial Diagram** (`mode-1-editorial-diagram.md`): explaining a concept, process, or relationship. Default mode.
+  - **Mode 2 — Technical Line** (`mode-2-technical-line.md`): FMECA, reliability, asset hierarchies, Maximo data structure, equipment teardowns.
+  - **Mode 3 — Data as Hero** (`mode-3-data-as-hero.md`): maturity assessments, Weibull, fleet simulation, analytics results.
+  - **Mode 4 — Architectural** (`mode-4-architectural.md`): sector positioning, infrastructure, "who we serve".
+- **nano-banana-2** Each mode sub-file contains: when-to-use criteria, the prompt template with `[FIXED BRAND FRAME]` placeholder, slot definitions, and one fully assembled worked example.
+- **nano-banana-2** Plugin version bumped to 1.3.0.
+
+## [1.10.0] - 2026-05-19
+
+### Added
+- **nano-banana-2** SAS-AM Brand Prompt Architect — primary mode that assembles a single natural-language image prompt from a piece of written content (LinkedIn post, blog article, slide topic, Webflow page). Separates a FIXED brand frame (visual style, colour, lighting, negative instruction) from VARIABLE per-image content (subject metaphor, composition directive, aspect, open-space region).
+- **nano-banana-2** Three composition modes selected automatically from the source subject:
+  - **A — Node Network:** connectivity, ML, multi-agent, federated, data flow → luminous nodes joined by fine threads
+  - **B — Structured Progression:** maturity assessments, frameworks, governance, roadmaps → layered geometric tiers
+  - **C — Order from Chaos:** data quality, analytics, diagnostics, raw-to-insight → particles resolving into a crystalline lattice
+- **nano-banana-2** Aspect ratio handled as plain language inside the prompt body (no CLI flags): default `a wide 16:9 landscape composition`, plus `a square 1:1` and `a tall 4:5 portrait`.
+- **nano-banana-2** Three worked examples in SKILL.md covering all three modes (edge federated ML, Yarra Trams MR5 governance maturity, worthless-data-to-intelligent-assets).
+
+### Changed
+- **nano-banana-2** Frontmatter description updated so the skill triggers on requests to generate image prompts, social or blog or presentation imagery, or SAS-AM visuals from written content.
+- **nano-banana-2** Hyper-realistic photographic enhancement is now opt-in only (`--photoreal` or explicit user request), not the default. SAS-AM imagery routes through the Brand Prompt Architect.
+- **nano-banana-2** Plugin version bumped to 1.2.0 to reflect the new primary mode.
+
 ## [1.9.1] - 2026-04-15
 
 ### Changed

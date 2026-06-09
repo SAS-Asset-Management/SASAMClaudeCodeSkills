@@ -1,7 +1,7 @@
 {
   "name": "nano-banana-2",
-  "description": "Generate images using Google's Nano Banana 2 model with web search grounding",
-  "version": "1.1.0",
+  "description": "Generate SAS-AM brand-consistent image prompts and images using Google's Nano Banana 2 model — router with fixed brand frame and four mode sub-files (Editorial Diagram, Technical Line, Data as Hero, Architectural)",
+  "version": "1.3.0",
   "author": { "name": "SAS-AM" },
   "license": "MIT",
   "keywords": ["image-generation", "gemini", "nano-banana", "google-ai", "text-to-image"]

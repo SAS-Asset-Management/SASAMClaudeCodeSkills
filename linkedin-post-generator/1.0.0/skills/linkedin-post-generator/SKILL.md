@@ -580,6 +580,80 @@ Every post needs a CTA. Match the CTA to the post's goal.
 
 ---
 
+## URL Attribution (UTM Convention — MANDATORY)
+
+Every URL that goes from a LinkedIn post into the SAS-AM website (or any owned property) must carry UTM parameters. Without them, GA4 attributes the session as `(direct)` because LinkedIn's mobile in-app browser strips the referrer header.
+
+### Why this is mandatory
+
+A 30-day audit of www.sas-am.com showed:
+
+- 1,192 of 4,468 users (27%) arrived as `Source = Direct, Medium = Direct, Campaign = (direct)` with a 98% bounce rate — the classic LinkedIn-mobile signature where referrer is stripped.
+- Articles that received hundreds of LinkedIn impressions registered only single-digit web views attributable to LinkedIn.
+- Campaign-level attribution was unusable until UTMs were added to first-comment link drops.
+
+UTMs move the missing traffic from the unmeasurable "(direct)" black hole into a named campaign that can be split post by post.
+
+### The scheme
+
+Every outbound URL placed in a LinkedIn post (in the body, in the first comment, anywhere a reader might click) must include all four parameters:
+
+| Parameter | Value | Notes |
+|-----------|-------|-------|
+| `utm_source` | `linkedin` | Always lowercase. |
+| `utm_medium` | `organic_social` (default) or `paid_social` | Use `paid_social` only when boosting via LinkedIn Ads. |
+| `utm_campaign` | The campaign slug | Must match the `--campaign` value used when registering the post via `analytics/register.py add`. Use lowercase hyphenated form (e.g. `ai-in-am-weekly`, `geelongport-case`). |
+| `utm_content` | A short slug identifying the specific post within the campaign | Lets you split a multi-post arc's traffic across the Mon roundup, Tue pillar, Wed carousel, Thu closer, etc. |
+
+### Where the UTMd URL goes
+
+The URL the reader actually clicks lives in the **first-comment text block** of the post draft. The post body itself uses the placeholder `[link in comments]`. The UTMd URL is what gets pasted into the first comment after the post lands.
+
+Every Pillar Promotion or carousel-CTA draft therefore has two URL representations:
+
+1. The body uses `[link in comments]` (placeholder, no URL — keeps the post body clean of long URL strings).
+2. The first comment carries the full UTMd URL.
+
+### Worked example
+
+For a Tuesday Pillar Promotion driving traffic to a GeelongPort case study under the `geelongport-case` campaign:
+
+```
+https://www.sas-am.com/resources/geelongport-12000-assets-one-standard?utm_source=linkedin&utm_medium=organic_social&utm_campaign=geelongport-case&utm_content=pillar
+```
+
+For a Wednesday carousel post in the same campaign, change only `utm_content`:
+
+```
+https://www.sas-am.com/resources/geelongport-12000-assets-one-standard?utm_source=linkedin&utm_medium=organic_social&utm_campaign=geelongport-case&utm_content=carousel
+```
+
+### Carousel exception
+
+PDF document carousels render the URL into the slide image (slide 8 typically), which is text rendered into a JPG and not clickable. The UTM convention applies only to the **caption** and the **first-comment** text block — the slide image stays clean for legibility.
+
+### Output format addition
+
+When the skill outputs a draft, the first-comment block in the rendered draft file MUST include the UTMd URL inline, ready to paste. Format:
+
+```markdown
+## First comment (UTMd for attribution)
+
+```text
+Full read → https://www.sas-am.com/resources/<slug>?utm_source=linkedin&utm_medium=organic_social&utm_campaign=<campaign-slug>&utm_content=<post-slug>
+```
+```
+
+If the post has no external URL (a pure engagement post like a Quick Insight that asks a question), no UTM is needed — the first-comment block can be omitted entirely.
+
+### Rules of thumb
+
+- **One campaign per multi-post arc.** A weekly arc that drives to the same article uses the same `utm_campaign` for all posts in the week, with different `utm_content` slugs per day.
+- **Mirror the registry.** Whatever `--campaign "..."` value goes into `register.py add` should match `utm_campaign`. Hyphenate the URL slug version (`utm_campaign=ai-in-am-weekly`) even if the human-readable registry value uses spaces and capitals (`AI in AM Weekly`).
+- **Don't UTM the body URL.** The body uses `[link in comments]` for the user-facing CTA. The UTMd URL only appears in the first comment text.
+
+---
+
 ## LinkedIn Formatting Rules
 
 - **Line breaks**: Use liberally — single idea per line
@@ -832,6 +906,8 @@ Before presenting the final post, verify every item:
 - [ ] Post length matches the chosen format (150–300 for pillar, 150–400 for insight)
 - [ ] Every story, anecdote, and statistic traces back to the user's interview answers — nothing fabricated
 - [ ] Format matches the material available (no story-led post without a real story)
+- [ ] Any external URL in the first-comment block carries the full UTM scheme (`utm_source`, `utm_medium`, `utm_campaign`, `utm_content`) — see URL Attribution section above
+- [ ] `utm_campaign` matches the `--campaign` value used (or planned) for `register.py add`
 - [ ] Would a senior asset management professional find this valuable and credible?
 
 ---

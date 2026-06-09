@@ -1,29 +1,95 @@
 ---
 name: nano-banana-2
-description: Generate images using Google's Nano Banana 2 model (gemini-3.1-flash-image-preview) with web search grounding for real-world context. Use when the user wants to create AI-generated images, visual content, graphics, or artwork from text descriptions.
+description: Generate SAS-AM brand-consistent image prompts and images using Google's Nano Banana 2 model. Use when the user wants to create an image prompt or image for a LinkedIn post, blog article, Webflow page, or slide topic, or asks for SAS-AM visuals, social or blog or presentation imagery, AI-generated images, graphics, or artwork from a piece of written content. Acts as a router — selects one of four modes (Editorial Diagram, Technical Line, Data as Hero, Architectural) based on the subject of the input and assembles a finished prompt using the SAS-AM brand frame (deep navy #002244 base, single lime-green #69BE28 accent).
 ---
 
 # Nano Banana 2 Image Generation Skill
 
-Generate images from text prompts using Google's Nano Banana 2 model with web search grounding for accurate, contextually-aware visual content.
+Generate SAS-AM brand-consistent image prompts (and the images themselves) using Google's Nano Banana 2 model. The skill separates a FIXED brand frame from VARIABLE per-image content so every visual is on-brand by construction.
 
 ## Overview
 
-This skill integrates with Google's Gemini API to generate images using the Nano Banana 2 model (`gemini-3.1-flash-image-preview`), optimised for speed and high-volume use.
+This skill integrates with Google's Gemini API to generate images using the Nano Banana 2 model (`gemini-3.1-flash-image-preview`), optimised for speed and high-volume use. The primary path is the **SAS-AM Brand Prompt Architect (Router)** described in the next section — given a piece of written content (LinkedIn post, blog article, slide topic), the router selects one of four modes and assembles a single natural-language prompt ready to paste into Nano Banana 2.
 
 **Key Capabilities:**
-- Text-to-image generation from natural language prompts
-- Web search grounding for real-world accuracy (enabled by default)
-- Configurable aspect ratios (1:1, 16:9, 4:5, 9:16, etc.)
-- Multiple image sizes (512px, 1K, 2K, 4K)
+- Brand-consistent prompt assembly from written content (post, article, slide topic)
+- Four mode templates selected automatically from the subject:
+  - Mode 1 — Editorial Diagram (`modes/mode-1-editorial-diagram.md`)
+  - Mode 2 — Technical Line (`modes/mode-2-technical-line.md`)
+  - Mode 3 — Data as Hero (`modes/mode-3-data-as-hero.md`)
+  - Mode 4 — Architectural (`modes/mode-4-architectural.md`)
+- Text-to-image generation via the Gemini API
+- Web search grounding for real-world accuracy (optional, for non-brand work)
+- Configurable aspect ratios (16:9, 1:1, 4:5)
 - Integration with other SAS-AM skills (presentations, social media, research)
 
 **Use Cases:**
-- Presentation visuals for sas-presentation
-- Social media graphics for linkedin-post-generator
-- Industry/market infographics for b2b-research-agent
+- Hero images for blog articles published via webflow-content-creator
+- Feed and carousel imagery for linkedin-post-generator
+- Slide visuals for sas-presentation
+- Industry and market infographics for b2b-research-agent
 - Proposal visuals for beam-selling
-- Standalone creative image generation
+
+---
+
+## SAS-AM Brand Prompt Architect (Router)
+
+When the input is a piece of written content (LinkedIn post, blog article, Webflow page, slide topic, or any SAS-AM communication), the skill **must** assemble one finished image prompt using the brand frame below and one of four mode sub-files in `modes/`. This is the default path for any SAS-AM imagery request.
+
+### Context
+
+Nano Banana 2 responds to natural-language descriptive prompts, **not** comma-stacked keyword lists. It takes the aspect ratio as plain English inside the prompt body (no CLI flags). Negative instructions land best as a prose sentence, not a bullet list. **Subjects are always stylised, simplified real objects, never pure abstraction.**
+
+Images are consumed across LinkedIn (1:1 feed, 4:5 carousel), Webflow articles (16:9 hero), and presentations (16:9 slide). Aspect ratio is a variable slot. **No text, words, or letters appear in the image** — overlay text is added later in the design layer.
+
+### The FIXED brand frame (verbatim — inserted into every mode at `[FIXED BRAND FRAME]`)
+
+> Visual style: clean, sophisticated, intentional — the look of a high-end consultancy report or quality editorial publication. Flat with crisp clean edges; no outer glow, no halo, no soft luminous bloom, no glassy or frosted texture, no glossy 3D render. Subtle, restrained, confident.
+>
+> Colour: a deep navy blue (hex #002244) dominates as background and base. A bright lime-green (hex #69BE28) appears ONLY as a precise, deliberate accent — on a single highlighted element, a callout, or a key line. It must never appear as a glow, haze, gradient field, starburst or background light. Support these with cool greys and a soft off-white. Use no other colours.
+>
+> Lighting: soft, even, calm and assured.
+>
+> Do not include any text, words, letters, numbers, logos, people or faces. Avoid clutter, neon, rainbow palettes, lens flares, and a generic stock-image look.
+
+### Mode-selection logic
+
+Pick exactly one mode for each prompt.
+
+| If the input is… | Use |
+|---|---|
+| Explaining a concept, process, or relationship (most posts) | **Mode 1 — Editorial Diagram** — `modes/mode-1-editorial-diagram.md` |
+| Engineering teardown, failure analysis, asset structure, Maximo data structure, FMECA, reliability hierarchies | **Mode 2 — Technical Line** — `modes/mode-2-technical-line.md` |
+| About numbers or an analytical result (maturity assessments, Weibull, fleet simulation, analytics findings) | **Mode 3 — Data as Hero** — `modes/mode-3-data-as-hero.md` |
+| Sector positioning, infrastructure, "who we serve" — mood and gravitas over explanation | **Mode 4 — Architectural** — `modes/mode-4-architectural.md` |
+
+If the choice is genuinely ambiguous between two modes, **state the call you made and the reason**. Do not silently default.
+
+### Required behaviour
+
+1. Take the written content as input — post draft, article, Webflow page copy, or slide topic.
+2. Infer the mode from the subject. If ambiguous, declare the call and the reason.
+3. Load the matching mode sub-file from `modes/`.
+4. Derive the slot values for that mode (subject, core idea, composition directive, chart type, etc — slot set depends on the mode).
+5. Accept an aspect ratio. Default to `a wide 16:9 landscape composition` if none is given. Also support `a square 1:1 composition` and `a tall 4:5 portrait composition`. Phrase the aspect in plain English inside the prompt body.
+6. Choose a sensible open-space region for the text overlay — typically opposite the focal point.
+7. Assemble the final prompt by inserting the brand frame verbatim into the mode template at `[FIXED BRAND FRAME]`, filling all bracketed slots.
+8. Output **one finished prompt**, ready to paste into Nano Banana 2 or to use as the `PROMPT` value for the API call documented later in this file.
+
+### Aspect-ratio reference
+
+- `a wide 16:9 landscape composition` — default; blog hero, slide visual, LinkedIn article header
+- `a square 1:1 composition` — LinkedIn feed post, profile image
+- `a tall 4:5 portrait composition` — LinkedIn carousel slides, mobile-first
+
+### When NOT to use the router
+
+Skip the router only when the user explicitly asks for:
+- A photorealistic scene (industrial photograph, portrait, on-site asset)
+- Non-SAS-AM creative work
+- A pure illustration in a non-SAS visual style
+
+In those cases, follow the **Hyper-Realistic Photography Style** notes in `references/prompt-guide.md`.
 
 ---
 
@@ -589,6 +655,8 @@ After generation:
 
 ## Content Guidelines
 
+**For SAS-AM imagery, use the [SAS-AM Brand Prompt Architect](#sas-am-brand-prompt-architect-primary-mode) section above.** The tips below apply only when the user has explicitly asked for non-brand or photographic work.
+
 **Prompt Engineering Tips:**
 - Be specific and descriptive
 - Include style keywords (photorealistic, digital art, watercolour, minimalist)
@@ -596,9 +664,11 @@ After generation:
 - Reference time of day, weather, or environment
 - For infographics, describe the data story and visual style
 
-### Hyper-Realistic Prompt Enhancement (Default)
+### Hyper-Realistic Prompt Enhancement (Opt-In Only)
 
-For maximum photorealism, automatically enhance user prompts with these modifiers:
+**Not the default for SAS-AM content.** Use this enhancement only when the user explicitly asks for a photorealistic image or supplies a `--photoreal` flag. For SAS-AM brand imagery, route through the SAS-AM Brand Prompt Architect instead.
+
+For maximum photorealism on opt-in requests, enhance user prompts with these modifiers:
 
 **Core Hyper-Realistic Keywords:**
 - `hyperrealistic photograph`
@@ -641,10 +711,9 @@ glowing nodes, dark background, futuristic technology aesthetic"
 ```
 
 **SAS-AM Brand Integration:**
-- When generating for SAS-AM content, incorporate brand colours where appropriate
-- SAS Blue: #002244
-- SAS Green: #69BE28
-- Keep visuals professional and suitable for asset management audience
+- For SAS-AM content, use the [SAS-AM Brand Prompt Architect](#sas-am-brand-prompt-architect-primary-mode) — it enforces the brand colour system and visual style by construction.
+- Brand colours: SAS Blue `#002244` (dominant); SAS Green `#69BE28` (single sparing accent); cool greys and soft off-white as supports.
+- Visual style: minimalist geometric abstraction, generous negative space, no people, no text in image.
 
 ---
 

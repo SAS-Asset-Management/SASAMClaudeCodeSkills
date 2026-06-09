@@ -1,25 +1,21 @@
 ---
 name: linkedin-post-generator
-description: This skill should be used when the user asks to create, draft, or refine a LinkedIn post for SAS-AM. It generates LinkedIn posts using brand voice, tone, and content strategy for an audience of asset management professionals. Supports 8 formats — pillar promotion, quick insight, carousel, SLAY (story-led), confession, this-not-that, myth vs reality, and BABLA (transformation story). Interviews the user first to gather real material, then produces all eligible formats in parallel and recommends the strongest.
+description: Generate LinkedIn posts for SAS-AM using brand voice, tone, and content strategy. Use when the user wants to create, draft, or refine a LinkedIn post for SAS-AM's audience of asset management professionals. Supports 8 formats — pillar promotion, quick insight, carousel, SLAY (story-led), confession, this-not-that, myth vs reality, and BABLA (transformation story). Interviews the user first to gather real material, then produces all eligible formats in parallel and recommends the strongest.
 ---
 
 # SAS-AM LinkedIn Post Generator
 
-Generate LinkedIn posts that sound like a knowledgeable peer — someone who has spent time on the tools, understands the realities of maintenance depots and control rooms, and can translate complex technical concepts into actionable insights. Not a vendor pushing product; a trusted advisor sharing what actually works.
-
-> **Integration note:** This skill is part of the **sas-content-hub** plugin and can be orchestrated via the **content-campaign** skill to produce LinkedIn posts as part of a coordinated multi-channel content campaign (website article, email gate, LinkedIn promotion).
-
-> **Image generation:** The external **nano-banana-2** skill can generate hyper-realistic images to accompany LinkedIn posts. After finalising a post, offer the user image generation via nano-banana-2 at 1:1 aspect ratio (optimal for LinkedIn). See the "Image Generation Integration" section for details.
+Generate LinkedIn posts that sound like a knowledgeable peer — someone who's spent time on the tools, understands the realities of maintenance depots and control rooms, and can translate complex technical concepts into actionable insights. You're not a vendor pushing product; you're a trusted advisor sharing what actually works.
 
 ## Overview
 
-This skill:
+This skill helps you:
 
-- **Interviews first** — gather real stories, confessions, contrasts, and myths before writing a word
-- **Produces all formats in parallel** — SLAY, Confession, This Not That, Myth vs Reality, BABLA (transformation), Pillar Promotion, Quick Insight, and Carousel
-- **Reviews and recommends** — compare all drafts side by side and pick the strongest for the topic
-- **Nails the hook** — 20-hook library built on 7 psychological triggers and the "I See You" principle
-- **Stays on-brand** — Australian English, no emojis, no hashtags, no corporate waffle, no fabricated stories
+- **Interview first** — gather real stories, confessions, contrasts, and myths before writing a word
+- **Produce all formats in parallel** — SLAY, Confession, This Not That, Myth vs Reality, BABLA (transformation), Pillar Promotion, Quick Insight, and Carousel
+- **Review and recommend** — compare all drafts side by side and pick the strongest for the topic
+- **Nail the hook** — 20-hook library built on 7 psychological triggers and the "I See You" principle
+- **Stay on-brand** — Australian English, no emojis, no hashtags, no corporate waffle, no fabricated stories
 
 ---
 
@@ -45,7 +41,7 @@ The skill MUST interview the user before drafting any post. This is non-negotiab
 
 ### Why This Matters
 
-**The skill never invents stories, quotes, anecdotes, data points, or client experiences.** Every narrative element in a post must come directly from the user's interview answers. If the user has not provided a story, do not write a story-led post. If the user has not provided a number, do not fabricate one. Authenticity is the brand — and fabrication destroys it.
+**The skill never invents stories, quotes, anecdotes, data points, or client experiences.** Every narrative element in a post must come directly from the user's interview answers. If the user hasn't provided a story, the skill does not write a story-led post. If the user hasn't provided a number, the skill does not fabricate one. Authenticity is the brand — and fabrication destroys it.
 
 ### Interview Questions
 
@@ -86,14 +82,14 @@ This catalogue determines which formats are eligible for production (see Format 
 
 ### Core Characteristics
 
-| Trait | What it means | What it does not mean |
+| Trait | What it means | What it doesn't mean |
 |-------|---------------|----------------------|
 | **Upbeat** | Optimistic about technology's potential, energised by solving problems, genuinely enthusiastic about good outcomes | Sycophantic, fake positivity, ignoring real challenges |
 | **Clear & Concise** | Get to the point, respect the reader's time, no waffle or filler | Dumbed down, oversimplified, missing nuance |
 | **Tech Forward** | Embrace AI/ML, edge computing, data analytics — but grounded in practical application | Buzzword-heavy, hype-driven, technology for its own sake |
-| **Insightful** | Offer genuine value, share perspectives others have not considered, connect dots | Stating the obvious, regurgitating common knowledge |
-| **Playful** | Occasional wit, relatable analogies, not taking ourselves too seriously | Unprofessional, silly, undermining credibility |
-| **Conversational** | Write like explaining to a smart colleague over coffee | Overly formal, academic, stiff corporate-speak |
+| **Insightful** | Offer genuine value, share perspectives others haven't considered, connect dots | Stating the obvious, regurgitating common knowledge |
+| **Playful** | Occasional wit, relatable analogies, don't take ourselves too seriously | Unprofessional, silly, undermining credibility |
+| **Conversational** | Write like you're explaining to a smart colleague over coffee | Overly formal, academic, stiff corporate-speak |
 
 ### Language Rules
 
@@ -162,7 +158,7 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 
 ### Our Differentiators
 
-1. **Practitioner-led**: We have worked on the tools, not just in boardrooms
+1. **Practitioner-led**: We've worked on the tools, not just in boardrooms
 2. **AI with purpose**: Technology that solves real problems, not innovation theatre
 3. **Sovereign capability**: Offline AI that keeps sensitive data where it belongs
 4. **Vendor-neutral**: We recommend what works, not what pays commission
@@ -215,8 +211,8 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 ```
 
 **Rules**:
-- The hook (first line) must grab attention — it is all the reader sees before "...see more"
-- Pull 2–3 key insights from the article — do not summarise the whole thing
+- The hook (first line) must grab attention — it's all they see before "...see more"
+- Pull 2–3 key insights from the article — don't summarise the whole thing
 - Give enough value that non-clickers still learn something
 - CTA must be clear and specific about what awaits on the website
 
@@ -281,7 +277,7 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 ```
 [STORY — open with a real moment: a project, a conversation, a failure, a surprise]
 
-[LESSON — what was learned from it, stated plainly]
+[LESSON — what you learned from it, stated plainly]
 
 [ACTIONABLE — one thing the reader can do or think about differently]
 
@@ -310,22 +306,22 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 **Structure**:
 
 ```
-[ADMISSION — state what was wrong, plainly and specifically]
+[ADMISSION — state what you were wrong about, plainly and specifically]
 
 [WHAT I USED TO BELIEVE — describe the old thinking and why it seemed reasonable]
 
-[WHAT CHANGED MY MIND — the experience, data, or moment that shifted the view]
+[WHAT CHANGED MY MIND — the experience, data, or moment that shifted your view]
 
-[THE REAL LESSON — what is now understood to be true]
+[THE REAL LESSON — what you now understand to be true]
 
-[WHAT ABOUT YOU — ask the reader what they have changed their mind about]
+[WHAT ABOUT YOU — ask the reader what they've changed their mind about]
 ```
 
 **Rules**:
 - The confession MUST be genuine — sourced from the user's interview answers
-- The "what I used to believe" must be something the reader might also believe right now — that is the hook
+- The "what I used to believe" must be something the reader might also believe right now — that's the hook
 - The pivot moment should be specific: a project, a conversation, a data point
-- Avoid self-deprecation — be matter-of-fact. "I was wrong" is stronger than "I feel so silly"
+- Don't be self-deprecating — be matter-of-fact. "I was wrong" is stronger than "I feel so silly"
 - End with a real question that invites the reader to share their own confession
 
 **Why it works**: Admitting mistakes is the opposite of vendor-speak. Vulnerability builds trust instantly. The format naturally drives comments because everyone has something they were wrong about.
@@ -353,12 +349,12 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 
 [WHY THE DIFFERENCE MATTERS — connect to real outcomes]
 
-[QUICK TEST — one question the reader can ask themselves to check which side they are on]
+[QUICK TEST — one question the reader can ask themselves to check which side they're on]
 ```
 
 **Rules**:
 - Name the "common approach" specifically — not a straw man
-- Acknowledge why the common approach exists (it is not stupid, it is just incomplete)
+- Acknowledge why the common approach exists (it's not stupid, it's just incomplete)
 - The "better approach" must be backed by real evidence from the interview
 - The quick test at the end drives comments: readers will answer it
 - Keep the contrast scannable — this format works well with arrow points (→)
@@ -380,13 +376,13 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 ```
 [NAME THE MYTH — state it plainly, as the reader would have heard it]
 
-[WHY PEOPLE BELIEVE IT — empathise with the reasoning, do not mock it]
+[WHY PEOPLE BELIEVE IT — empathise with the reasoning, don't mock it]
 
 [THE REALITY — present the truth with specific evidence]
 
 [WHAT TO DO INSTEAD — actionable alternative]
 
-[CHALLENGE TO READER — ask which myths they have encountered]
+[CHALLENGE TO READER — ask which myths they've encountered]
 ```
 
 **Rules**:
@@ -417,7 +413,7 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 
 [BRIDGE — how the transformation happened: the decision, the method, the turning point]
 
-[LESSON — the "so what": what was learned, why it matters, the non-obvious insight]
+[LESSON — the "so what": what you learned, why it matters, the non-obvious insight]
 
 [ACTION — hand the mic: ask the reader if they want the same transformation, or invite them to share their own]
 ```
@@ -426,11 +422,11 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 - The Before and After MUST come from the user's interview answers — never fabricate outcomes or numbers
 - Start with the Before state to create emotional resonance — the reader should recognise themselves in it ("I see you" principle in action)
 - The After must include at least one specific, concrete outcome: a number, a timeline, or a visible change
-- The Bridge is the most valuable section — it is the "how" that readers save and bookmark. Make it actionable and specific
+- The Bridge is the most valuable section — it's the "how" that readers save and bookmark. Make it actionable and specific
 - The Lesson should be non-obvious — not just "we improved" but a deeper insight about why the transformation worked
 - Juxtaposition between Before and After creates the tension that keeps readers engaged — put them side by side early
 - The Action ending should make the reader want the same transformation for themselves
-- Keep the Before concise — do not dwell on misery. Get to the After quickly to create the contrast
+- Keep the Before concise — don't dwell on misery. Get to the After quickly to create the contrast
 
 **Why it works**: Transformation stories tap into aspiration — the reader sees themselves in the Before and wants to reach the After. The Bridge section is highly saveable (bookmarked for reference), which boosts LinkedIn's algorithm distribution. The Before/After contrast creates natural dwell time as readers process the juxtaposition. This format works especially well for SAS-AM because asset management consulting is built on transformation: reactive to predictive, messy data to AI-ready, compliance tick-box to genuine maturity.
 
@@ -440,14 +436,14 @@ SAS-AM is an Australian asset management consulting firm specialising in:
 
 ## Format Recommendation Engine
 
-After the interview, recommend the optimal format based on what material was gathered. Use this decision table:
+After the interview, the skill recommends the optimal format based on what material was gathered. Use this decision table:
 
 | Interview Signal | Recommended Format | Why |
 |-----------------|-------------------|-----|
 | User has a website article to promote | Pillar Promotion | Purpose-built for traffic |
 | User shared a real story or project experience | SLAY | Story-driven, maximises dwell time |
 | User described something they used to believe differently | Confession | Vulnerability builds trust |
-| User named a common practice that does not work | This, Not That | Contrast is scannable and drives debate |
+| User named a common practice that doesn't work | This, Not That | Contrast is scannable and drives debate |
 | User identified a myth professionals believe | Myth vs Reality | High shareability, tag-worthy |
 | User has a single focused tip or insight | Quick Insight | Clean, standalone, proven |
 | User has 5+ items to present | Carousel | Visual, one idea per slide |
@@ -474,7 +470,7 @@ Each hook targets a specific psychological trigger that stops the scroll and pul
 |---------|---------|--------------|
 | **Uncomfortable truth** | Identity threat | Challenges something the reader does or believes — they HAVE to read to defend or reconsider |
 | **Specific number** | Curiosity gap | A precise figure feels credible and begs "how did they get that?" |
-| **Permission to fail** | Relief | Tells the reader the thing they are struggling with is normal — instant emotional connection |
+| **Permission to fail** | Relief | Tells the reader the thing they're struggling with is normal — instant emotional connection |
 | **Confrontation** | Ego engagement | Calls out a common behaviour directly — the reader argues back in their head, then reads on |
 | **Open loop** | Incomplete pattern | Starts a story or claim but withholds the resolution — the brain needs closure |
 | **Status threat** | Fear of being left behind | Implies the reader might be behind their peers — competitive instinct kicks in |
@@ -482,41 +478,41 @@ Each hook targets a specific psychological trigger that stops the scroll and pul
 
 ### The "I See You" Principle
 
-The most powerful hooks on LinkedIn do not just inform — they make the reader feel recognised. The underlying thread across every hook in this library: **I see your struggle. It is real. You are not alone. And there is a way through.**
+The most powerful hooks on LinkedIn don't just inform — they make the reader feel recognised. The underlying thread across every hook in this library: **I see your struggle. It's real. You're not alone. And there's a way through.**
 
-This is not sympathy. It is the kind of recognition that only comes from someone who has been in the room, felt the same frustration, and come out the other side. When the reader thinks "that is exactly how I feel and no one else is saying it" — that is the moment they stop scrolling, save the post, and drop a comment.
+This isn't sympathy. It's the kind of recognition that only comes from someone who's been in the room, felt the same frustration, and come out the other side. When the reader thinks "that's exactly how I feel and no one else is saying it" — that's the moment they stop scrolling, save the post, and drop a comment.
 
-Every trigger category below carries this thread. Even the confrontational hooks come from a place of "I am calling this out because I have lived it too."
+Every trigger category below carries this thread. Even the confrontational hooks come from a place of "I'm calling this out because I've lived it too."
 
 ### Master Hook Library (20 Hooks)
 
 Use these as-is or adapt them to a specific topic. Each is categorised by trigger type.
 
-**Uncomfortable Truth** — I see what you are really dealing with, even if no one is naming it
+**Uncomfortable Truth** — I see what you're really dealing with, even if no one's naming it
 
 1. "You already know your maintenance strategy isn't working. You've known for a while. The hard part isn't the fix — it's getting the organisation to admit it out loud."
 2. "That AI pilot your team built? It works. The problem is, nobody changed the process around it — and you can see exactly where this is heading."
 3. "You spent six figures on a CMMS and your planners still run on spreadsheets. You're not the only one. And the reason is never what the vendor told you."
 
-**Specific Number** — The data proves what you have been feeling is real
+**Specific Number** — The data proves what you've been feeling is real
 
 4. "We reviewed 11 asset management maturity assessments last year. The same 3 gaps showed up in every one. If you've felt like your challenges aren't unique — you're right."
 5. "73% of condition data never makes it into a maintenance decision. If you've ever wondered whether anyone actually acts on the data your team collects — now you know."
 6. "It takes 14 months to get an AI model from pilot to production in asset management. If you're at month 6 and it feels like pushing uphill — that's not failure. That's the hard middle everyone hits."
 
-**Permission to Fail** — The struggle is real. No one is alone. Here is proof.
+**Permission to Fail** — Your struggle is real. You're not alone. Here's proof.
 
 7. "If your asset management plan is mostly about keeping things stable with slightly better reporting — that's not a failure. That's where most organisations actually are. The difference is whether you're honest about it."
 8. "Every asset manager I've worked with has felt this: you can see what needs to change, but the organisation isn't ready to hear it. That's not you failing. That's you being further ahead than the room."
 9. "Nobody gets ISO 55001 right on the first attempt. Not one. The organisations that get it right on the second attempt are the ones that were brutally honest about the first."
 
-**Confrontation** — Saying what has been thought but cannot be said in the meeting
+**Confrontation** — I'm saying what you've been thinking but can't say in the meeting
 
 10. "You don't have a data quality problem. You have a 'nobody wants to own this' problem. And you've probably tried to raise it. More than once."
 11. "Your reliability engineer and your data scientist sit in the same building and speak completely different languages. You've seen it. Everyone has. No one's bridging the gap because no one's been asked to."
 12. "If your asset management strategy doesn't force you to say no to something, it's not a strategy. It's a comfort blanket. And you already know that — you just can't say it in the steering committee."
 
-**Open Loop** — From someone who has been there — here is what happened next
+**Open Loop** — I've been where you are — let me tell you what happened next
 
 13. "We asked one question in a maturity assessment last year. The room went quiet. Then the GM said something that nobody expected — and it changed the entire programme."
 14. "The most expensive asset failure I've seen wasn't caused by a mechanical fault. It was caused by a decision someone didn't want to make. You've probably seen something similar."
@@ -540,7 +536,7 @@ Use these as-is or adapt them to a specific topic. Each is categorised by trigge
 | Drive comments and debate | Confrontation, Uncomfortable Truth | The reader thinks "finally someone said it" — they comment to agree or push back |
 | Build trust and connection | Permission to Fail, Shared Enemy | The reader feels seen — they save the post and share it with a colleague who needs to hear it |
 | Drive clicks to an article | Open Loop, Specific Number | The brain needs closure — an unfinished story or a surprising number demands the full explanation |
-| Position as thought leader | Status Threat, Uncomfortable Truth | Shows seeing what others miss — the reader respects someone willing to name it |
+| Position as thought leader | Status Threat, Uncomfortable Truth | Shows you see what others miss — the reader respects someone willing to name it |
 | Maximise shares and saves | Specific Number, Permission to Fail | Data gets saved for reference; reassurance gets shared because it helps others feel less alone |
 
 ### Weak Hooks — Never Use
@@ -584,21 +580,95 @@ Every post needs a CTA. Match the CTA to the post's goal.
 
 ---
 
+## URL Attribution (UTM Convention — MANDATORY)
+
+Every URL that goes from a LinkedIn post into the SAS-AM website (or any owned property) must carry UTM parameters. Without them, GA4 attributes the session as `(direct)` because LinkedIn's mobile in-app browser strips the referrer header.
+
+### Why this is mandatory
+
+A 30-day audit of www.sas-am.com showed:
+
+- 1,192 of 4,468 users (27%) arrived as `Source = Direct, Medium = Direct, Campaign = (direct)` with a 98% bounce rate — the classic LinkedIn-mobile signature where referrer is stripped.
+- Articles that received hundreds of LinkedIn impressions registered only single-digit web views attributable to LinkedIn.
+- Campaign-level attribution was unusable until UTMs were added to first-comment link drops.
+
+UTMs move the missing traffic from the unmeasurable "(direct)" black hole into a named campaign that can be split post by post.
+
+### The scheme
+
+Every outbound URL placed in a LinkedIn post (in the body, in the first comment, anywhere a reader might click) must include all four parameters:
+
+| Parameter | Value | Notes |
+|-----------|-------|-------|
+| `utm_source` | `linkedin` | Always lowercase. |
+| `utm_medium` | `organic_social` (default) or `paid_social` | Use `paid_social` only when boosting via LinkedIn Ads. |
+| `utm_campaign` | The campaign slug | Must match the `--campaign` value used when registering the post via `analytics/register.py add`. Use lowercase hyphenated form (e.g. `ai-in-am-weekly`, `geelongport-case`). |
+| `utm_content` | A short slug identifying the specific post within the campaign | Lets you split a multi-post arc's traffic across the Mon roundup, Tue pillar, Wed carousel, Thu closer, etc. |
+
+### Where the UTMd URL goes
+
+The URL the reader actually clicks lives in the **first-comment text block** of the post draft. The post body itself uses the placeholder `[link in comments]`. The UTMd URL is what gets pasted into the first comment after the post lands.
+
+Every Pillar Promotion or carousel-CTA draft therefore has two URL representations:
+
+1. The body uses `[link in comments]` (placeholder, no URL — keeps the post body clean of long URL strings).
+2. The first comment carries the full UTMd URL.
+
+### Worked example
+
+For a Tuesday Pillar Promotion driving traffic to a GeelongPort case study under the `geelongport-case` campaign:
+
+```
+https://www.sas-am.com/resources/geelongport-12000-assets-one-standard?utm_source=linkedin&utm_medium=organic_social&utm_campaign=geelongport-case&utm_content=pillar
+```
+
+For a Wednesday carousel post in the same campaign, change only `utm_content`:
+
+```
+https://www.sas-am.com/resources/geelongport-12000-assets-one-standard?utm_source=linkedin&utm_medium=organic_social&utm_campaign=geelongport-case&utm_content=carousel
+```
+
+### Carousel exception
+
+PDF document carousels render the URL into the slide image (slide 8 typically), which is text rendered into a JPG and not clickable. The UTM convention applies only to the **caption** and the **first-comment** text block — the slide image stays clean for legibility.
+
+### Output format addition
+
+When the skill outputs a draft, the first-comment block in the rendered draft file MUST include the UTMd URL inline, ready to paste. Format:
+
+```markdown
+## First comment (UTMd for attribution)
+
+```text
+Full read → https://www.sas-am.com/resources/<slug>?utm_source=linkedin&utm_medium=organic_social&utm_campaign=<campaign-slug>&utm_content=<post-slug>
+```
+```
+
+If the post has no external URL (a pure engagement post like a Quick Insight that asks a question), no UTM is needed — the first-comment block can be omitted entirely.
+
+### Rules of thumb
+
+- **One campaign per multi-post arc.** A weekly arc that drives to the same article uses the same `utm_campaign` for all posts in the week, with different `utm_content` slugs per day.
+- **Mirror the registry.** Whatever `--campaign "..."` value goes into `register.py add` should match `utm_campaign`. Hyphenate the URL slug version (`utm_campaign=ai-in-am-weekly`) even if the human-readable registry value uses spaces and capitals (`AI in AM Weekly`).
+- **Don't UTM the body URL.** The body uses `[link in comments]` for the user-facing CTA. The UTMd URL only appears in the first comment text.
+
+---
+
 ## LinkedIn Formatting Rules
 
 - **Line breaks**: Use liberally — single idea per line
 - **No emojis**: Do not use emojis in any post
 - **No hashtags**: Do not include hashtags in any post
 - **Emphasis**: Bold is not available on LinkedIn, so use CAPS sparingly for emphasis (one word or short phrase, not whole sentences)
-- **Lists**: Work well but do not overdo numbered lists — mix with arrow points (→) or dashes
+- **Lists**: Work well but don't overdo numbered lists — mix with arrow points (→) or dashes
 - **Paragraphs**: Keep to 1–3 lines maximum
-- **Length discipline**: Say it in fewer words. If a sentence does not add value, cut it
+- **Length discipline**: Say it in fewer words. If a sentence doesn't add value, cut it
 
 ---
 
 ## Output Format: LinkedIn-Ready
 
-When presenting a finished post, format it so it can be copied directly from the terminal and pasted into LinkedIn's post composer with zero reformatting. LinkedIn is a plain-text platform with specific quirks — follow these rules exactly.
+When presenting a finished post to the user, format it so it can be copied directly from the terminal and pasted into LinkedIn's post composer with zero reformatting. LinkedIn is a plain-text platform with specific quirks — follow these rules exactly.
 
 ### Copy-Paste Rules
 
@@ -606,7 +676,7 @@ When presenting a finished post, format it so it can be copied directly from the
 2. **No code fences** — do not wrap the finished post in triple backticks. Output the post as raw text. Code fence characters (```) will appear as literal text in LinkedIn.
 3. **Use Unicode characters for structure** — use → (U+2192) for arrow lists, and — (U+2014) for em dashes. These render reliably across all devices and operating systems.
 4. **Do not use indentation** — LinkedIn strips leading spaces and tabs. Start every line flush left. Use → at the start of list items instead of spaces or tabs for indentation.
-5. **Preserve blank lines with U+2800** — LinkedIn collapses empty blank lines when pasting. To preserve paragraph spacing, place a single U+2800 (Braille Pattern Blank) character on every "empty" line between paragraphs. This invisible character tricks LinkedIn into keeping the line break. The output should look like plain text with normal spacing, but every blank line actually contains U+2800. Do not use multiple consecutive blank lines.
+5. **Preserve blank lines with U+2800** — LinkedIn collapses empty blank lines when you paste. To preserve paragraph spacing, place a single U+2800 (Braille Pattern Blank) character on every "empty" line between paragraphs. This invisible character tricks LinkedIn into keeping the line break. The output should look like plain text with normal spacing, but every blank line actually contains U+2800. Do not use multiple consecutive blank lines.
 6. **Do not use Unicode bold or italic** — do not use Mathematical Alphanumeric Symbol characters (U+1D400–U+1D7FF) for faux bold/italic styling. They break screen readers, are not searchable on LinkedIn, and may not render on older Android devices. Use CAPS sparingly for emphasis instead (one word or short phrase, never whole sentences).
 7. **Hook on its own line** — the first line of the post must stand alone, followed by a blank line. This is what appears before LinkedIn's "see more" truncation.
 8. **Keep the hook under 110 characters** — LinkedIn shows approximately 140 characters on desktop and 110 on mobile before truncating with "see more". Optimise for mobile.
@@ -633,7 +703,7 @@ Everything between the markers should paste directly into LinkedIn with zero ref
 
 ## Technical Accuracy
 
-- Always ground claims in reality — if the post says AI can do something, it should be genuinely achievable
+- Always ground claims in reality — if we say AI can do something, it should be genuinely achievable
 - Use specific numbers where possible ("23% reduction" not "significant reduction")
 - Acknowledge limitations and trade-offs — it builds credibility
 - Reference standards correctly (ISO 55001, not ISO 55000 for certification)
@@ -715,10 +785,10 @@ Then present the recommended draft in full.
 
 Present the recommended draft and ask:
 
-- "Does this capture what was intended?"
+- "Does this capture what you wanted to say?"
 - "Anything to adjust — tone, specific details, the CTA?"
-- "Prefer one of the other formats instead?"
-- "Ready to ship, or should it be tightened up?"
+- "Want me to switch to one of the other formats instead?"
+- "Ready to ship, or want me to tighten it up?"
 
 If the user prefers a different draft from Step 4, switch to that one and refine it instead.
 
@@ -741,7 +811,7 @@ See the "Image Generation Integration" section below for implementation details.
 
 ## Image Generation Integration
 
-This skill integrates with **nano-banana-2** (an external dependency, not part of sas-content-hub) to generate matching visuals for LinkedIn posts. The nano-banana-2 skill must be available in the user's environment for image generation to work.
+This skill integrates with **nano-banana-2** to generate matching visuals for LinkedIn posts.
 
 ### When to Offer Image Generation
 
@@ -823,8 +893,8 @@ Before presenting the final post, verify every item:
 
 - [ ] Australian English spelling throughout (organisation, behaviour, analyse, colour, centre)
 - [ ] Active voice predominant
-- [ ] Opening hook is genuinely compelling — would it earn a "see more" tap?
-- [ ] Clear value proposition — what is in it for the reader?
+- [ ] Opening hook is genuinely compelling — would YOU tap "see more"?
+- [ ] Clear value proposition — what's in it for the reader?
 - [ ] Specific and concrete, not vague and general
 - [ ] Technical claims are accurate and achievable
 - [ ] CTA is clear and appropriate for the goal
@@ -836,6 +906,8 @@ Before presenting the final post, verify every item:
 - [ ] Post length matches the chosen format (150–300 for pillar, 150–400 for insight)
 - [ ] Every story, anecdote, and statistic traces back to the user's interview answers — nothing fabricated
 - [ ] Format matches the material available (no story-led post without a real story)
+- [ ] Any external URL in the first-comment block carries the full UTM scheme (`utm_source`, `utm_medium`, `utm_campaign`, `utm_content`) — see URL Attribution section above
+- [ ] `utm_campaign` matches the `--campaign` value used (or planned) for `register.py add`
 - [ ] Would a senior asset management professional find this valuable and credible?
 
 ---
@@ -1079,10 +1151,10 @@ The skill responds to these in-session commands:
 ## Final Notes
 
 - **Be genuinely helpful**: Every post should leave the reader better off than before they read it
-- **Respect intelligence**: The audience are professionals — do not patronise
-- **Stay grounded**: Practitioners, not academics or pure theorists
-- **Show personality**: It is okay to have opinions and express them
+- **Respect intelligence**: Our audience are professionals — don't patronise
+- **Stay grounded**: We're practitioners, not academics or pure theorists
+- **Show personality**: It's okay to have opinions and express them
 - **Build trust**: Consistency, accuracy, and honesty compound over time
-- **One post, one idea**: Do not try to cover everything — depth beats breadth
+- **One post, one idea**: Don't try to cover everything — depth beats breadth
 
 When in doubt, ask: "Would a senior asset management professional find this valuable and credible?" If yes, ship it. If not, revise.

@@ -12,13 +12,14 @@ To produce comprehensive, ISO 55001:2024-aligned Asset Management Plans, conduct
 
 The AMP development process follows an adaptive, gap-driven methodology rather than a rigid linear sequence. The overall flow is:
 
-1. **Intake** — Accept whatever the user provides upfront (data files, context, documents, partial plans)
-2. **Analysis** — Assess what is covered and what is missing against the full AMP structure
-3. **Research** — Dispatch the `amp-researcher` agent to gather regulatory, benchmark, and organisational context
-4. **Interview** — Conduct targeted interviews only for identified gaps (one question at a time, multiple-choice where possible)
-5. **Data Analysis** — Process any quantitative data through the `amp-data-analyst` agent
-6. **Drafting** — Write each AMP section, with per-section review by `amp-asset-context-reviewer`
-7. **Output Generation** — Produce both HTML presentation (via `/sas-presentation`) and DOCX (via `generateDocx.py`)
+1. **Intake** — Accept whatever the user provides upfront (data files, context, documents, partial plans). Save client documents to `sas-amp-working/research/client-docs/`.
+2. **Knowledge Graph Load + Client Overlay** — Load the standards graph. If client documents were provided, extract a client graph and merge with standards. Run gap analysis. See `references/client-integration.md` for the full process.
+3. **Analysis** — Present gap analysis showing what standards require vs what client documents already cover. Prioritise gaps by severity (ISO 55001 Clause 6.2.3 and 8.1 are high priority).
+4. **Research** — Dispatch `amp-researcher` agent targeting **graph identified gaps** — not generic research, but specific questions the gap analysis raised.
+5. **Interview** — Conduct targeted interviews only for gaps the graph and research could not resolve (one question at a time, multiple choice where possible).
+6. **Data Analysis** — Process quantitative data through `amp-data-analyst`. Enrich the merged graph with data summary nodes linked to relevant standard clauses.
+7. **Drafting** — Write each AMP section by querying the **merged graph** (standards + client + data) for section context. Review with `amp-asset-context-reviewer`.
+8. **Output Generation** — Produce both HTML presentation (via `/sas-presentation`) and DOCX (via `generateDocx.py`)
 
 ## Working Directory
 
@@ -27,6 +28,10 @@ Create `./sas-amp-working/` in the current project directory at session start. S
 ```
 sas-amp-working/
   research/
+    client-docs/             # Client provided documents (policies, plans, reports)
+    client-graph.json        # Extracted graph from client documents
+    merged-graph.json        # Standards + client + data merged graph
+    gap-analysis.md          # Graph informed gap analysis output
     regulatory.md
     benchmarks.md
     organisational.md
@@ -41,9 +46,58 @@ sas-amp-working/
     amp-document.docx        # Final DOCX document
 ```
 
+## AMP Knowledge Graph
+
+The skill ships with a 183 node knowledge graph (`references/amp-knowledge-graph.json`) extracted from the SAS Technical Resource Library. It encodes:
+
+- **ISO 55001:2024** clause level requirements (Clauses 4.1 through 10.3)
+- **ISO 55000:2024** definitions (AMP, SAMP, AMS, LoS, AM objectives)
+- **ISO 55002:2014** guidance for AMP development (Clause 6.2.2 detail)
+- **AMAF** mandatory requirements mapped to ISO 55001 equivalents
+- **IAM Anatomy v4** (6 Groups, 39 Subjects) mapped to AMP content areas
+- **GFMAM Landscape v3.0** (7 Subject Areas) mapped to AMP inputs
+- **GFMAM Maintenance Framework** (9 Areas) mapped to maintenance planning
+- **Downer AMS** AMP guide, template, lifecycle plan methodology
+- **NAMS.PLUS / SMEC** template structures for local government
+- **GFMAM Certification Guidance** — what auditors expect as evidence
+- **IAM SSG Subjects 6/7/8** — decision making, lifecycle value realisation
+- **MTM SAMP** — real world SAMP to AMP cascade example
+
+### Mandatory Graph Query Before Drafting
+
+Before drafting each AMP section, **you must** query the graph for that section's context. The file `references/graph-queries.md` specifies the seed nodes and extraction patterns for each of the 10 sections. This ensures every section is grounded in the standards, uses correct terminology, and addresses all applicable requirements.
+
+**Load pattern:**
+
+```python
+import json
+from networkx.readwrite import json_graph
+from pathlib import Path
+
+graph_path = Path('${CLAUDE_PLUGIN_ROOT}/skills/sas-amp/references/amp-knowledge-graph.json')
+data = json.loads(graph_path.read_text())
+G = json_graph.node_link_graph(data)
+```
+
+Then for each section, run the queries specified in `references/graph-queries.md`. Use the results to:
+1. **Ground the section** in ISO 55001 clause language
+2. **Check AMAF compliance** by verifying all mandatory requirements are addressed
+3. **Adopt IAM/GFMAM terminology** where it adds precision
+4. **Reference source documents** the client can verify
+5. **Ensure nothing is missed** that the standards require
+
+### Cross Cutting Graph Queries
+
+Run these once at the start of any AMP engagement:
+
+- **AMAF compliance matrix** — query all `amaf_mandatory_*` nodes to build a requirements checklist
+- **IAM 39 Subjects coverage** — query IAM subject group nodes to verify the AMP addresses all relevant subjects
+- **GFMAM Landscape alignment** — query `gfmam_sa*` nodes for subject area coverage
+- **Maintenance Framework alignment** — query `maint_fw_area*` nodes for Section 5 coverage
+
 ## AMP Structure
 
-The plan follows a combined structure drawing from both the SMEC AMP Template and NAMS.PLUS AMP Template, aligned to ISO 55001:2024. Refer to `references/amp-template-structure.md` for the full section-by-section breakdown with guidance notes.
+The plan follows a combined structure drawing from both the SMEC AMP Template and NAMS.PLUS AMP Template, aligned to ISO 55001:2024. Refer to `references/amp-template-structure.md` for the full section by section breakdown with guidance notes.
 
 ### Core Sections
 
@@ -62,16 +116,30 @@ The plan follows a combined structure drawing from both the SMEC AMP Template an
 
 Every section of the AMP maps to specific ISO 55001:2024 clauses. Refer to `references/iso55001-amp-mapping.md` for the complete clause-by-clause mapping table. Ensure each section explicitly demonstrates how it addresses the relevant ISO requirements.
 
+## Client Document Integration
+
+When the user provides client documents (policies, existing plans, reports, contracts), follow the process in `references/client-integration.md`:
+
+1. Save documents to `sas-amp-working/research/client-docs/`
+2. Extract a client graph using graphify or a targeted subagent
+3. Merge with the standards graph: `nx.compose(G_standards, G_client)`
+4. Create bridge edges between client nodes and standard requirement nodes
+5. Run compliance gap analysis and AMAF gap analysis
+6. Present gap analysis to user before starting interviews
+
+The merged graph (`sas-amp-working/research/merged-graph.json`) replaces `amp-knowledge-graph.json` for all subsequent section queries. If no client documents are provided, use the standards graph directly.
+
 ## Research Phase
 
-Dispatch the `amp-researcher` agent early in the process with these parameters:
+Dispatch the `amp-researcher` agent after the graph gap analysis with these parameters:
 - **Organisation name** and sector/industry
 - **Jurisdiction** (for regulatory context)
 - **Asset class(es)** covered by the AMP
+- **Graph identified gaps** — specific requirements where neither client documents nor the standards graph provide enough context
 
-The researcher produces structured files in `sas-amp-working/research/` and a consolidated `research-brief.md`. All other agents should read `research-brief.md` before performing their work.
+The researcher produces structured files in `sas-amp-working/research/` and a consolidated `research-brief.md`. The research brief should specifically address the gaps identified by the graph analysis. All other agents should read `research-brief.md` before performing their work.
 
-## Data Analysis
+## Data Analysis and Graph Enrichment
 
 When the user provides quantitative data (asset registers, condition data, maintenance histories, financial records), dispatch the `amp-data-analyst` agent. It handles:
 
@@ -81,16 +149,59 @@ When the user provides quantitative data (asset registers, condition data, maint
 - **Lifecycle costing** — Basic LCC analysis with discount rates
 - **Chart generation** — D3.js interactive charts for HTML, matplotlib/plotly static images for DOCX
 
+After data analysis completes, **enrich the merged graph** with data summary nodes. See `references/client-integration.md` Layer 2 for the enrichment pattern. Key linkages:
+
+| Analysis Output | Links To | Edge |
+|----------------|----------|------|
+| Asset portfolio summary | `iso55001_cl623` | `evidences` |
+| Condition profile | `iso55001_cl76` | `evidences` |
+| Renewal forecast | `iso55001_cl623` (financial implications) | `quantifies` |
+| Maintenance costs | `maint_fw_area4` | `quantifies` |
+| Criticality distribution | `iso55001_cl612` | `evidences` |
+| LCC results | `concept_iam_lifecycle_cost_elements` | `quantifies` |
+
+This means section queries now return three layers: standards requirements, client context, and quantitative evidence.
+
 Refer to `references/data-analysis-patterns.md` for methodology details.
 
-## Per-Section Drafting with Context Review
+## Per-Section Drafting with Graph Query and Context Review
 
-Draft each major section individually. After drafting each section, dispatch the `amp-asset-context-reviewer` agent with:
+For each major section, follow this three step process:
+
+### Step 1 — Query the Knowledge Graph
+
+Before writing a single word, run the graph queries specified in `references/graph-queries.md` for the current section. This returns:
+- The **ISO 55001 clause requirements** the section must address
+- The **AMAF mandatory requirements** the section satisfies
+- The **IAM/GFMAM subject guidance** that informs the content
+- **Template structures** from Downer, NAMS.PLUS, and SMEC for that section
+- **Audit evidence expectations** — what an ISO 55001 auditor looks for
+
+Collect the query results into section context. Do not draft without this step.
+
+### Step 2 — Draft the Section
+
+Write the section using:
+- The graph query results (standards grounding)
+- The `research-brief.md` (organisational context)
+- User interview responses (client specifics)
+- Data analysis outputs (quantitative evidence)
+
+Every section should:
+- Use terminology consistent with ISO 55000:2024 definitions (verify against graph nodes `def_amp`, `def_samp`, etc.)
+- Include an ISO 55001 alignment note citing the specific clause(s) addressed
+- Address all AMAF mandatory requirements identified by the graph query
+- Reflect IAM/GFMAM subject guidance where it adds depth
+
+### Step 3 — Context Review
+
+After drafting, dispatch the `amp-asset-context-reviewer` agent with:
 - The drafted section content
+- The graph query results for that section (so the reviewer can verify standards coverage)
 - The `research-brief.md`
 - All user interview responses collected so far
 
-The reviewer validates the section reads authentically for the specific organisation and asset class, flags generic language, and challenges unsupported assumptions. Incorporate feedback before moving to the next section.
+The reviewer validates the section reads authentically for the specific organisation and asset class, flags generic language, challenges unsupported assumptions, and **verifies all graph identified requirements are addressed**. Incorporate feedback before moving to the next section.
 
 ## Output Generation
 
@@ -144,10 +255,13 @@ Adapt the plan to any sector. Adjust terminology, benchmarks, and emphasis based
 
 ### Reference Files
 
-- **`references/amp-template-structure.md`** — Full section-by-section AMP structure with guidance notes
+- **`references/amp-knowledge-graph.json`** — 183 node knowledge graph (ISO 55001, AMAF, IAM, GFMAM, templates). **Query before drafting each section.**
+- **`references/graph-queries.md`** — Section by section graph query guide with seed nodes and extraction patterns
+- **`references/client-integration.md`** — How to merge client documents and data with the standards graph for gap analysis and context enrichment
+- **`references/amp-template-structure.md`** — Full section by section AMP structure with guidance notes
 - **`references/iso55001-amp-mapping.md`** — ISO 55001:2024 clause summaries and AMP section mapping
 - **`references/data-analysis-patterns.md`** — LCC, NPV, renewal modelling, chart specifications
-- **`references/interview-methodology.md`** — Adaptive interview process and question bank
+- **`references/interview-methodology.md`** — Adaptive, graph informed interview process and question bank
 
 ### Scripts
 

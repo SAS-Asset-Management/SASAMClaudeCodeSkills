@@ -1,6 +1,8 @@
 # AMP Template Structure
 
-Comprehensive section-by-section guide for developing an Asset Management Plan. This structure combines the SMEC AMP Template and NAMS.PLUS AMP Template, adapted for sector-agnostic use.
+Comprehensive section by section guide for developing an Asset Management Plan. This structure combines the SMEC AMP Template and NAMS.PLUS AMP Template, adapted for sector agnostic use.
+
+> **Knowledge Graph Integration:** Each section below includes a `Graph Query` block listing the seed nodes to query in `amp-knowledge-graph.json` before drafting. See `graph-queries.md` for full query methodology.
 
 ## Section 1: Executive Summary
 
@@ -16,6 +18,8 @@ Comprehensive section-by-section guide for developing an Asset Management Plan. 
 - **Confidence Levels** — Data confidence rating (High/Medium/Low) and what it means
 - **The Next Steps** — Priority actions arising from the plan
 - **Key Chart** — Single chart showing projected expenditure vs available funding over 10 years
+
+**Graph Query:** Seed nodes `iso55001_cl623`, `def_amp`, `samp_concept`. Extract the planning hierarchy and ISO definition of an AMP. The graph shows AMP sits between SAMP (strategic direction) and operational plans — the executive summary should reflect this cascade positioning.
 
 **Notes:** Draft this section LAST after all other sections are complete. It should be no more than 2-3 pages.
 
@@ -33,6 +37,8 @@ Comprehensive section-by-section guide for developing an Asset Management Plan. 
 - **AM Maturity / Improvement Progress** — Current AM maturity level and progress since last plan
 
 **ISO 55001 alignment:** Clauses 4.1, 4.2, 4.3, 5.1, 5.2, 5.3, 6.2.1
+
+**Graph Query:** Seed nodes `iso55001_cl41`, `iso55001_cl42`, `iso55001_cl43`, `amaf`, `gfmam_landscape_v3`, `iam_anatomy_v4`. The graph connects AMAF to ISO 55000 (aligned), Victorian Standing Directions (enforced by), and asset life cycle (structured around). Establish the regulatory cascade: Victorian legislation → AMAF → ISO 55001 → this AMP. Query IAM Anatomy v4 for the 6 Groups and 39 Subjects framing, and GFMAM Landscape v3.0 for the 7 Subject Areas.
 
 ## Section 3: Levels of Service
 
@@ -54,6 +60,8 @@ Comprehensive section-by-section guide for developing an Asset Management Plan. 
 
 **ISO 55001 alignment:** Clauses 4.2, 4.5, 6.2.2
 
+**Graph Query:** Seed nodes `iso55001_cl622`, `amaf_mandatory_3_2_2_strategy`, `concept_lg_amp_los`. The graph reveals LoS is where customer expectations meet technical reality. The local government node shows a specific pattern: community LoS → technical LoS → gap analysis → improvement programme. Query IAM Subject Group 5 (Strategy and Planning) for service level guidance.
+
 ## Section 4: Future Demand
 
 **Purpose:** Forecast how demand for the assets and services will change over the planning period.
@@ -73,6 +81,8 @@ Comprehensive section-by-section guide for developing an Asset Management Plan. 
 - Include sensitivity analysis for key demand assumptions
 
 **ISO 55001 alignment:** Clauses 4.1, 6.1, 6.2.3
+
+**Graph Query:** Seed nodes `iso55001_cl41`, `iso55001_cl613`, `concept_lg_demand_forecasting`. The graph links demand to both risk (6.1.2) and opportunity (6.1.3). Query the local government 3 scenario model for demand forecasting structure.
 
 ## Section 5: Asset Lifecycle Management
 
@@ -115,6 +125,8 @@ Comprehensive section-by-section guide for developing an Asset Management Plan. 
 
 **ISO 55001 alignment:** Clauses 4.5.3, 6.2.3, 7.6, 8.1
 
+**Graph Query:** Seed nodes `iso55001_cl81`, `iso55001_cl623`, `maint_fw_area4`, `maint_fw_area3`, `concept_iam_lifecycle_value_realisation`, `concept_iam_decision_making_techniques_scale`. This is the densest section of the graph. Query the Maintenance Framework's 9 areas for maintenance planning content. Query IAM Subjects 6/7 (Capital and Ops Decision Making) for investment appraisal methods. Query IAM Subject 8 (Lifecycle Value Realisation) for whole of life costing. Query Downer GU006 for lifecycle plan methodology (renewal, replacement, continue maintenance). Reference worked examples: Spotless hospital LCMP ($800M, 50,000+ assets) and the numerical lifecycle plan with 7 level hierarchy.
+
 ## Section 6: Risk Management
 
 **Purpose:** Identify, assess, and plan mitigation for risks to the assets and the services they support.
@@ -132,6 +144,8 @@ Comprehensive section-by-section guide for developing an Asset Management Plan. 
 - Link risks to specific lifecycle actions (maintenance, renewal, upgrade)
 
 **ISO 55001 alignment:** Clauses 6.1.1, 6.1.2, 6.1.3
+
+**Graph Query:** Seed nodes `iso55001_cl612`, `iso55001_cl611`, `amaf_mandatory_3_1_5`. Query the ISO 55002 8 step risk assessment process node. The graph shows risk connects to both planning (6.1) and operations (8.1) — the AMP should demonstrate this bidirectional link.
 
 ## Section 7: Financial Summary
 
@@ -158,6 +172,8 @@ Comprehensive section-by-section guide for developing an Asset Management Plan. 
 
 **ISO 55001 alignment:** Clauses 6.2.3(h), 7.1
 
+**Graph Query:** Seed nodes `iso55001_cl623`, `iso55001_cl71`, `concept_iam_capex_opex_totex`, `concept_iam_lifecycle_cost_elements`. The IAM's TOTEX concept bridges the traditional capex/opex split. Query the local government financial sustainability framework for the sustainability ratio approach. The AMP should present total cost of ownership, not just budget line items.
+
 ## Section 8: Asset Management Practices
 
 **Purpose:** Describe the systems, processes, and capabilities that support AM delivery.
@@ -173,6 +189,8 @@ Comprehensive section-by-section guide for developing an Asset Management Plan. 
 
 **ISO 55001 alignment:** Clauses 4.4, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 8.3
 
+**Graph Query:** Seed nodes `iso55001_cl76`, `amaf_mandatory_3_4_3_info`, `maint_fw_area8`, `maint_fw_area9`. The Maintenance Framework's support systems area (Area 8) maps directly to CMMS/EAM, GIS, and data management content. Query AMAF information management requirements for Victorian compliance.
+
 ## Section 9: Improvement and Monitoring
 
 **Purpose:** Define how the AMP will be measured, monitored, and improved.
@@ -185,6 +203,8 @@ Comprehensive section-by-section guide for developing an Asset Management Plan. 
 - **Audit Program** — Internal and external audit schedule
 
 **ISO 55001 alignment:** Clauses 9.1, 9.2, 9.3, 10.1, 10.2, 10.3
+
+**Graph Query:** Seed nodes `iso55001_cl91`, `amaf_mandatory_3_1_4_perf`, `amaf_mandatory_3_4_2_monitor`, `concept_audit_evidence_for_amp`. Query what auditors look for as evidence of AM planning (complexity categories, asset sampling). The graph shows the feedback loop: monitor → evaluate → improve → monitor. The GFMAM Maintenance Framework Area 9 (Maintenance Improvement) informs the improvement programme structure.
 
 ## Section 10: Appendices
 

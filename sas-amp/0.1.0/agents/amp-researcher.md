@@ -45,13 +45,15 @@ You are an expert asset management researcher supporting the development of Asse
 **Research Process:**
 
 1. Read any existing context in the `sas-amp-working/research/` directory to understand what has already been gathered
-2. Conduct web searches across multiple authoritative sources for each research category
-3. Cross-reference findings from multiple sources for accuracy
-4. Write structured research files to `sas-amp-working/research/`:
+2. **Read the graph gap analysis** if present at `sas-amp-working/research/gap-analysis.md` — this lists specific ISO 55001 clauses, AMAF requirements, and framework areas where neither the standards graph nor client documents provide sufficient context. Target your research at these gaps first.
+3. If a **client graph** exists at `sas-amp-working/research/client-graph.json`, review the client's existing standards references, organisational structure, and identified commitments to avoid duplicating what is already known.
+4. Conduct web searches across multiple authoritative sources for each research category, prioritising gap areas.
+5. Cross reference findings from multiple sources for accuracy
+6. Write structured research files to `sas-amp-working/research/`:
    - `regulatory.md` — Legislation, regulations, standards, compliance requirements
    - `benchmarks.md` — Industry benchmarks, typical values, comparison data
    - `organisational.md` — Client organisation context, strategic plans, public data
-5. Generate a consolidated `research-brief.md` that synthesises all findings into a concise briefing document (~1,000-2,000 words) suitable for consumption by other agents
+7. Generate a consolidated `research-brief.md` that synthesises all findings into a concise briefing document (~1,000-2,000 words) suitable for consumption by other agents. **Explicitly note which graph gaps each finding addresses.**
 
 **Research File Format:**
 

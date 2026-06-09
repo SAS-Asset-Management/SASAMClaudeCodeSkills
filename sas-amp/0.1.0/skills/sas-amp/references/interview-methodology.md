@@ -17,32 +17,34 @@ When the user first engages, accept everything they provide before asking questi
 
 1. Ask: *"What organisation is this AMP for? Go ahead and share any data, documents, or context you have — I'll analyse it all before asking questions."*
 2. Receive and catalogue all materials
-3. Analyse each item and map to AMP sections
-4. Present a gap analysis:
-   - Sections with sufficient information (green)
-   - Sections with partial information (amber)
-   - Sections with no information (red)
-5. Begin research phase in parallel
-6. Start interviews for amber/red sections
+3. Save client documents to `sas-amp-working/research/client-docs/`
+4. **Extract client graph** — graphify the client documents to identify what standards they reference, what commitments they've made, what asset classes they cover
+5. **Merge with standards graph** — compose client graph with `amp-knowledge-graph.json`
+6. **Run graph gap analysis** — compare ISO 55001 clause requirements and AMAF mandatory requirements against what the client documents evidence
+7. Present a **graph informed gap analysis** (see below)
+8. Begin research phase targeting graph identified gaps
+9. Start interviews only for gaps that research cannot fill
 
 ## Gap Analysis Template
 
-After analysing provided materials:
+After merging client documents with the standards graph and running compliance checks:
 
 ```
-## AMP Readiness Assessment
+## AMP Readiness Assessment (Graph Informed)
 
-| Section | Status | Information Available | Gaps |
-|---------|--------|---------------------|------|
-| Introduction | Partial | Organisation name, sector | Strategic linkages, AM policy |
-| Levels of Service | Gap | — | All LoS data needed |
-| Future Demand | Partial | Population forecasts (from research) | Asset-specific demand drivers |
-| Lifecycle Management | Good | Asset register, condition data | Maintenance costs, renewal criteria |
-| Risk Management | Gap | — | Risk register needed |
-| Financial Summary | Partial | Current budgets | 10-year LTFP, funding strategy |
-| AM Practices | Gap | — | Systems, processes, capabilities |
-| Improvement | Gap | — | Performance measures, maturity |
+| Section | Standards | Client Evidence | Research | Gap | Interview Needed? |
+|---------|-----------|----------------|----------|-----|-------------------|
+| Introduction | 4.1, 4.2, 4.3, 5.1-5.3 | AM Policy found, SAMP exists | Org context gathered | Strategic linkages unclear | Yes — Q4 |
+| Levels of Service | 4.5, 6.2.2 | Contract KPIs found | Benchmarks gathered | Community LoS not defined | Yes — Q6, Q7 |
+| Future Demand | 4.1, 6.1.3 | — | Population data found | Asset specific demand unknown | Yes — Q9, Q10 |
+| Lifecycle Mgmt | 6.2.3, 8.1 | Asset register provided | Useful life benchmarks | Condition data, renewal criteria | Yes — Q11, Q12 |
+| Risk Management | 6.1.1, 6.1.2 | Risk register found | — | Covered by client docs | No |
+| Financial Summary | 6.2.3(h), 7.1 | LTFP provided | — | Renewal gap not quantified | Data analysis needed |
+| AM Practices | 7.2-7.7, 8.3 | CMMS identified | — | Work mgmt process unknown | Yes — Q18 |
+| Improvement | 9.1-10.3 | Maturity assessment exists | — | Improvement plan outdated | Yes — Q19 |
 ```
+
+The key difference: the **Standards** column comes from the knowledge graph (ISO 55001 clauses per section), and **Client Evidence** comes from the client graph overlay. Only the remaining **Gap** column drives interviews.
 
 ## Interview Sequences by Section
 
@@ -198,10 +200,12 @@ After analysing provided materials:
 
 Not all questions above will be asked. Select based on:
 
-1. **Skip if answered** — If the user's provided materials or research already answers the question
-2. **Skip if irrelevant** — If the organisation's context makes a question irrelevant
-3. **Go deeper if needed** — If an answer reveals complexity, ask follow-up questions
-4. **Adjust language** — Match terminology to the user's sector and familiarity
+1. **Skip if graph resolved** — If the merged graph (standards + client) already provides the answer. For example, if the client's SAMP defines AM objectives, skip Q4 (strategic context) and instead validate what the graph found.
+2. **Skip if research resolved** — If the amp-researcher found the answer from public sources
+3. **Skip if irrelevant** — If the organisation's context makes a question irrelevant
+4. **Prioritise by gap severity** — Ask about high severity gaps first (ISO 55001 Clause 6.2.3 and 8.1 gaps are critical; Clause 10.x gaps can wait)
+5. **Go deeper if needed** — If an answer reveals complexity, ask follow-up questions
+6. **Adjust language** — Match terminology to the user's sector and familiarity. If the client graph reveals their terminology (e.g., they say "asset renewal" not "capital replacement"), use their language in questions.
 
 ## Validation Checkpoints
 

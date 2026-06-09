@@ -19,6 +19,7 @@ Examples:
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -63,6 +64,84 @@ def check_sshpass():
         print("ERROR: sshpass is not installed.")
         print("  Install with: brew install hudochenkov/sshpass/sshpass")
         sys.exit(1)
+
+
+def validate_self_contained(file_path):
+    """Check that an HTML file is self-contained with no local file references.
+
+    Scans for <link href="..."> and <script src="..."> tags that point to
+    local files (not CDN URLs, data URIs, or anchors). If any are found,
+    prints warnings and offers to inline CSS files automatically.
+
+    Returns the (possibly modified) file path to deploy.
+    """
+    ext = os.path.splitext(file_path)[1].lower()
+    if ext != ".html":
+        return file_path
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        html = f.read()
+
+    # Find local stylesheet references: href="something.css" (not http/https/data/mailto/#)
+    local_css = re.findall(
+        r'<link[^>]+href="(?!https?://|data:|mailto:|#)([^"]+\.css)"[^>]*/?>',
+        html,
+    )
+    # Find local script references: src="something.js" (not http/https/data)
+    local_js = re.findall(
+        r'<script[^>]+src="(?!https?://|data:)([^"]+)"[^>]*>',
+        html,
+    )
+
+    issues = []
+    if local_css:
+        issues.extend([f"  CSS: {ref}" for ref in local_css])
+    if local_js:
+        issues.extend([f"  JS:  {ref}" for ref in local_js])
+
+    if not issues:
+        print("  Asset is self-contained. No local file references found.")
+        return file_path
+
+    print(f"  WARNING: Asset references {len(issues)} local file(s):")
+    for issue in issues:
+        print(issue)
+
+    # Attempt to auto-inline CSS files
+    base_dir = os.path.dirname(os.path.abspath(file_path))
+    inlined_count = 0
+
+    for css_ref in local_css:
+        css_path = os.path.join(base_dir, css_ref)
+        if os.path.isfile(css_path):
+            with open(css_path, "r", encoding="utf-8") as cf:
+                css_content = cf.read()
+            # Replace the <link> tag with an inline <style> block
+            link_pattern = re.compile(
+                r'<link[^>]+href="' + re.escape(css_ref) + r'"[^>]*/?>',
+            )
+            html = link_pattern.sub(
+                "<style>\n" + css_content + "\n  </style>",
+                html,
+            )
+            inlined_count += 1
+            print(f"  INLINED: {css_ref} ({len(css_content):,} chars)")
+        else:
+            print(f"  MISSING: {css_ref} — cannot find {css_path}")
+
+    if local_js:
+        print("  NOTE: Local JS files detected but not auto-inlined.")
+        print("  Ensure JS dependencies are available via CDN or inline them manually.")
+
+    if inlined_count > 0:
+        # Write the inlined version to a temp file for deployment
+        standalone_path = file_path.replace(".html", "_standalone.html")
+        with open(standalone_path, "w", encoding="utf-8") as f:
+            f.write(html)
+        print(f"  Created self-contained version: {standalone_path}")
+        return standalone_path
+
+    return file_path
 
 
 def check_connectivity():
@@ -280,28 +359,32 @@ Subcommands:
         print(f"{'='*60}\n")
 
         # Step 1: Connectivity
-        print("[1/5] Checking connectivity")
+        print("[1/6] Checking connectivity")
         check_connectivity()
 
-        # Step 2: Upload asset
-        print("\n[2/5] Uploading asset to server")
+        # Step 2: Validate self-contained
+        print("\n[2/6] Validating asset is self-contained")
+        deploy_file = validate_self_contained(args.asset_file)
+
+        # Step 3: Upload asset
+        print("\n[3/6] Uploading asset to server")
         if args.dry_run:
-            ext = os.path.splitext(args.asset_file)[1] or ".html"
+            ext = os.path.splitext(deploy_file)[1] or ".html"
             file_path = f"assets/{args.slug}{ext}"
             print(f"  [DRY RUN] Would upload to {ASSETS_DIR}/{args.slug}{ext}")
         else:
-            file_path = upload_asset(args.asset_file, args.slug)
+            file_path = upload_asset(deploy_file, args.slug)
 
-        # Step 3: Register resource
-        print("\n[3/5] Registering resource in resources.json")
+        # Step 4: Register resource
+        print("\n[4/6] Registering resource in resources.json")
         register_resource(args.slug, args.label, file_path, dry_run=args.dry_run)
 
-        # Step 4: Restart container
-        print("\n[4/5] Restarting sas-gate container")
+        # Step 5: Restart container
+        print("\n[5/6] Restarting sas-gate container")
         restart_container(dry_run=args.dry_run)
 
-        # Step 5: Verify
-        print("\n[5/5] Verifying deployment")
+        # Step 6: Verify
+        print("\n[6/6] Verifying deployment")
         if not args.dry_run:
             verify_container()
 
