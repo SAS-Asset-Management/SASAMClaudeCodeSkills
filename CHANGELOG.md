@@ -5,6 +5,12 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-06-09
+
+### Added
+- **b2b-research-agent** Fit-to-services, scope options, and build-out (Phase 6): the skill now assesses fit against our SAS-AM service lines, targets Director-level and above decision-makers, pitches a range of 2–4 engagement scopes each with a win probability, and asks which scope to build out through interview (handing off to beam-selling).
+- **b2b-research-agent** Site Locations: a new research step that finds the prospect's physical sites (head office + operational facilities) with addresses and approximate coordinates, surfaced as a Site Locations table in the dossier and **plotted on an interactive map** (Leaflet + OpenStreetMap, no API key) in the HTML report. The map self-removes when there are no plottable sites. Wired into `report-template.html` and `prospect-dossier-template.md`.
+
 ## [1.9.1] - 2026-04-15
 
 ### Changed

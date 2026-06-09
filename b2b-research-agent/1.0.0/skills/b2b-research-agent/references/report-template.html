@@ -8,6 +8,10 @@
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+  <!-- Leaflet (site map — OpenStreetMap tiles, no API key) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,6 +51,7 @@
         <a href="#executive-summary">Executive Summary</a>
         <div class="nav-divider"></div>
         <a href="#company-snapshot">Company Snapshot</a>
+        <a href="#site-map">Site Locations</a>
         <a href="#problem-evidence">Problem Evidence</a>
         <a href="#buying-committee">Buying Committee</a>
         <div class="nav-divider"></div>
@@ -227,6 +232,24 @@
               <li>{{PRIORITY_3}}</li>
             </ul>
           </div>
+        </section>
+
+        <!-- ======== SITE LOCATIONS ========
+             Plot the prospect's physical sites. Fill SITES[] in the script at the
+             bottom of <body> with ONLY sites you have a real address + coordinates
+             for. If SITES is empty the script removes this whole section. -->
+        <section class="report-section" id="site-map">
+          <span class="section-label">Geography</span>
+          <h2>Site Locations</h2>
+          <p>Head office and key operational sites. Markers are approximate.</p>
+          <div id="map" style="height: 440px; border-radius: 12px; overflow: hidden; margin: 1rem 0;"></div>
+          <table class="data-table">
+            <thead><tr><th>Site</th><th>Type</th><th>Address</th></tr></thead>
+            <tbody>
+              <!-- One row per site (mirror SITES[] below): -->
+              <tr><td>{{SITE_1_NAME}}</td><td>{{SITE_1_TYPE}}</td><td>{{SITE_1_ADDRESS}}</td></tr>
+            </tbody>
+          </table>
         </section>
 
         <!-- ======== PROBLEM EVIDENCE ======== -->
@@ -632,6 +655,35 @@
     }, { rootMargin: '-100px 0px -60% 0px' });
 
     sections.forEach(section => observer.observe(section));
+  </script>
+
+  <!-- ======== SITE MAP (Leaflet + OpenStreetMap, no API key) ========
+       Fill SITES[] with the prospect's sites — ONLY ones with a real address +
+       coordinates (decimal degrees; south/west negative). Leave it empty and the
+       section removes itself. Keep the table rows above in sync with these. -->
+  <script>
+    const SITES = [
+      // { name: "Head office",   type: "HQ",    address: "...", lat: -37.8136, lng: 144.9631 },
+      // { name: "Example depot", type: "Depot", address: "...", lat: -37.9870, lng: 145.2140 },
+    ];
+    (function plotSites() {
+      const el = document.getElementById('map');
+      if (!el) return;
+      if (!SITES.length) { document.getElementById('site-map')?.remove(); return; }
+      const map = L.map('map', { scrollWheelZoom: false });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors', maxZoom: 18
+      }).addTo(map);
+      const markers = SITES.map(s =>
+        L.marker([s.lat, s.lng]).addTo(map)
+         .bindPopup('<strong>' + s.name + '</strong><br>' + (s.type || '') + '<br>' + (s.address || ''))
+      );
+      if (markers.length === 1) {
+        map.setView(markers[0].getLatLng(), 12);
+      } else {
+        map.fitBounds(L.featureGroup(markers).getBounds().pad(0.2));
+      }
+    })();
   </script>
 </body>
 </html>
