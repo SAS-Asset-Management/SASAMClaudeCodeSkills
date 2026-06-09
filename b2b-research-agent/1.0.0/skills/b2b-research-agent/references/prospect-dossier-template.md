@@ -88,6 +88,17 @@
 
 ---
 
+## Site Locations
+
+*Head office and key operational sites. Plotted on the map in the HTML dossier. Include only sites with a defensible address and coordinates.*
+
+| Site | Type | Address | Lat, Long | Notes |
+|------|------|---------|-----------|-------|
+| {{SITE_1_NAME}} | {{SITE_1_TYPE}} | {{SITE_1_ADDRESS}} | {{SITE_1_LATLNG}} | {{SITE_1_NOTES}} |
+| {{SITE_2_NAME}} | {{SITE_2_TYPE}} | {{SITE_2_ADDRESS}} | {{SITE_2_LATLNG}} | {{SITE_2_NOTES}} |
+
+---
+
 ## Buying Signals
 
 | Signal | Source | Date | Interpretation |

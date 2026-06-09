@@ -5,7 +5,7 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.11.0] - 2026-05-19
+## [1.11.0] - 2026-06-09
 
 ### Changed
 - **nano-banana-2** Restructured the brand prompt architect into a **router** with four mode sub-files. The earlier abstraction-based modes (Node Network, Structured Progression, Order from Chaos) are removed entirely — they produced glowy tech-icon clichés. Subjects are now always **stylised, simplified real objects**, never pure abstraction.
@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Mode 4 — Architectural** (`mode-4-architectural.md`): sector positioning, infrastructure, "who we serve".
 - **nano-banana-2** Each mode sub-file contains: when-to-use criteria, the prompt template with `[FIXED BRAND FRAME]` placeholder, slot definitions, and one fully assembled worked example.
 - **nano-banana-2** Plugin version bumped to 1.3.0.
+- **b2b-research-agent** Fit-to-services, scope options, and build-out (Phase 6): the skill now assesses fit against our SAS-AM service lines, targets Director-level and above decision-makers, pitches a range of 2–4 engagement scopes each with a win probability, and asks which scope to build out through interview (handing off to beam-selling).
+- **b2b-research-agent** Site Locations: a new research step that finds the prospect's physical sites (head office + operational facilities) with addresses and approximate coordinates, surfaced as a Site Locations table in the dossier and **plotted on an interactive map** (Leaflet + OpenStreetMap, no API key) in the HTML report. The map self-removes when there are no plottable sites. Wired into `report-template.html` and `prospect-dossier-template.md`.
 
 ## [1.10.0] - 2026-05-19
 

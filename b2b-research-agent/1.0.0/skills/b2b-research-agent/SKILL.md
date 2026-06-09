@@ -1,6 +1,6 @@
 ---
 name: b2b-research-agent
-description: Research and identify B2B engagement opportunities for a target company. Use when the user provides a company name to research as a potential client, partner, or engagement opportunity. Also supports broad pipeline building when no specific target is given. Conducts structured web research, compiles intelligence dossiers, maps decision-makers, and produces actionable engagement strategies with branded HTML reports and outreach templates. Output is designed to feed directly into the BEAM selling framework.
+description: Research and identify B2B engagement opportunities for a target company. Use when the user provides a company name to research as a potential client, partner, or engagement opportunity. Also supports broad pipeline building when no specific target is given. Conducts structured web research, surfaces evidenced pain points, assesses fit against our SAS-AM service lines, maps Director-level decision-makers, locates the prospect's physical sites and plots them on a map in the dossier, and pitches a range of engagement scopes each with a win probability — then asks which scope to build out through interview. Produces intelligence dossiers, branded HTML reports, and outreach templates. Output is designed to feed directly into the BEAM selling framework.
 ---
 
 # B2B Research Agent Skill
@@ -233,6 +233,43 @@ For each shortlisted prospect, compile with a **problem-centric focus**:
 
 **CRITICAL**: For BEAM Stage 1, you need at least one **named individual** you can access — not just "someone in IT". The skill will challenge vague answers.
 
+#### Site Locations & Geography (REQUIRED)
+
+For an asset-intensive prospect, **where their assets physically are** is engagement
+intelligence — it shapes scope (travel, multi-site rollout), reveals operational scale,
+and gives concrete talking points. Research and capture the company's physical sites.
+
+**Search strategy — run these for each target company:**
+
+```
+"[Company Name]" head office OR headquarters address
+"[Company Name]" sites OR depots OR plants OR facilities OR branches locations
+"[Company Name]" "our locations" OR "where we operate" OR contact us address
+```
+
+Also check: the company's own "Contact"/"Locations" pages, annual reports (asset
+registers, site maps), regulator/operator registers, and Google Maps / business
+listings.
+
+**For each site, capture:**
+
+| Field | What to Record |
+|-------|---------------|
+| **Site name** | e.g. "Head office", "Dandenong depot", "Port Kembla plant" |
+| **Type** | HQ / office / depot / plant / yard / branch / warehouse / substation, etc. |
+| **Full address** | Street, suburb, state, postcode, country |
+| **Latitude, Longitude** | Approximate decimal coordinates (from web research / known map position). Needed to plot the site — give your best estimate; never invent precision you don't have. |
+| **Notes** | Role of the site, headcount/scale if known, relevance to the problem domain |
+
+Guidance:
+- Prioritise **operational** sites (depots, plants, yards, networks) for an asset-management
+  pitch — that's where the pain lives — not just the registered HQ.
+- If you cannot find a defensible address or coordinates for a site, **say so** and omit
+  it from the map rather than guessing a pin location. Evidence discipline applies to
+  geography too.
+- For very large/distributed operators (e.g. a rail or water network), capture the
+  **principal** sites or operating regions rather than every asset.
+
 ### Phase 4: BEAM Qualification Assessment
 
 Before producing engagement strategy, **honestly assess BEAM Stage 1 gate readiness**:
@@ -287,6 +324,59 @@ For qualified prospects, produce:
 6. **Problem-Led Talking Points** — 3–5 points leading with their problem, not your solution
 7. **Discovery Questions** — SPIN-aligned questions to validate problem in first conversation
 8. **Outreach Sequence** — multi-touch plan focused on earning the right to a conversation
+
+### Phase 6: Fit-to-Services, Scope Options & Build-Out (SAS-AM)
+
+This phase turns research into a decision. It runs after qualification and feeds straight
+into the marcov.BEAM lifecycle (and the in-app CRM "Pursue (BEAM)" chat).
+
+#### 6a. Assess fit against OUR service lines
+Map the evidenced pain to the **SAS-AM service lines** — do not assess fit in the
+abstract, assess it against what we actually sell:
+
+- **Asset Management Strategy** — ISO 55001 implementation, AM policy, strategy workshops
+- **Asset Information Management** — CMMS implementation, data quality, asset register development
+- **Reliability & Maintenance Optimisation** — FMEA/FMECA, RCFA, preventive maintenance, condition monitoring
+- **Capital Investment Planning** — lifecycle costing, capital prioritisation, OPEX/CAPEX analysis
+- **Delivery Acceleration** — project assurance, commissioning support, turnaround planning
+- **Training & Capability Building** — AM training, competency frameworks, certification prep
+
+For each evidenced problem, name the service line(s) that address it and state the
+fit strength (strong / partial / weak). Be honest where we are a poor fit.
+
+#### 6b. Target Director-level stakeholders
+When mapping the buying committee, **aim for Director level and above** — Director,
+Head of, General Manager, Chief / C-suite, Executive Director — i.e. the people with
+budget authority or technical-evaluation influence. Use `site:linkedin.com/in "[Company]"`
+searches biased to those titles. Capture name, exact title, LinkedIn URL, BEAM buying
+role, and likely attitude. Note gatekeepers, but do not let them be the plan.
+
+#### 6c. Pitch a range of scopes, each with a win probability
+Offer **2–4 candidate engagement scopes sized small → large**, each grounded in the
+evidenced pain. For every scope provide:
+
+| Field | Notes |
+|-------|-------|
+| **Scope name** | e.g. "ISO 55001 readiness diagnostic" |
+| **Summary** | one paragraph |
+| **Deliverables** | concrete, specific outputs |
+| **Service lines** | which SAS-AM lines it draws on |
+| **Indicative price band** | e.g. $25k–$40k |
+| **Indicative timeline** | weeks |
+| **Win probability** | Bayesian — anchor to where the relationship actually is; a cold prospect with thin evidence stays low even for a small scope |
+| **Rationale** | why this scope fits the evidenced pain |
+
+A typical ladder: a low-commitment **diagnostic / readiness** piece → a focused
+**delivery** engagement → a broader **programme**. Make the smallest a genuine easy
+"yes" that earns the right to the next conversation.
+
+#### 6d. Build out the chosen scope through interview
+Present the scope options and **ask the user which one to build out**. Then run a short
+build-out interview to sharpen it into a proposal-ready scope: confirm deliverables,
+assumptions, success criteria, commercial shape (fixed vs T&M, contingency), and the
+decision path. Hand the result to the **beam-selling** skill / proposal drafting. Keep
+applying BEAM evidence discipline — a scope being built out does not skip the evidence
+later stages still require.
 
 ---
 
@@ -391,6 +481,18 @@ The full detailed output for deep research on a single prospect.
 | EAM | [e.g., IBM Maximo] | [Version, satisfaction level] |
 | CRM | [e.g., Salesforce] | [Usage context] |
 | Other | [Relevant systems] | [Notes] |
+
+## Site Locations
+
+*Physical sites — head office and operational facilities. Plotted on the map in the HTML dossier.*
+
+| Site | Type | Address | Lat, Long | Notes |
+|------|------|---------|-----------|-------|
+| [Head office] | HQ | [Full address] | [-37.8136, 144.9631] | [Role / scale] |
+| [Depot / plant name] | Depot | [Full address] | [lat, long] | [Role / scale] |
+| [Site 3] | [Type] | [Full address] | [lat, long] | [Role / scale] |
+
+*Omit any site you cannot place with a defensible address and coordinates — do not invent pins.*
 
 ## Decision-Makers
 
@@ -643,9 +745,75 @@ report-folder/
 - **Score Badges**: Colour-coded circular badges (1–5) for Fit and Timing scores
 - **Priority Badges**: HIGH (red), MEDIUM (amber), LOW (grey) pill badges
 - **Outreach Timeline**: Vertical timeline with day markers and channel badges
+- **Site Map**: Interactive Leaflet + OpenStreetMap map plotting the prospect's sites (see below)
 - **Summary Callout**: Green-bordered highlight box for the executive conclusion
 - **Responsive**: Collapses sidebar on small screens, stacks cards on mobile
 - **Print-Ready**: Hides interactive elements, clean page layout
+
+#### Site Map (Leaflet + OpenStreetMap)
+
+The dossier MUST include a **Site Map** section plotting the prospect's physical sites
+(from Phase 3 → "Site Locations"). Use **Leaflet.js with OpenStreetMap tiles** — it is
+free, needs **no API key or token**, and keeps the report a self-contained HTML file that
+opens straight from disk.
+
+**Build it in three steps:**
+
+1. In `<head>`, add the Leaflet CSS + JS from the CDN:
+   ```html
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+   ```
+
+2. Add a Site Map section (give it an `id` so the sidebar nav links to it). Include a
+   short site table beneath the map for print/no-JS fallback:
+   ```html
+   <section id="site-map">
+     <h2><i class="fa-solid fa-location-dot"></i> Site Locations</h2>
+     <div id="map" style="height: 440px; border-radius: 12px; overflow: hidden;"></div>
+     <table class="site-table"><!-- one row per site: name, type, address --></table>
+   </section>
+   ```
+
+3. Before `</body>`, plot the sites. Fill `SITES` from the research — **only** sites with
+   a defensible address and coordinates; omit anything you had to guess:
+   ```html
+   <script>
+     // Each site: name, type, address, lat, lng (decimal degrees).
+     const SITES = [
+       { name: "Head office", type: "HQ",    address: "...", lat: -37.8136, lng: 144.9631 },
+       { name: "Dandenong depot", type: "Depot", address: "...", lat: -37.9870, lng: 145.2140 }
+     ];
+     if (SITES.length) {
+       const map = L.map('map', { scrollWheelZoom: false });
+       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+         attribution: '&copy; OpenStreetMap contributors', maxZoom: 18
+       }).addTo(map);
+       const markers = SITES.map(s =>
+         L.marker([s.lat, s.lng]).addTo(map)
+          .bindPopup(`<strong>${s.name}</strong><br>${s.type}<br>${s.address}`)
+       );
+       if (markers.length === 1) {
+         map.setView(markers[0].getLatLng(), 12);
+       } else {
+         map.fitBounds(L.featureGroup(markers).getBounds().pad(0.2));
+       }
+     } else {
+       document.getElementById('site-map')?.remove(); // no plottable sites → drop the section
+     }
+   </script>
+   ```
+
+**Rules:**
+- **No API key.** Use OpenStreetMap raster tiles via Leaflet only. Do NOT use Google Maps,
+  Mapbox, or anything needing a token (it would break the offline/standalone report).
+- **Plot only defensible sites.** A pin asserts a location — if you don't have a real
+  address + coordinates, leave the site out (and if there are none, omit the whole map
+  section, as the script does).
+- **Coordinates** are decimal degrees (south/west negative). Source them from your web
+  research; approximate-but-honest is fine, invented precision is not.
+- Style the map container to match the report (rounded corners, full width); the popups
+  inherit the page font.
 
 #### Design System
 
