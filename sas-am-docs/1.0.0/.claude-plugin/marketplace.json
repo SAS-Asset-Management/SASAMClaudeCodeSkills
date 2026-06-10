@@ -1,0 +1,9 @@
+{
+  "name": "sas-am-docs",
+  "description": "SAS-AM asset-management document suite (SAMP / AMP / TMP / RCM) over a shared code-grounded analytics engine, with ISO 55001 line-of-sight composition.",
+  "version": "1.0.0",
+  "author": { "name": "SAS-AM" },
+  "license": "MIT",
+  "category": "asset-management",
+  "keywords": ["asset-management", "ISO-55001", "SAMP", "AMP", "TMP", "RCM", "reliability"]
+}

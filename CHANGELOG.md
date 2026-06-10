@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2026-06-10
+
+### Added
+- **sas-am-docs** New asset-management document suite — a composable hub that authors the full ISO 55001 document family (**SAMP, AMP, TMP, RCM**) over a shared, code-grounded analytics engine (`sas-am-engine`). Implements the strategic-to-tactical line of sight (SAMP → AMP → TMP, with RCM/FMECA feeding maintenance tactics) with sub-skills `sas-samp`, `sas-tmp`, `sas-rcm`, an engine guide (`_engine-guide/ENGINE.md`), an enterprise-brain citation hook, and a bundled standards library (ISO 55000 line-of-sight, ISO 55001 clause map, SAE JA1011 / IEC 60812 / ISO 14224 reliability map). Owned by `larsFrederickson`; every document's numbers are computed from real audit/financial data, not estimated. The engine re-derives the reference LHG dataset byte-identically and renders professional, paginated A4 HTML + PDF.
+
 ## [1.11.0] - 2026-06-09
 
 ### Changed

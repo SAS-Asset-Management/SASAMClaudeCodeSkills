@@ -1,0 +1,12 @@
+{
+  "name": "sas-am-docs",
+  "description": "SAS-AM asset-management document suite — a composable hub that authors the full ISO 55001 document family (SAMP, AMP, TMP, RCM) over a shared, code-grounded analytics engine. Strategic-to-tactical line of sight: SAMP → AMP → TMP, with RCM + FMECA feeding maintenance tactics.",
+  "version": "1.0.0",
+  "author": { "name": "SAS-AM" },
+  "license": "MIT",
+  "keywords": [
+    "asset-management", "ISO-55001", "SAMP", "AMP", "TMP", "RCM",
+    "line-of-sight", "lifecycle-costing", "renewal", "risk", "criticality",
+    "reliability-centred-maintenance", "aged-care", "infrastructure"
+  ]
+}
