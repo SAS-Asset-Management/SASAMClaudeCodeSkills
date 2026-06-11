@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - 2026-06-11
+
+### Added
+- **ensemble** New consultant workflow plugin packaging the five SAS-AM Ensemble engagement commands — **`/tether`** (bind the session to an engagement repo: clone/remote-add, fetch `main`+`queue`, orient), **`/handoff`** (write a task packet and fast-forward push it to the engagement's `queue` branch for the Norbert-poller to claim; results return as a PR into `main`), **`/sync`** (read-only catch-up: merged results to collect, PRs awaiting review, bounced packets, claims in flight), **`/collect`** (pull merged result sets from `main`, materialise + sha256-verify LFS deliverables, record what was collected), and **`/status`** (registry-wide view across every tethered engagement — open packets, claims with age, open PRs by review tier, last poll heartbeat). Ships a **SessionStart hook** (`hooks/hooks.json` → `skills/hooks/session-start-ensemble.sh`) that prints a hard-time-boxed, read-only `/sync` greeting only inside a tethered engagement repo and is otherwise silent. Bundles the shared `_lib` (stdlib-only bash + Python helpers for packet parsing, schema validation, repo resolution, and `~/.ensemble` state I/O), a reference copy of `schemas/packet.schema.json`, and the "0 → 100" reveal.js onboarding deck. Sourced from the `theEnsembles` monorepo (`deploy/skills/ensemble/`); stdlib/bash + `gh`/`git`/`git-lfs` only, no pip installs, Australian English throughout.
+
 ## [1.12.0] - 2026-06-10
 
 ### Added

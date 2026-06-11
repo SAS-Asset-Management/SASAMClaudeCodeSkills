@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sas-am.com/ensemble/packet.schema.json",
+  "title": "Ensemble handoff task packet",
+  "description": "Front-matter of a handoffs/inbox/HX-*.md consultant packet. Single source of truth (spec v1.2 §5.1). Validated by /handoff, tier-gate.yml, and the poller on claim.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "engagement",
+    "requested_by",
+    "kind",
+    "review_tier",
+    "route_hint",
+    "deadline",
+    "definition_of_done"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "HX-<YYYY-MMDD>-<slug>, unique per repo. slug kebab, <=24 chars.",
+      "pattern": "^HX-[0-9]{4}-[0-9]{4}-[a-z0-9]([a-z0-9-]{0,22}[a-z0-9])?$"
+    },
+    "engagement": {
+      "type": "string",
+      "description": "Must equal project.json scope_tag.",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$"
+    },
+    "requested_by": {
+      "type": "string",
+      "description": "GitHub handle of the requesting consultant.",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "description": "project -> larsFrederickson (intake/plan/team/fan-out); task -> agnarBergstrom (triage).",
+      "enum": ["project", "task"],
+      "default": "project"
+    },
+    "review_tier": {
+      "type": "string",
+      "enum": ["auto", "light", "full", "founder"],
+      "default": "full"
+    },
+    "route_hint": {
+      "type": "string",
+      "description": "Model route only. api = Anthropic (v1). local-bulk reserved/deferred (no vLLM yet) and rejected by the poller.",
+      "enum": ["api", "local-bulk"],
+      "default": "api"
+    },
+    "workflow": {
+      "type": "string",
+      "description": "Dispatch shape (DELTA-1 §11/D4). single = one dispatch → one result PR (current). report = the staged outline→gates→QA→copy→render pipeline. artefact = interactive HTML deliverable where the HTML is the source of truth (reserved).",
+      "enum": ["single", "report", "artefact"],
+      "default": "single"
+    },
+    "style_refs": {
+      "type": "array",
+      "description": "Pinned style/voice/template inputs (repo-relative), e.g. brand-voice + report template, applied by the copy-edit stage.",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "stage_tiers": {
+      "type": "object",
+      "description": "Optional per-stage review-tier overrides for a report workflow, e.g. { \"outline\": \"light\" }.",
+      "default": {}
+    },
+    "deadline": {
+      "type": "string",
+      "description": "ISO8601 timestamp or the literal string 'none'."
+    },
+    "inputs": {
+      "type": "array",
+      "description": "Repo-relative paths. LFS pointers are fine.",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "definition_of_done": {
+      "type": "array",
+      "description": "Verbatim acceptance criteria.",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "retries": {
+      "type": "integer",
+      "description": "Incremented on rejection-return by the janitor.",
+      "minimum": 0,
+      "default": 0
+    },
+    "context": {
+      "type": "array",
+      "description": "Optional PR numbers / packet ids to read for context.",
+      "items": { "type": "string" },
+      "default": []
+    }
+  }
+}

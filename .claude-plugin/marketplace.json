@@ -146,6 +146,16 @@
       "keywords": ["asset-management", "AMP", "ISO-55001", "lifecycle-costing", "data-analysis", "presentation", "docx"],
       "category": "engineering",
       "tags": ["asset-management", "AMP", "ISO-55001", "lifecycle-costing", "planning"]
+    },
+    {
+      "name": "ensemble",
+      "source": "./ensemble/1.0.0",
+      "description": "SAS-AM Ensemble consultant workflow — tether to an engagement, hand work off to the autonomous Ensemble via task packets, sync, collect results, and check status. Five commands (/tether /handoff /sync /collect /status) plus a read-only SessionStart greeter.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["ensemble", "sas-am", "consultant", "handoff", "engagement", "agents", "workflow", "tether", "packet"],
+      "category": "business-development",
+      "tags": ["ensemble", "consultant", "handoff", "engagement", "agents"]
     }
   ]
 }
