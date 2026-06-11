@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.1] - 2026-06-11
+
+### Fixed
+- **ensemble** Hardening from GitHub Copilot's PR review across `/tether`, `/submit`, and the onboarding deck. `/tether`: option parsing shifts by two only when a value is present (a trailing `--query`/`--mode`/`--dir` shows guidance instead of aborting), and `tether_state.py` usage lists the new `list` subcommand. `/submit`: `requested_by` never falls back to `git config user.name` (a name with spaces would make `tier-gate` unsatisfiable) — it requires a valid GitHub login; refuses a stale local `handoffs/outbox/<id>/`; errors when two artefacts share a filename; propagates `submit_state.py`'s own exit code; and fails loudly (no false "PR opened") when `gh pr create` fails; the summary uses its placeholder when evidence is empty. Onboarding deck: the display-only terminal no longer shows a copy cursor, and clipboard copy guards for a missing Clipboard API with an off-screen textarea fallback.
+
 ## [1.14.0] - 2026-06-11
 
 ### Added

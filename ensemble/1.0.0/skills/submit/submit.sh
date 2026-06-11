@@ -62,8 +62,11 @@ ENGAGEMENT="$(ens_project_field scope_tag)"
 if [ -z "$REQUESTED_BY" ] && command -v gh >/dev/null 2>&1; then
   REQUESTED_BY="$(gh api user --jq .login 2>/dev/null || true)"
 fi
-[ -n "$REQUESTED_BY" ] || REQUESTED_BY="$(git config user.name 2>/dev/null || true)"
-[ -n "$REQUESTED_BY" ] || ens_die "could not determine requested_by — pass --requested-by <github-handle>."
+# Must be a GitHub LOGIN, not a display name — tier-gate matches review approvals
+# against the login, so a full name (with spaces) would make `full` unsatisfiable.
+# Do NOT fall back to git user.name. Require gh auth or an explicit --requested-by.
+[ -n "$REQUESTED_BY" ] || ens_die "could not determine your GitHub handle — run 'gh auth login', or pass --requested-by <github-login>."
+case "$REQUESTED_BY" in *[!A-Za-z0-9-]*) ens_die "requested_by '$REQUESTED_BY' is not a valid GitHub login — pass --requested-by <github-login>." ;; esac
 
 # slug: from --slug, else from --title. kebab, <=24 chars (schema pattern).
 [ -n "$SLUG" ] || SLUG="$TITLE"
@@ -129,6 +132,11 @@ else
   ens_die "no main branch found on '$REMOTE' or locally — cannot base a submission PR."
 fi
 
+# Refuse to proceed if a local outbox path survived a prior run (untracked leftovers
+# would otherwise be silently reused/committed). The clean branch checkout above does
+# not remove untracked dirs, so check explicitly.
+[ -e "$ROOT/$OUTBOX_REL" ] && ens_die "a local outbox already exists at ${OUTBOX_REL} — remove it (or choose a different --slug) and re-run."
+
 # --- copy artefacts into the outbox (with a >10MB non-LFS guard) --------------
 mkdir -p "$ROOT/$ARTE_REL"
 declare -a INPUTS=()
@@ -138,6 +146,8 @@ for src in ${ARTEFACTS[@]+"${ARTEFACTS[@]}"}; do
   [ -f "$src" ] || ens_die "artefact not found: $src"
   base="$(basename -- "$src")"
   dest_rel="${ARTE_REL}/${base}"
+  # Two source paths with the same filename would silently overwrite — refuse instead.
+  [ -e "$ROOT/$dest_rel" ] && ens_die "two artefacts resolve to the same name ($base) — rename one and re-run."
   cp -- "$src" "$ROOT/$dest_rel"
   sz="$(wc -c < "$ROOT/$dest_rel" 2>/dev/null | tr -d '[:space:]')"
   if [ -n "$sz" ] && [ "$sz" -gt "$MAX_BYTES" ] && ! lfs_tracked "$dest_rel"; then
@@ -172,7 +182,7 @@ cfg = {
 print(json.dumps(cfg))
 PY
 )"
-printf '%s' "$CONFIG" | python3 "$HERE/submit_state.py" build || exit 1
+printf '%s' "$CONFIG" | python3 "$HERE/submit_state.py" build || exit $?
 
 # --- stage ONLY the outbox, commit, (push + PR) ------------------------------
 git add -- "$OUTBOX_REL"
@@ -194,12 +204,24 @@ git push --quiet "$REMOTE" "HEAD:refs/heads/submit/${ID}" \
 REPO_SLUG="$(git remote get-url "$REMOTE" | sed -E 's#(git@github.com:|https://github.com/)##; s#\.git$##')"
 PR_BODY="$(printf 'Consultant submission of completed work, matched to the delivery page.\n\n- **Submitted by:** %s\n- **Review tier:** %s\n- **Deliverables:** %s\n\nSee `%s/summary.md` and `%s/submission.json`. tier-gate requires the %s approval before merge.\n' \
   "$REQUESTED_BY" "$REVIEW_TIER" "$(IFS=,; echo "${DELIVS[*]:-（none matched）}")" "$OUTBOX_REL" "$OUTBOX_REL" "$REVIEW_TIER")"
-PR_URL="$(gh pr create --repo "$REPO_SLUG" --base main --head "submit/${ID}" \
-  --title "submit: ${TITLE} (${ID})" --body "$PR_BODY" 2>/dev/null || true)"
+set +e
+PR_OUT="$(gh pr create --repo "$REPO_SLUG" --base main --head "submit/${ID}" \
+  --title "submit: ${TITLE} (${ID})" --body "$PR_BODY" 2>&1)"
+PR_RC=$?
+set -e
+if [ "$PR_RC" -ne 0 ]; then
+  {
+    printf '\nensemble: submission %s was pushed to %s/submit/%s, but OPENING THE PR FAILED:\n' "$ID" "$REMOTE" "$ID"
+    printf '%s\n' "$PR_OUT" | sed 's/^/  /'
+    printf 'ensemble: nothing is under review yet. Create the PR manually:\n'
+    printf 'ensemble:   gh pr create --repo %s --base main --head submit/%s\n' "$REPO_SLUG" "$ID"
+  } >&2
+  echo "$ID"; exit 1
+fi
 
 {
   printf '\nensemble: submission %s pushed; PR opened into main.\n' "$ID"
-  [ -n "$PR_URL" ] && printf 'ensemble: %s\n' "$PR_URL"
+  [ -n "$PR_OUT" ] && printf 'ensemble: %s\n' "$PR_OUT"
   printf 'ensemble: tier-gate is RED until the %s reviewer approves; approve on GitHub to merge.\n' "$REVIEW_TIER"
   printf 'ensemble: on merge, the fleet reconciles the matched deliverable(s) on Lars'"'"'s delivery page.\n'
 } >&2

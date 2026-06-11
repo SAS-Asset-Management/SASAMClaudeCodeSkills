@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Consultant onboarding for the SAS-AM Ensemble handoff protocol — from installing Claude Code to running a full handoff end to end.">
+<meta name="description" content="Zero-to-100 consultant onboarding for the SAS-AM Ensemble handoff workflow — from opening a terminal to running a full handoff, with every command and what you'll see.">
 <meta name="author" content="marcov / SAS Asset Management">
 <title>Working with the Ensemble — 0 to 100 | marcov</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
@@ -11,369 +11,548 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root, :root[data-theme="light"]{
-  --sas-green:#69BE28; --sas-blue:#002244;
-  --bg-primary:#ffffff; --bg-secondary:#f7f7f7; --bg-tertiary:#ededed;
-  --text-primary:#002244; --text-secondary:#334466; --text-muted:#6b7280;
-  --accent:#69BE28; --accent-2:#2da44e;
-  --card-bg:#ffffff; --card-border:rgba(0,34,68,.15);
-  --code-bg:#f0f4f8; --code-text:#1e3a5f; --code-border:rgba(0,34,68,.12);
-  --amber:#e8843c; --rule:rgba(0,34,68,.12);
+:root,:root[data-theme="light"]{
+  --bg:#ffffff;--bg2:#f4f7fa;--bg3:#e9eef3;--fg:#002244;--fg2:#334466;--muted:#6b7280;
+  --green:#69BE28;--green2:#5aa822;--navy:#002244;--amber:#e8843c;--rule:rgba(0,34,68,.12);
+  --card:#ffffff;--cardbd:rgba(0,34,68,.14);
+  --term-bg:#0b1220;--term-fg:#d7e2ee;--term-dim:#7f93a8;
 }
 :root[data-theme="dark"]{
-  --bg-primary:#0a0f1a; --bg-secondary:#141d2b; --bg-tertiary:#1e2a3d;
-  --text-primary:#f4fbff; --text-secondary:#d1e3ed; --text-muted:#8ba3b5;
-  --accent:#7AD33B; --accent-2:#2dd4bf;
-  --card-bg:rgba(20,29,43,.92); --card-border:rgba(255,255,255,.10);
-  --code-bg:#111b29; --code-text:#d1e3ed; --code-border:rgba(255,255,255,.10);
-  --amber:#e8843c; --rule:rgba(255,255,255,.10);
+  --bg:#0a0f1a;--bg2:#111a28;--bg3:#1a2740;--fg:#f4fbff;--fg2:#cfe0ee;--muted:#8ba3b5;
+  --green:#7AD33B;--green2:#69BE28;--navy:#cfe0ee;--rule:rgba(255,255,255,.10);
+  --card:rgba(20,29,43,.85);--cardbd:rgba(255,255,255,.10);
+  --term-bg:#070c16;--term-fg:#d7e2ee;--term-dim:#73879b;
 }
 *{box-sizing:border-box}
-.reveal{font-family:'Source Sans Pro',system-ui,sans-serif;font-size:30px;color:var(--text-primary)}
-.reveal-viewport{background:var(--bg-primary);transition:background .3s}
-.reveal h1,.reveal h2,.reveal h3,.reveal h4{font-family:'Source Sans Pro';color:var(--text-primary);text-transform:none;letter-spacing:-.5px;margin:0 0 .4em}
-.reveal h1{font-size:1.9em;font-weight:700}
-.reveal h2{font-size:1.35em;font-weight:700}
-.reveal h2 .accent,.reveal h1 .accent{color:var(--accent)}
-.reveal h3{font-size:.9em;font-weight:600;color:var(--text-secondary)}
-.reveal section{text-align:left}
+.reveal{font-family:'Source Sans Pro',system-ui,sans-serif;font-size:28px;color:var(--fg)}
+.reveal-viewport{background:var(--bg);transition:background .3s}
 .reveal .slides{text-align:left}
-.eyebrow{font-size:.5em;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:.6em}
-.lead{color:var(--text-secondary);font-weight:300;font-size:1.05em;line-height:1.45}
-.muted{color:var(--text-muted)}
-code,.mono{font-family:'Source Code Pro',monospace}
-.reveal a{color:var(--accent)}
-.tag{display:inline-block;font-family:'Source Code Pro';font-size:.62em;padding:2px 10px;border-radius:20px;background:var(--bg-tertiary);color:var(--accent);border:1px solid var(--card-border);margin-right:6px}
+.reveal section{text-align:left}
+.reveal h1{font-size:1.9em;font-weight:700;letter-spacing:-.5px;margin:0 0 .3em}
+.reveal h2{font-size:1.3em;font-weight:700;margin:0 0 .35em;letter-spacing:-.3px}
+.reveal h2 .a,.reveal h1 .a{color:var(--green)}
+.reveal h3{font-size:.82em;font-weight:600;color:var(--fg2);text-transform:uppercase;letter-spacing:.6px;margin:.6em 0 .3em}
+.eyebrow{font-size:.5em;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:.5em}
+.tag{display:inline-block;font-family:'Source Code Pro';font-size:.5em;padding:2px 10px;border-radius:20px;background:var(--bg3);color:var(--green);border:1px solid var(--cardbd);margin-right:8px;vertical-align:middle}
+.lead{color:var(--fg2);font-weight:300;font-size:1.02em;line-height:1.5}
+.muted{color:var(--muted)} b,strong{color:var(--fg)}
+code{font-family:'Source Code Pro';background:var(--bg3);padding:1px 6px;border-radius:5px;font-size:.82em;color:var(--green2)}
+:root[data-theme="dark"] code{color:var(--green)}
+.reveal a{color:var(--green)}
 
-/* command block with copy button */
-.cmd{position:relative;background:var(--code-bg);border:1px solid var(--code-border);border-radius:10px;padding:16px 54px 16px 18px;margin:12px 0;font-family:'Source Code Pro';font-size:.62em;color:var(--code-text);line-height:1.7;white-space:pre-wrap;word-break:break-word}
-.cmd .copy{position:absolute;top:8px;right:8px;border:1px solid var(--code-border);background:var(--card-bg);color:var(--text-muted);border-radius:7px;font-size:14px;padding:4px 9px;cursor:pointer;font-family:'Source Sans Pro'}
-.cmd .copy:hover{color:var(--accent);border-color:var(--accent)}
-.cmd .c{color:var(--text-muted)}            /* comment */
-.cmd .p{color:var(--accent)}                /* prompt/keyword */
+/* terminal window component */
+.term{background:var(--term-bg);border:1px solid var(--cardbd);border-radius:10px;overflow:hidden;margin:12px 0;box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:copy}
+.term .bar{display:flex;align-items:center;gap:7px;padding:7px 12px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.07)}
+.term .bar i{width:11px;height:11px;border-radius:50%}
+.term .bar i.r{background:#ff5f57}.term .bar i.y{background:#febc2e}.term .bar i.g{background:#28c840}
+.term .bar span{font-family:'Source Code Pro';font-size:.5em;color:var(--term-dim);margin-left:6px;letter-spacing:.5px}
+.term .bar .cp{margin-left:auto;font-family:'Source Sans Pro';font-size:13px;background:transparent;border:1px solid rgba(255,255,255,.14);color:var(--term-dim);border-radius:6px;padding:2px 9px;cursor:pointer;display:flex;align-items:center;gap:5px}
+.term .bar .cp:hover{color:var(--green);border-color:var(--green)}
+.term .bar .cp::before{content:"\2398"}
+.term pre{margin:0;padding:14px 16px;font-family:'Source Code Pro';font-size:.6em;line-height:1.65;color:var(--term-fg);white-space:pre-wrap;word-break:break-word;background:none}
+.term .pr{color:var(--green);font-weight:600;user-select:none}
+.term .o{color:var(--term-dim)}
+.term .cm{color:#7f93a8;font-style:italic}
+.term .ok{color:#28c840}.term .warn{color:#febc2e}
+
+/* plain command block (click anywhere to copy) */
+.cmd{position:relative;background:var(--bg3);border:1px solid var(--cardbd);border-radius:9px;padding:12px 130px 12px 16px;margin:10px 0;font-family:'Source Code Pro';font-size:.62em;color:var(--green2);white-space:pre-wrap;word-break:break-word;cursor:copy}
+:root[data-theme="dark"] .cmd{color:var(--green)}
+.cmd .cp{position:absolute;top:8px;right:8px;border:1px solid var(--cardbd);background:var(--card);color:var(--muted);border-radius:6px;font-size:12px;font-family:'Source Sans Pro';padding:3px 9px;cursor:pointer;display:flex;align-items:center;gap:5px}
+.cmd .cp::before{content:"\2398"}
+.cmd:hover .cp,.cmd .cp:hover{color:var(--green);border-color:var(--green)}
+
+/* OS callout */
+.os{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.62em;color:var(--fg2);background:var(--bg2);border:1px solid var(--rule);border-radius:9px;padding:9px 13px;margin:8px 0}
+.os b{color:var(--green2);font-family:'Source Code Pro';font-size:.9em}
+:root[data-theme="dark"] .os b{color:var(--green)}
+.os code{background:transparent;padding:0}
 
 /* cards */
-.grid{display:grid;gap:18px;margin-top:14px}
-.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
-.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:18px 20px}
-.card h3{margin:0 0 .3em;color:var(--accent)}
-.card p{margin:0;font-size:.7em;color:var(--text-secondary);line-height:1.5}
-.kbd{font-family:'Source Code Pro';font-size:.8em;background:var(--bg-tertiary);border:1px solid var(--card-border);border-bottom-width:2px;border-radius:6px;padding:1px 8px;color:var(--text-primary)}
+.grid{display:grid;gap:14px;margin-top:10px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+.card{background:var(--card);border:1px solid var(--cardbd);border-radius:11px;padding:14px 16px}
+.card h3{margin:0 0 .25em;color:var(--green);text-transform:none;letter-spacing:0;font-size:.85em}
+.card p{margin:0;font-size:.66em;color:var(--fg2);line-height:1.45}
+.kbd{font-family:'Source Code Pro';font-size:.85em;background:var(--bg3);border:1px solid var(--cardbd);border-bottom-width:2px;border-radius:6px;padding:1px 8px;color:var(--fg)}
 
-/* checklist */
-.check{list-style:none;margin:.2em 0 0;padding:0}
-.check li{position:relative;padding:10px 0 10px 44px;font-size:.78em;color:var(--text-secondary);border-bottom:1px solid var(--rule);cursor:pointer;transition:color .15s}
-.check li:hover,.check li.done{color:var(--text-primary)}
-.check li:focus{outline:none;box-shadow:var(--focus-ring,0 0 0 3px rgba(105,190,40,.5));border-radius:6px}
-.check li::before{content:"";position:absolute;left:6px;top:9px;width:24px;height:24px;border-radius:6px;border:2px solid var(--accent);background:transparent}
-.check li::after{content:"✓";position:absolute;left:11px;top:7px;color:var(--accent);font-weight:700;opacity:.0}
+/* numbered step pill */
+.step{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:rgba(105,190,40,.16);color:var(--green);border:1px solid var(--green);font-weight:700;font-family:'Source Code Pro';font-size:.7em;margin-right:10px;vertical-align:middle}
+
+/* interactive checklist */
+.check{list-style:none;margin:.3em 0 0;padding:0}
+.check li{position:relative;padding:9px 0 9px 42px;font-size:.74em;color:var(--fg2);border-bottom:1px solid var(--rule);cursor:pointer;transition:color .15s}
+.check li:hover,.check li.done{color:var(--fg)}
+.check li::before{content:"";position:absolute;left:6px;top:8px;width:23px;height:23px;border-radius:6px;border:2px solid var(--green);background:transparent}
+.check li::after{content:"\2713";position:absolute;left:11px;top:6px;color:var(--green);font-weight:700;opacity:0}
 .check li.done::after{opacity:1}
-.check b{color:var(--text-primary)}
+.check li:focus{outline:none;box-shadow:0 0 0 3px rgba(105,190,40,.4);border-radius:6px}
+.check b{color:var(--fg)}
 
-/* routemap */
-.route{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.route .step{flex:1;min-width:90px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;padding:10px;text-align:center;font-size:.52em}
-.route .step .n{display:block;font-family:'Source Code Pro';color:var(--accent);font-weight:700;font-size:1.3em}
+/* route map */
+.route{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.route .s{flex:1;min-width:80px;background:var(--card);border:1px solid var(--cardbd);border-radius:9px;padding:8px;text-align:center;font-size:.5em}
+.route .s .n{display:block;font-family:'Source Code Pro';color:var(--green);font-weight:700;font-size:1.4em}
 
-/* flow beams (mini) */
-table.simple{border-collapse:collapse;width:100%;font-size:.66em;margin-top:8px}
-table.simple td,table.simple th{border-bottom:1px solid var(--rule);padding:8px 10px;text-align:left}
-table.simple th{color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;font-size:.85em;font-weight:600}
-table.simple code{color:var(--accent)}
+table.t{width:100%;border-collapse:collapse;font-size:.64em;margin-top:6px}
+table.t td,table.t th{border-bottom:1px solid var(--rule);padding:7px 9px;text-align:left;vertical-align:top}
+table.t th{color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-size:.85em;font-weight:600}
+table.t code{color:var(--green2)} :root[data-theme="dark"] table.t code{color:var(--green)}
 
-.title-wrap{display:flex;flex-direction:column;justify-content:center;height:100%}
-.title-logo{height:54px;width:auto;margin-bottom:30px}
-:root[data-theme="light"] .logo-dark{display:none}
-:root[data-theme="dark"] .logo-light{display:none}
-.tagline{margin-top:28px;font-size:.5em;color:var(--text-muted);max-width:80%;line-height:1.5}
-.pill{display:inline-block;background:var(--accent);color:#06210a;font-weight:700;font-size:.5em;padding:4px 12px;border-radius:20px;letter-spacing:1px}
+.note{font-size:.6em;color:var(--muted);margin-top:8px}
+.copyhint{font-size:.5em;color:var(--muted);margin:2px 0 0;font-style:italic}
+.pill{display:inline-block;background:var(--green);color:#06210a;font-weight:700;font-size:.5em;padding:4px 13px;border-radius:20px;letter-spacing:1px}
+.tagline{margin-top:22px;font-size:.46em;color:var(--muted);max-width:82%;line-height:1.5}
+.center{display:flex;flex-direction:column;justify-content:center;height:100%}
 
-/* theme toggle */
-#themeToggle{position:fixed;bottom:14px;right:16px;z-index:60;background:var(--card-bg);color:var(--text-secondary);border:1px solid var(--card-border);border-radius:8px;width:40px;height:40px;font-size:18px;cursor:pointer}
-#themeToggle:hover{color:var(--accent);border-color:var(--accent)}
-.reveal .progress{color:var(--accent);height:5px}
-.reveal .slide-number{background:transparent;color:var(--text-muted);font-family:'Source Code Pro'}
-.foot{position:fixed;left:16px;bottom:16px;z-index:55;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);font-weight:700}
-@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+#themeToggle{position:fixed;bottom:14px;right:16px;z-index:60;background:var(--card);color:var(--fg2);border:1px solid var(--cardbd);border-radius:8px;width:40px;height:40px;font-size:18px;cursor:pointer}
+#themeToggle:hover{color:var(--green);border-color:var(--green)}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:80;background:var(--green);color:#06210a;font-weight:700;font-size:14px;padding:8px 18px;border-radius:22px;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.show{opacity:1}
+.reveal .progress{color:var(--green);height:5px}
+.reveal .slide-number{background:transparent;color:var(--muted);font-family:'Source Code Pro'}
+.foot{position:fixed;left:16px;bottom:16px;z-index:55;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);font-weight:700}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
-<button id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle theme (also: T)">◐</button>
+<button id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle theme (T)">◐</button>
+<div id="toast" role="status" aria-live="polite">Copied to clipboard</div>
 <div class="foot">SAS-AM · Ensemble Onboarding</div>
 <div class="reveal"><div class="slides">
 
-<!-- TITLE -->
-<section id="title" data-section="title">
-  <div class="title-wrap">
-    <span class="pill">0 → 100</span>
-    <h1 style="margin-top:18px">Working with the <span class="accent">Ensemble</span></h1>
-    <p class="lead" style="font-size:1.1em">From a blank laptop to your first delivered handoff.</p>
-    <p class="muted" style="margin-top:10px;font-size:.7em">For SAS-AM consultants · Jonathan · Saxon · Scriv</p>
+<!-- ===== TITLE ===== -->
+<section data-section="title">
+  <div class="center">
+    <span class="pill">0 → 100 · NO EXPERIENCE NEEDED</span>
+    <h1 style="margin-top:16px">Working with the <span class="a">Ensemble</span></h1>
+    <p class="lead" style="font-size:1.08em">From a brand-new laptop to your first delivered piece of work — every command, and exactly what you'll see on screen.</p>
+    <p class="muted" style="margin-top:8px;font-size:.66em">For SAS-AM consultants · no terminal or GitHub experience assumed</p>
     <p class="tagline">At SAS-AM we help organisations understand their strengths and weaknesses, model and predict the future, and make the right decisions through audit and benchmarking, advanced analytics and deep advisory services.</p>
   </div>
-  <aside class="notes">Self-navigation deck. Arrows or space to move; <b>O</b> for overview, <b>?</b> for help, <b>T</b> to toggle theme, <b>S</b> for speaker notes. Tell them: by the end you will have run a real handoff.</aside>
+  <aside class="notes">Self-paced. Arrows/space to move; <b>O</b> overview, <b>?</b> help, <b>T</b> theme. Reassure: you only ever copy-paste commands — every command block here is click-to-copy. Nothing needs prior coding.</aside>
 </section>
 
-<!-- WHAT IS THE ENSEMBLE -->
-<section id="what" data-section="model">
-  <div class="eyebrow">The one idea</div>
-  <h2>You hand work to a fleet of agents — over <span class="accent">GitHub</span>.</h2>
-  <p class="lead">No SSH, no servers, no dashboards. A repo per engagement is the whole control surface. You write a task; the Ensemble does it; you review a pull request.</p>
-  <div class="grid g3">
-    <div class="card"><h3>Control plane</h3><p>GitHub. Packets in, results out as PRs. Repo access is the permission wall.</p></div>
-    <div class="card"><h3>Data plane</h3><p>MinIO + Git-LFS over Tailscale. Big files ride the mesh, not GitHub.</p></div>
-    <div class="card"><h3>The fleet</h3><p>agnarBergstrom (conductor) + 14 specialists on the R740.</p></div>
-  </div>
-  <aside class="notes">Transition: "It looks like normal git — because it is." The magic is who's on the other end.</aside>
-</section>
-
-<!-- ROADMAP -->
-<section id="roadmap" data-section="model">
-  <div class="eyebrow">The journey</div>
-  <h2>Eight stops, 0 to 100</h2>
+<!-- ===== OVERVIEW / ROADMAP ===== -->
+<section data-section="map">
+  <div class="eyebrow">The plan</div>
+  <h2>Two parts: <span class="a">set up once</span>, then a five-command rhythm</h2>
+  <p class="lead">First we install a small toolbelt (about 15 minutes, once). Then you use five simple commands to pick up and deliver work. That's the whole job.</p>
   <div class="route">
-    <div class="step"><span class="n">0</span>Install</div>
-    <div class="step"><span class="n">1</span>Model</div>
-    <div class="step"><span class="n">2</span>Commands</div>
-    <div class="step"><span class="n">3</span>Packets</div>
-    <div class="step"><span class="n">4</span>On-site</div>
-    <div class="step"><span class="n">5</span>Review</div>
-    <div class="step"><span class="n">6</span>Lab</div>
-    <div class="step"><span class="n">7</span>Help</div>
+    <div class="s"><span class="n">0</span>Install</div>
+    <div class="s"><span class="n">1</span>How it works</div>
+    <div class="s"><span class="n">2</span>5 commands</div>
+    <div class="s"><span class="n">3</span>Write a task</div>
+    <div class="s"><span class="n">4</span>On-site</div>
+    <div class="s"><span class="n">5</span>Review</div>
+    <div class="s"><span class="n">6</span>Lab</div>
+    <div class="s"><span class="n">7</span>Help</div>
   </div>
-  <p class="muted" style="margin-top:18px;font-size:.7em">Each module ends with a tick-box checklist. Do them in order.</p>
-  <aside class="notes">Press O to see the whole map any time. Modules are vertical stacks — down-arrow drills in, right-arrow skips to the next module.</aside>
+  <p class="note">Every command block on these slides is <b>click-to-copy</b> — click it (or its ⎘ button) and it lands on your clipboard. Each module ends with a tick-box checklist. Press <span class="kbd">O</span> any time to see the whole map.</p>
+  <aside class="notes">Set expectations: the install is the only "techy" bit, and it's just pasting commands. Everything after is five words: tether, handoff, sync, collect, status.</aside>
 </section>
 
-<!-- ===================== M0 INSTALL ===================== -->
+<!-- ============================================================= M0 INSTALL ============================================================= -->
 <section data-section="m0">
-  <section id="m0">
-    <span class="tag">M0</span><div class="eyebrow" style="display:inline">The "0"</div>
-    <h2>Install Claude Code &amp; the toolbelt</h2>
-    <p class="lead">Three things: the CLI, the git toolbelt, and the Ensemble skills. ~10 minutes, once.</p>
+  <!-- M0.0 -->
+  <section>
+    <span class="tag">M0</span><div class="eyebrow" style="display:inline">The setup (once)</div>
+    <h2>The toolbelt you'll install</h2>
+    <p class="lead">Six small tools. You'll paste one command for each. Here's what they're for — you don't need to understand them deeply, just install them.</p>
     <div class="grid g3">
-      <div class="card"><h3>1 · Claude Code</h3><p>Sign in on your Max plan, install the CLI, run <code>claude</code> and log in.</p></div>
-      <div class="card"><h3>2 · Toolbelt</h3><p><code>git</code>, <code>gh</code> (then <code>gh auth login</code>), <code>git-lfs</code>, and join the Tailscale tailnet.</p></div>
-      <div class="card"><h3>3 · Skills</h3><p>Install the <code>SASAMClaudeCodeSkills</code> plugin — the <code>/tether…/status</code> skills.</p></div>
+      <div class="card"><h3>Claude Code</h3><p>Your AI workmate in the terminal — it runs the SAS-AM commands.</p></div>
+      <div class="card"><h3>git + GitHub CLI</h3><p><code>git</code> tracks files; <code>gh</code> talks to GitHub (where the work lives).</p></div>
+      <div class="card"><h3>git-lfs</h3><p>Handles big files (spreadsheets, scans) sensibly.</p></div>
+      <div class="card"><h3>Tailscale</h3><p>A private network so large files can reach you securely.</p></div>
+      <div class="card"><h3>Homebrew</h3><p>The "app store for the terminal" on a Mac — installs the rest.</p></div>
+      <div class="card"><h3>The skills plugin</h3><p>Adds the five SAS-AM commands into Claude Code.</p></div>
     </div>
-    <aside class="notes">macOS: Homebrew for everything. Linux: the official install scripts. Tailscale is what lets you pull big files later — do it now.</aside>
+    <p class="note">On a <b>Mac</b> you'll use Homebrew. On <b>Windows</b> we use <code>winget</code>; on <b>Linux</b>, <code>apt</code>. The slides show all three where they differ.</p>
+    <aside class="notes">Frame it: six tools, six paste-and-enter steps. Reassure non-technical folks — no decisions, just copy/paste/verify.</aside>
   </section>
-  <section id="m0-verify">
-    <h3>Verify your install</h3>
-    <div class="cmd"><button class="copy">copy</button><span class="c"># each should print a version / a logged-in status</span>
-claude --version
+
+  <!-- M0.1 terminal -->
+  <section>
+    <h3>Step 1 · Open a terminal</h3>
+    <p class="lead">The "terminal" is a text window where you type commands. Opening it:</p>
+    <div class="os">
+      <span><b>macOS</b> press <code>⌘ Space</code>, type <code>Terminal</code>, hit Return</span>
+      <span><b>Windows</b> Start → type <code>Terminal</code></span>
+      <span><b>Linux</b> <code>Ctrl Alt T</code></span>
+    </div>
+    <p class="lead">You'll see a window with a blinking cursor after a <code>$</code> (or <code>%</code>). That <code>$</code> is the prompt — it means "type here". You type a command and press <b>Return</b>.</p>
+    <div class="term" style="cursor:default">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>Terminal — zsh</span></div>
+<pre><span class="pr">$</span> <span class="cm"># this is the prompt. you type after the $ and press Return.</span>
+<span class="pr">$</span> </pre>
+    </div>
+    <p class="note">Throughout this deck, a line starting with <code>$</code> is something <b>you type</b>; the dimmed lines under it are what the computer <b>prints back</b>.</p>
+    <aside class="notes">This is the single biggest unlock for a true beginner — what the $ is and that dimmed = output. Don't rush it.</aside>
+  </section>
+
+  <!-- M0.2 homebrew -->
+  <section>
+    <h3>Step 2 · Homebrew <span class="muted">(Mac only — Win/Linux skip)</span></h3>
+    <p class="lead">Homebrew lets you install the other tools with one short command each. Paste this whole line into the terminal and press Return:</p>
+    <div class="cmd" data-copy='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'><button class="cp" title="Click to copy to clipboard">copy</button>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</div>
+    <p class="copyhint">↑ click anywhere on the box to copy it to your clipboard</p>
+    <div class="term" data-copy='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'>
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>Terminal — zsh</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">$</span> /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+<span class="o">==> Checking for `sudo` access (which may request your password)...</span>
+<span class="o">==> Installation successful!</span>
+<span class="pr">$</span> brew --version
+<span class="ok">Homebrew 4.3.8</span></pre>
+    </div>
+    <div class="os"><span><b>Windows</b> Homebrew not needed — use <code>winget</code> (built in)</span><span><b>Linux</b> use <code>apt</code> (built in)</span></div>
+    <p class="note">It may ask for your Mac password (typing shows nothing — that's normal) and take a few minutes. ✅ Success = <code>brew --version</code> prints a number.</p>
+    <aside class="notes">Two beginner gotchas to call out: the password prompt shows no characters, and it's slow. Both are normal.</aside>
+  </section>
+
+  <!-- M0.3 claude code -->
+  <section>
+    <h3>Step 3 · Claude Code</h3>
+    <p class="lead">Install it, then sign in with your SAS-AM Max plan.</p>
+    <div class="os"><span><b>macOS</b> <code>brew install --cask claude-code</code></span><span><b>Win</b> <code>winget install Anthropic.ClaudeCode</code></span><span><b>Linux</b> see claude.com/code</span></div>
+    <div class="term" data-copy="claude">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>Terminal — zsh</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">$</span> brew install --cask claude-code
+<span class="o">🍺  claude-code was successfully installed!</span>
+<span class="pr">$</span> claude
+<span class="o">Welcome to Claude Code. Opening your browser to sign in…</span>
+<span class="ok">✓ Signed in as you@sas-am.com (Max plan)</span></pre>
+    </div>
+    <p class="note">Running <code>claude</code> opens your browser to log in. Choose your <b>SAS-AM</b> account (Max plan). After this, typing <code>claude</code> anywhere starts your AI workmate.</p>
+    <aside class="notes">If the browser login stalls, just run `claude` again. The Max plan is what gives them the model.</aside>
+  </section>
+
+  <!-- M0.4 git -->
+  <section>
+    <h3>Step 4 · git</h3>
+    <p class="lead"><code>git</code> is the tool that tracks versions of files — GitHub is built on it. Install + check:</p>
+    <div class="os"><span><b>macOS</b> <code>brew install git</code></span><span><b>Win</b> <code>winget install Git.Git</code></span><span><b>Linux</b> <code>sudo apt install git</code></span></div>
+    <div class="term" data-copy="git --version">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>Terminal — zsh</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">$</span> brew install git
+<span class="o">==> Pouring git… 🍺</span>
+<span class="pr">$</span> git --version
+<span class="ok">git version 2.45.2</span></pre>
+    </div>
+    <p class="note">✅ Success = <code>git --version</code> prints a version number. That's all you need to do with git directly — the commands handle the rest.</p>
+    <aside class="notes">Reassure: they will essentially never type a raw git command — the /skills wrap it.</aside>
+  </section>
+
+  <!-- M0.5 gh -->
+  <section>
+    <h3>Step 5 · GitHub CLI (gh) — install &amp; log in</h3>
+    <p class="lead"><code>gh</code> connects you to GitHub, where engagement work lives. After installing, run <code>gh auth login</code> and answer the prompts (arrow keys + Return).</p>
+    <div class="os"><span><b>macOS</b> <code>brew install gh</code></span><span><b>Win</b> <code>winget install GitHub.cli</code></span><span><b>Linux</b> <code>sudo apt install gh</code></span></div>
+    <div class="term" data-copy="gh auth login">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>Terminal — zsh</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">$</span> gh auth login
+<span class="o">? Where do you use GitHub?</span>  <span class="ok">GitHub.com</span>
+<span class="o">? Preferred protocol for Git operations?</span>  <span class="ok">HTTPS</span>
+<span class="o">? How would you like to authenticate?</span>  <span class="ok">Login with a web browser</span>
+<span class="o">! First copy your one-time code:</span> <span class="warn">A1B2-C3D4</span>
+<span class="o">  Press Enter to open github.com in your browser…</span>
+<span class="ok">✓ Logged in as your-username</span></pre>
+    </div>
+    <p class="note">It shows a short <b>code</b> and opens GitHub — paste the code, approve, done. Check with <code>gh auth status</code>. <b>No GitHub account yet?</b> Make a free one at <a href="https://github.com/signup">github.com/signup</a> first, then ask Shane to add you to the org.</p>
+    <aside class="notes">Most interactive step. Walk the arrow-key choices: GitHub.com → HTTPS → browser. The one-time code trips people up — copy then paste in browser.</aside>
+  </section>
+
+  <!-- M0.6 git-lfs -->
+  <section>
+    <h3>Step 6 · git-lfs</h3>
+    <p class="lead">Large File Storage — keeps big inputs (spreadsheets, point clouds, images) out of the way. Install, then run <code>git lfs install</code> once:</p>
+    <div class="os"><span><b>macOS</b> <code>brew install git-lfs</code></span><span><b>Win</b> <code>winget install GitHub.GitLFS</code></span><span><b>Linux</b> <code>sudo apt install git-lfs</code></span></div>
+    <div class="term" data-copy="git lfs install">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>Terminal — zsh</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">$</span> brew install git-lfs
+<span class="pr">$</span> git lfs install
+<span class="ok">Git LFS initialized.</span>
+<span class="pr">$</span> git lfs version
+<span class="ok">git-lfs/3.5.1</span></pre>
+    </div>
+    <p class="note">✅ Success = "Git LFS initialized." You only run <code>git lfs install</code> once per machine.</p>
+    <aside class="notes">Quick — one extra "install" sub-step (git lfs install) beyond the brew install. That's the only nuance.</aside>
+  </section>
+
+  <!-- M0.7 tailscale -->
+  <section>
+    <h3>Step 7 · Tailscale</h3>
+    <p class="lead">A secure private network that lets big files reach your laptop from our server. Install the app, then connect:</p>
+    <div class="os"><span><b>macOS</b> <code>brew install --cask tailscale</code></span><span><b>Win</b> <code>winget install tailscale.tailscale</code></span><span><b>Linux</b> <code>curl -fsSL https://tailscale.com/install.sh | sh</code></span></div>
+    <div class="term" data-copy="tailscale status">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>Terminal — zsh</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">$</span> tailscale up
+<span class="o">To authenticate, visit:  https://login.tailscale.com/a/abc123</span>
+<span class="ok">Success.</span>
+<span class="pr">$</span> tailscale status
+<span class="ok">100.x.x.x   your-mac   you@   active</span></pre>
+    </div>
+    <p class="note">Sign in with your SAS-AM account when the browser opens. ✅ Success = <code>tailscale status</code> shows your machine as <b>active</b>. (Mac app users: just sign in via the menu-bar icon.)</p>
+    <aside class="notes">If they install the Mac cask app, they sign in via the menu-bar icon rather than `tailscale up` — mention both.</aside>
+  </section>
+
+  <!-- M0.8 skills plugin -->
+  <section>
+    <h3>Step 8 · The SAS-AM skills</h3>
+    <p class="lead">Finally, add the SAS-AM commands into Claude Code. Start <code>claude</code>, then add the marketplace and install the ensemble skills:</p>
+    <div class="term" data-copy="/plugin marketplace add scrivo21/SASAMClaudeCodeSkills">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>claude</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">&gt;</span> /plugin marketplace add scrivo21/SASAMClaudeCodeSkills
+<span class="ok">✓ Marketplace added</span>
+<span class="pr">&gt;</span> /plugin install ensemble
+<span class="ok">✓ Installed: /tether /handoff /sync /collect /status</span></pre>
+    </div>
+    <p class="note">Inside Claude Code the prompt is <code>&gt;</code> and commands start with <code>/</code>. After this you have the five SAS-AM commands. (The marketplace name <code>scrivo21/SASAMClaudeCodeSkills</code> is correct — it redirects to the SAS-AM org repo.)</p>
+    <aside class="notes">This is inside claude, not the shell — note the > prompt and / commands. Exact plugin name may differ; flag to confirm.</aside>
+  </section>
+
+  <!-- M0.9 verify all + checklist -->
+  <section>
+    <h3>Step 9 · Check everything at once</h3>
+    <p class="lead">Paste these four lines together — each should print a version or a logged-in status:</p>
+    <div class="term" data-copy="claude --version
 gh auth status
 git lfs version
-tailscale status</div>
-    <ul class="check">
-      <li><b>claude</b> logged in on your Max plan</li>
-      <li><b>gh</b> authenticated to GitHub</li>
-      <li><b>git-lfs</b> installed; Tailscale connected</li>
-      <li>SASAMClaudeCodeSkills plugin installed</li>
-    </ul>
-    <aside class="notes">If any line errors, fix it before moving on — the later modules assume all four work.</aside>
-  </section>
-</section>
-
-<!-- ===================== M1 MODEL ===================== -->
-<section data-section="m1">
-  <section id="m1">
-    <span class="tag">M1</span><div class="eyebrow" style="display:inline">Mental model</div>
-    <h2>How the pieces fit</h2>
-    <table class="simple">
-      <tr><th>Thing</th><th>What it is</th></tr>
-      <tr><td><code>queue</code> branch</td><td>The mailbox — your packets go to <code>handoffs/inbox/</code>; the poller claims them.</td></tr>
-      <tr><td><code>main</code> branch</td><td>The reviewed record — results land in <code>handoffs/outbox/&lt;id&gt;/</code> via PR. Protected.</td></tr>
-      <tr><td>Routing</td><td><code>kind: project</code> → <b>larsFrederickson</b>; anything else → <b>agnarBergstrom</b>.</td></tr>
-      <tr><td>You</td><td>Write the task. You never pick a specialist — the conductor does.</td></tr>
-    </table>
-    <aside class="notes">The single most freeing idea: you describe the work and its done-criteria. Who does it is the Ensemble's problem, not yours.</aside>
-  </section>
-  <section id="m1-tiers">
-    <h3>Review tiers — who must approve</h3>
-    <div class="grid g2">
-      <div class="card"><h3>auto</h3><p>Low-stakes. Auto-merges on green checks.</p></div>
-      <div class="card"><h3>light</h3><p>Any engagement consultant approves.</p></div>
-      <div class="card"><h3>full <span class="muted">(default)</span></h3><p>The <b>requesting</b> consultant approves.</p></div>
-      <div class="card"><h3>founder</h3><p>Scriv approves (CODEOWNERS).</p></div>
+tailscale status">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>Terminal — zsh</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">$</span> claude --version      <span class="ok">→ 1.x.x</span>
+<span class="pr">$</span> gh auth status        <span class="ok">→ ✓ Logged in to github.com</span>
+<span class="pr">$</span> git lfs version       <span class="ok">→ git-lfs/3.5.1</span>
+<span class="pr">$</span> tailscale status      <span class="ok">→ … active</span></pre>
     </div>
-    <ul class="check"><li>I know queue vs main, project→Lars / else→Agnar, and the four tiers</li></ul>
-    <aside class="notes">Tier is a field on the packet. It decides whose approval turns the PR's tier-gate check green.</aside>
+    <ul class="check">
+      <li>Terminal opened — I know what the <code>$</code> means</li>
+      <li><b>Claude Code</b> installed &amp; signed in (Max plan)</li>
+      <li><b>git</b>, <b>gh</b> (logged in), <b>git-lfs</b> all print versions</li>
+      <li><b>Tailscale</b> connected (status = active)</li>
+      <li>SAS-AM <b>ensemble skills</b> installed in Claude Code</li>
+    </ul>
+    <p class="note">All five ticked? You're set up. If any line errors, fix that one tool before moving on — the rest of the workflow assumes all four work.</p>
+    <aside class="notes">Anything red here is a blocker. The four-line check is the single source of truth for "install done".</aside>
   </section>
 </section>
 
-<!-- ===================== M2 COMMANDS ===================== -->
-<section data-section="m2">
-  <section id="m2">
-    <span class="tag">M2</span><div class="eyebrow" style="display:inline">Your five commands</div>
-    <h2>The whole workflow is five verbs</h2>
-    <table class="simple">
-      <tr><th>Command</th><th>What it does</th></tr>
-      <tr><td><code>/tether &lt;uuid|name&gt;</code></td><td>Bind to an engagement: resolve it in the registry, clone or add the <code>ensemble</code> remote, fetch <code>main</code>+<code>queue</code>, orient you.</td></tr>
-      <tr><td><code>/handoff</code></td><td>Write a task packet and fast-forward push it to <code>queue</code> — your only direct push.</td></tr>
-      <tr><td><code>/sync</code></td><td>Four-part report: results to collect · PRs awaiting you · returned packets · claims in flight.</td></tr>
-      <tr><td><code>/collect [id]</code></td><td>Pull <code>main</code>, fetch + sha256-verify LFS blobs, summarise results.</td></tr>
-      <tr><td><code>/status</code></td><td>Registry-wide view + the poller's last heartbeat.</td></tr>
+<!-- ===================== M1 MENTAL MODEL ===================== -->
+<section data-section="m1">
+  <section>
+    <span class="tag">M1</span><div class="eyebrow" style="display:inline">How it works</div>
+    <h2>You hand work to a fleet of AI agents — over GitHub</h2>
+    <p class="lead">You describe a task and its done-criteria. The Ensemble (a conductor agent + 14 specialists on our server) does it, and hands you back a <b>pull request</b> to review. You never pick which agent — the conductor decides.</p>
+    <div class="grid g3">
+      <div class="card"><h3>GitHub = the inbox/outbox</h3><p>Tasks go in, finished work comes back. Repo access is the wall that keeps engagements separate.</p></div>
+      <div class="card"><h3>Two lanes</h3><p><code>queue</code> = your outbox for tasks. <code>main</code> = the reviewed record of finished work.</p></div>
+      <div class="card"><h3>Routing</h3><p>A <b>project</b> goes to Lars (plans + delegates). Anything else goes to Agnar (triage).</p></div>
+    </div>
+    <aside class="notes">The freeing idea: describe the work + done-criteria; who does it is the Ensemble's problem.</aside>
+  </section>
+  <section>
+    <h3>Three GitHub words you'll meet</h3>
+    <table class="t">
+      <tr><th>Word</th><th>Plain English</th></tr>
+      <tr><td><b>Branch</b></td><td>A safe copy to work on without touching the finished version (<code>main</code>).</td></tr>
+      <tr><td><b>Pull request (PR)</b></td><td>"Here's my work — please review &amp; approve." It's the review screen you'll click through.</td></tr>
+      <tr><td><b>Merge</b></td><td>Approving the PR — the work joins <code>main</code> (becomes official).</td></tr>
     </table>
-    <aside class="notes">There's also a SessionStart hook: open a tethered repo and /sync runs automatically before your first prompt.</aside>
-  </section>
-  <section id="m2-loop">
-    <h3>The everyday loop</h3>
-    <div class="cmd"><button class="copy">copy</button><span class="c"># once per engagement</span>
-/tether transdev-iso55001
-<span class="c"># whenever you have work</span>
-/handoff
-<span class="c"># the Ensemble polls every ~2 min — later…</span>
-/sync          <span class="c"># what needs me?</span>
-/collect       <span class="c"># pull the finished results</span></div>
-    <ul class="check"><li>I can name all five commands and when to use each</li></ul>
-    <aside class="notes">Muscle memory: tether once, then handoff → sync → collect for the life of the engagement.</aside>
+    <h3 style="margin-top:14px">Review tiers — whose approval is needed</h3>
+    <div class="grid g4">
+      <div class="card"><h3>auto</h3><p>Low-stakes — merges itself on green checks.</p></div>
+      <div class="card"><h3>light</h3><p>Any consultant approves.</p></div>
+      <div class="card"><h3>full</h3><p>The <b>requester</b> approves.</p></div>
+      <div class="card"><h3>founder</h3><p>Shane approves.</p></div>
+    </div>
+    <ul class="check"><li>I get branch / PR / merge, the queue→main lanes, and the four tiers</li></ul>
+    <aside class="notes">Define PR/branch/merge before any module uses them. The tier table maps directly to who clicks approve.</aside>
   </section>
 </section>
 
-<!-- ===================== M3 PACKETS ===================== -->
-<section data-section="m3">
-  <section id="m3">
-    <span class="tag">M3</span><div class="eyebrow" style="display:inline">Writing a good packet</div>
-    <h2>The packet is a brief for an agent with no memory</h2>
-    <div class="cmd"><button class="copy">copy</button>---
-id: HX-2026-0610-tram-fmeca
-engagement: transdev-iso55001
-requested_by: jonathan
-kind: project           <span class="c"># → larsFrederickson</span>
-review_tier: full       <span class="c"># you must approve</span>
-route_hint: api
-deadline: 2026-06-20T17:00+10:00
-inputs: [data/asset-register-trams.csv]
-definition_of_done:
-  - Re-score all 11 assets against rubric v3 (S×O×D)
-  - Flag the top-5 by RPN with a maintenance tactic
----
-## Brief
-Re-score Transdev's tram subsystem register…</div>
-    <aside class="notes">The definition_of_done IS the contract. Write it as verbatim, testable acceptance criteria — the agent has zero session context.</aside>
+<!-- ===================== M2 FIVE COMMANDS ===================== -->
+<section data-section="m2">
+  <section>
+    <span class="tag">M2</span><div class="eyebrow" style="display:inline">Your five commands</div>
+    <h2>The whole job is five verbs</h2>
+    <table class="t">
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><code>/tether &lt;name&gt;</code></td><td>Connect to an engagement (do this once per engagement).</td></tr>
+      <tr><td><code>/handoff</code></td><td>Write a task and send it to the fleet.</td></tr>
+      <tr><td><code>/sync</code></td><td>"What needs me?" — results to collect, PRs to review.</td></tr>
+      <tr><td><code>/collect</code></td><td>Pull the finished work to your laptop.</td></tr>
+      <tr><td><code>/status</code></td><td>A bird's-eye view across all your engagements.</td></tr>
+    </table>
+    <p class="note">You type these <b>inside Claude Code</b> (the <code>&gt;</code> prompt), in plain language afterwards. There's also a hook that runs <code>/sync</code> automatically when you open an engagement.</p>
+    <aside class="notes">Five verbs. Tether once; then handoff → sync → collect on repeat.</aside>
   </section>
-  <section id="m3-rules">
+  <section>
+    <h3>What running one looks like</h3>
+    <p class="lead">You start Claude Code in the engagement folder and type a command — it talks back in plain English:</p>
+    <div class="term" data-copy="/tether transurban-wcx-ncx">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>claude — sasam-transurban-wcx-ncx</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">&gt;</span> /tether transurban-wcx-ncx
+<span class="o">Resolving engagement in the registry…</span>
+<span class="ok">✓ Tethered: Transurban WCX/NCX</span>
+<span class="o">  open PRs: 0   ·   inbox: 0 packets   ·   you have access</span>
+<span class="pr">&gt;</span> /sync
+<span class="ok">All clear — nothing waiting on you.</span></pre>
+    </div>
+    <ul class="check"><li>I can name all five commands and when to use each</li></ul>
+    <aside class="notes">Show the > prompt + plain-English replies. They never read raw git output — the skill narrates.</aside>
+  </section>
+</section>
+
+<!-- ===================== M3 PACKET ===================== -->
+<section data-section="m3">
+  <section>
+    <span class="tag">M3</span><div class="eyebrow" style="display:inline">Writing a task</div>
+    <h2>A task is a brief for someone with no memory</h2>
+    <p class="lead">Run <code>/handoff</code> and answer a few questions. The most important is the <b>definition of done</b> — write it as clear, testable bullet points, because the agent has zero prior context.</p>
+    <div class="term" data-copy="/handoff">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>claude — sasam-transurban-wcx-ncx</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">&gt;</span> /handoff
+<span class="o">What's the brief?</span>      <span class="ok">Re-score the tram asset register against rubric v3</span>
+<span class="o">Inputs?</span>               <span class="ok">data/asset-register.csv</span>
+<span class="o">Done when…?</span>           <span class="ok">All 11 assets re-scored; top-5 by RPN flagged</span>
+<span class="o">Kind / tier?</span>          <span class="ok">project / full</span>
+<span class="ok">✓ Packet HX-2026-0610-fmeca pushed. Norbert polls every ~2 min.</span></pre>
+    </div>
+    <p class="note">Defaults are sensible (<code>kind: project</code>, <code>tier: full</code>) — just press Return to accept. A "packet" is simply your task, saved with an ID.</p>
+    <aside class="notes">The DoD discipline is the #1 quality lever — testable bullets, written for zero context.</aside>
+  </section>
+  <section>
     <h3>Two rules that save you pain</h3>
     <div class="grid g2">
-      <div class="card"><h3>Done-criteria are testable</h3><p>"Re-score all 11 assets", not "look at the register". The reviewer checks each line.</p></div>
-      <div class="card"><h3>Big files use LFS</h3><p>Inputs &gt;10&nbsp;MB must be Git-LFS pointers or live under <code>data/</code>. <code>/handoff</code> stops you otherwise.</p></div>
+      <div class="card"><h3>Done-criteria are testable</h3><p>"Re-score all 11 assets" — not "look at the register". The reviewer checks each line you wrote.</p></div>
+      <div class="card"><h3>Big files use LFS</h3><p>Inputs over 10&nbsp;MB go in the <code>data/</code> folder (git-lfs handles them). <code>/handoff</code> warns you if one's too big.</p></div>
     </div>
-    <ul class="check"><li>My packet has a testable definition_of_done and LFS-safe inputs</li></ul>
-    <aside class="notes">A vague done-list is the #1 cause of a rejected result. Spend the extra minute here.</aside>
+    <ul class="check"><li>My task has testable done-criteria and LFS-safe inputs</li></ul>
+    <aside class="notes">A vague done-list is the top cause of a rejected result. One extra minute here pays off.</aside>
   </section>
 </section>
 
 <!-- ===================== M4 ON-SITE ===================== -->
 <section data-section="m4">
-  <section id="m4">
+  <section>
     <span class="tag">M4</span><div class="eyebrow" style="display:inline">From a client site</div>
-    <h2>What works on hotel wifi</h2>
+    <h2>What works on hotel wi-fi</h2>
     <div class="grid g2">
-      <div class="card"><h3>GitHub only → control plane</h3><p>Tether, handoff, sync, review, merge — all work with nothing but GitHub access.</p></div>
-      <div class="card"><h3>Tailscale → data plane</h3><p>Only <code>/collect</code>'s big blobs need the mesh. Off-mesh, it tells you what it skipped.</p></div>
+      <div class="card"><h3>GitHub-only → it all works</h3><p>Tether, handoff, sync, review, approve — with nothing but internet access.</p></div>
+      <div class="card"><h3>Tailscale → just the big files</h3><p>Only <code>/collect</code>'s large downloads need the private network. Off it, it tells you what it skipped.</p></div>
     </div>
     <ul class="check">
-      <li>No secrets, credentials, or client PII in any file or packet</li>
-      <li>Australian English in everything client-facing</li>
+      <li>No passwords, keys or client data in any task or file</li>
+      <li>Australian English in anything client-facing</li>
     </ul>
-    <aside class="notes">You can run the whole control plane from a client boardroom. Blobs just wait until you're back on the tailnet.</aside>
+    <aside class="notes">You can run the whole control flow from a client boardroom; blobs wait for Tailscale.</aside>
   </section>
 </section>
 
 <!-- ===================== M5 REVIEW ===================== -->
 <section data-section="m5">
-  <section id="m5">
+  <section>
     <span class="tag">M5</span><div class="eyebrow" style="display:inline">Review &amp; collect</div>
-    <h2>The pull request is the gate</h2>
-    <p class="lead">The Ensemble opens a PR into <code>main</code>. The <b>tier-gate</b> check stays red until the right person approves — for a <code>full</code> packet, that's you.</p>
-    <div class="cmd"><button class="copy">copy</button><span class="c"># see what's waiting, then pull the merged result</span>
-/sync
-/collect HX-2026-0610-tram-fmeca   <span class="c"># sha256-verifies LFS blobs</span></div>
+    <h2>The pull request is where you approve</h2>
+    <p class="lead">When the fleet finishes, it opens a <b>PR</b>. A check called <code>tier-gate</code> stays <span style="color:var(--amber)">red</span> until the right person approves — for a <code>full</code> task, that's you. Approve it and it goes <span style="color:var(--green)">green</span> and merges.</p>
+    <div class="term" data-copy="/sync
+/collect">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>claude — sasam-transurban-wcx-ncx</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">&gt;</span> /sync
+<span class="o">1 PR waiting on you:</span> <span class="warn">#7 “FMECA re-score” — needs your approval</span>
+<span class="o">   → approve it on GitHub, then…</span>
+<span class="pr">&gt;</span> /collect
+<span class="ok">✓ Pulled FMECA worksheet + summary (sha256 verified).</span></pre>
+    </div>
     <ul class="check">
-      <li>I approve as the required reviewer; red → green; it merges</li>
-      <li>Results land in <code>handoffs/outbox/&lt;id&gt;/</code> on <code>main</code></li>
+      <li>I approve as the required reviewer; the check goes red → green; it merges</li>
+      <li>Results land in the engagement's <code>outbox</code> and <code>/collect</code> brings them down</li>
     </ul>
-    <aside class="notes">Approving is a normal GitHub review. tier-gate re-checks the moment you approve and flips green.</aside>
+    <aside class="notes">Approving is a normal GitHub review (a green button). tier-gate re-checks the instant you approve.</aside>
   </section>
 </section>
 
 <!-- ===================== M6 LAB ===================== -->
 <section data-section="m6">
-  <section id="m6">
+  <section>
     <span class="tag">M6</span><div class="eyebrow" style="display:inline">The "100"</div>
     <h2>Hands-on: run a real handoff</h2>
-    <div class="cmd"><button class="copy">copy</button><span class="c"># against the practice engagement</span>
-/tether sasam-onboarding-sandbox
-/handoff            <span class="c"># a tiny sample task, kind: task, tier: full</span>
-<span class="c"># wait ~2 min — the poller claims it, opens a PR</span>
-/sync               <span class="c"># your PR is awaiting review</span>
-<span class="c"># approve the PR on GitHub → it merges</span>
-/collect</span></div>
-    <aside class="notes">This is the graduation exercise. When /collect shows your result summary, you've gone end to end.</aside>
+    <p class="lead">Do this once against the practice sandbox and you've gone end-to-end:</p>
+    <div class="term" data-copy="/tether sasam-onboarding-sandbox
+/handoff">
+      <div class="bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>claude — sandbox</span><button class="cp" title="Click to copy to clipboard">copy</button></div>
+<pre><span class="pr">&gt;</span> /tether sasam-onboarding-sandbox
+<span class="ok">✓ Tethered to the practice engagement</span>
+<span class="pr">&gt;</span> /handoff      <span class="cm"># a tiny sample task, tier: full</span>
+<span class="ok">✓ Packet pushed.</span> <span class="o">Wait ~2 min — the fleet picks it up &amp; opens a PR.</span>
+<span class="pr">&gt;</span> /sync         <span class="cm"># your PR is waiting → approve it on GitHub</span>
+<span class="pr">&gt;</span> /collect      <span class="ok">✓ your result is on your laptop</span></pre>
+    </div>
+    <aside class="notes">This is graduation. When /collect shows the result, they're operational.</aside>
   </section>
-  <section id="m6-check">
+  <section>
     <h3>You've reached 100 when…</h3>
     <ul class="check">
-      <li>Tethered the sandbox and pushed a packet to <code>queue</code></li>
-      <li>Watched the poller claim it and open a PR</li>
-      <li>Approved the PR; tier-gate went green; it merged</li>
-      <li><code>/collect</code> pulled your result and summarised it</li>
+      <li>Tethered the sandbox and sent a task with <code>/handoff</code></li>
+      <li>Waited ~2 min and saw the fleet open a PR</li>
+      <li>Approved the PR on GitHub — it went green and merged</li>
+      <li><code>/collect</code> pulled your result down</li>
     </ul>
-    <aside class="notes">All four ticked = you're operational. Real engagements work exactly the same way.</aside>
+    <p class="note">All four ticked = you're operational. Real engagements work exactly the same way.</p>
+    <aside class="notes">Four ticks and they're cleared for real engagements.</aside>
   </section>
 </section>
 
 <!-- ===================== M7 HELP ===================== -->
 <section data-section="m7">
-  <section id="m7">
+  <section>
     <span class="tag">M7</span><div class="eyebrow" style="display:inline">When something's odd</div>
     <h2>Troubleshooting &amp; FAQ</h2>
-    <table class="simple">
-      <tr><th>Symptom</th><th>What's happening / do</th></tr>
-      <tr><td>"fast-forward push failed"</td><td>The queue advanced — re-run <code>/handoff</code>; it rebases onto the new tip.</td></tr>
-      <tr><td>Packet went quiet</td><td>A claim can stall; the janitor returns it to inbox and bumps <code>retries</code>. Check <code>/status</code>.</td></tr>
-      <tr><td>"LFS mesh unreachable"</td><td>You're off Tailscale. Control plane still works; <code>/collect</code> skips blobs and lists them.</td></tr>
-      <tr><td>Is the fleet alive?</td><td><code>/status</code> shows the poller's last heartbeat and per-repo claims.</td></tr>
+    <table class="t">
+      <tr><th>You see…</th><th>What's happening / do</th></tr>
+      <tr><td>"command not found"</td><td>That tool didn't install — re-run its install step from M0.</td></tr>
+      <tr><td>"fast-forward push failed"</td><td>The queue moved on — just run <code>/handoff</code> again; it sorts itself out.</td></tr>
+      <tr><td>It's gone quiet</td><td>The fleet polls every ~2 minutes. Run <code>/status</code> to see what's in flight.</td></tr>
+      <tr><td>"LFS / mesh unreachable"</td><td>You're off Tailscale — everything still works; big files just wait.</td></tr>
+      <tr><td>Stuck on a step</td><td>Ask Claude Code in plain English ("what does this error mean?") or ping Shane.</td></tr>
     </table>
-    <aside class="notes">Most "stuck" feelings are just the 2-minute poll cadence. /status is your single source of truth.</aside>
+    <aside class="notes">Most "stuck" feelings are the 2-minute poll. /status is the source of truth. And Claude Code itself can explain any error.</aside>
   </section>
 </section>
 
-<!-- READINESS -->
-<section id="ready" data-section="close">
+<!-- ===== READINESS ===== -->
+<section data-section="close">
   <div class="eyebrow">Readiness check</div>
   <h2>You're cleared to operate when every box is ticked</h2>
   <div class="grid g2">
     <ul class="check">
-      <li>Claude Code, gh, git-lfs, Tailscale all verified</li>
-      <li>Ensemble skills installed</li>
-      <li>Understand queue/main, routing, tiers</li>
-      <li>Can write a testable packet</li>
+      <li>All four tools verified (claude, gh, git-lfs, Tailscale)</li>
+      <li>Ensemble skills installed in Claude Code</li>
+      <li>Understand queue/main, routing, and tiers</li>
+      <li>Can write a testable task with <code>/handoff</code></li>
     </ul>
     <ul class="check">
       <li>Know all five commands</li>
-      <li>Can review &amp; approve a PR by tier</li>
-      <li>Ran the sandbox handoff end to end</li>
-      <li>Know where /status and help live</li>
+      <li>Can approve a PR by tier (red → green)</li>
+      <li>Ran the sandbox handoff end-to-end</li>
+      <li>Know <code>/status</code> and how to get help</li>
     </ul>
   </div>
-  <aside class="notes">If anything's unticked, jump back via O (overview). Don't start a real engagement with gaps here.</aside>
+  <aside class="notes">Unticked anything? Press O and jump back. Don't start a real engagement with gaps.</aside>
 </section>
 
-<!-- CLOSE -->
-<section id="close" data-section="close">
-  <div class="title-wrap">
+<!-- ===== CLOSE ===== -->
+<section data-section="close">
+  <div class="center">
     <span class="pill">100</span>
-    <h2 style="margin-top:16px">What you can now do</h2>
-    <ol style="font-size:.8em;color:var(--text-secondary);line-height:1.8">
-      <li>Tether any engagement and hand work to the fleet</li>
-      <li>Write packets the agents can act on without you</li>
-      <li>Review, collect and ship — from anywhere with GitHub</li>
+    <h2 style="margin-top:14px">What you can now do</h2>
+    <ol style="font-size:.78em;color:var(--fg2);line-height:1.8">
+      <li>Set up a working laptop from scratch — terminal and all</li>
+      <li>Tether an engagement and hand work to the fleet</li>
+      <li>Review, approve and collect — from anywhere with GitHub</li>
     </ol>
     <p class="tagline">At SAS-AM we help organisations understand their strengths and weaknesses, model and predict the future, and make the right decisions through audit and benchmarking, advanced analytics and deep advisory services.</p>
   </div>
-  <aside class="notes">Close, don't thank: you're now part of how SAS-AM delivers. Keep this open during questions.</aside>
+  <aside class="notes">Close, don't thank: you're now part of how SAS-AM delivers. Keep open during questions.</aside>
 </section>
 
 </div></div>
@@ -383,32 +562,35 @@ Re-score Transdev's tram subsystem register…</div>
 <script>
 Reveal.initialize({
   plugins:[RevealNotes], hash:true, slideNumber:'c/t', showSlideNumber:'all',
-  progress:true, center:false, width:1280, height:720, margin:.06,
+  progress:true, center:false, width:1280, height:760, margin:.05,
   minScale:.2, maxScale:2.0, transition:'slide', help:true, controls:true, overview:true,
 });
-/* theme toggle (light/dark) with persistence */
+/* theme toggle */
 var KEY='marcov-presentation-theme';
-function applyTheme(t){document.documentElement.setAttribute('data-theme',t);
-  try{localStorage.setItem(KEY,t);}catch(e){}}
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem(KEY,t);}catch(e){}}
 applyTheme((function(){try{return localStorage.getItem(KEY)||'dark';}catch(e){return 'dark';}})());
-function toggleTheme(){var t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';applyTheme(t);}
+function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');}
 document.getElementById('themeToggle').addEventListener('click',toggleTheme);
-document.addEventListener('keydown',function(e){if((e.key==='t'||e.key==='T')&&!e.metaKey&&!e.ctrlKey){toggleTheme();}});
-/* interactive checklists — consultant ticks through (click or Enter/Space) */
+document.addEventListener('keydown',function(e){if((e.key==='t'||e.key==='T')&&!e.metaKey&&!e.ctrlKey)toggleTheme();});
+/* click-to-copy-to-clipboard: terminal windows + command blocks both carry data-copy */
+var toast=document.getElementById('toast');var toastT;
+function copied(){toast.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){toast.classList.remove('show');},1200);}
+function copyText(t){
+  if(!t) return; t=t.trim(); if(!t) return;
+  function fb(){var ta=document.createElement('textarea');ta.value=t;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.top='-9999px';ta.style.left='-9999px';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');copied();}catch(e){}document.body.removeChild(ta);}
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(copied,fb); else fb();
+}
+document.querySelectorAll('[data-copy]').forEach(function(el){
+  var txt=el.getAttribute('data-copy');if(!txt)return;
+  el.setAttribute('title','Click to copy to clipboard');
+  el.addEventListener('click',function(e){e.stopPropagation();copyText(txt);});
+});
+/* interactive checklists */
 document.querySelectorAll('.check li').forEach(function(li){
   li.setAttribute('tabindex','0'); li.setAttribute('role','checkbox'); li.setAttribute('aria-checked','false');
   function toggle(){var on=li.classList.toggle('done');li.setAttribute('aria-checked',on?'true':'false');}
   li.addEventListener('click',toggle);
   li.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
-});
-/* copy-to-clipboard for command blocks */
-document.querySelectorAll('.cmd .copy').forEach(function(btn){
-  btn.addEventListener('click',function(){
-    var block=btn.parentNode.cloneNode(true);
-    var b=block.querySelector('.copy'); if(b) b.remove();
-    var text=block.textContent.trim();
-    navigator.clipboard.writeText(text).then(function(){btn.textContent='copied';setTimeout(function(){btn.textContent='copy';},1200);});
-  });
 });
 </script>
 </body>

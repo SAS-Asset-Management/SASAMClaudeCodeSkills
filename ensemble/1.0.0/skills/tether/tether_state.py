@@ -200,7 +200,7 @@ def _upsert(uuid: str, name: str, scope_tag: str, repo: str, path: str) -> int:
 
 def main(argv: list[str]) -> int:
     if len(argv) < 2:
-        print("usage: tether_state.py <resolve|upsert> ...", file=sys.stderr)
+        print("usage: tether_state.py <list|resolve|upsert> ...", file=sys.stderr)
         return 2
     cmd = argv[1]
     try:

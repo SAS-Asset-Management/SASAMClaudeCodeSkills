@@ -44,9 +44,11 @@ EOF
 QUERY="" MODE="" TARGET_DIR="" DO_LIST=0
 while [ "$#" -gt 0 ]; do
   case "$1" in
-    --query) QUERY="${2:-}"; shift 2 ;;
-    --mode)  MODE="${2:-}";  shift 2 ;;
-    --dir)   TARGET_DIR="${2:-}"; shift 2 ;;
+    # shift by 2 only when a value is actually present, so a trailing `--query`
+    # with no value shows usage instead of aborting on `shift: count out of range`.
+    --query) QUERY="${2:-}"; shift $(( $# >= 2 ? 2 : 1 )) ;;
+    --mode)  MODE="${2:-}";  shift $(( $# >= 2 ? 2 : 1 )) ;;
+    --dir)   TARGET_DIR="${2:-}"; shift $(( $# >= 2 ? 2 : 1 )) ;;
     --list)  DO_LIST=1; shift ;;
     -h|--help) usage ;;
     *) ens_die "unknown argument: $1" ;;

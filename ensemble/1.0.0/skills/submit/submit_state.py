@@ -23,7 +23,8 @@ Subcommand:
       directory, validating packet.md against the engagement's packet.schema.json
       BEFORE writing anything. Exit non-zero (with errors on stderr) on any failure.
 
-Stdlib only. Australian English in user-facing strings. Never prints secrets.
+Standard library + the repo-local ``ensemble_common`` only — no third-party deps.
+Australian English in user-facing strings. Never prints secrets.
 """
 from __future__ import annotations
 
@@ -99,7 +100,8 @@ def _render_summary(cfg: dict) -> str:
         "",
     ]
     L += [f"- {d}" for d in delivs] or ["- (none matched — free submission; triage to file)"]
-    L += ["", "## Evidence / how it meets the criteria", "", cfg.get("evidence", "_(none provided)_"), ""]
+    L += ["", "## Evidence / how it meets the criteria", "",
+          (cfg.get("evidence") or "_(none provided)_"), ""]
     L += ["## Acceptance criteria claimed", ""]
     L += [f"- [x] {c}" for c in cfg.get("definition_of_done", [])] or ["- (none stated)"]
     L += ["", "## Artefacts in this submission", ""]
