@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2026-06-11
+
+### Added
+- **ensemble / `/submit`** New consultant command to land work the consultant did **themselves** (offline, in a workshop) as a **reviewed deliverable**. Where `/handoff` queues work *for* the fleet, `/submit` brings finished work *in*: it interviews the consultant, matches the work to the engagement's **deliverables** ("Lars's delivery page" — reads `.ensemble/deliverables.json` when present, otherwise a free interview), and opens a **PR into `main`** carrying a self-contained result set under `handoffs/outbox/<id>/` — a schema-valid `packet.md` (so `tier-gate` reads the right review tier + requester), a human `summary.md`, a structured `submission.json` of the deliverable claims, and the artefact(s) (with a >10MB-non-LFS guard). Defaults to the `full` review tier (the submitter approves). `submit/{submit.sh,submit_state.py,SKILL.md}`; stdlib/bash + `gh`/`git` only.
+
 ## [1.13.1] - 2026-06-11
 
 ### Fixed
