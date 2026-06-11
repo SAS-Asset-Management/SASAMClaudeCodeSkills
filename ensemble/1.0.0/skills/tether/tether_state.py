@@ -23,10 +23,21 @@ Stdlib only. Australian English in all user-facing strings. Never prints secrets
 """
 from __future__ import annotations
 
+import re
 import sys
 from datetime import datetime, timezone
 
 import ensemble_common as e
+
+
+def _norm(s: object) -> str:
+    """Lowercase and collapse every non-alphanumeric run to a single space.
+
+    So 'Transurban WCX/NCX', 'transurban-wcx-ncx' and 'transurban  wcx ncx' all
+    normalise to the same 'transurban wcx ncx' — punctuation/spacing never blocks a
+    match.
+    """
+    return re.sub(r"[^a-z0-9]+", " ", str(s).lower()).strip()
 
 
 def _utc_now() -> str:
@@ -50,22 +61,32 @@ def _resolve(query: str) -> int:
             _emit(p)
             return 0
 
-    # 2) Exact (case-insensitive) name match.
-    ql = query.lower()
-    exact_name = [p for p in projects if str(p.get("name", "")).lower() == ql]
-    if len(exact_name) == 1:
-        _emit(exact_name[0])
-        return 0
-    if len(exact_name) > 1:
-        return _ambiguous(query, exact_name)
+    # Everything else matches on a punctuation-insensitive normal form, so
+    # 'transurban WCX NCX' resolves 'Transurban WCX/NCX' / 'transurban-wcx-ncx'.
+    nq = _norm(query)
+    q_tokens = nq.split()
 
-    # 3) Fuzzy: case-insensitive substring against name OR scope_tag.
-    fuzzy = [
-        p
-        for p in projects
-        if ql in str(p.get("name", "")).lower()
-        or ql in str(p.get("scope_tag", "")).lower()
-    ]
+    def _haystacks(p: dict) -> list[str]:
+        return [_norm(p.get("name", "")), _norm(p.get("scope_tag", ""))]
+
+    # 2) Normalised exact match on name or scope_tag.
+    exact = [p for p in projects if nq and nq in _haystacks(p)]
+    if len(exact) == 1:
+        _emit(exact[0])
+        return 0
+    if len(exact) > 1:
+        return _ambiguous(query, exact)
+
+    # 3) Fuzzy: normalised substring OR every query token present (any order).
+    def _is_fuzzy(p: dict) -> bool:
+        for hay in _haystacks(p):
+            if nq and nq in hay:
+                return True
+            if q_tokens and all(t in hay.split() for t in q_tokens):
+                return True
+        return False
+
+    fuzzy = [p for p in projects if _is_fuzzy(p)]
     if len(fuzzy) == 1:
         _emit(fuzzy[0])
         return 0
@@ -73,11 +94,41 @@ def _resolve(query: str) -> int:
         return _ambiguous(query, fuzzy)
 
     print(
-        f"ensemble: no project in the registry matches {query!r}. "
-        "Check the name/uuid, or refresh the registry and try again.",
+        f"ensemble: no engagement in the registry matches {query!r}. "
+        "Run /tether with no name to list what's available, or refresh the registry.",
         file=sys.stderr,
     )
     return 3
+
+
+def _list() -> int:
+    """List the engagements in the registry (stdout) as guidance.
+
+    Used when /tether is run with no project name: rather than erroring, show the
+    consultant what they can tether to. Active engagements first, then the rest.
+    """
+    registry = e.load_registry()
+    projects = [p for p in registry.get("projects", []) if isinstance(p, dict)]
+    if not projects:
+        print(
+            "ensemble: the registry has no engagements yet. Ask Shane to register one.",
+            file=sys.stderr,
+        )
+        return 0
+
+    def _key(p: dict) -> tuple:
+        return (
+            0 if str(p.get("status", "")).lower() == "active" else 1,
+            str(p.get("name", "")).lower(),
+        )
+
+    ordered = sorted(projects, key=_key)
+    print("Available engagements — tether with  /tether <name or scope-tag>:\n")
+    for p in ordered:
+        print(f"  • {p.get('name', '?')}")
+        print(f"      scope: {p.get('scope_tag', '?')}    status: {p.get('status', '') or 'unknown'}")
+    print(f"\ne.g.  /tether {ordered[0].get('scope_tag', '<scope-tag>')}")
+    return 0
 
 
 def _emit(p: dict) -> None:
@@ -153,6 +204,8 @@ def main(argv: list[str]) -> int:
         return 2
     cmd = argv[1]
     try:
+        if cmd == "list":
+            return _list()
         if cmd == "resolve":
             if len(argv) != 3:
                 print("usage: tether_state.py resolve <uuid|name>", file=sys.stderr)

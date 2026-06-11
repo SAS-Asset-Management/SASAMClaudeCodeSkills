@@ -15,47 +15,53 @@ This is the **first** skill a consultant runs for a given engagement.
 
 ## What you need from the user
 
-1. **Which project** — a uuid (exact) or a name (fuzzy substring match). This is the
-   `<uuid|name>` the user gave with `/tether`. If they did not give one, ask for it.
+**Do not interrogate the consultant — the skill is built to need almost nothing.**
 
-2. **Clone or remote?** — You MUST ask this before running, unless the answer is obvious
-   from the user's request:
-   - **clone** — *"I'm starting fresh."* The skill runs `git clone` of the engagement
-     repo into the current directory (or `--dir`). Use this when the current directory is
-     **not** already the engagement's checkout.
-   - **remote** — *"I'm already in the repo."* The current directory is already a git
-     repo and the skill simply adds the engagement as a remote named `ensemble`
-     (`git remote add ensemble <url>`). Use this when the user is already inside the
-     engagement's working tree (or a sibling clone they want to attach).
+1. **Which engagement** — a uuid (exact) or a name/scope-tag (fuzzy; punctuation and
+   spacing don't matter, so "transurban WCX NCX" resolves "Transurban WCX/NCX"). If the
+   user **did not name one**, do NOT ask — run the skill with **no `--query`** and it will
+   **list** the engagements they can tether to; show that list and let them pick.
 
-   Phrase it plainly, e.g. *"Do you want me to clone the engagement repo here, or are you
-   already inside a git repo I should attach as a remote?"*
+2. **Clone or remote?** — **Do not ask this.** Omit `--mode` and the skill auto-detects:
+   if the current directory is already a git repo it attaches the engagement as a remote
+   named `ensemble`; otherwise it clones the engagement repo into the current directory.
+   Only pass `--mode` if the user explicitly overrides the default.
+
+There is **no SSH-key or registry setup** to do first: the skill defaults the registry to
+the SAS-AM shared one and uses the GitHub CLI's credential helper, so a consultant who has
+run `gh auth login` can clone private engagement repos over HTTPS with no further config.
 
 ## How to run it
 
-Once you know the project query and the mode, invoke the script in this folder:
-
 ```bash
-bash "$SKILL_DIR/tether.sh" --query "<uuid-or-name>" --mode <clone|remote> [--dir <target-dir>]
+# list the engagements (use when the user didn't name one):
+bash "$SKILL_DIR/tether.sh" --list
+
+# tether (mode auto-detected; quote the name — it can contain spaces/punctuation):
+bash "$SKILL_DIR/tether.sh" --query "<uuid-or-name>" [--mode <clone|remote>] [--dir <dir>]
 ```
 
-- `--query` — the uuid or name the user supplied (quote it; names can contain spaces).
-- `--mode`  — `clone` or `remote`, per the user's answer above.
-- `--dir`   — optional; the working directory (defaults to the current directory). Pass it
-  only if the user wants the clone/attach to happen somewhere other than the cwd.
+- `--query` — the uuid or name/scope-tag the user supplied. Omit (or pass `--list`, `*`,
+  or `all`) to list available engagements instead of tethering.
+- `--mode`  — optional; `clone` or `remote`. Omit to auto-detect (remote if cwd is a git
+  repo, else clone).
+- `--dir`   — optional; the working directory (defaults to the current directory).
 
 The script is **idempotent** — re-running it refreshes the registry, re-fetches `main`
 and `queue`, and updates the tether record. It is safe to run again.
 
 ### What the script does (deterministic — do not reproduce by hand)
 
-1. Ensures `~/.ensemble/registry` is a shallow clone/pull of `registry_repo` from
-   `~/.ensemble/config.json`. (If `registry_repo` is unset it prints a one-line hint and
-   exits non-zero — relay that to the user.)
-2. Resolves the project: **exact uuid** first, else a **fuzzy** case-insensitive match on
-   name/scope_tag. If the query is **ambiguous**, it lists the candidates to stderr and
-   exits non-zero — when that happens, show the candidates and ask the user to re-run
-   `/tether` with the **exact uuid or full name**.
+0. Wires the GitHub CLI as git's HTTPS credential helper (`gh auth setup-git`, best-effort)
+   so private engagement repos clone with no SSH key.
+1. Ensures `~/.ensemble/registry` is a shallow clone/pull of `registry_repo`. If it's not
+   pinned in `~/.ensemble/config.json`, the skill **defaults to the SAS-AM shared registry**
+   and records it — no manual setup.
+2. If no `--query` (or `--list`/`*`/`all`): **lists the engagements** and exits. Otherwise
+   resolves: **exact uuid** first, else a **punctuation-insensitive** match on
+   name/scope_tag (spacing/`/`/`-` don't matter). If the query is **ambiguous**, it lists
+   the candidates to stderr and exits non-zero — show them and ask the user to re-run with
+   the exact uuid or full name.
 3. Clones (or `remote add ensemble`) the engagement repo, **fetches both `main` and
    `queue`**, runs `git lfs install`, verifies `CLAUDE.md` at the repo root, and HEAD-checks
    the LFS endpoint from `.lfsconfig` over Tailscale (**warn-only** if unreachable — the
@@ -75,8 +81,8 @@ and `queue`, and updates the tether record. It is safe to run again.
 
 ## Exit codes
 
-- `0` — tethered successfully.
-- `2` — bad/missing arguments (e.g. no `--query`, or `registry_repo` unset).
-- `3` — no project in the registry matched the query.
+- `0` — tethered successfully, **or** listed the available engagements (no query given).
+- `2` — bad arguments (e.g. an invalid `--mode`).
+- `3` — no engagement in the registry matched the query.
 - `4` — the query was ambiguous (candidates listed on stderr).
 - other non-zero — a git/clone/access error; relay the stderr message to the user.

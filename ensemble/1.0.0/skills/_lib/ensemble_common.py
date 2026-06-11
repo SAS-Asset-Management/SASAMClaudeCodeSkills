@@ -45,6 +45,9 @@ __all__ = [
     "save_json",
     "load_config",
     "config_get",
+    "config_set",
+    "DEFAULT_REGISTRY_REPO",
+    "registry_repo",
     "load_registry",
     "find_repo_root",
     "load_project",
@@ -212,6 +215,41 @@ def config_get(key: str, default: Any = None) -> Any:
         The config value, or ``default``.
     """
     return load_config().get(key, default)
+
+
+def config_set(key: str, value: Any) -> None:
+    """Set a single key in ~/.ensemble/config.json, preserving other keys.
+
+    Best-effort: a write failure is swallowed (callers fall back to the in-memory
+    value) so a read-only home never breaks a skill.
+    """
+    cfg = load_config()
+    cfg[key] = value
+    try:
+        save_json(config_path(), cfg)
+    except Exception:
+        pass
+
+
+#: The SAS-AM shared registry, used when ~/.ensemble/config.json does not pin one.
+#: A bare ``owner/repo`` slug — the skills resolve it to an HTTPS URL, so a consultant
+#: who has run ``gh auth login`` can clone it with no SSH key.
+DEFAULT_REGISTRY_REPO = "SAS-Asset-Management/sasam-registry"
+
+
+def registry_repo() -> str:
+    """Resolve the registry repo, with a sensible SAS-AM default.
+
+    Returns the ``registry_repo`` pinned in ~/.ensemble/config.json if present;
+    otherwise returns (and persists) :data:`DEFAULT_REGISTRY_REPO` so a brand-new
+    consultant never has to configure anything by hand. Persisting the default
+    makes the choice explicit and keeps every skill (tether/sync/status) in step.
+    """
+    val = config_get("registry_repo")
+    if val:
+        return str(val)
+    config_set("registry_repo", DEFAULT_REGISTRY_REPO)
+    return DEFAULT_REGISTRY_REPO
 
 
 def load_registry() -> dict[str, Any]:

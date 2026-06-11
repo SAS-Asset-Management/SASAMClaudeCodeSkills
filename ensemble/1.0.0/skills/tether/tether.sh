@@ -27,32 +27,39 @@ TETHER_PY="$HERE/tether_state.py"
 
 usage() {
   cat >&2 <<'EOF'
-usage: tether.sh --query <uuid|name> --mode <clone|remote> [--dir <target-dir>]
+usage: tether.sh [--query <uuid|name>] [--mode <clone|remote>] [--dir <dir>] [--list]
 
-  --query   the project uuid (exact) or name (fuzzy substring) from the registry.
+  --query   the engagement uuid (exact) or name/scope-tag (fuzzy). Omit it — or pass
+            --list, '*' or 'all' — to list the engagements you can tether to.
   --mode    clone  : git clone the engagement repo into --dir (default: cwd).
             remote : cwd is already a git repo -> add it as the 'ensemble' remote.
+            Omit to auto-detect: remote when cwd is already a git repo, else clone.
   --dir     working directory (default: current directory).
+  --list    just list the available engagements and exit.
 EOF
   exit 2
 }
 
 # --- parse args --------------------------------------------------------------
-QUERY="" MODE="" TARGET_DIR=""
+QUERY="" MODE="" TARGET_DIR="" DO_LIST=0
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --query) QUERY="${2:-}"; shift 2 ;;
     --mode)  MODE="${2:-}";  shift 2 ;;
     --dir)   TARGET_DIR="${2:-}"; shift 2 ;;
+    --list)  DO_LIST=1; shift ;;
     -h|--help) usage ;;
     *) ens_die "unknown argument: $1" ;;
   esac
 done
 
-[ -n "$QUERY" ] || { printf 'ensemble: --query <uuid|name> is required.\n' >&2; usage; }
+# No project given (or a wildcard) => list what's available rather than erroring.
+case "$QUERY" in
+  ""|"*"|all|All|ALL|ls|list) DO_LIST=1 ;;
+esac
+
 case "$MODE" in
-  clone|remote) : ;;
-  "") printf 'ensemble: --mode <clone|remote> is required (ask the user which they want).\n' >&2; usage ;;
+  clone|remote|"") : ;;   # "" -> auto-detect later (remote if cwd is a git repo, else clone)
   *)  ens_die "--mode must be 'clone' or 'remote', not '$MODE'." ;;
 esac
 
@@ -71,8 +78,14 @@ TARGET_DIR="${TARGET_DIR:-$PWD}"
 [ -d "$TARGET_DIR" ] || ens_die "target directory does not exist: $TARGET_DIR"
 TARGET_DIR="$(CDPATH= cd -- "$TARGET_DIR" && pwd)"
 
+# Make git use the gh credential helper so PRIVATE repos clone over https:// with
+# NO SSH key — the consultant only needs to have run `gh auth login`.
+ens_ensure_git_auth
+
 # --- 1) ensure the registry mirror is present + fresh ------------------------
-REG_URL="$(ens_config_get registry_repo)" || exit 1
+# registry_repo has a baked-in SAS-AM default, so a fresh consultant never has to
+# configure anything by hand (it persists the default into ~/.ensemble/config.json).
+REG_URL="$(ens_registry_repo)"
 REG_DIR="$(python3 -c 'import ensemble_common as e; print(e.registry_dir())')"
 
 normalise_remote() {
@@ -107,6 +120,12 @@ fi
 [ -f "$REG_DIR/registry.json" ] \
   || ens_die "registry.json is missing from the registry mirror at $REG_DIR — is registry_repo correct?"
 
+# --- list mode: show the engagements and exit (no project/mode needed) --------
+if [ "$DO_LIST" -eq 1 ]; then
+  python3 "$TETHER_PY" list
+  exit 0
+fi
+
 # --- 2) resolve the project --------------------------------------------------
 # resolve prints a TSV line on a unique match; exits non-zero (and explains) otherwise.
 set +e
@@ -123,6 +142,17 @@ EOF
 REPO_REMOTE="$(normalise_remote "$P_REPO")"
 
 printf 'ensemble: resolved %s [scope: %s, status: %s]\n' "$P_NAME" "$P_SCOPE" "${P_STATUS:-unknown}" >&2
+
+# Auto-detect mode when not given: remote if cwd is already a git repo, else clone.
+if [ -z "$MODE" ]; then
+  if git -C "$TARGET_DIR" rev-parse --git-dir >/dev/null 2>&1; then
+    MODE="remote"
+    printf 'ensemble: no --mode given — cwd is a git repo, attaching as the ensemble remote.\n' >&2
+  else
+    MODE="clone"
+    printf 'ensemble: no --mode given — cwd is not a git repo, cloning the engagement here.\n' >&2
+  fi
+fi
 
 # --- 3) bring the engagement repo local --------------------------------------
 fetch_both_branches() {

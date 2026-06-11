@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.1] - 2026-06-11
+
+### Fixed
+- **ensemble / `/tether`** Made the first tether seamless for a brand-new consultant — three first-run walls removed. **Registry auto-config:** `registry_repo` now defaults to the SAS-AM shared registry (`SAS-Asset-Management/sasam-registry`) and is persisted, so there's no manual `~/.ensemble/config.json` step. **No SSH keys:** the skill runs `gh auth setup-git` before cloning, so private engagement repos clone over HTTPS via the GitHub CLI credential helper — `gh auth login` (already in onboarding) is sufficient. **No-arg listing:** `/tether` with no engagement name (or `--list` / `*` / `all`) now lists the engagements you can tether to instead of erroring. **Auto-mode:** clone-vs-remote is auto-detected (remote if the cwd is a git repo, else clone) — the skill no longer asks. **Forgiving match:** engagement resolution is punctuation/spacing-insensitive with token-subset matching, so `transurban WCX NCX` resolves `Transurban WCX/NCX` / `transurban-wcx-ncx`.
+
 ## [1.13.0] - 2026-06-11
 
 ### Added

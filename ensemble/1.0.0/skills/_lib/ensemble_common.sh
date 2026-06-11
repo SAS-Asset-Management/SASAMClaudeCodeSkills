@@ -125,6 +125,27 @@ print("" if v is None else v)
   printf '%s\n' "$val"
 }
 
+# ens_registry_repo
+#   Echo the registry repo to use: the value pinned in ~/.ensemble/config.json, or
+#   the baked-in SAS-AM default (which it also persists). Unlike ens_config_get it
+#   never fails for a fresh consultant — the default makes the first /tether seamless.
+#   e.g.  reg="$(ens_registry_repo)"
+ens_registry_repo() {
+  ens_have python3
+  python3 -c 'import ensemble_common as e; print(e.registry_repo())' \
+    || ens_die "could not resolve the registry repo"
+}
+
+# ens_ensure_git_auth
+#   Best-effort: make git use the GitHub CLI as its HTTPS credential helper, so
+#   clones/pulls of PRIVATE engagement repos work over https:// with NO SSH key —
+#   the consultant only needs to have run `gh auth login`. Idempotent; silent and
+#   non-fatal when gh is absent or already configured.
+ens_ensure_git_auth() {
+  command -v gh >/dev/null 2>&1 || return 0
+  gh auth setup-git >/dev/null 2>&1 || true
+}
+
 # --- make the python lib importable for any `python3 -c` in a sourcing skill --
 # Prepend the lib dir to PYTHONPATH so `import ensemble_common` resolves both for
 # the helpers above and for ad-hoc python in the consuming skill.
