@@ -150,10 +150,10 @@
     {
       "name": "ensemble",
       "source": "./ensemble/1.0.0",
-      "description": "SAS-AM Ensemble consultant workflow — tether to an engagement, hand work off to the autonomous Ensemble via task packets, sync, collect results, and check status. Five commands (/tether /handoff /sync /collect /status) plus a read-only SessionStart greeter.",
-      "version": "1.0.0",
+      "description": "SAS-AM Ensemble consultant workflow — stand up a new engagement, tether to it, hand work off to the autonomous Ensemble via task packets, sync, collect results, check status, and publish conference decks to the team portal. Seven commands (/init-engagement /tether /handoff /sync /collect /status /publish-presentation) plus a read-only SessionStart greeter.",
+      "version": "1.2.0",
       "license": "MIT",
-      "keywords": ["ensemble", "sas-am", "consultant", "handoff", "engagement", "agents", "workflow", "tether", "packet"],
+      "keywords": ["ensemble", "sas-am", "consultant", "handoff", "engagement", "agents", "workflow", "tether", "packet", "presentation", "publish"],
       "category": "business-development",
       "tags": ["ensemble", "consultant", "handoff", "engagement", "agents"]
     }

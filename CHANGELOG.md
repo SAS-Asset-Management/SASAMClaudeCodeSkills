@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.17.0] - 2026-06-13
+
+### Added
+- **ensemble / `/publish-presentation`** New consultant command — publishes a finished conference deck (a `sas-presentation` reveal.js build) straight to the SAS-AM **contentLibrary** container, so it goes live in the `team.sas-am.com` content library alongside the existing catalogue (maximoLive2025, AMPEAK2024, …). Unlike `/handoff` (work *for* the fleet) and `/submit` (engagement work *in*), this is a **direct publish** over Tailscale — no engagement repo, no GitHub control plane, no poller. It reuses the contentLibrary app's existing `POST /api/presentations/create` API (the tailnet is the trust boundary, like the data plane). The skill **flattens** the deck to a single self-contained HTML (inlines local CSS/JS/images/fonts as `data:` URIs; CDN/remote refs stay remote — the publish API stores one file), runs a **warn-only QA** pass (Australian English, SAS palette `#002244`/`#69BE28`, the SAS-AM tagline, `<img>` alt text, slide count, and any surviving local refs that would 404), pre-flights endpoint reachability, refuses on an id collision (the API can't overwrite), then POSTs the deck. Endpoint defaults to the baked tailnet URL (`cortex-t4.<tailnet>.ts.net:8081`), overridable via `presentations_endpoint` in `~/.ensemble/config.json`. Not engagement-scoped (no `/tether` required). `--dry-run` flattens + QAs without publishing. Verified end-to-end against the live container (publish → render → catalogue entry → cleanup). `publish-presentation/{SKILL.md,publish_presentation.sh,flatten_assets.py,presentation_qa.py}`; bash + python3 stdlib + `curl`. Ensemble plugin bumped `1.1.0 → 1.2.0`.
+
 ## [1.16.1] - 2026-06-13
 
 ### Fixed
