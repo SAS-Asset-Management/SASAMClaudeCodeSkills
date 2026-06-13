@@ -1,6 +1,6 @@
 {
-  "version": "1.16.0",
-  "generated_at": "2026-06-13T21:15:45Z",
+  "version": "1.16.1",
+  "generated_at": "2026-06-13T21:28:06Z",
   "files": {
     "analytics/1.0.0/agents/analytics-advisor.md": "dffecd33dabbb9017a35447e7d1031f0974d826cc48eeaf72cebffc4231cc059",
     "analytics/1.0.0/.claude-plugin/plugin.json": "02c6f918cfabf42695e37462c65b43882c09a2c0d9b085115e3d061e65ea8bb0",
@@ -31,7 +31,7 @@
     "beam-selling/1.0.0/skills/beam-selling/references/spin-question-bank.md": "8fe56e103ad59d2befb8ada3913e688ada3ff41b2cd9dc48798cb8c4cbbf747b",
     "beam-selling/1.0.0/skills/beam-selling/references/stage-gate-checklist.md": "f8de80bbbefceb1014ca430e01d7f5c746b1a9fe525d147e73d87e970992dcc6",
     "beam-selling/1.0.0/skills/beam-selling/SKILL.md": "2a3793bbfed64592681614c3c627bf8263b538debfcd380fb28b831d83e0493f",
-    "CHANGELOG.md": "06e4b3f4260269c30906b8c29edc8898913536395903a8ba222be8ec6e683e09",
+    "CHANGELOG.md": "485997b1caf5526a39cf3949d77d28e3cddcc284e15074b1fc75626f86994ffe",
     "CLAUDE.md": "61f0376756e7934c23e602fbb707fb3b4619176d317aa645fa0565047af8a85b",
     ".claude-plugin/marketplace.json": "7a9c681732940ba2e53a6f5904657d02e1de69a46b134287eef923a6b04d661a",
     "data-quality-analysis/1.0.0/.claude-plugin/marketplace.json": "2142b04ede802865141f137f1bd6843b34cba45800b41f4ed337fcbd8d62ef1c",
@@ -48,7 +48,7 @@
     "ensemble/1.0.0/skills/handoff/SKILL.md": "e7adfdf688640c15ee5a28e01c5e8ebfc1a8899988acc5a6ff82345e7219b9b2",
     "ensemble/1.0.0/skills/hooks/README.md": "36247a1c4babfa1eed1f21ad44142b94097eb372d5865a8afcda2097f8bfb0d2",
     "ensemble/1.0.0/skills/hooks/session-start-ensemble.sh": "46fc80c28aaf5a42e490c2f4b0897197511b7df2ebd7f9fea3edee367f56789f",
-    "ensemble/1.0.0/skills/init-engagement/init_engagement.sh": "8c49ac43717dc680967f707145fd7a4a1ab7a3eb4cb81bca2738cad5858b25bf",
+    "ensemble/1.0.0/skills/init-engagement/init_engagement.sh": "78cd54ddd8338cf4b4ac2cf707db668ce9c35ed368f83221796dcc30599b455b",
     "ensemble/1.0.0/skills/init-engagement/SKILL.md": "55a08728a6cc6cca7304fa00290a3a065c3270f6c5b1e881ea00446730b9eba7",
     "ensemble/1.0.0/skills/_lib/ensemble_common.sh": "79aff0458965bb287b83e1184076727a9c80c13a7b6086f01e272a2e7306bf5f",
     "ensemble/1.0.0/skills/_lib/README.md": "031f63e42c8f03284d9d4313f9a55871e9f2c2ea01f7b7b134237c977139f74f",

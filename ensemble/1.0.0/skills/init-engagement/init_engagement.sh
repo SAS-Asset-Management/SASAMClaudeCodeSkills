@@ -208,19 +208,42 @@ else
 fi
 REPO_REMOTE="$(normalise_remote "$REPO")"
 
+# Template instantiation (gh repo create --template) is ASYNC — the scaffold lands a few
+# seconds after the repo exists, so a clone fired too early gets an empty repo. Wait until a
+# sentinel template file is visible on the API before cloning.
+wait_for_repo_content() {
+  local i
+  for i in $(seq 1 20); do
+    gh api "repos/$REPO/contents/scripts/apply-branch-protection.sh" >/dev/null 2>&1 && return 0
+    gh api "repos/$REPO/contents/templates/CLAUDE.md.tmpl" >/dev/null 2>&1 && return 0
+    sleep 2
+  done
+  return 1
+}
+printf 'ensemble: waiting for the template scaffold to populate ...\n' >&2
+wait_for_repo_content || printf 'ensemble: WARNING — scaffold not visible yet; will re-pull after clone.\n' >&2
+
 # --- 2) clone the working copy + fill placeholders + push main ---------------
 REPO_DIR="$TARGET_DIR/$REPO_BASE"
 if [ -d "$REPO_DIR/.git" ]; then
   printf 'ensemble: %s already cloned — reusing it.\n' "$REPO_DIR" >&2
   git -C "$REPO_DIR" pull --ff-only >/dev/null 2>&1 || true
 else
-  # gh repo create from a template can lag a moment before the default branch is ready.
-  for _ in 1 2 3 4 5; do
-    git clone "$REPO_REMOTE" "$REPO_DIR" >/dev/null 2>&1 && break
+  git clone "$REPO_REMOTE" "$REPO_DIR" >/dev/null 2>&1 \
+    || ens_die "could not clone $REPO after creation."
+fi
+
+# Guard against an early/empty clone (scaffold still propagating): pull until the sentinel
+# template files appear, then assert we actually have the scaffold before proceeding.
+if [ ! -f "$REPO_DIR/templates/CLAUDE.md.tmpl" ] && [ ! -f "$REPO_DIR/CLAUDE.md" ]; then
+  for _ in 1 2 3 4 5 6 7 8; do
+    git -C "$REPO_DIR" pull --ff-only >/dev/null 2>&1 || true
+    [ -f "$REPO_DIR/templates/CLAUDE.md.tmpl" ] && break
     sleep 2
   done
-  [ -d "$REPO_DIR/.git" ] || ens_die "could not clone $REPO after creation."
 fi
+[ -f "$REPO_DIR/templates/CLAUDE.md.tmpl" ] || [ -f "$REPO_DIR/CLAUDE.md" ] \
+  || ens_die "the engagement repo has no template scaffold yet — re-run /init-engagement in a moment (idempotent)."
 
 # Render the root CLAUDE.md from the template (tether requires it at the root).
 if [ ! -f "$REPO_DIR/CLAUDE.md" ] && [ -f "$REPO_DIR/templates/CLAUDE.md.tmpl" ]; then

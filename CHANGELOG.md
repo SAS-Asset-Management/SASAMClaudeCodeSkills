@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.1] - 2026-06-13
+
+### Fixed
+- **ensemble / `/init-engagement`** Fixed a template-propagation race: `gh repo create --template` populates the new repo's scaffold **asynchronously**, so the immediate `git clone` could land an empty repo (no `CLAUDE.md`/`.ensemble/project.json`/`scripts/`), which then silently produced an unscaffolded, unprotected engagement. The skill now waits (polls the contents API) for a sentinel template file to appear before cloning, re-pulls if the working clone is still empty, and hard-fails with a re-run hint rather than proceeding without a scaffold. Verified end-to-end (repo created from template, scaffold filled, `queue`+protected `main` with the `tier-gate` check, registry row, tether).
+
 ## [1.16.0] - 2026-06-13
 
 ### Added
