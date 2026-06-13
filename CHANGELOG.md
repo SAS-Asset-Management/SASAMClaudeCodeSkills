@@ -5,6 +5,14 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.0] - 2026-06-13
+
+### Added
+- **ensemble / `/init-engagement`** New consultant command — the onboarding step the protocol was missing. `/tether` and `/handoff` both assume the engagement already exists; when it doesn't, the consultant hit a dead-end (the v1.2 spec's founder-tier `init-project` was never built). `/init-engagement` stands a new engagement up end-to-end: creates `<owner>/sasam-<scope_tag>` from the `sasam-engagement-template`; fills the scaffold (root `CLAUDE.md` from `templates/CLAUDE.md.tmpl`, `.ensemble/project.json`, `.lfsconfig`) and pushes `main`; applies the two-branch model via the repo's `scripts/apply-branch-protection.sh` (the `queue` mailbox + protected `main` + the `tier-gate` required check + `tier:*` labels); registers `{uuid,name,scope_tag,repo,status:active}` in `sasam-registry`; and tethers the session so `/handoff` works immediately. Idempotent / re-runnable (every external mutation is create-if-not-exists); `--dry-run` previews with no changes; `--cleanup <scope_tag>` tears down a throwaway. Founder-run (needs org-admin `gh` + registry push). `init-engagement/{SKILL.md,init_engagement.sh,init_engagement_state.py}`; bash + python3 stdlib + `gh`/`git`. Ensemble plugin bumped `1.0.0 → 1.1.0`.
+
+### Changed
+- **ensemble** Dead-end abort messages are now actionable — `ens_require_tethered` (no `.ensemble/project.json`) and `/tether`'s no-match / empty-registry paths now point to `/init-engagement` to stand one up.
+
 ## [1.15.0] - 2026-06-13
 
 ### Added
