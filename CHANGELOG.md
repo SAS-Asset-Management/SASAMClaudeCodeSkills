@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.0] - 2026-06-13
+
+### Added
+- **handoff-proposal** New standalone plugin/skill — the proposal sibling of `import-beam-leads`. Hands an externally-authored proposal **into** the Ensemble opportunities pipeline (the reverse of the normal flow, where a proposal is an *output* of a stage-4 deal). A consultant points it at a finished proposal — a **PDF**, single-page **HTML**, or **structured JSON** (`proposal_sections` / `client_problem_map` / `timeline_weeks` / `case_study_references`) — for a company; the stdlib-only `handoff_proposal.py` base64s the artefact and POSTs to the Ensemble's `POST /api/import/proposal` intake over **Tailscale** (`ENSEMBLE_API_URL` + `ENSEMBLE_IMPORT_KEY`, sent as `X-Import-Key`). The intake finds-or-creates the opportunity by company, advances it to the BEAM **"Propose"** stage (never regressing a Commit/Deliver deal), and attaches the proposal as a `PENDING_APPROVAL` proposal — visible on the opportunity's **Proposals** rail and in the founder's approval queue, with the inbound handoff recorded as a radar-replay beam. Idempotent on company; `--dry-run` previews the body before sending. Pairs with theEnsembles `POST /api/import/proposal` (PR #142). `handoff-proposal/{SKILL.md,handoff_proposal.py}`; stdlib `urllib` only — no pip install.
+
 ## [1.14.1] - 2026-06-11
 
 ### Fixed

@@ -1,6 +1,6 @@
 {
-  "version": "1.14.1",
-  "generated_at": "2026-06-11T04:38:26Z",
+  "version": "1.15.0",
+  "generated_at": "2026-06-13T10:47:14Z",
   "files": {
     "analytics/1.0.0/agents/analytics-advisor.md": "dffecd33dabbb9017a35447e7d1031f0974d826cc48eeaf72cebffc4231cc059",
     "analytics/1.0.0/.claude-plugin/plugin.json": "02c6f918cfabf42695e37462c65b43882c09a2c0d9b085115e3d061e65ea8bb0",
@@ -31,7 +31,7 @@
     "beam-selling/1.0.0/skills/beam-selling/references/spin-question-bank.md": "8fe56e103ad59d2befb8ada3913e688ada3ff41b2cd9dc48798cb8c4cbbf747b",
     "beam-selling/1.0.0/skills/beam-selling/references/stage-gate-checklist.md": "f8de80bbbefceb1014ca430e01d7f5c746b1a9fe525d147e73d87e970992dcc6",
     "beam-selling/1.0.0/skills/beam-selling/SKILL.md": "2a3793bbfed64592681614c3c627bf8263b538debfcd380fb28b831d83e0493f",
-    "CHANGELOG.md": "aca12b9c901dc3b6045745c635266e2bb537ca74220c29dc4017e5dde2f875eb",
+    "CHANGELOG.md": "e3a9928bf36f61dbf87da55c48f73969fbe23e29b44f5e7b8f82467dda1a745b",
     "CLAUDE.md": "61f0376756e7934c23e602fbb707fb3b4619176d317aa645fa0565047af8a85b",
     ".claude-plugin/marketplace.json": "7a9c681732940ba2e53a6f5904657d02e1de69a46b134287eef923a6b04d661a",
     "data-quality-analysis/1.0.0/.claude-plugin/marketplace.json": "2142b04ede802865141f137f1bd6843b34cba45800b41f4ed337fcbd8d62ef1c",
@@ -69,6 +69,9 @@
     "fmeca/SKILL.md": "ee15b8ea6a0e549c0782b175631b7b95c099777d5ff7b2ca23acabc8fe8cf602",
     "fmeca/standards-guide.md": "130f174e5c043df9d4d9c9b3dcba707697fdba6bef73393913c92463cc0e3980",
     "generate-manifest.sh": "fc8236f2141ccb4b9f91b38991cc019ed3ff3e81522900b1a324188d38d89d82",
+    "handoff-proposal/1.0.0/.claude-plugin/marketplace.json": "6aa410af6530bd07e4006b7ce37f819ec55880c7d9152a4fc36c2b680a4aa837",
+    "handoff-proposal/1.0.0/.claude-plugin/plugin.json": "c8c06805dde92cba8188898245a1bb3ec74767481837379a47384f8798d616dd",
+    "handoff-proposal/1.0.0/skills/handoff-proposal/SKILL.md": "3a4848212aabf2aa95cd19be81e561e8b90ecce6e75e3dad846d9cf6b8e73ce0",
     "linkedin-post-generator/1.0.0/.claude-plugin/plugin.json": "4debe6098efa655de40bdad2a6391729aded9acbf4d704f13e3e4e3b57dd007f",
     "linkedin-post-generator/1.0.0/README.md": "f632ab3846b55644f4a0b9d4fd880f89bb66edd8aba92b2d94b95a536b763f78",
     "linkedin-post-generator/1.0.0/skills/linkedin-post-generator/references/insight-post-template.md": "ae3686f70a25d659bb058cb567b4347be5592b6270e647d373f9a7b471f72c65",
