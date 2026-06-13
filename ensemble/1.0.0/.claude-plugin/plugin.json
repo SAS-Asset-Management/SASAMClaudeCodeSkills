@@ -1,7 +1,7 @@
 {
   "name": "ensemble",
-  "description": "SAS-AM Ensemble consultant workflow — tether to an engagement, hand work off to the autonomous Ensemble via task packets, sync, collect results, and check status. Five commands (/tether /handoff /sync /collect /status) plus a read-only SessionStart greeter.",
-  "version": "1.0.0",
+  "description": "SAS-AM Ensemble consultant workflow — stand up a new engagement, tether to it, hand work off to the autonomous Ensemble via task packets, sync, collect results, and check status. Six commands (/init-engagement /tether /handoff /sync /collect /status) plus a read-only SessionStart greeter.",
+  "version": "1.1.0",
   "author": {
     "name": "SAS-AM"
   },
@@ -15,6 +15,8 @@
     "agents",
     "workflow",
     "tether",
-    "packet"
+    "packet",
+    "onboarding",
+    "init-engagement"
   ]
 }

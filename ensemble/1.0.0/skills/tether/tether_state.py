@@ -95,7 +95,8 @@ def _resolve(query: str) -> int:
 
     print(
         f"ensemble: no engagement in the registry matches {query!r}. "
-        "Run /tether with no name to list what's available, or refresh the registry.",
+        "Run /tether with no name to list what's available, refresh the registry, "
+        "or — if this engagement doesn't exist yet — stand it up with /init-engagement.",
         file=sys.stderr,
     )
     return 3
@@ -111,7 +112,7 @@ def _list() -> int:
     projects = [p for p in registry.get("projects", []) if isinstance(p, dict)]
     if not projects:
         print(
-            "ensemble: the registry has no engagements yet. Ask Shane to register one.",
+            "ensemble: the registry has no engagements yet. Stand one up with /init-engagement.",
             file=sys.stderr,
         )
         return 0
