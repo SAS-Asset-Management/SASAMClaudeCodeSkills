@@ -79,7 +79,7 @@ ens_require_tethered() {
   local root
   root="$(ens_repo_root)" || exit 1
   if [ ! -f "$root/.ensemble/project.json" ]; then
-    ens_die "not a tethered engagement repo: $root/.ensemble/project.json is missing. Tether this engagement first."
+    ens_die "not a tethered engagement repo: $root/.ensemble/project.json is missing. Tether an existing engagement (/tether), or if there is none yet, stand one up with /init-engagement."
   fi
   printf '%s\n' "$root"
 }
