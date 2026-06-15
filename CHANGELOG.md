@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.19.0] - 2026-06-15
+
+### Added
+- **sasdocx (SASdocX)** First-use dependency auto-install. The three skills now install their Python requirements automatically the first time they're used, gated by the user authorizing the command. Added a stdlib-only `sasdocx/0.10.0/scripts/bootstrap.py` that detects any missing required package (`python-docx`, `python-pptx`, `openpyxl`, `lxml`, `Pillow`) and runs `python -m pip install -r requirements.txt` for the current interpreter — idempotent (a no-op once installed) and fail-loud on externally managed environments. Each `SKILL.md` preflight now runs `python scripts/bootstrap.py` as its first step (before `doctor`), and the engine launchers (`scripts/cli.py` + each `skills/*/scripts/cli.py`) now catch a missing runtime dependency and point the user at the bootstrap instead of dumping an import traceback. Verified end-to-end in a clean virtualenv: launcher fails closed with the bootstrap pointer → `bootstrap.py` installs all requirements → launcher runs.
+
 ## [1.18.0] - 2026-06-15
 
 ### Added

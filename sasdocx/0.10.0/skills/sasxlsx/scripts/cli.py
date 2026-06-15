@@ -22,7 +22,19 @@ def _root(start: Path) -> Path:
 ROOT = _root(Path(__file__).resolve())
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from sasdockit.cli import main  # noqa: E402
+_THIRD_PARTY = {"docx", "pptx", "openpyxl", "lxml", "PIL"}
+try:
+    from sasdockit.cli import main  # noqa: E402
+except ModuleNotFoundError as exc:  # missing runtime dependency on first use
+    if (exc.name or "").split(".")[0] in _THIRD_PARTY:
+        sys.stderr.write(
+            "SASdocX: required Python dependency '%s' is not installed.\n"
+            "Run the one-time bootstrap to install requirements (you will be "
+            "asked to authorize):\n    python %s\n"
+            % (exc.name, ROOT / "scripts" / "bootstrap.py")
+        )
+        raise SystemExit(3) from None
+    raise
 
 
 if __name__ == "__main__":
