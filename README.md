@@ -62,6 +62,19 @@ Guide sales engagements through the marcov.BEAM evidence-gated lifecycle:
 - **Proposal Generation**: Structured proposals built from diagnostic findings
 - **Pipeline Dashboard**: Track all active engagements with stage progress and health metrics
 
+### sasdocx (SASdocX)
+
+Generate on-brand Word, PowerPoint and Excel documents from a company's own templates — off-brand output impossible by construction:
+
+- **Learn once, generate forever**: Extract a `.docx`/`.pptx`/`.xlsx` template into a reusable **Brand Profile** (theme colours, fonts, named styles, structure, layouts, cover anchors, logos, tables), then generate unlimited faithful documents from it
+- **Three skills, one engine**: `/sasdocx` (Word), `/saspptx` (PowerPoint), `/sasxlsx` (Excel) share a single OOXML engine and the same verbs — `extract → comprehend → verify → generate`
+- **Brand guarantee**: No generator ever writes a literal style name, hex colour, or font — those live only in the Brand Profile, and `verify` refuses anything the template doesn't contain
+- **Formulas & structure preserved**: Excel named-region fills keep formulas; Word/PowerPoint output follows the template's real structural order, masters and layouts
+- **Local-first**: Runs entirely locally with a deterministic core (no model required for extract/verify/generate); model-assisted verbs sit on top, fail-closed
+- **Attribution**: SAS-AM rebrand of the MIT-licensed [`brand-docs`](https://github.com/ferdinandobons/brand-docs) engine by Ferdinando Bonsegna
+
+> Requires Python ≥ 3.10 (`pip install -r sasdocx/0.10.0/requirements.txt`). Optional LibreOffice + Poppler enable the visual QA gate. Run `python sasdocx/0.10.0/scripts/cli.py doctor` to check.
+
 ## Installation
 
 ### Quick Setup (Recommended)
