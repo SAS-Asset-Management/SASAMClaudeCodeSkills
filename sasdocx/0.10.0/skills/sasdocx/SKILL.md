@@ -46,7 +46,7 @@ template's preserved cover/index structures with the new content. See
 
 - Treat `python scripts/cli.py ...` as an internal engine command, not the user-facing workflow.
 - `scripts/cli.py` is a LAUNCHER that locates the engine root by itself: it works from this skill folder AND from the repo/plugin root (set `SASDOCX_ROOT` to override). Never guess deeper paths like `scripts/sasdockit/...`.
-- Run the dependency preflight before starting extract / comprehend / verify / generate, and report missing or unusable dependencies before proceeding.
+- On first use, run `python scripts/bootstrap.py` to auto-install the Python requirements (the user authorizes the install via the normal permission prompt); it is a no-op once installed. Then run the dependency preflight before starting extract / comprehend / verify / generate, and report missing or unusable dependencies before proceeding.
 - Extract opens the source template read-only and saves `brand-kit/<name>/template/shell.docx` byte-for-byte.
 - Generate opens the saved shell and resolves every semantic block through `profile.json`.
 - Do not put style names, colors, fonts, or brand identifiers in an IntermediateDocument.
@@ -56,11 +56,19 @@ template's preserved cover/index structures with the new content. See
 
 ## Preflight (always first)
 
-Before doing any work, run:
+Before doing any work, **on first use install the Python requirements**, then probe
+the environment:
 
 ```bash
+# First use only: installs the required Python packages (python-docx, python-pptx,
+# openpyxl, lxml, Pillow). You will be asked to authorize the install; it is an
+# idempotent no-op once they are present.
+python scripts/bootstrap.py
 python scripts/cli.py doctor
 ```
+
+If `bootstrap.py` reports the install failed (e.g. an externally managed
+environment), install the contents of `requirements.txt` yourself, then re-run.
 
 Use its output to decide the run mode:
 
