@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.20.0] - 2026-06-16
+
+### Added
+- **sasam-core / `/loopBuilder`** New skill — designs a well-formed autonomous agent loop for a given subject, then launches it. Built on the Cherny "write loops, not prompts" / Karpathy "autonomy slider" framing: move up a level of abstraction from hand-prompting each step to specifying **outcomes plus verification** and letting the agent run the `context → decide → tool → result` cycle until a stop condition trips. The skill is **inspect-first** — it scans the working directory (repo shape, runnable test/build commands, available skills + tools, git state) and drafts a candidate loop against the five-part anatomy (**goal · context · action policy · verification · stop condition**) before asking the user anything, then confirms only the gaps. It **refuses to launch** without all four mandatory guardrails — explicit stop condition, iteration/budget cap, verification method, and a no-progress/drift detector — directly countering the dominant failure mode (expensive drift, infinite retries). The **design picks the substrate**: an in-session `/loop` for supervised single-prompt cycles, or a multi-agent `Workflow` for parallel fan-out/verify loops (no cron path — loops run now). A **pre-launch gate** renders the full design (approve / edit / cancel) before any autonomous work starts, and the skill pushes back honestly when a task isn't loop-shaped (no verifiable end-state, single-pass work, undefinable stop condition). `sasam-core/1.0.0/skills/loopBuilder/SKILL.md`. sasam-core plugin bumped `1.0.0 → 1.1.0`.
+
 ## [1.19.0] - 2026-06-16
 
 ### Added
