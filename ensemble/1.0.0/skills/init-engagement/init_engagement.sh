@@ -251,7 +251,10 @@ if [ ! -f "$REPO_DIR/CLAUDE.md" ] && [ -f "$REPO_DIR/templates/CLAUDE.md.tmpl" ]
 fi
 
 # Fill placeholders only where {{ }} remain (re-run safe).
-for f in CLAUDE.md .ensemble/project.json .lfsconfig; do
+# .claude/CLAUDE.md is the engagement working-agreement doc shipped by the
+# template's .claude/ scaffold; it carries {{project_name}}/{{scope_tag}}/
+# {{founder_handle}}/{{tailnet}} which must render at init like the root doc.
+for f in CLAUDE.md .claude/CLAUDE.md .ensemble/project.json .lfsconfig; do
   [ -f "$REPO_DIR/$f" ] || continue
   if grep -q '{{' "$REPO_DIR/$f" 2>/dev/null; then
     python3 "$STATE_PY" fill "$REPO_DIR/$f" "${fill_args[@]}" \
