@@ -156,6 +156,16 @@
       "keywords": ["ensemble", "sas-am", "consultant", "handoff", "engagement", "agents", "workflow", "tether", "packet", "presentation", "publish"],
       "category": "business-development",
       "tags": ["ensemble", "consultant", "handoff", "engagement", "agents"]
+    },
+    {
+      "name": "sasdocx",
+      "source": "./sasdocx/0.10.0",
+      "description": "SASdocX — SAS-AM on-brand document generator. Learn a company's Word, PowerPoint or Excel template once into a reusable Brand Profile, then generate unlimited on-brand .docx/.pptx/.xlsx — off-brand output impossible by construction. Three skills (sasdocx / saspptx / sasxlsx) over one shared OOXML engine. Based on the MIT-licensed brand-docs engine by Ferdinando Bonsegna.",
+      "version": "0.10.0",
+      "license": "MIT",
+      "keywords": ["sas", "sas-am", "document-generator", "on-brand-documents", "docx", "pptx", "xlsx", "word", "powerpoint", "excel", "template", "brand", "ooxml"],
+      "category": "productivity",
+      "tags": ["documents", "docx", "pptx", "xlsx", "brand", "templates"]
     }
   ]
 }

@@ -5,13 +5,21 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.18.0] - 2026-06-15
+## [1.19.0] - 2026-06-16
 
 ### Added
 - **ensemble — local-stdio MCP server.** New `ensemble/1.0.0/mcp/ensemble_mcp_server.py` (FastMCP, stdio; `+ requirements.txt + README.md`) gives a tethered consultant's Claude Code session first-class read+write `ensemble_*` tools over the Ensemble operational API — instead of every skill hand-rolling HTTP. It runs **locally** on the consultant's box and calls the Tailscale-only API; secrets (api_url/api_key/import_key/verify_tls) are read from `~/.ensemble/config.json` (the established per-user state file, mode 0600), **never** from the repo-shared `.mcp.json`. Tool catalogue spans approvals (list/transition), HMI tasks (list/assign/update), projects + gate decisions, opportunities + CRM, issue-flags, imports (beam-lead + proposal) and research (submit/list/results). HTTP errors are returned verbatim (a 422 invalid-transition or a 403 scope rejection is actionable, not silent). The server **complements** the git-queue → PR → tier-gate handoff (the audited deliverable path) — it never submits deliverables. Declared per-engagement via the template's `.mcp.json` (launched with `uv run --with mcp --with httpx`). Approvals/research/import-beam-lead tools work today (X-API-Key / X-Import-Key); the hmi/projects/crm/issue-flags tools are gated on theEnsembles' hardened-auth backend change (typed `Principal`/`get_principal` + default-deny route allowlist + per-engagement scoping), and `ensemble_import_proposal` awaits the backend `POST /import/proposal` route. Ensemble plugin bumped `1.2.0 → 1.3.0`.
 
 ### Changed
 - **ensemble / `/init-engagement`** The placeholder-fill loop now also renders **`.claude/CLAUDE.md`** (the engagement working-agreement doc shipped by the template's new `.claude/` scaffold), so its `{{project_name}}`/`{{scope_tag}}`/`{{founder_handle}}`/`{{tailnet}}` tokens fill at init like the root `CLAUDE.md`/`.ensemble/project.json`/`.lfsconfig`. Without this a new engagement would render the working-guide with raw `{{…}}` placeholders.
+
+## [1.18.0] - 2026-06-15
+
+### Added
+- **sasdocx (SASdocX)** New plugin — a SAS-AM on-brand document generator that learns a company's existing Word, PowerPoint or Excel template once into a reusable **Brand Profile**, then generates unlimited on-brand `.docx`/`.pptx`/`.xlsx` from it, with **off-brand output impossible by construction** (no generator writes a literal style name, hex colour or font — those live only in the profile, and `verify` refuses anything the template doesn't contain). Ships **three skills over one shared OOXML engine** — `/sasdocx` (Word), `/saspptx` (PowerPoint), `/sasxlsx` (Excel) — each exposing the same verbs `extract → comprehend (optional, model-driven) → verify → generate`, plus the learning verbs `learn`/`propose-overrides`/`refine`. The deterministic core runs fully offline (no model required); model-assisted verbs sit on top, fail-closed. Excel fills preserve formulas and brand number formats; Word/PowerPoint follow the template's real structural order, masters and layouts. Vendored at `sasdocx/0.10.0/` with the Python engine (`scripts/sasdockit/`, launched via `scripts/cli.py`), reference docs, synthetic example templates, and the full 936-test suite (verified green after rebrand). Requires Python ≥ 3.10 (`python-docx`, `python-pptx`, `openpyxl`, `lxml`, `Pillow`); optional LibreOffice + Poppler enable the visual QA gate (`python sasdocx/0.10.0/scripts/cli.py doctor`).
+
+### Attribution
+- **sasdocx** is a SAS-AM rebrand of the MIT-licensed [`brand-docs`](https://github.com/ferdinandobons/brand-docs) project by Ferdinando Bonsegna. Product names, command/skill identifiers (`sasdocx`/`saspptx`/`sasxlsx`), the engine package (`sasdockit`), env var (`SASDOCX_ROOT`) and user-facing text were renamed; the original MIT `LICENSE`, `NOTICE` and `CITATION.cff` are retained in full.
 
 ## [1.17.0] - 2026-06-13
 

@@ -1,0 +1,23 @@
+SASdocX (sasdocx)
+Copyright (c) 2026 SAS-AM
+
+SASdocX is a SAS-AM rebrand of the MIT-licensed "brand-docs" project. The
+product names, command/skill identifiers (sasdocx / saspptx / sasxlsx), the
+internal engine package (sasdockit), and user-facing text have been renamed,
+but the underlying engine remains the original work below, used and
+redistributed under the MIT License. The original copyright and license are
+retained in full (see LICENSE).
+
+-------------------------------------------------------------------------------
+Original work
+-------------------------------------------------------------------------------
+
+brand-docs
+Copyright (c) 2026 Ferdinando Bonsegna
+
+This M1 implementation is original MIT-licensed code. It does not vendor
+proprietary Office helper scripts and does not include customer template assets.
+
+This implementation uses python-docx, python-pptx, openpyxl, and lxml for
+OOXML manipulation; Pillow for image processing. The OOXML resolver, profile
+schema, QA gate, and CLI are custom-implemented from scratch.
