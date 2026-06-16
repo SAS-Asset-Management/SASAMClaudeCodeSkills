@@ -19,19 +19,14 @@ echo "  \"version\": \"${VERSION}\"," >> "$MANIFEST_FILE"
 echo "  \"generated_at\": \"${TIMESTAMP}\"," >> "$MANIFEST_FILE"
 echo '  "files": {' >> "$MANIFEST_FILE"
 
-# Find all relevant files (excluding git, node_modules, cache, generated)
+# List release files from git (tracked files only) so the manifest never
+# references untracked local cruft (.notifications/, sasam-local-patches/,
+# editor backups). Keeps the same extension allow-list and path exclusions.
 FIRST=true
-find . -type f \
-  \( -name "*.md" -o -name "*.json" -o -name "*.sh" -o -name "*.js" -o -name "*.png" \) \
-  ! -path "./.git/*" \
-  ! -path "*/node_modules/*" \
-  ! -path "*/__pycache__/*" \
-  ! -path "*/generated-images/*" \
-  ! -path "./.planning/*" \
-  ! -name "sasam-file-manifest.json" \
-  ! -name "package-lock.json" \
+git ls-files -- '*.md' '*.json' '*.sh' '*.js' '*.png' \
+  | grep -vE '(^|/)node_modules/|(^|/)__pycache__/|/generated-images/|^\.planning/|^sasam-file-manifest\.json$|(^|/)package-lock\.json$' \
   | sort | while read -r file; do
-    # Get relative path (remove leading ./)
+    # git ls-files yields repo-relative paths already
     REL_PATH="${file#./}"
 
     # Calculate SHA-256 hash

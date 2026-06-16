@@ -5,6 +5,12 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.20.1] - 2026-06-16
+
+### Fixed
+- **generate-manifest.sh** now sources its file list from `git ls-files` (tracked files only) instead of walking the filesystem with `find`. The old approach swept untracked local cruft into the release manifest — `.notifications/config.json` (gitignored) and `sasam-local-patches/.../marketplace.json` (the `/sasam-update` backup dir) — producing phantom entries that fail integrity checks for any user who lacks those local dirs. The extension allow-list and path exclusions are preserved. Regenerated the manifest (232 → 230 real, tracked files).
+- **marketplace.json** — the `sasam-core` registry entry still advertised `1.0.0` with the pre-loopBuilder description after the plugin bumped to `1.1.0` in 1.20.0. Updated version, description, keywords and tags to match `plugin.json`, so consumers discovering/installing the plugin see consistent metadata.
+
 ## [1.20.0] - 2026-06-16
 
 ### Added
