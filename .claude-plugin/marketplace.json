@@ -90,12 +90,12 @@
     {
       "name": "sasam-core",
       "source": "./sasam-core/1.0.0",
-      "description": "Core utilities for SASAMClaudeCodeSkills - update management, version tracking, and marketplace maintenance.",
-      "version": "1.0.0",
+      "description": "Core utilities for SASAMClaudeCodeSkills - update management, loop design, version tracking, and marketplace maintenance.",
+      "version": "1.1.0",
       "license": "MIT",
-      "keywords": ["sasam", "update", "version", "management", "core", "utilities"],
+      "keywords": ["sasam", "update", "version", "management", "core", "utilities", "loop", "automation"],
       "category": "utilities",
-      "tags": ["update", "version", "management", "core"]
+      "tags": ["update", "version", "management", "core", "loop"]
     },
     {
       "name": "sas-content-hub",
