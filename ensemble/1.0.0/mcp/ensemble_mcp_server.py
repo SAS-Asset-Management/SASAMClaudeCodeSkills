@@ -59,16 +59,33 @@ __version__ = "1.0.0"
 _DEFAULT_API_URL = "https://cortex-t4.tail060c48.ts.net:8181"
 
 
-def _load_config() -> dict[str, Any]:
-    """Best-effort read of ~/.ensemble/config.json (or $ENSEMBLE_CONFIG). Never raises."""
-    path = os.environ.get("ENSEMBLE_CONFIG") or str(
+def _config_path() -> str:
+    return os.environ.get("ENSEMBLE_CONFIG") or str(
         pathlib.Path.home() / ".ensemble" / "config.json"
     )
-    try:
-        raw = pathlib.Path(path).read_text()
-        return json.loads(raw) if raw.strip() else {}
-    except Exception:
+
+
+def _load_config() -> dict[str, Any]:
+    """Read ~/.ensemble/config.json (or $ENSEMBLE_CONFIG). A MISSING file is fine — env
+    vars may supply everything — and returns {}. But a PRESENT, corrupt/invalid-JSON file
+    is an ACTIONABLE error: fail fast rather than silently behaving as unauthenticated
+    (mirrors the corrupt-config handling in skills/_lib/ensemble_common.py)."""
+    path = pathlib.Path(_config_path())
+    if not path.exists():
         return {}
+    try:
+        raw = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise SystemExit(f"ensemble MCP: cannot read config {path}: {exc}")
+    if not raw.strip():
+        return {}
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"ensemble MCP: {path} is not valid JSON: {exc}")
+    if not isinstance(data, dict):
+        raise SystemExit(f"ensemble MCP: {path} must contain a JSON object, got {type(data).__name__}")
+    return data
 
 
 _CFG = _load_config()
@@ -101,7 +118,11 @@ def _resolve_verify() -> Any:
 
 
 # nginx strips the /api/ prefix and proxies FastAPI; the public path is <api_url>/api/<route>.
-_client = httpx.Client(base_url=API_URL + "/api", timeout=30.0, verify=_resolve_verify())
+# IMPORTANT: httpx replaces a base_url path when the request path is ABSOLUTE (starts with
+# "/"). base_url=<host>/api + request "/approvals" would resolve to <host>/approvals — wrong,
+# bypassing the nginx /api route. So we keep base_url at the host and prefix "/api" inside
+# _call (paths there start with "/", e.g. "/approvals" -> <host>/api/approvals).
+_client = httpx.Client(base_url=API_URL, timeout=30.0, verify=_resolve_verify())
 
 mcp = FastMCP("ensemble")
 
@@ -146,14 +167,22 @@ def _call(
 ) -> Any:
     if import_key:
         if not IMPORT_KEY:
-            return {"ok": False, "error": "no_import_key", "detail": "import_key missing from ~/.ensemble/config.json"}
+            return {
+                "ok": False,
+                "error": "no_import_key",
+                "detail": f"import_key not set (env ENSEMBLE_IMPORT_KEY, or 'import_key' in {_config_path()})",
+            }
         headers = {"X-Import-Key": IMPORT_KEY}
     else:
         if not API_KEY:
-            return {"ok": False, "error": "no_api_key", "detail": "api_key missing from ~/.ensemble/config.json"}
+            return {
+                "ok": False,
+                "error": "no_api_key",
+                "detail": f"api_key not set (env ENSEMBLE_API_KEY, or 'api_key' in {_config_path()})",
+            }
         headers = {"X-API-Key": API_KEY}
     try:
-        resp = _client.request(method, path, params=_clean(params), json=json_body, headers=headers)
+        resp = _client.request(method, "/api" + path, params=_clean(params), json=json_body, headers=headers)
     except httpx.HTTPError as exc:
         return {
             "ok": False,
