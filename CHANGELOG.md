@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.25.0] - 2026-06-30
+
+### Added
+- **magpie** New plugin — an agent that mines another team's open source repository or package for engineering approaches worth adopting. It answers "what is done **well** here, **how** is it done, and is it worth taking" rather than the usual "what does this repo contain". Three stages in one agent context: **extract** with the Vercel `opensrc` CLI (shallow clones the exact released version of an npm/PyPI/crates package or a GitHub repo), **map** with `graphify` (deterministic AST path builds a directed knowledge graph with god nodes, communities, and surprising connections — no token cost for the mapping), then **research** the map by reading the real source behind the structurally important code, tracing mechanisms through the directed edges, and scoring every candidate against a fixed **merit lens** (problem · mechanism · why it is good · evidence it is deliberate · reusability for React + FastAPI · adoption cost · licence). A **merit filter** drops anything that cannot name a concrete tradeoff it wins, keeping the output at "done well" rather than "done". Outputs a **Pattern Catalogue** report, an attributed **snippets** folder (source URL, file:line, licence preserved), and a retained `graphify-out/` graph for later `/graphify query`. Validated against `zod@4.4.3`. Ships as a plugin agent at `magpie/1.0.0/agents/magpie.md`. **Requires** the `opensrc` and `graphify` binaries on PATH (see the plugin README for install).
+
 ## [1.24.0] - 2026-07-03
 
 Uprev from the 02/07/2026 comprehensive skills review (full findings in `test-reports/skillsOptimisationReview.md`).
