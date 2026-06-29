@@ -166,6 +166,16 @@
       "keywords": ["sas", "sas-am", "document-generator", "on-brand-documents", "docx", "pptx", "xlsx", "word", "powerpoint", "excel", "template", "brand", "ooxml"],
       "category": "productivity",
       "tags": ["documents", "docx", "pptx", "xlsx", "brand", "templates"]
+    },
+    {
+      "name": "magpie",
+      "source": "./magpie/1.0.0",
+      "description": "Mines an open source repo or package for engineering approaches worth adopting. Extracts source with opensrc, maps it with graphify, then researches the map to find what is done well and how, not just what exists. Produces a Pattern Catalogue, attributed snippets, and a retained graph. Requires the opensrc and graphify binaries on PATH.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["code-reuse", "research", "opensrc", "graphify", "patterns", "agent", "codebase-analysis"],
+      "category": "developer-tools",
+      "tags": ["code-reuse", "research", "opensrc", "graphify", "patterns"]
     }
   ]
 }
