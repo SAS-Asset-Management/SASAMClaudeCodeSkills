@@ -1,0 +1,12 @@
+{
+  "name": "magpie",
+  "description": "Mines an open source repo or package for engineering approaches worth adopting. Extracts source with opensrc, maps it with graphify, then researches the map to find what is done well and how, not just what exists.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SAS-AM"
+  },
+  "homepage": "https://github.com/scrivo21/SASAMClaudeCodeSkills",
+  "repository": "https://github.com/scrivo21/SASAMClaudeCodeSkills",
+  "license": "MIT",
+  "keywords": ["code-reuse", "research", "opensrc", "graphify", "patterns", "agent", "codebase-analysis"]
+}
