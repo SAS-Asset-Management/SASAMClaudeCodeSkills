@@ -67,7 +67,7 @@ Draft LAST. Query the graph for the overall planning hierarchy and confidence co
 **What to extract:**
 - ISO 55001 Clause 4.1 (context), 4.2 (stakeholders), 4.3 (scope) requirements
 - AMAF alignment requirements and which mandatory requirements apply
-- How the IAM Anatomy v4 frames AM (6 Groups, 39 Subjects)
+- How the IAM Anatomy v4 frames AM (10 Capabilities / 10-box model, July 2024)
 - How the GFMAM Landscape v3.0 frames AM (7 Subject Areas)
 
 **Graph insight:** The graph connects AMAF to ISO 55000 (aligned), Victorian Standing Directions (enforced by), and asset life cycle (structured around). The introduction should establish this regulatory cascade: Victorian legislation → AMAF → ISO 55001 → this AMP.
@@ -198,13 +198,29 @@ for n in amaf_nodes:
     print(f'{label}: {neighbors}')
 ```
 
-### IAM 39 Subjects Coverage
+### IAM 10-Box Capability Coverage
 
-Query IAM subject group nodes to ensure the AMP addresses all relevant subjects:
+Query the IAM capability group nodes to ensure the AMP addresses all ten capabilities of the IAM Anatomy v4 (10-box model, July 2024):
 
 ```python
 iam_nodes = [n for n in G.nodes() if 'iam_anatomy' in n or 'iam_group' in n]
 ```
+
+### IAM 10-Box Coverage Matrix
+
+Run this at engagement start and again before finalisation, mirroring the AMAF compliance matrix. Query each of the ten `iam_group*` capability nodes, follow its edges to the AMP clause and concept nodes it informs, then judge each box **well covered**, **thin**, or **missing** against the drafted sections. The box to section mapping and line of sight for each box are in `references/iam-10box-mapping.md`.
+
+```python
+iam_boxes = sorted(n for n in G.nodes() if n.startswith('iam_group'))
+for n in iam_boxes:
+    label = G.nodes[n].get('label', n)
+    informs = [(G.nodes[nb].get('label', nb), G.edges[n, nb].get('relation', ''))
+               for nb in G.neighbors(n)]
+    print(f'{label}\n  informs: {informs}\n')
+# For each box, record: well covered / thin / missing across the drafted AMP sections.
+```
+
+The enabler boxes — Organisation & People (`iam_group3_people`), Information Management (`iam_group7_info`) and Risk Management (`iam_group8_risk`) — are the ones most often left thin, so give them explicit attention. No box should finish the engagement missing.
 
 ### GFMAM Landscape Alignment
 

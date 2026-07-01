@@ -192,6 +192,16 @@ The key difference: the **Standards** column comes from the knowledge graph (ISO
 > - C) Spreadsheets and documents
 > - D) Minimal — mostly paper-based or informal
 
+**Q18a: Organisational Culture, Change Readiness and Competence**
+> How ready is the organisation — its people, culture and skills — to deliver the practices this plan will rely on?
+> - A) Strong — the right skills are in place and there is an established asset management culture
+> - B) Developing — some capability and buy in, with known skills or resourcing gaps
+> - C) Early — asset management is new to most of the organisation; significant change management needed
+> - D) Constrained — capability or culture is a recognised barrier and needs a deliberate uplift plan
+> - E) Not sure — this has not been assessed
+
+*(Covers IAM Anatomy v4 box 6 — Organisation & People: organisational arrangements, culture, competence management and change management. A weak answer here should surface as an action in the Section 9 improvement programme.)*
+
 **Q19: Improvement Priorities**
 > If you could improve one aspect of how these assets are managed, what would it be?
 > (Open question — this often reveals the most important gaps)
