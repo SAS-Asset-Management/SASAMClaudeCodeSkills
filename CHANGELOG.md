@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.23.0] - 2026-07-02
+
+### Changed
+- **sas-presentation — flat design, no box shadows.** SAS decks are flat. Set the `--shadow-sm/md/lg` variables to `none` across all three theme blocks (light, dark, share) in `references/base-styles.css`, so cards, tiles and containers no longer cast a box shadow by default. Added an explicit rule to `SKILL.md` § Structural Rules ("never add a `box-shadow`; never redefine the shadow variables to a shadow value") and a pre-delivery checklist item. Box shadows also degrade badly under Teams/Zoom chroma subsampling; separation now comes from borders and background contrast.
+
 ## [1.22.0] - 2026-07-01
 
 ### Changed
