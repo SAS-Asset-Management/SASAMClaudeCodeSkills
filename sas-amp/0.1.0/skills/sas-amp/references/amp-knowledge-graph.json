@@ -5132,6 +5132,83 @@
       "_tgt": "concept_mtm_samp_to_amp_cascade",
       "source": "concept_mtm_samp_to_amp_cascade",
       "target": "concept_lcvr_optimisation_levels"
+    },
+    {
+      "relation": "provides_purpose_and_context_subjects_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "Asset Management/GFMAM/iam-anatomy-version-4-final.pdf",
+      "rationale": "Purpose and Context capability (7.2) provides the organisational purpose, context and stakeholder management subjects that inform ISO 55001 Clause 4.1.",
+      "_src": "iam_group1_context",
+      "_tgt": "iso55001_cl41",
+      "source": "iso55001_cl41",
+      "target": "iam_group1_context"
+    },
+    {
+      "relation": "provides_leadership_and_governance_subjects_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "Asset Management/GFMAM/iam-anatomy-version-4-final.pdf",
+      "rationale": "Leadership and Governance capability (7.3) — AM leadership, AM policy, the AM system, assurance and audit, technical standards and legislation — establishes the governance boundary determined under ISO 55001 Clause 4.3.",
+      "_src": "iam_group2_governance",
+      "_tgt": "iso55001_cl43",
+      "source": "iso55001_cl43",
+      "target": "iam_group2_governance"
+    },
+    {
+      "relation": "provides_organisation_and_people_subjects_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "Asset Management/GFMAM/iam-anatomy-version-4-final.pdf",
+      "rationale": "Organisation and People capability (7.4) — organisational arrangements, culture, competence and organisational change management — details the human and organisational resources provided under ISO 55001 Clause 7.1.",
+      "_src": "iam_group3_people",
+      "_tgt": "iso55001_cl71",
+      "source": "iso55001_cl71",
+      "target": "iam_group3_people"
+    },
+    {
+      "relation": "provides_information_management_subjects_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "Asset Management/GFMAM/iam-anatomy-version-4-final.pdf",
+      "rationale": "Information Management capability (7.8) provides the data and information strategy, standards, management, systems and configuration management subjects that inform ISO 55001 Clause 7.6.",
+      "_src": "iam_group7_info",
+      "_tgt": "iso55001_cl76",
+      "source": "iso55001_cl76",
+      "target": "iam_group7_info"
+    },
+    {
+      "relation": "provides_review_and_continual_improvement_subjects_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "Asset Management/GFMAM/iam-anatomy-version-4-final.pdf",
+      "rationale": "Review and Continual Improvement capability (7.10) provides the monitoring, continuous improvement and management of change subjects that inform ISO 55001 Clause 9.1.",
+      "_src": "iam_group9_review",
+      "_tgt": "iso55001_cl91",
+      "source": "iso55001_cl91",
+      "target": "iam_group9_review"
+    },
+    {
+      "relation": "defines_value_and_outcomes_targeted_by",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "Asset Management/GFMAM/iam-anatomy-version-4-final.pdf",
+      "rationale": "Value and Outcomes capability (7.11) defines the organisational value and outcomes that the AMP developed under ISO 55001 Clause 6.2.3 is intended to deliver.",
+      "_src": "iam_group10_value",
+      "_tgt": "iso55001_cl623",
+      "source": "iso55001_cl623",
+      "target": "iam_group10_value"
+    },
+    {
+      "relation": "elaborated_by_value_dimensions",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "Asset Management/GFMAM/iam-anatomy-version-4-final.pdf",
+      "rationale": "The Value and Outcomes capability is elaborated by the Shamrock dimensions of asset value used to frame the outcomes statement of an AMP.",
+      "_src": "iam_group10_value",
+      "_tgt": "concept_iam_value_dimensions",
+      "source": "concept_iam_value_dimensions",
+      "target": "iam_group10_value"
     }
   ],
   "hyperedges": [

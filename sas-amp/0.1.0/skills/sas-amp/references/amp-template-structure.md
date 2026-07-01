@@ -16,10 +16,11 @@ Comprehensive section by section guide for developing an Asset Management Plan. 
 - **What We Cannot Do** — Services or works that cannot be provided under current funding
 - **Managing the Risks** — Top 3-5 risks and high-level mitigation approach
 - **Confidence Levels** — Data confidence rating (High/Medium/Low) and what it means
+- **Value and Outcomes** — A short outcomes statement naming the organisational value and outcomes the plan delivers against the asset management objectives. Frame it against the dimensions of asset value (financial, service/level of service, risk reduction, compliance, sustainability and stakeholder outcomes) rather than expenditure alone. This closes the line of sight from purpose through to realised value and maps to IAM Anatomy v4 box 10 (Value & Outcomes).
 - **The Next Steps** — Priority actions arising from the plan
 - **Key Chart** — Single chart showing projected expenditure vs available funding over 10 years
 
-**Graph Query:** Seed nodes `iso55001_cl623`, `def_amp`, `samp_concept`. Extract the planning hierarchy and ISO definition of an AMP. The graph shows AMP sits between SAMP (strategic direction) and operational plans — the executive summary should reflect this cascade positioning.
+**Graph Query:** Seed nodes `iso55001_cl623`, `def_amp`, `samp_concept`, `concept_iam_value_dimensions`, `iam_group10_value`. Extract the planning hierarchy and ISO definition of an AMP. The graph shows AMP sits between SAMP (strategic direction) and operational plans — the executive summary should reflect this cascade positioning. Use `concept_iam_value_dimensions` (the Shamrock dimensions of asset value) and `iam_group10_value` (IAM Value & Outcomes capability) to frame the outcomes statement so the summary closes on the value the plan realises, not just what it costs.
 
 **Notes:** Draft this section LAST after all other sections are complete. It should be no more than 2-3 pages.
 
@@ -38,7 +39,7 @@ Comprehensive section by section guide for developing an Asset Management Plan. 
 
 **ISO 55001 alignment:** Clauses 4.1, 4.2, 4.3, 5.1, 5.2, 5.3, 6.2.1
 
-**Graph Query:** Seed nodes `iso55001_cl41`, `iso55001_cl42`, `iso55001_cl43`, `amaf`, `gfmam_landscape_v3`, `iam_anatomy_v4`. The graph connects AMAF to ISO 55000 (aligned), Victorian Standing Directions (enforced by), and asset life cycle (structured around). Establish the regulatory cascade: Victorian legislation → AMAF → ISO 55001 → this AMP. Query IAM Anatomy v4 for the 6 Groups and 39 Subjects framing, and GFMAM Landscape v3.0 for the 7 Subject Areas.
+**Graph Query:** Seed nodes `iso55001_cl41`, `iso55001_cl42`, `iso55001_cl43`, `amaf`, `gfmam_landscape_v3`, `iam_anatomy_v4`. The graph connects AMAF to ISO 55000 (aligned), Victorian Standing Directions (enforced by), and asset life cycle (structured around). Establish the regulatory cascade: Victorian legislation → AMAF → ISO 55001 → this AMP. Query IAM Anatomy v4 for the 10 Capabilities (10-box model, July 2024) framing, and GFMAM Landscape v3.0 for the 7 Subject Areas.
 
 ## Section 3: Levels of Service
 
@@ -74,6 +75,7 @@ Comprehensive section by section guide for developing an Asset Management Plan. 
 - **Demand Impact on Assets** — How forecast changes affect asset utilisation, capacity, and condition
 - **Demand Management Plan** — Non-asset solutions to manage demand (education, pricing, policy)
 - **Asset Programs to Meet Demand** — Capital works or operational changes required
+- **Sustainability and ESG** — How environmental, social and governance factors and sustainable development shape demand and asset decisions: decarbonisation and energy transition, climate adaptation and resilience, resource efficiency and circular economy, and any ESG or sustainability commitments the organisation has made. Treat this as a demand and objective driver, not an afterthought. This maps to IAM Strategy & Planning sub subject 7.5.2 (Sustainable Development). A standalone sustainability section can be used instead where the organisation's ESG commitments are material enough to warrant it.
 
 **Notes:**
 - Link demand forecasts to credible sources (government projections, industry forecasts)
@@ -82,7 +84,7 @@ Comprehensive section by section guide for developing an Asset Management Plan. 
 
 **ISO 55001 alignment:** Clauses 4.1, 6.1, 6.2.3
 
-**Graph Query:** Seed nodes `iso55001_cl41`, `iso55001_cl613`, `concept_lg_demand_forecasting`. The graph links demand to both risk (6.1.2) and opportunity (6.1.3). Query the local government 3 scenario model for demand forecasting structure.
+**Graph Query:** Seed nodes `iso55001_cl41`, `iso55001_cl613`, `concept_lg_demand_forecasting`, `iam_group4_strategy`. The graph links demand to both risk (6.1.2) and opportunity (6.1.3). Query the local government 3 scenario model for demand forecasting structure. Query `iam_group4_strategy` (Strategy & Planning) for the Demand Analysis (7.5.1) and Sustainable Development (7.5.2) sub subjects that inform the demand forecast and the sustainability and ESG treatment.
 
 ## Section 5: Asset Lifecycle Management
 
@@ -133,9 +135,12 @@ Comprehensive section by section guide for developing an Asset Management Plan. 
 
 **Content:**
 - **Risk Framework** — Methodology used (e.g., ISO 31000 aligned), likelihood and consequence scales
+- **Risk Appetite** — The risk appetite and tolerance the plan works within, inherited from the SAMP. State it explicitly so treatment decisions and residual risk acceptance trace back to the organisation's agreed appetite rather than being made ad hoc.
 - **Risk Identification** — Key risks to assets, services, safety, environment, compliance, reputation
 - **Risk Assessment** — Risk register with likelihood, consequence, inherent risk, controls, residual risk
 - **Risk Mitigation Strategies** — Actions to treat high and extreme risks
+- **Resilience and Contingency Planning** — Contingency plans and resilience analysis for high consequence and low likelihood events; how the organisation maintains or restores service when assets are disrupted (IAM Strategy & Planning sub subject 7.5.6, Contingency Planning and Resilience Analysis)
+- **Incident Management and Response** — How asset related incidents are detected, escalated, responded to and learned from, and how response feeds back into the risk register and lifecycle plans (IAM Life Cycle Delivery sub subject 7.7.6, Incident Management and Response)
 - **Service Consequences** — What happens if key assets fail (impact on levels of service)
 
 **Notes:**
@@ -180,16 +185,18 @@ Comprehensive section by section guide for developing an Asset Management Plan. 
 
 **Content:**
 - **AM Framework** — How AM is structured in the organisation
+- **Organisation, Culture and Competence** — Organisational arrangements and roles; the asset management competence needs of the workforce and how they are met; organisational culture and change readiness — how prepared the organisation is to adopt the practices this plan depends on, and how change will be managed. This maps to IAM Anatomy v4 box 6 (Organisation & People) — organisational arrangements, culture, competence management and organisational change management.
 - **IT Systems** — CMMS/EAM, GIS, document management, financial systems
 - **Work Management** — How work is planned, scheduled, executed, and closed
 - **Data Management** — How asset data is collected, stored, and quality-assured
+- **Configuration Management** — How the integrity of asset configuration and its records is controlled as assets and their information change over time (IAM Information Management sub subject 7.8.6)
 - **Cost Control and Budgeting** — How AM costs are tracked and budgets developed
 - **Supply Chain** — Procurement, contractor management, materials supply
 - **Continuous Improvement** — How AM practices are reviewed and improved
 
 **ISO 55001 alignment:** Clauses 4.4, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 8.3
 
-**Graph Query:** Seed nodes `iso55001_cl76`, `amaf_mandatory_3_4_3_info`, `maint_fw_area8`, `maint_fw_area9`. The Maintenance Framework's support systems area (Area 8) maps directly to CMMS/EAM, GIS, and data management content. Query AMAF information management requirements for Victorian compliance.
+**Graph Query:** Seed nodes `iso55001_cl76`, `iso55001_cl71`, `amaf_mandatory_3_4_3_info`, `maint_fw_area8`, `maint_fw_area9`, `iam_group3_people`, `iam_group7_info`. The Maintenance Framework's support systems area (Area 8) maps directly to CMMS/EAM, GIS, and data management content. Query AMAF information management requirements for Victorian compliance. Query `iam_group3_people` (Organisation & People) for the organisation, culture, competence and change readiness content, and `iam_group7_info` (Information Management) for data standards, systems and configuration management.
 
 ## Section 9: Improvement and Monitoring
 
@@ -201,10 +208,11 @@ Comprehensive section by section guide for developing an Asset Management Plan. 
 - **Improvement Program** — Prioritised actions to address shortcomings, with owner, timeline, and resources
 - **Monitoring and Review Process** — How and when the AMP is reviewed, who is responsible, what triggers an update
 - **Audit Program** — Internal and external audit schedule
+- **Value and Outcomes Realised** — An outcomes statement that closes the plan: state the organisational value and outcomes delivered against the asset management objectives, how they are measured, and how continual improvement will sustain them. This mirrors the Executive Summary outcomes statement and completes the line of sight from purpose to realised value, addressing IAM Anatomy v4 box 10 (Value & Outcomes).
 
 **ISO 55001 alignment:** Clauses 9.1, 9.2, 9.3, 10.1, 10.2, 10.3
 
-**Graph Query:** Seed nodes `iso55001_cl91`, `amaf_mandatory_3_1_4_perf`, `amaf_mandatory_3_4_2_monitor`, `concept_audit_evidence_for_amp`. Query what auditors look for as evidence of AM planning (complexity categories, asset sampling). The graph shows the feedback loop: monitor → evaluate → improve → monitor. The GFMAM Maintenance Framework Area 9 (Maintenance Improvement) informs the improvement programme structure.
+**Graph Query:** Seed nodes `iso55001_cl91`, `amaf_mandatory_3_1_4_perf`, `amaf_mandatory_3_4_2_monitor`, `concept_audit_evidence_for_amp`, `iam_group10_value`, `concept_iam_value_dimensions`. Query what auditors look for as evidence of AM planning (complexity categories, asset sampling). The graph shows the feedback loop: monitor → evaluate → improve → monitor. The GFMAM Maintenance Framework Area 9 (Maintenance Improvement) informs the improvement programme structure. Use `iam_group10_value` and `concept_iam_value_dimensions` to frame the outcomes realised so the plan reports value delivered against objectives, not just activity completed.
 
 ## Section 10: Appendices
 

@@ -5,6 +5,17 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.26.0] - 2026-07-01
+
+### Changed
+- **sas-amp — IAM 10-box alignment.** Brought the `sas-amp` skill into line with the authoritative IAM Anatomy of Asset Management v4 (the 10-box / 10 capability model, July 2024), replacing the superseded v3 "6 Groups, 39 Subjects" framing. Changes span the skill's `SKILL.md`, three reference files and the shipped knowledge graph:
+  - **Knowledge graph wiring** — the graph already carried all ten `iam_group*` capability nodes but only four (Strategy, Decision Making, Life Cycle Delivery, Risk) had inbound edges. Added edges so the six orphaned boxes — Purpose & Context, Leadership & Governance, Organisation & People, Information Management, Review & Continual Improvement, and Value & Outcomes — are now reachable by the per-section graph queries, each anchored to the relevant section's seed clause (for example Purpose & Context → Clause 4.1, Information Management → Clause 7.6, Review & Continual Improvement → Clause 9.1, Value & Outcomes → Clause 6.2.3 and the Shamrock value dimensions node). All ten boxes are now reachable; JSON re-validated (`references/amp-knowledge-graph.json`, links 168 → 175).
+  - **Model relabelled** — every "IAM Anatomy v4 (6 Groups, 39 Subjects)" / "IAM 39 Subjects Coverage" reference across `SKILL.md`, `graph-queries.md` and `amp-template-structure.md` now reads "IAM Anatomy v4 (10 Capabilities / 10-box model, July 2024)".
+  - **New reference** — added `references/iam-10box-mapping.md`, the IAM counterpart to `iso55001-amp-mapping.md`: each of the ten boxes plus its sub subjects mapped to the AMP section(s) that cover it, with a line of sight column and box summaries. Registered in the `SKILL.md` reference list and backed by a new **IAM 10-box coverage matrix** cross cutting query (well covered / thin / missing per box, run at engagement start and before finalisation, mirroring the AMAF compliance matrix).
+  - **Value & Outcomes close-out** — the Executive Summary and Section 9 content prompts now require an explicit outcomes statement naming the value the plan delivers against objectives, tied to the value dimensions node.
+  - **Coverage gaps closed** — added Organisation, Culture & Competence content and an interview question (change readiness / competence); Resilience & Contingency Planning and Incident Management & Response bullets in the Risk section; a risk appetite line inherited from the SAMP; a Sustainability & ESG treatment in Future Demand seeded from the Strategy capability; Configuration Management in the information management bullets; and a note that Shutdown & Outage is sector conditional (required for water, transport and resources; not applicable to buildings or roads).
+  - Existing content — the AMAF compliance matrix, GFMAM mapping, financial sustainability ratio, data confidence ratings and the adaptive interview — is retained unchanged.
+
 ## [1.25.0] - 2026-06-30
 
 ### Added
