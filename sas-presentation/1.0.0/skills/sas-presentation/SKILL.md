@@ -385,6 +385,7 @@ See `references/scaffold-template.html` for the complete scaffold including Java
 - All `<img>` tags must have `alt` text. Decorative images: `alt="" role="presentation"`
 - Inline SVGs preferred over image files
 - CSS variables for all theme-aware colours — no hardcoded values
+- **Flat design — no box shadows.** SAS decks are flat. The `--shadow-sm/md/lg` variables are set to `none` in `base-styles.css`; never add a `box-shadow` to any element, and never redefine those variables to a shadow value in a deck's inline styles. Shadows also degrade badly under Teams/Zoom chroma subsampling. Use borders and background contrast for separation instead.
 - All JS at bottom of `<body>`
 - No build step — open-in-browser ready
 
@@ -1373,6 +1374,7 @@ Example (Yarra Trams):
 - [ ] All slides have `data-section` attributes
 - [ ] Heading hierarchy correct (h1 → h2 → h3, no skips)
 - [ ] No hardcoded colours (all via CSS variables)
+- [ ] No box shadows — flat design (`--shadow-*` are `none`; no `box-shadow` added anywhere)
 
 ### Accessibility
 - [ ] All images have alt text
