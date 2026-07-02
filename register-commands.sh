@@ -42,8 +42,9 @@ find "${SCRIPT_DIR}" -name "SKILL.md" -type f | while read -r skill_file; do
     # This handles patterns like:
     #   references/file.html -> /full/path/to/skill/references/file.html
     #   `references/file.md` -> `/full/path/to/skill/references/file.md`
-    sed -e "s|\`references/|\`${skill_dir}/references/|g" \
-        -e "s|references/\([a-zA-Z0-9._-]*\)|${skill_dir}/references/\1|g" \
+    # Single expression: two chained -e expressions double-applied (the second
+    # re-matched "references/" inside the absolute path the first inserted).
+    sed -E "s|(\`?)references/([a-zA-Z0-9._-])|\1${skill_dir}/references/\2|g" \
         "${skill_file}" > "${output_file}"
 
     echo "    Done"

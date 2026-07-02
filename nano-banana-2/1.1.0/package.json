@@ -1,6 +1,6 @@
 {
-  "name": "1.1.0",
-  "version": "1.0.0",
+  "name": "nano-banana-2",
+  "version": "1.3.0",
   "description": "Generate images using Google's Nano Banana 2 model (`gemini-3.1-flash-image-preview`) with web search grounding for real-world context.",
   "main": "index.js",
   "scripts": {

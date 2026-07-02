@@ -1,5 +1,8 @@
 .notifications/
 
+# /sasam-update local-modification backups
+sasam-local-patches/
+
 # Python bytecode
 __pycache__/
 *.pyc

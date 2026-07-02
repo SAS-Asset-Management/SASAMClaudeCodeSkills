@@ -55,7 +55,7 @@ When **all four are empty**, the output is a **single line** — e.g.
    Optional flags (pass through to `sync.py`):
    - `--no-fetch` — skip the network fetch and report against local refs only
      (use when offline or when you only just fetched).
-   - `--remote=<name>` — use a non-default remote (defaults to `origin`).
+   - `--remote=<name>` — use a non-default remote (defaults to `ensemble`, the remote `/tether` creates).
 
 3. Relay the script's report to the consultant verbatim, then offer the obvious
    next actions it implies: run `/collect <id>` for any uncollected results, open

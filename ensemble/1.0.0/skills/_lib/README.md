@@ -1,6 +1,6 @@
 # `_lib` — shared library for the Ensemble consultant skills
 
-Every consultant skill under `deploy/skills/ensemble/<skill>/` sources **one** of
+Every consultant skill under `ensemble/1.0.0/skills/<skill>/` sources **one** of
 these two files and reuses its helpers — no skill re-implements packet parsing,
 schema validation, repo resolution, or `~/.ensemble` state I/O.
 
