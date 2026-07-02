@@ -82,5 +82,4 @@ bash "$SKILL_DIR/publish_presentation.sh" --name "<deck title>" \
 ## Exit codes
 
 - `0` — published (or, with `--dry-run`, validated). Prints the deck id on stdout.
-- `1` — a flatten / reachability / publish error, or an id collision (relay the stderr message).
-- `2` — bad/missing arguments (e.g. no `--name`).
+- `1` — any error: bad/missing arguments (e.g. no `--name`), a flatten / reachability / publish error, or an id collision (relay the stderr message).

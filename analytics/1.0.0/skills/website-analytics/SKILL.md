@@ -1,17 +1,6 @@
 ---
 name: website-analytics
-description: Provide expertise for the SAS-AM Website Analytics system. Use when the user asks about:
-- Google Analytics or Search Console data collection
-- Microsoft Clarity UX analytics (heatmaps, rage clicks, dead clicks, session recordings)
-- SQLite database queries for analytics data
-- Grafana dashboard configuration or troubleshooting
-- Data pipeline issues, cron jobs, or automation
-- SEO keyword analysis or SERP ranking
-- API authentication with Google services or Clarity
-- Analytics metrics interpretation (bounce rate, CTR, impressions, scroll depth)
-- Docker container issues with Grafana
-- LinkedIn or Google Ads campaign tracking
-- UTM parameters and attribution
+description: Provide expertise for the SAS-AM Website Analytics system. Use when the user asks about Google Analytics or Search Console data collection, Microsoft Clarity UX analytics (heatmaps, rage clicks, dead clicks, session recordings), SQLite queries for analytics data, Grafana dashboard configuration or troubleshooting, data pipeline issues, cron jobs or automation, SEO keyword analysis or SERP ranking, API authentication with Google services or Clarity, analytics metrics interpretation (bounce rate, CTR, impressions, scroll depth), Docker container issues with Grafana, LinkedIn or Google Ads campaign tracking, or UTM parameters and attribution.
 ---
 
 # Website Analytics Skill

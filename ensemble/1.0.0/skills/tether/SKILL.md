@@ -9,7 +9,7 @@ Use this skill when a consultant says **"tether to <project>"**, **"/tether <uui
 or otherwise wants to start working on an Ensemble engagement in the current session.
 Tethering resolves the project from the shared **registry**, brings the engagement repo
 local, and records the binding under `~/.ensemble/tethers.json` so the other Ensemble
-skills (collect, packet, etc.) know which engagement you are operating in.
+skills (handoff, sync, collect, etc.) know which engagement you are operating in.
 
 This is the **first** skill a consultant runs for a given engagement.
 
@@ -82,7 +82,8 @@ and `queue`, and updates the tether record. It is safe to run again.
 ## Exit codes
 
 - `0` — tethered successfully, **or** listed the available engagements (no query given).
-- `2` — bad arguments (e.g. an invalid `--mode`).
+- `1` — bad arguments (e.g. an invalid `--mode`), or a git/clone/access error; relay the stderr message.
+- `2` — usage error (no arguments at all) or an empty resolve query.
 - `3` — no engagement in the registry matched the query.
 - `4` — the query was ambiguous (candidates listed on stderr).
 - other non-zero — a git/clone/access error; relay the stderr message to the user.

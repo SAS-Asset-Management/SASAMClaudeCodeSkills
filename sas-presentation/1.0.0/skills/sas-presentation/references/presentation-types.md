@@ -729,9 +729,9 @@ Reveal.initialize({
   showSlideNumber: 'speaker',
   center: false,
 
-  // Dimensions (16:9)
-  width: 1920,
-  height: 1080,
+  // Dimensions (16:9) — authoritative canvas, matches scaffold-template.html
+  width: 1760,
+  height: 990,
   margin: 0,
   minScale: 0.2,
   maxScale: 2.0,

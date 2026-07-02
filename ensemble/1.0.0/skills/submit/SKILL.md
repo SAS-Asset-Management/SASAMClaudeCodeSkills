@@ -69,5 +69,4 @@ bash "$SKILL_DIR/submit.sh" --title "<short title>" \
 ## Exit codes
 
 - `0` — submission built (and PR opened unless `--no-pr`).
-- `1` — a packet/schema or git/push error (relay the stderr message).
-- `2` — bad/missing arguments (e.g. no `--title`), or an id collision.
+- `1` — any error: bad/missing arguments (e.g. no `--title`), an id collision, or a packet/schema/git/push failure (relay the stderr message).

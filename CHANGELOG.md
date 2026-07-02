@@ -5,6 +5,27 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.24.0] - 2026-07-03
+
+Uprev from the 02/07/2026 comprehensive skills review (full findings in `test-reports/skillsOptimisationReview.md`).
+
+### Fixed
+- **website-analytics** — frontmatter description was invalid YAML (a scalar followed by column-0 list items), so the skill registered with the bare description "Website Analytics Skill" and its entire GA4/Clarity/Grafana trigger vocabulary was invisible to the router. Collapsed to a single flowing description.
+- **nano-banana-2** — unquoted ` #002244` in the frontmatter description acted as a YAML comment marker, silently truncating the registered description mid-sentence at "deep navy". Description now quoted. Also reconciled the version triple: registry entry bumped 1.1.0 → 1.3.0 to match plugin.json, and package.json corrected from name "1.1.0" / version "1.0.0" to name "nano-banana-2" / version "1.3.0".
+- **register-commands.sh** — the two chained sed expressions double-applied: the second re-matched `references/` inside the absolute path the first inserted, so every registered command file carried doubled, broken reference paths. Collapsed to a single expression; re-registered commands verified clean.
+- **fmeca** — SKILL.md pointed at `references/*.md` but all seven reference files sat flat beside it, so every "read the reference" instruction 404'd. Files moved into a real `references/` directory and the plugin given its missing `.claude-plugin/plugin.json`.
+- **sas-presentation** — slide canvas corrected to the authoritative 1760×990 (SKILL.md and presentation-types.md said 1920×1080 while the scaffold template and prose said 1760×990, producing ~9% off-scale decks); "17 presentation types" corrected to 18 (the table and reference define 18); standards version unified to marcov-revealjs-standards v1.0.0.
+- **ensemble** — exit-code tables in tether/submit/publish-presentation documented an exit `2` for argument errors that `ens_die` never produces (it exits 1); sync SKILL.md said `--remote` defaults to `origin` when sync.py defaults to `ensemble`; tether referenced a nonexistent "packet" skill (renamed `/handoff`); full-width CJK parentheses in submit.sh's PR body fallback replaced with ASCII; stale `deploy/skills/...` path fixed in `_lib/README.md`.
+- **sasam-update** — version comparison hardened: `curl -sf` (a 404 body no longer masquerades as a version), sentinel guard before comparing, and `sort -V` semantic comparison so a local copy ahead of remote is no longer reported as an available "update".
+- **webflowPublish.py** (sas-content-hub) — `fileHash` now sends the real MD5 of the file instead of a random UUID (the UUID defeated Webflow asset dedup, so every retry uploaded a duplicate asset); collections listing populated `itemCount` from `lastUpdated`; removed a dead `upload_request` block left over from an earlier upload implementation.
+
+### Added
+- **Marketplace registry** — registered three plugins that existed in the repo but were absent from `.claude-plugin/marketplace.json` and therefore uninstallable: `sas-am-docs` 1.0.0, `handoff-proposal` 1.0.0, and `project-manager` 1.0.0. Bumped the `ensemble` entry 1.2.0 → 1.3.0 to match its plugin.json and corrected its description to eight commands including `/submit`.
+- `.gitignore` — added `sasam-local-patches/` (the `/sasam-update` backup directory) so backups no longer pollute `git status`.
+
+### Removed
+- Ten per-plugin `.claude-plugin/marketplace.json` files (b2b-research-agent, beam-selling, data-quality-analysis, handoff-proposal, project-manager, push-notifications, sas-am-docs, sas-amp, sas-presentation, sasdocx). These duplicated plugin.json and the root registry in a location the marketplace loader never reads, and had already drifted. The root registry + each plugin.json are now the only metadata sources.
+
 ## [1.23.1] - 2026-07-02
 
 ### Security

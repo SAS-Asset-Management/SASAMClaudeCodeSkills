@@ -1,6 +1,6 @@
 ---
 name: nano-banana-2
-description: Generate SAS-AM brand-consistent image prompts and images using Google's Nano Banana 2 model. Use when the user wants to create an image prompt or image for a LinkedIn post, blog article, Webflow page, or slide topic, or asks for SAS-AM visuals, social or blog or presentation imagery, AI-generated images, graphics, or artwork from a piece of written content. Acts as a router — selects one of four modes (Editorial Diagram, Technical Line, Data as Hero, Architectural) based on the subject of the input and assembles a finished prompt using the SAS-AM brand frame (deep navy #002244 base, single lime-green #69BE28 accent).
+description: "Generate SAS-AM brand-consistent image prompts and images using Google's Nano Banana 2 model. Use when the user wants to create an image prompt or image for a LinkedIn post, blog article, Webflow page, or slide topic, or asks for SAS-AM visuals, social or blog or presentation imagery, AI-generated images, graphics, or artwork from a piece of written content. Acts as a router — selects one of four modes (Editorial Diagram, Technical Line, Data as Hero, Architectural) based on the subject of the input and assembles a finished prompt using the SAS-AM brand frame (deep navy #002244 base, single lime-green #69BE28 accent)."
 ---
 
 # Nano Banana 2 Image Generation Skill

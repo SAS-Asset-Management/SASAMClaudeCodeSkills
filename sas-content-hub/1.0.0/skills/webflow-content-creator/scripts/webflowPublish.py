@@ -24,6 +24,7 @@ import sys
 import urllib.request
 import urllib.error
 import urllib.parse
+import hashlib
 import mimetypes
 import uuid
 from datetime import datetime, timezone
@@ -97,7 +98,7 @@ def list_collections(site_id):
             "displayName": col.get("displayName", ""),
             "slug": col.get("slug", ""),
             "singularName": col.get("singularName", ""),
-            "itemCount": col.get("lastUpdated", ""),
+            "itemCount": col.get("itemCount", ""),
         })
     print(json.dumps(output, indent=2))
 
@@ -191,7 +192,7 @@ def upload_asset_and_get_id(site_id, file_path):
     }
     meta_payload = json.dumps({
         "fileName": file_name,
-        "fileHash": uuid.uuid4().hex,
+        "fileHash": hashlib.md5(file_data).hexdigest(),
     }).encode("utf-8")
 
     req = urllib.request.Request(url, data=meta_payload, headers=headers, method="POST")
@@ -297,14 +298,6 @@ def upload_asset(site_id, file_path):
 
     # Step 1: Request upload URL
     token = get_token()
-    upload_request = {
-        "fileName": file_name,
-        "fileHash": str(uuid.uuid4()),  # Unique hash for deduplication
-    }
-
-    # Get presigned upload details
-    boundary = uuid.uuid4().hex
-    body_parts = []
 
     with open(file_path, "rb") as f:
         file_data = f.read()
@@ -320,7 +313,7 @@ def upload_asset(site_id, file_path):
     # First, create the asset metadata
     meta_payload = json.dumps({
         "fileName": file_name,
-        "fileHash": uuid.uuid4().hex,
+        "fileHash": hashlib.md5(file_data).hexdigest(),
     }).encode("utf-8")
 
     req = urllib.request.Request(url, data=meta_payload, headers=headers, method="POST")

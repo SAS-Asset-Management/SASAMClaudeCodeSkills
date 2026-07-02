@@ -1,6 +1,6 @@
 ---
 name: sas-presentation
-description: Create polished marcov / SAS-AM branded Reveal.js presentations. Use when the user asks to create slides, a presentation, a deck, or a slideshow. Supports 17 presentation types — from standard narrative decks to dashboards, proposals, and meeting minutes. Implements SAS brand guidelines with light/dark mode and professional layouts. Generates standalone HTML + CSS with no build step required. Complies with marcov-revealjs-standards v1.0.0.
+description: Create polished marcov / SAS-AM branded Reveal.js presentations. Use when the user asks to create slides, a presentation, a deck, or a slideshow. Supports 18 presentation types — from standard narrative decks to dashboards, proposals, and meeting minutes. Implements SAS brand guidelines with light/dark mode and professional layouts. Generates standalone HTML + CSS with no build step required. Complies with marcov-revealjs-standards v1.0.0.
 ---
 
 # SAS-AM Presentation Skill
@@ -57,7 +57,7 @@ Do not say "it was a difficult situation." Say "it was 2am, the control room sme
 
 This skill creates presentations following the marcov / SAS-AM communication style, which features:
 
-- **17 Presentation Types**: Standard presentations, reports, dashboards, proposals, pitch decks, and more
+- **18 Presentation Types**: Standard presentations, reports, dashboards, proposals, pitch decks, and more
 - **SAS Brand Colours**: SAS Blue (#002244) and SAS Green (#69BE28)
 - **Light/Dark Mode Toggle**: Built-in theme switching with localStorage persistence
 - **Type-Specific Structures**: Each type has its own section layout, tone, and component set
@@ -66,7 +66,7 @@ This skill creates presentations following the marcov / SAS-AM communication sty
 - **Dual-Theme Assets**: Support for light/dark image variants
 - **Speaker Notes with Presenter View**: Reveal.js Notes plugin with transition cues, timing, and recovery phrases (press S to open)
 - **WCAG 2.1 AA Compliance**: Focus indicators, reduced motion, screen reader support
-- **marcov Standards Compliant**: All output follows marcov-revealjs-standards v2.0.0
+- **marcov Standards Compliant**: All output follows marcov-revealjs-standards v1.0.0
 
 ## Supported Presentation Types
 
@@ -392,8 +392,8 @@ Reveal.initialize({
   slideNumber: 'c/t',
   showSlideNumber: 'speaker',
   center: false,
-  width: 1920,
-  height: 1080,
+  width: 1760,   // authoritative canvas — matches scaffold-template.html
+  height: 990,
   margin: 0,
   minScale: 0.2,
   maxScale: 2.0,
@@ -907,8 +907,8 @@ For images that work in both themes (photos, memes):
 
 ### Slide Dimensions
 
-- **Width**: 1920px
-- **Height**: 1080px
+- **Width**: 1760px
+- **Height**: 990px
 - **Aspect Ratio**: 16:9
 - **Padding**: 60px
 

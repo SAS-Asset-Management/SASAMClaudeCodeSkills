@@ -1,0 +1,8 @@
+{
+  "name": "fmeca",
+  "description": "Analyse, author, review, generate, and extract context for FMEA and FMECA documents for asset-intensive organisations. Supports 5 workflows, 4 sector taxonomies, and standards-aligned scoring scales (IEC 60812, SAE J1739, MIL-STD-1629A, ISO 14224).",
+  "version": "1.0.0",
+  "author": { "name": "SAS-AM" },
+  "license": "MIT",
+  "keywords": ["fmea", "fmeca", "failure-mode", "reliability", "rcm", "criticality", "risk", "asset-management"]
+}

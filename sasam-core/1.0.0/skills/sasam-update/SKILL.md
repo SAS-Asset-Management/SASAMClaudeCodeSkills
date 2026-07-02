@@ -44,17 +44,24 @@ echo "Local version: $LOCAL_VERSION"
 ### Step 2: Fetch Remote Version
 
 ```bash
-REMOTE_VERSION=$(curl -s "https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/VERSION" 2>/dev/null || echo "error")
+# -f makes HTTP errors (404 etc.) fail instead of returning the error body
+REMOTE_VERSION=$(curl -sf "https://raw.githubusercontent.com/SAS-Asset-Management/SASAMClaudeCodeSkills/main/VERSION" 2>/dev/null || echo "error")
 echo "Remote version: $REMOTE_VERSION"
 ```
 
 ### Step 3: Compare Versions
 
+Guard the sentinels first, then compare semantically — plain string equality cannot tell "behind" from "ahead" (a local dev copy can be newer than remote).
+
 ```bash
-if [ "$LOCAL_VERSION" = "$REMOTE_VERSION" ]; then
+if [ "$LOCAL_VERSION" = "unknown" ] || [ "$REMOTE_VERSION" = "error" ]; then
+  echo "Cannot compare versions (local: $LOCAL_VERSION, remote: $REMOTE_VERSION) — aborting."
+elif [ "$LOCAL_VERSION" = "$REMOTE_VERSION" ]; then
   echo "You are up to date (v$LOCAL_VERSION)"
-else
+elif [ "$(printf '%s\n%s\n' "$LOCAL_VERSION" "$REMOTE_VERSION" | sort -V | tail -1)" = "$REMOTE_VERSION" ]; then
   echo "Update available: $LOCAL_VERSION -> $REMOTE_VERSION"
+else
+  echo "Local version ($LOCAL_VERSION) is ahead of remote ($REMOTE_VERSION) — no update."
 fi
 ```
 

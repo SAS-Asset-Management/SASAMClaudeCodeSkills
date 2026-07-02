@@ -203,7 +203,7 @@ git push --quiet "$REMOTE" "HEAD:refs/heads/submit/${ID}" \
 
 REPO_SLUG="$(git remote get-url "$REMOTE" | sed -E 's#(git@github.com:|https://github.com/)##; s#\.git$##')"
 PR_BODY="$(printf 'Consultant submission of completed work, matched to the delivery page.\n\n- **Submitted by:** %s\n- **Review tier:** %s\n- **Deliverables:** %s\n\nSee `%s/summary.md` and `%s/submission.json`. tier-gate requires the %s approval before merge.\n' \
-  "$REQUESTED_BY" "$REVIEW_TIER" "$(IFS=,; echo "${DELIVS[*]:-（none matched）}")" "$OUTBOX_REL" "$OUTBOX_REL" "$REVIEW_TIER")"
+  "$REQUESTED_BY" "$REVIEW_TIER" "$(IFS=,; echo "${DELIVS[*]:-(none matched)}")" "$OUTBOX_REL" "$OUTBOX_REL" "$REVIEW_TIER")"
 set +e
 PR_OUT="$(gh pr create --repo "$REPO_SLUG" --base main --head "submit/${ID}" \
   --title "submit: ${TITLE} (${ID})" --body "$PR_BODY" 2>&1)"
