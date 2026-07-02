@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.23.1] - 2026-07-02
+
+### Security
+- **email-gate** — removed the hardcoded Cortex4 SSH password from `scripts/deployGate.py` and `references/server-deployment.md` (it appeared in seven places across the two files). The script now defaults to SSH key auth (`BatchMode=yes`, so a missing key fails fast instead of prompting) with an optional `CORTEX4_SSH_PASS` env var fallback via `sshpass` for machines without provisioned keys. Manual command examples in the reference doc now use plain `ssh`/`scp`; prerequisite notes in the email-gate and content-campaign SKILL.md files updated to match. **The leaked credential remains in git history and must be rotated on the server.** Version numbered 1.23.1 to sit above the in-flight `sas-amp-10box-alignment` branch (1.23.0).
+
 ## [1.20.1] - 2026-06-16
 
 ### Fixed

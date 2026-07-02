@@ -149,7 +149,7 @@ The script automatically:
 3. Restarts the sas-gate container
 4. Verifies the container is running
 
-**Prerequisites:** `sshpass` installed and Tailscale connected.
+**Prerequisites:** SSH key auth to cortext4 (or `CORTEX4_SSH_PASS` set with `sshpass` installed) and Tailscale connected.
 
 **Gate check:** Confirm deployment succeeded. Ask: "Asset deployed to Cortex4. Want me to verify with a test download, or proceed to hero image?"
 

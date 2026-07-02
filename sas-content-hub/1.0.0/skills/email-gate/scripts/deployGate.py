@@ -25,20 +25,32 @@ import sys
 import tempfile
 
 # ── Server Configuration ──────────────────────────────────────────────
+# Auth: SSH keys (default). Set CORTEX4_SSH_PASS only where keys are not
+# provisioned — never hardcode the password in this file.
 SERVER_HOST = "cortext4@cortext-t4"
-SERVER_PASS = "iso55001:2024"
+SERVER_PASS = os.environ.get("CORTEX4_SSH_PASS")
 PROJECT_DIR = "/home/cortext4/docker/clientDatabase"
 ASSETS_DIR = f"{PROJECT_DIR}/app/assets"
 RESOURCES_JSON = f"{ASSETS_DIR}/resources.json"
 
 
+def _auth_wrap(cmd):
+    """Wrap an ssh/scp command with the configured auth method.
+
+    Default is SSH key auth (BatchMode so a missing key fails fast instead
+    of prompting). If CORTEX4_SSH_PASS is set, fall back to sshpass.
+    """
+    if SERVER_PASS:
+        return ["sshpass", "-p", SERVER_PASS] + cmd
+    return cmd[:1] + ["-o", "BatchMode=yes"] + cmd[1:]
+
+
 def ssh_cmd(command, capture=True):
-    """Execute a command on the remote server via sshpass + ssh."""
-    full = [
-        "sshpass", "-p", SERVER_PASS,
+    """Execute a command on the remote server via ssh."""
+    full = _auth_wrap([
         "ssh", "-o", "StrictHostKeyChecking=no", SERVER_HOST,
         command,
-    ]
+    ])
     if capture:
         result = subprocess.run(full, capture_output=True, text=True)
         return result.returncode, result.stdout.strip(), result.stderr.strip()
@@ -47,18 +59,19 @@ def ssh_cmd(command, capture=True):
 
 
 def scp_upload(local_path, remote_path):
-    """Upload a local file to the remote server via sshpass + scp."""
-    full = [
-        "sshpass", "-p", SERVER_PASS,
+    """Upload a local file to the remote server via scp."""
+    full = _auth_wrap([
         "scp", "-o", "StrictHostKeyChecking=no",
         local_path, f"{SERVER_HOST}:{remote_path}",
-    ]
+    ])
     result = subprocess.run(full, capture_output=True, text=True)
     return result.returncode, result.stdout.strip(), result.stderr.strip()
 
 
 def check_sshpass():
-    """Verify sshpass is installed."""
+    """Verify sshpass is installed (only needed for the CORTEX4_SSH_PASS fallback)."""
+    if not SERVER_PASS:
+        return
     result = subprocess.run(["which", "sshpass"], capture_output=True)
     if result.returncode != 0:
         print("ERROR: sshpass is not installed.")
@@ -151,6 +164,9 @@ def check_connectivity():
     if rc != 0:
         print(f"  ERROR: Cannot connect to {SERVER_HOST}")
         print(f"  {err}")
+        if not SERVER_PASS:
+            print("  Ensure SSH keys are provisioned for this host (default auth),")
+            print("  or set CORTEX4_SSH_PASS to use password auth as a fallback.")
         sys.exit(1)
     print("  Connected.")
 
