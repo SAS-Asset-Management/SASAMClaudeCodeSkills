@@ -178,7 +178,7 @@ The script performs 5 steps automatically:
 4. Restarts the `sas-gate` Docker container
 5. Verifies the container is running
 
-**Prerequisites:** `sshpass` must be installed (`brew install hudochenkov/sshpass/sshpass`) and Tailscale must be connected so `cortext-t4` is reachable.
+**Prerequisites:** SSH key auth to `cortext4@cortext-t4` (default) and Tailscale connected so `cortext-t4` is reachable. Where keys are not provisioned, set the `CORTEX4_SSH_PASS` env var and install `sshpass` (`brew install hudochenkov/sshpass/sshpass`).
 
 Use `--dry-run` to preview without making changes.
 

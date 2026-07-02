@@ -22,7 +22,7 @@ Webflow page (article)
 | Component | Detail |
 |-----------|--------|
 | Host | `cortext4@cortext-t4` (Tailscale) |
-| Password | `iso55001:2024` |
+| Auth | SSH keys (default). Fallback: set `CORTEX4_SSH_PASS` env var — never write the password into files |
 | Project dir | `/home/cortext4/docker/clientDatabase/` |
 | App container | `sas-gate` (FastAPI, port 8000) |
 | DB container | `sas-db` (Postgres 16, port 5435) |
@@ -66,15 +66,14 @@ python3 ${CLAUDE_PLUGIN_ROOT}/skills/email-gate/scripts/deployGate.py verify
 ### Step 1: Copy asset to server
 
 ```bash
-sshpass -p 'iso55001:2024' scp \
-  ./myArtefact.html \
+scp ./myArtefact.html \
   cortext4@cortext-t4:/home/cortext4/docker/clientDatabase/app/assets/my-resource-slug.html
 ```
 
 ### Step 2: Read current resources.json
 
 ```bash
-sshpass -p 'iso55001:2024' ssh cortext4@cortext-t4 \
+ssh cortext4@cortext-t4 \
   "cat /home/cortext4/docker/clientDatabase/app/assets/resources.json"
 ```
 
@@ -93,14 +92,14 @@ Add to the JSON array:
 ### Step 4: Restart container
 
 ```bash
-sshpass -p 'iso55001:2024' ssh cortext4@cortext-t4 \
+ssh cortext4@cortext-t4 \
   "cd /home/cortext4/docker/clientDatabase && docker compose restart app"
 ```
 
 ### Step 5: Verify
 
 ```bash
-sshpass -p 'iso55001:2024' ssh cortext4@cortext-t4 \
+ssh cortext4@cortext-t4 \
   "cd /home/cortext4/docker/clientDatabase && docker compose ps"
 ```
 
@@ -123,7 +122,7 @@ python3 ${CLAUDE_PLUGIN_ROOT}/skills/email-gate/scripts/deployGate.py downloads
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/email-gate/scripts/deployGate.py downloads --slug maintenance-business-case
 
 # All contacts (leads) — manual query
-sshpass -p 'iso55001:2024' ssh cortext4@cortext-t4 \
+ssh cortext4@cortext-t4 \
   "docker exec sas-db psql -U sas -d sas -c \
   \"SELECT first_name, last_name, email, job_title, organisation, source, created_at \
   FROM contacts ORDER BY created_at DESC LIMIT 20;\""
@@ -142,7 +141,7 @@ sshpass -p 'iso55001:2024' ssh cortext4@cortext-t4 \
 
 | Issue | Cause | Fix |
 |-------|-------|-----|
-| `sshpass` not found | Not installed | `brew install hudochenkov/sshpass/sshpass` |
+| SSH auth failure | Keys not provisioned for this host | Provision SSH keys, or set `CORTEX4_SSH_PASS` (requires `brew install hudochenkov/sshpass/sshpass`) |
 | SSH connection refused | Tailscale not running or host offline | Check `tailscale status`, ensure cortext-t4 is online |
 | Turnstile widget missing | Script not loaded or site key wrong | Check `data-sitekey="0x4AAAAAACfsXoEwP0T4dL86"` |
 | "Resource not found" on submit | Slug not in resources.json or container not restarted | Run `deployGate.py list` to check, restart if needed |
