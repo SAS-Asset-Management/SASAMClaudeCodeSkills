@@ -78,6 +78,7 @@ which verifies the reconciliation and exits nonzero on failure. A failed check b
 - Build from the generated standard chunks, never from memory of the standard.
 - Never assume the subject count — enumerate from the pack taxonomy.
 - Australian English throughout. No hyphens in prose — em dashes or rephrase. No emojis. DD/MM/YYYY displayed dates.
+- **Agent fallback.** If a named delegate agent is not an available subagent type in this session, execute its instruction file from the plugin's `agents/` directory inline and record in the output that it ran inline.
 
 ## Invocation
 

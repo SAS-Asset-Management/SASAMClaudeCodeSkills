@@ -77,6 +77,7 @@ Give the assessor a short handover: deliverable paths, report version and date, 
 - Never reference a subject, artefact, or finding not present in its source location. The report is an evidence register, not an essay.
 - Never assume the subject count — enumerate from the pack taxonomy.
 - Australian English throughout. No hyphens in prose — em dashes or rephrase. No emojis. DD/MM/YYYY displayed dates. Quality and traceability override speed — if in doubt, stop and ask.
+- **Agent fallback.** If a named delegate agent is not an available subagent type in this session, execute its instruction file from the plugin's `agents/` directory inline and record in the output that it ran inline.
 
 ## Invocation
 

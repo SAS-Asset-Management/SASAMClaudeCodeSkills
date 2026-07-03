@@ -58,6 +58,7 @@ Note the validation in `evidence/ARTEFACT_SCHEDULE.md` against the source CSV (r
 - Validation evidence enters the ledger with `tag` exactly `Direct`; aggregation stays with `engine/aggregate.py`.
 - Never modify the client's CSV. The discrepancy report is a separate output.
 - Australian English throughout. No hyphens in prose — em dashes or rephrase. No emojis. DD/MM/YYYY displayed dates.
+- **Agent fallback.** If a named delegate agent is not an available subagent type in this session, execute its instruction file from the plugin's `agents/` directory inline and record in the output that it ran inline.
 
 ## Invocation
 

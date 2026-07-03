@@ -78,6 +78,7 @@ Raw transcripts land in `interviews/`. After each session, the `transcript-extra
 - Say versus do is the core question — everything else is colour.
 - Never assume the subject count — enumerate from the pack taxonomy.
 - Australian English throughout. No hyphens in prose — em dashes or rephrase. No emojis. DD/MM/YYYY displayed dates.
+- **Agent fallback.** If a named delegate agent is not an available subagent type in this session, execute its instruction file from the plugin's `agents/` directory inline and record in the output that it ran inline.
 
 ## Invocation
 

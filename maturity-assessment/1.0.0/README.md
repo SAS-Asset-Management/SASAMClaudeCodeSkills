@@ -35,6 +35,8 @@ An internal SAS Asset Management delivery accelerator for evidence based maturit
 
 ## Quick Start
 
+0. **Install the plugin** so every component registers: `/plugin install maturity-assessment@SASAMClaudeCodeSkills`. The fourteen agents are auto discovered from `agents/` only on an installed plugin — the `register-commands.sh` copies in `~/.claude/commands/` surface the eight skills but never the agents, and a session running from those copies alone falls back to executing agent instruction files inline (see `agents/README.md`, Availability and fallback).
+
 1. **Create the engagement repo** on SAS AM controlled disk with this exact layout:
 
    ```
