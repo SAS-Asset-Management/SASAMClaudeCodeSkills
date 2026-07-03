@@ -53,6 +53,25 @@ packs/<packId>/
   lists, scalars only — no anchors, no multiline scalars — so the engine's
   `configLoader.py` can parse every shipped file.
 
+## Writing rubric level sentences
+
+Level sentences are matched against every kind of evidence the engagement
+produces, not only documents. Two rules keep them serviceable in the field:
+
+- **Write for practice evidence as well as document evidence.** Interview
+  quotes and observed behaviour must be able to match a level sentence, so
+  phrase levels around what the organisation does ("defect scores are
+  reviewed at a set cadence"), not only around what its documents contain
+  ("a procedure document defines the review cadence"). A sentence that can
+  only ever be satisfied by a document silently caps the do layer.
+- **Substance over sentence.** Real evidence will sometimes sit between two
+  level sentences or match a level's intent in different words. The scorer
+  scores the substance, cites the nearest rubric sentence verbatim, and
+  records the mismatch as an epistemic note on the evidence record — this is
+  blessed practice, mirrored in the maturity-score skill's guardrails, not a
+  rubric failure. If the same mismatch recurs across engagements, reword the
+  level sentence in the next pack version.
+
 ## Library roadmap
 
 `mdr-governance-v3` is the first pack, extracted and generalised from the

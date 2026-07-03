@@ -90,6 +90,7 @@ Summarise the finding to the assessor: final score, the two line reconciliation,
 - Write `sayScore`, `doScore`, and disputes to the ledger, then rerun the engine. Never hand compute or hand edit `final`, `ci`, `history`, or `flag`.
 - Confidence is exactly Low, Medium, High. Never assume the subject count — enumerate from the pack taxonomy.
 - Australian English throughout. No hyphens in prose — em dashes or rephrase. No emojis. DD/MM/YYYY displayed dates, ISO 8601 in the ledger.
+- **Agent fallback.** If a named delegate agent is not an available subagent type in this session, execute its instruction file from the plugin's `agents/` directory inline and record in the output that it ran inline.
 
 ## Invocation
 

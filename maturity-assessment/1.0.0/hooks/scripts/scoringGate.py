@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
-"""PreToolUse gate: no score without a matching review.
+"""PreToolUse gate: no score without ledger evidence.
 
-Blocks a FIRST write to scoring/NN_*.md unless a matching reviews/NN_*.md
-exists (match by the two digit numeric prefix). Edits to files that already
-exist pass — the gate applies to first writes only.
+Blocks a FIRST write to scoring/NN_*.md unless subject NN in
+scoreLedger.json carries at least one evidence record whose artefact path
+exists on disk. Scoring files are numbered by SUBJECT while reviews are
+numbered by ARTEFACT intake order, so the two prefixes never need to
+match — the ledger is the join. Edits to files that already exist pass —
+the gate applies to first writes only.
 
 Also gates scoreLedger.json: any reviews/ path cited in the new content
 (evidence records cite their review as the artefact) must exist on disk.
 
-Exits 0 silently when the session is not an engagement (no engagement.yaml
-under CLAUDE_PROJECT_DIR). Structure is derived from the engagement layout
-contract; nothing here is client or taxonomy specific.
+The engagement root is resolved by walking up from the target file path
+to the nearest engagement.yaml, falling back to CLAUDE_PROJECT_DIR. Exits
+0 silently when neither resolves to an engagement. Structure is derived
+from the engagement layout contract; nothing here is client or taxonomy
+specific.
 """
 from __future__ import annotations
 
@@ -27,11 +32,36 @@ def readEvent() -> dict:
         sys.exit(0)
 
 
-def engagementRoot() -> str:
+def engagementRoot(fromPath: str = "") -> str:
+    if fromPath and os.path.isabs(fromPath):
+        current = os.path.dirname(os.path.abspath(fromPath))
+        while True:
+            if os.path.isfile(os.path.join(current, "engagement.yaml")):
+                return current
+            parent = os.path.dirname(current)
+            if parent == current:
+                break
+            current = parent
     root = os.environ.get("CLAUDE_PROJECT_DIR") or ""
     if not root or not os.path.isfile(os.path.join(root, "engagement.yaml")):
         sys.exit(0)
     return root
+
+
+def ledgerSubject(root: str, prefix: str) -> dict | None:
+    """The scoreLedger.json subject entry whose key starts with NN_."""
+    ledgerPath = os.path.join(root, "scoreLedger.json")
+    if not os.path.isfile(ledgerPath):
+        return None
+    try:
+        with open(ledgerPath, encoding="utf-8") as fh:
+            ledger = json.load(fh)
+    except Exception:
+        return None
+    for key, entry in (ledger.get("subjects") or {}).items():
+        if key.startswith(prefix + "_") and isinstance(entry, dict):
+            return entry
+    return None
 
 
 def deny(reason: str) -> None:
@@ -68,11 +98,11 @@ def main() -> None:
     if not path:
         sys.exit(0)
 
-    root = engagementRoot()
+    root = engagementRoot(path)
     reviewsDir = os.path.join(root, "reviews")
     normalised = path.replace("\\", "/")
 
-    # Gate 1: scoring/NN_*.md first writes need reviews/NN_*.md.
+    # Gate 1: scoring/NN_*.md first writes need ledger evidence for subject NN.
     if "/scoring/" in normalised or normalised.startswith("scoring/"):
         if not normalised.endswith(".md"):
             sys.exit(0)
@@ -84,20 +114,25 @@ def main() -> None:
         if not m:
             sys.exit(0)
         prefix = m.group(1)
-        matches = []
-        if os.path.isdir(reviewsDir):
-            matches = [
-                f for f in os.listdir(reviewsDir)
-                if f.startswith(prefix + "_") and f.endswith(".md")
-            ]
-        if matches:
+        entry = ledgerSubject(root, prefix)
+        evidence = [
+            e for e in ((entry or {}).get("evidence") or [])
+            if isinstance(e, dict)
+        ]
+        backed = [
+            e for e in evidence
+            if (e.get("artefact") or "")
+            and os.path.isfile(os.path.join(root, str(e.get("artefact"))))
+        ]
+        if backed:
             sys.exit(0)
         deny(
             f"Scoring gate blocked the write to {path}.\n\n"
-            f"No matching review found at reviews/{prefix}_*.md. "
-            "A score may not be recorded without a filed review — run the "
-            "intake and parse steps on the source artefact first, or confirm "
-            f"the review file uses the {prefix}_ prefix."
+            f"Subject {prefix} carries no evidence record in scoreLedger.json "
+            "whose artefact exists on disk. A score may not be recorded "
+            "without ledger evidence — run the intake and parse steps on the "
+            "source artefact and record its evidence against subject "
+            f"{prefix} first."
         )
 
     # Gate 2: scoreLedger.json — every cited reviews/ path must exist.

@@ -292,6 +292,119 @@ def test_history_appends_on_change_with_direction(aggregate, acmeRepo):
     }
 
 
+# ---- loud failure on malformed evidence ---------------------------------------
+
+def _corruptFirstEvidence(repo, subjectId, **overrides):
+    path = os.path.join(repo, "scoreLedger.json")
+    ledger = json.loads(open(path).read())
+    ledger["subjects"][subjectId]["evidence"][0].update(overrides)
+    open(path, "w").write(json.dumps(ledger, indent=2) + "\n")
+
+
+def test_out_of_bounds_rubric_level_fails_loudly(aggregate, acmeRepo):
+    # The rubricLevel 47 case from the road test critique: never silently
+    # skipped, never ingested — the run aborts naming subject and record.
+    _corruptFirstEvidence(acmeRepo, "01_governancePolicy", rubricLevel=47)
+    with pytest.raises(ValueError) as excinfo:
+        aggregate.runAggregation(acmeRepo, today="2026-01-15", pluginRoot="/nonexistent")
+    message = str(excinfo.value)
+    assert "01_governancePolicy" in message
+    assert "record 0" in message
+    assert "47" in message
+
+
+def test_invalid_tag_fails_loudly(aggregate, acmeRepo):
+    _corruptFirstEvidence(acmeRepo, "02_riskRegister", tag="Somewhat")
+    with pytest.raises(ValueError) as excinfo:
+        aggregate.runAggregation(acmeRepo, today="2026-01-15", pluginRoot="/nonexistent")
+    message = str(excinfo.value)
+    assert "02_riskRegister" in message and "Somewhat" in message
+
+
+def test_null_tag_fails_loudly(aggregate, acmeRepo):
+    _corruptFirstEvidence(acmeRepo, "01_governancePolicy", tag=None)
+    with pytest.raises(ValueError):
+        aggregate.runAggregation(acmeRepo, today="2026-01-15", pluginRoot="/nonexistent")
+
+
+def test_invalid_confidence_fails_loudly(aggregate, acmeRepo):
+    _corruptFirstEvidence(acmeRepo, "01_governancePolicy", confidence="Certain")
+    with pytest.raises(ValueError) as excinfo:
+        aggregate.runAggregation(acmeRepo, today="2026-01-15", pluginRoot="/nonexistent")
+    assert "Certain" in str(excinfo.value)
+
+
+def test_invalid_evidence_never_ingested(aggregate, acmeRepo):
+    # The failed run must leave the ledger without invented finals.
+    _corruptFirstEvidence(acmeRepo, "01_governancePolicy", rubricLevel=47)
+    with pytest.raises(ValueError):
+        aggregate.runAggregation(acmeRepo, today="2026-01-15", pluginRoot="/nonexistent")
+    ledger = json.loads(open(os.path.join(acmeRepo, "scoreLedger.json")).read())
+    assert ledger["subjects"]["01_governancePolicy"]["final"]["score"] is None
+
+
+# ---- revert to unscored ----------------------------------------------------------
+
+def test_revert_to_unscored_appends_history(aggregate, acmeRepo):
+    aggregate.runAggregation(acmeRepo, today="2026-01-15", pluginRoot="/nonexistent")
+    path = os.path.join(acmeRepo, "scoreLedger.json")
+    ledger = json.loads(open(path).read())
+    subject = ledger["subjects"]["02_riskRegister"]
+    assert subject["final"]["score"] == 1
+    # The only weight bearing record is retagged None: the subject unscores.
+    for record in subject["evidence"]:
+        record["tag"] = "None"
+    open(path, "w").write(json.dumps(ledger, indent=2) + "\n")
+    aggregate.runAggregation(
+        acmeRepo, trigger="evidence retracted", today="2026-01-16", pluginRoot="/nonexistent"
+    )
+    ledger = json.loads(open(path).read())
+    subject = ledger["subjects"]["02_riskRegister"]
+    assert subject["final"] == {"score": None, "confidence": None, "ci": None}
+    latest = subject["history"][-1]
+    assert latest["score"] is None and latest["confidence"] is None
+    assert latest["driver"] == "reverts to unscored after evidence retracted"
+    # A further run appends nothing: history never repeats the revert.
+    historyLength = len(subject["history"])
+    aggregate.runAggregation(acmeRepo, today="2026-01-17", pluginRoot="/nonexistent")
+    ledger = json.loads(open(path).read())
+    assert len(ledger["subjects"]["02_riskRegister"]["history"]) == historyLength
+    # Evidence returning after a revert sets a fresh initial score.
+    ledger["subjects"]["02_riskRegister"]["evidence"][0]["tag"] = "Indirect"
+    open(path, "w").write(json.dumps(ledger, indent=2) + "\n")
+    aggregate.runAggregation(
+        acmeRepo, trigger="evidence reinstated", today="2026-01-18", pluginRoot="/nonexistent"
+    )
+    ledger = json.loads(open(path).read())
+    latest = ledger["subjects"]["02_riskRegister"]["history"][-1]
+    assert latest["score"] == 1
+    assert latest["driver"].startswith("sets initial score 1")
+
+
+# ---- atomic write and corrupt load ------------------------------------------------
+
+def test_write_ledger_is_atomic_and_leaves_no_temp_files(aggregate, acmeRepo):
+    aggregate.runAggregation(acmeRepo, today="2026-01-15", pluginRoot="/nonexistent")
+    leftovers = [name for name in os.listdir(acmeRepo) if name.endswith(".tmp")]
+    assert leftovers == []
+    # writeLedger replaces the existing file in place and stays parseable.
+    path = os.path.join(acmeRepo, "scoreLedger.json")
+    ledger = json.loads(open(path).read())
+    aggregate.writeLedger(path, ledger)
+    assert json.loads(open(path).read()) == ledger
+    assert [name for name in os.listdir(acmeRepo) if name.endswith(".tmp")] == []
+
+
+def test_corrupt_ledger_load_names_file_and_suggests_git(aggregate, acmeRepo):
+    path = os.path.join(acmeRepo, "scoreLedger.json")
+    open(path, "w").write('{"engagement": "ACME-CYBER-2026", "subjects": {')  # truncated
+    with pytest.raises(ValueError) as excinfo:
+        aggregate.runAggregation(acmeRepo, today="2026-01-15", pluginRoot="/nonexistent")
+    message = str(excinfo.value)
+    assert path in message
+    assert "git" in message
+
+
 def test_engine_never_deletes_agent_owned_fields(aggregate, acmeRepo):
     path = os.path.join(acmeRepo, "scoreLedger.json")
     ledger = json.loads(open(path).read())

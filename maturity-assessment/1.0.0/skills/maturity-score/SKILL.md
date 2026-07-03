@@ -78,6 +78,7 @@ Only AFTER the engine has run, render `scoring/NN_<subjectName>_scoring.md` for 
 - Never score without a prior recorded parse and discussion (maturity-parse). Hook enforced.
 - Tags are exactly None, Indirect, Direct. Confidence is exactly Low, Medium, High. No synonyms, no half grades.
 - Always quote the matched rubric sentence verbatim when assigning a score — paraphrase breaks auditability.
+- **Substance over sentence.** When evidence sits between level sentences or matches a level's intent in different words, score the substance, cite the nearest rubric sentence verbatim, and record the mismatch as an epistemic note on the evidence record.
 - Bracket every score: test the level above and the level below explicitly before settling.
 - **The model never does aggregation arithmetic.** Only `engine/aggregate.py` writes `final`, `ci`, `history`, and `flag`. Skills append evidence records only.
 - Never hand edit a final score in the ledger. Fix the evidence, rerun the engine.
@@ -87,6 +88,7 @@ Only AFTER the engine has run, render `scoring/NN_<subjectName>_scoring.md` for 
 - First pass artefact scores are indicative — the final finding waits for interview evidence and the maturity-reconcile skill.
 - Never assume the subject count — enumerate from the pack taxonomy.
 - Australian English throughout. No hyphens in prose — em dashes or rephrase. No emojis. DD/MM/YYYY displayed dates.
+- **Agent fallback.** If a named delegate agent is not an available subagent type in this session, execute its instruction file from the plugin's `agents/` directory inline and record in the output that it ran inline.
 
 ## Invocation
 

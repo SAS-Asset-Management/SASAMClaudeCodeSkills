@@ -79,6 +79,10 @@
           "type": "string",
           "enum": ["from-0.7"],
           "description": "Rounding rule for final scores: floor unless the fractional part is strictly greater than 0.7, in which case ceil. Only supported value."
+        },
+        "complianceMatrix": {
+          "type": "boolean",
+          "description": "Optional override of the pack's complianceMatrix flag. When absent the pack value applies (engine/configLoader.py resolveComplianceMatrix)."
         }
       }
     },

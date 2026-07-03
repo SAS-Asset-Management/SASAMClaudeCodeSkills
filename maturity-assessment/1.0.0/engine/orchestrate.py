@@ -17,11 +17,12 @@ plan    prints JSON with three lists: pendingScore (subjects with no evidence
         or a null final), pendingFindings (subjects with evidence but no
         findings file in the latest findings/runNN/), pendingSections
         (reportSpec section files with no matching draft in the engagement at
-        deliverable/sections/).
+        deliverable/draft/).
 check   the reconciliation gate: every taxonomy subject has a non null
         final.score; every findings file's subject has non null sayScore AND
-        doScore; no dispute has status "open"; when the pack declares
-        complianceMatrix, compliance/matrix.csv row count equals
+        doScore; no dispute has status "open"; when the resolved
+        complianceMatrix flag is true (engagement framework.complianceMatrix
+        overrides the pack), compliance/matrix.csv row count equals
         compliance/requirements.csv row count and every conformance value is
         in the five value enum. Exits 1 with a reasoned list on any failure,
         0 when clean.
@@ -174,7 +175,7 @@ def cmdPlan(repoRoot, pluginRoot=None):
 
     pendingSections = []
     sectionsDir = os.path.join(packDir, "reportSpec", "sections")
-    draftsDir = os.path.join(repoRoot, "deliverable", "sections")
+    draftsDir = os.path.join(repoRoot, "deliverable", "draft")
     for sectionFile in _listFiles(sectionsDir, suffix=".md"):
         if not os.path.isfile(os.path.join(draftsDir, sectionFile)):
             pendingSections.append(sectionFile)
@@ -193,7 +194,7 @@ def _csvRows(path):
 
 def cmdCheck(repoRoot, pluginRoot=None):
     """Run the reconciliation gate. Returns (ok, reasons)."""
-    _, _, pack, ledger = _loadContext(repoRoot, pluginRoot)
+    engagement, _, pack, ledger = _loadContext(repoRoot, pluginRoot)
     reasons = []
     ledgerSubjects = ledger.get("subjects") or {}
 
@@ -213,12 +214,12 @@ def cmdCheck(repoRoot, pluginRoot=None):
     for subjectId, disputeId in _openDisputes(ledger):
         reasons.append(f"subject {subjectId} has an open dispute ({disputeId})")
 
-    if pack.get("complianceMatrix"):
+    if _loadConfigLoader().resolveComplianceMatrix(engagement, pack):
         requirementsPath = os.path.join(repoRoot, "compliance", "requirements.csv")
         matrixPath = os.path.join(repoRoot, "compliance", "matrix.csv")
         if not os.path.isfile(requirementsPath) or not os.path.isfile(matrixPath):
             reasons.append(
-                "pack declares complianceMatrix but compliance/requirements.csv or compliance/matrix.csv is missing"
+                "complianceMatrix is enabled but compliance/requirements.csv or compliance/matrix.csv is missing"
             )
         else:
             requirements = _csvRows(requirementsPath)

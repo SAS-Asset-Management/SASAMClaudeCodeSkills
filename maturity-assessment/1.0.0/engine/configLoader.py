@@ -7,6 +7,8 @@ so the public function signatures below are a contract:
     loadYaml(path: str) -> dict
     loadEngagement(repoRoot: str) -> dict
     resolvePack(repoRoot: str, pluginRoot: str) -> tuple[str, dict]
+    resolveComplianceMatrix(engagement: dict, pack: dict) -> bool
+    scaleBounds(pack: dict) -> tuple[int, int]
 
 Supported YAML subset (anything outside it raises ``ValueError`` with the
 source path and line number):
@@ -267,11 +269,38 @@ def loadEngagement(repoRoot):
     """Load <repoRoot>/engagement.yaml, the single configuration surface."""
     path = os.path.join(repoRoot, "engagement.yaml")
     if not os.path.isfile(path):
+        initPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "init.py")
         raise FileNotFoundError(
-            f"No engagement.yaml found at {path}. This command must be run against "
-            "an engagement repo initialised with the maturity-intake skill."
+            f"No engagement.yaml found at {path}. Initialise the engagement repo "
+            f"first: python3 {initPath} --repo {repoRoot}"
         )
     return loadYaml(path)
+
+
+def resolveComplianceMatrix(engagement, pack):
+    """Resolve the effective complianceMatrix flag: an explicit
+    framework.complianceMatrix in engagement.yaml overrides the pack; when the
+    engagement is silent the pack value applies."""
+    framework = engagement.get("framework") or {}
+    value = framework.get("complianceMatrix")
+    if value is None:
+        return bool(pack.get("complianceMatrix"))
+    return bool(value)
+
+
+def scaleBounds(pack):
+    """Return (low, high) rubric level bounds from the pack scale levels.
+    Packs without an explicit levels map fall back to (0, 5)."""
+    levels = (pack.get("scale") or {}).get("levels") or {}
+    keys = []
+    for key in levels:
+        try:
+            keys.append(int(key))
+        except (TypeError, ValueError):
+            continue
+    if not keys:
+        return 0, 5
+    return min(keys), max(keys)
 
 
 def resolvePack(repoRoot, pluginRoot):

@@ -3,10 +3,10 @@
 # gate also greps for. Engagement brand.bannedPhrasings extends this list.
 bannedPhrasings:
   - concept: "Delivery horizon language in recommendations"
-    rationale: "The assessor names the action and the owner; the delivery programme is the client's to build."
+    rationale: "The assessor names the action and its rationale; the delivery programme is the client's to build."
     seedPatterns: ["within 3 months", "within 6 months", "within 12 months", "by Q1", "by Q2", "by Q3", "by Q4", "delivery horizon", "roadmap timeline", "target date of"]
-  - concept: "Unowned recommendations"
-    rationale: "Every recommendation names a responsible client function."
+  - concept: "Vague or hedged recommendations"
+    rationale: "Every recommendation names the capability or process it acts on — action verb and object with rationale, never a person or role as an accountable party; sequencing and ownership are the client's call."
     seedPatterns: ["it is recommended that consideration", "someone should", "the organisation may wish to consider"]
   - concept: "Assessor overreach into design"
     rationale: "The reviewer assesses maturity; it does not design the client's programme or select vendors."

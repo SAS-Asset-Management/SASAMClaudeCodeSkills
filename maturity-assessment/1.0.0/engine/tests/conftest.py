@@ -45,6 +45,16 @@ def chunker():
     return loadEngineModule("chunker")
 
 
+@pytest.fixture(scope="session")
+def ledgerCli():
+    return loadEngineModule("ledger")
+
+
+@pytest.fixture(scope="session")
+def initEngine():
+    return loadEngineModule("init")
+
+
 @pytest.fixture()
 def fixturesDir():
     return FIXTURES_DIR

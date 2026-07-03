@@ -34,11 +34,19 @@ gets one reproducible answer):
   driver states the direction (lifts, holds, lowers) plus the trigger text.
 * A runs entry is appended only when anything changed or --run-trigger was
   given.
+* Every evidence record is validated before aggregation: tag must be one of
+  None, Indirect, Direct; confidence one of Low, Medium, High; rubricLevel an
+  integer within the pack scale bounds. Any violation aborts the run loudly,
+  naming the subject and the record index — never silently skipped, never
+  ingested.
+* When a previously scored subject recomputes to no score (its weight
+  bearing evidence withdrawn), a history entry "reverts to unscored after
+  {trigger}" is appended so the history never contradicts the final block.
 
 Subjects with no evidence keep final, confidence, and ci all null — the
 engine never invents a score. The ledger is rewritten deterministically
-(fixed key order, two space indent, trailing newline), so identical inputs
-produce byte identical output.
+(fixed key order, two space indent, trailing newline) and atomically (temp
+file then os.replace), so identical inputs produce byte identical output.
 """
 
 from __future__ import annotations
@@ -50,6 +58,7 @@ import json
 import math
 import os
 import sys
+import tempfile
 
 _ENGINE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -64,7 +73,34 @@ def _loadConfigLoader():
 
 
 _CONF_NUMERIC = {"Low": 0.0, "Medium": 1.0, "High": 2.0}
+VALID_TAGS = ("None", "Indirect", "Direct")
+VALID_CONFIDENCE = ("Low", "Medium", "High")
 DEFAULT_TRIGGER = "aggregation run"
+
+
+def validateEvidence(subjectId, evidence, scaleLow, scaleHigh):
+    """Fail loudly on any malformed evidence record. The engine never silently
+    skips or ingests an invalid tag, confidence, or out of bounds rubricLevel;
+    the error names the subject and the record index."""
+    for index, record in enumerate(evidence or []):
+        tag = record.get("tag")
+        if tag not in VALID_TAGS:
+            raise ValueError(
+                f"subject {subjectId} evidence record {index}: tag {tag!r} is not "
+                f"one of {', '.join(VALID_TAGS)}"
+            )
+        confidence = record.get("confidence")
+        if confidence not in VALID_CONFIDENCE:
+            raise ValueError(
+                f"subject {subjectId} evidence record {index}: confidence "
+                f"{confidence!r} is not one of {', '.join(VALID_CONFIDENCE)}"
+            )
+        level = record.get("rubricLevel")
+        if not isinstance(level, int) or isinstance(level, bool) or not (scaleLow <= level <= scaleHigh):
+            raise ValueError(
+                f"subject {subjectId} evidence record {index}: rubricLevel "
+                f"{level!r} is not an integer between {scaleLow} and {scaleHigh}"
+            )
 
 
 def roundFrom07(mean):
@@ -215,13 +251,40 @@ def _orderedLedger(ledger):
 
 
 def writeLedger(path, ledger):
+    """Write the ledger atomically: serialise to a temp file in the same
+    directory, then os.replace so a crash mid write never truncates the
+    ledger."""
     payload = json.dumps(_orderedLedger(ledger), indent=2, ensure_ascii=False) + "\n"
-    with open(path, "w", encoding="utf-8") as handle:
-        handle.write(payload)
+    directory = os.path.dirname(os.path.abspath(path))
+    fd, tempPath = tempfile.mkstemp(dir=directory, prefix=".scoreLedger.", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(payload)
+        os.replace(tempPath, path)
+    except BaseException:
+        try:
+            os.unlink(tempPath)
+        except OSError:
+            pass
+        raise
+
+
+def loadLedger(path):
+    """Load scoreLedger.json, turning a JSON decode failure into an
+    actionable message."""
+    try:
+        with open(path, "r", encoding="utf-8") as handle:
+            return json.load(handle)
+    except json.JSONDecodeError as error:
+        raise ValueError(
+            f"{path} is not valid JSON ({error}). The ledger may be corrupted "
+            "or the victim of an interrupted write; recover the last good "
+            "version from git (git checkout -- scoreLedger.json) and rerun."
+        ) from error
 
 
 def _driverText(lastEntry, score, confidence, trigger):
-    if lastEntry is None:
+    if lastEntry is None or lastEntry.get("score") is None:
         return f"sets initial score {score} ({confidence}) after {trigger}"
     previous = lastEntry.get("score")
     if score > previous:
@@ -247,8 +310,7 @@ def runAggregation(repoRoot, trigger=None, today=None, pluginRoot=None):
 
     ledgerPath = os.path.join(repoRoot, "scoreLedger.json")
     if os.path.isfile(ledgerPath):
-        with open(ledgerPath, "r", encoding="utf-8") as handle:
-            ledger = json.load(handle)
+        ledger = loadLedger(ledgerPath)
     else:
         ledger = {"runs": [], "subjects": {}}
 
@@ -264,13 +326,28 @@ def runAggregation(repoRoot, trigger=None, today=None, pluginRoot=None):
     triggerText = trigger if trigger is not None else DEFAULT_TRIGGER
     changed = False
 
+    scaleLow, scaleHigh = loader.scaleBounds(pack)
+
     for subjectId in _taxonomySubjects(pack):
         subject = ledger["subjects"].setdefault(subjectId, _emptySubject())
         subject.setdefault("history", [])
+        validateEvidence(subjectId, subject.get("evidence"), scaleLow, scaleHigh)
         result = computeSubject(subject.get("evidence"), directOverIndirect, highOverLow)
         if result is None:
             newFinal = {"score": None, "confidence": None, "ci": None}
             newFlag = None
+            history = subject["history"]
+            last = history[-1] if history else None
+            if last is not None and last.get("score") is not None:
+                history.append(
+                    {
+                        "run": nextRun,
+                        "score": None,
+                        "confidence": None,
+                        "driver": f"reverts to unscored after {triggerText}",
+                    }
+                )
+                changed = True
         else:
             score, confidence, ci = result
             newFinal = {"score": score, "confidence": confidence, "ci": ci}

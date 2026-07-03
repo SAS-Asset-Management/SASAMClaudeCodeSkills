@@ -27,14 +27,14 @@ python3 exportPdf.py --repo <root>
 
 ## The report gate
 
-`reportGate.evaluateGate(ledger, pack) -> {"open": bool, "reasons": [str]}`. The gate opens only when every taxonomy subject has a non null `final.score`, every subject with a say or do score has both set, and no dispute has status `open`. A closed gate stamps a fixed position DRAFT banner (listing every reason) on both surfaces — the render still completes, but it is visibly not the deliverable of record.
+`reportGate.evaluateGate(ledger, pack, repoRoot) -> {"open": bool, "reasons": [str]}`. The gate opens only when every taxonomy subject has a non null `final.score`, every subject with a say or do score has both set, no dispute has status `open`, and every taxonomy subject carries a reconciled finding file in the latest `findings/runNN/` directory or an explicit `waiver` reason string on its ledger record — reconciliation is the only pathway to a final finding. A closed gate stamps a fixed position DRAFT banner (listing every reason) on both surfaces — the render still completes, but it is visibly not the deliverable of record.
 
 ## Surfaces
 
 - **dashboard.html** — header with brand tokens from `engagement.yaml`, a KPI strip (overall mean, subjects scored N of M, flags, open disputes), the four catalogue plots, and a per subject drill down table (score, confidence, CI, tag mix, evidence artefacts, history). Displayed dates are DD/MM/YYYY; the ledger keeps ISO 8601 at rest.
 - **summary.html** — print oriented: document control, headline maturity position, domain narrative bound from section writer drafts at `<root>/deliverable/draft/NN_*.md` when present, flagged outlier subjects auto surfaced from ledger flags, key findings with say versus do provenance, and an improvement roadmap placeholder.
 
-Both surfaces inline all CSS (templates/reportStyles.css), all JS, the vendored Plotly bundle, and the ledger as an inline JSON script tag. No `fetch()`, no CDN reference at runtime — they open offline from `file://`.
+Both surfaces inline all CSS (templates/reportStyles.css). The dashboard additionally inlines all JS, the vendored Plotly bundle, and the ledger as an inline JSON script tag; the summary carries no Plotly and no scripts — its domain radar is a small inline SVG generated in Python, keeping summary.html light. No `fetch()`, no CDN reference at runtime — they open offline from `file://`.
 
 ## Plots
 

@@ -111,6 +111,7 @@ Only after the discussion is recorded, hand off to the maturity-score skill for 
 - Never invent artefact names or facts. Only reference documents that exist under `evidence/`.
 - Documents over about 50 pages get sectioned briefings; CSVs route to maturity-validate.
 - Australian English throughout. No hyphens in prose — em dashes or rephrase. No emojis. camelCase file names. DD/MM/YYYY displayed dates.
+- **Agent fallback.** If a named delegate agent is not an available subagent type in this session, execute its instruction file from the plugin's `agents/` directory inline and record in the output that it ran inline.
 
 ## Invocation
 
