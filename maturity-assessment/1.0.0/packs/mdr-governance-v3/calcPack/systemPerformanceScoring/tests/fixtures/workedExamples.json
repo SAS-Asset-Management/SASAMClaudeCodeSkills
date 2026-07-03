@@ -1,0 +1,165 @@
+{
+  "scenarios": [
+    {
+      "scenario_id": "EX01",
+      "description": "Stable uniformly spaced failures",
+      "t_values": [
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0
+      ],
+      "expected_m": 5,
+      "expected_t_k": 5.0,
+      "expected_beta": 1.5338845123190095,
+      "expected_theta": 0.42347788960087446,
+      "expected_chi_squared": 6.519395638776912,
+      "expected_df": 8,
+      "expected_p_value": 0.41074291797426354,
+      "expected_SPCR": 1,
+      "expected_rule": "p \u2265 0.20 or \u03b2 \u2264 1"
+    },
+    {
+      "scenario_id": "EX02",
+      "description": "Improving system - failures cluster early, \u03b2 < 1",
+      "t_values": [
+        0.1,
+        0.5,
+        1.0,
+        5.0,
+        10.0
+      ],
+      "expected_m": 5,
+      "expected_t_k": 10.0,
+      "expected_beta": 0.471847914544387,
+      "expected_theta": 1.687027219424807,
+      "expected_chi_squared": null,
+      "expected_df": null,
+      "expected_p_value": null,
+      "expected_SPCR": 1,
+      "expected_rule": "p \u2265 0.20 or \u03b2 \u2264 1"
+    },
+    {
+      "scenario_id": "EX03",
+      "description": "Mild degradation - \u03b2 > 1, p around 0.05",
+      "t_values": [
+        1.0,
+        9.0,
+        9.2,
+        9.4,
+        9.6,
+        9.8,
+        10.0
+      ],
+      "expected_m": 7,
+      "expected_t_k": 10.0,
+      "expected_beta": 2.677655434942816,
+      "expected_theta": 0.014704240761595535,
+      "expected_chi_squared": 5.228454646293571,
+      "expected_df": 12,
+      "expected_p_value": 0.050090294369887635,
+      "expected_SPCR": 3,
+      "expected_rule": "\u03b2 > 1 and 0.10 > p \u2265 0.05"
+    },
+    {
+      "scenario_id": "EX04",
+      "description": "Strong degradation - many late failures",
+      "t_values": [
+        0.5,
+        9.0,
+        9.3,
+        9.5,
+        9.6,
+        9.7,
+        9.8,
+        9.85,
+        9.9,
+        9.95,
+        10.0
+      ],
+      "expected_m": 11,
+      "expected_t_k": 10.0,
+      "expected_beta": 3.286901171700132,
+      "expected_theta": 0.00568187288512206,
+      "expected_chi_squared": 6.693234402487561,
+      "expected_df": 20,
+      "expected_p_value": 0.0024234757361702866,
+      "expected_SPCR": 5,
+      "expected_rule": "\u03b2 > 1 and p < 0.02"
+    },
+    {
+      "scenario_id": "EX05",
+      "description": "Single failure - insufficient data",
+      "t_values": [
+        3.5
+      ],
+      "expected_m": 1,
+      "expected_t_k": 3.5,
+      "expected_beta": null,
+      "expected_theta": null,
+      "expected_chi_squared": null,
+      "expected_df": null,
+      "expected_p_value": null,
+      "expected_SPCR": 1,
+      "expected_rule": "insufficient data (m < 2)"
+    },
+    {
+      "scenario_id": "EX06",
+      "description": "No failures - SPCR floors to 1",
+      "t_values": [],
+      "expected_m": 0,
+      "expected_t_k": null,
+      "expected_beta": null,
+      "expected_theta": null,
+      "expected_chi_squared": null,
+      "expected_df": null,
+      "expected_p_value": null,
+      "expected_SPCR": 1,
+      "expected_rule": "insufficient data (m < 2)"
+    },
+    {
+      "scenario_id": "EX07",
+      "description": "Two failures clustered late - \u03b2 just above 1, weak evidence",
+      "t_values": [
+        1.0,
+        7.0
+      ],
+      "expected_m": 2,
+      "expected_t_k": 7.0,
+      "expected_beta": 1.0277966847395015,
+      "expected_theta": 0.27067056647322535,
+      "expected_chi_squared": 3.8918202981106265,
+      "expected_df": 2,
+      "expected_p_value": 0.1428571428571429,
+      "expected_SPCR": 2,
+      "expected_rule": "\u03b2 > 1 and 0.20 > p \u2265 0.10"
+    },
+    {
+      "scenario_id": "EX08",
+      "description": "Many failures concentrated mid window - \u03b2 > 1, weak evidence",
+      "t_values": [
+        2.0,
+        4.5,
+        5.0,
+        5.5,
+        6.0,
+        6.5,
+        7.0,
+        7.5,
+        8.0,
+        9.0,
+        10.0
+      ],
+      "expected_m": 11,
+      "expected_t_k": 10.0,
+      "expected_beta": 1.9595968842259808,
+      "expected_theta": 0.12072460717652901,
+      "expected_chi_squared": 11.226798826376864,
+      "expected_df": 20,
+      "expected_p_value": 0.059872524448602235,
+      "expected_SPCR": 3,
+      "expected_rule": "\u03b2 > 1 and 0.10 > p \u2265 0.05"
+    }
+  ]
+}

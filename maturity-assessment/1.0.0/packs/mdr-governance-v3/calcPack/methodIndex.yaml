@@ -1,0 +1,49 @@
+# Method routing index — the calc-validator routes on declared shape, it never
+# tries both methods to discover which applies.
+#
+# Routing procedure:
+#   1. Inspect the CSV headers against the signature lists below.
+#   2. Where both ACR methods are plausible (defect level columns present),
+#      route on element decomposition: element rows present means acrComplex,
+#      otherwise acrSimple.
+#   3. The methodBySubclassKind map resolves ambiguity from the asset subclass
+#      declaration in the submission or the data supply plan: the MDR standard
+#      assigns each asset subclass a Simple or Complex ACR method in its
+#      subclass definitions (Section 8).
+engines:
+  defectScoring:
+    scope: "Defect level cascade only (DCR_raw to DCR_cc to DCR_adjust); stops before the asset rollup"
+    requiredColumns: [DCR_raw, RMC]
+    optionalColumns: [CC, component_criticality, renewal_mode_criteria, DCR_cc, DCR_adjust]
+    routeWhen: "Declared DCR_cc or DCR_adjust columns present and no asset level ACR is being validated"
+    cliMethodFlag: "--method simple or --method complex, per the asset subclass method below"
+  acrSimple:
+    scope: "Asset level ACR by worst single defect (Equations 1, 2, 3)"
+    requiredColumns: [asset_survey_id, DCR_raw, CC, RMC]
+    declaredColumn: ACR
+    routeWhen: "Defect rows group by asset with no element_id column, and the subclass method is simple"
+  acrComplex:
+    scope: "Asset level ACR by element condition distribution (Equations 4, 5, 6, 80th percentile CDF)"
+    requiredColumns: [asset_survey_id, element_id, DCR_raw, CC, RMC]
+    optionalColumns: [element_inspected, AECR]
+    declaredColumn: ACR
+    routeWhen: "Rows carry an element_id (element decomposition), or the subclass method is complex"
+  supportabilityScoring:
+    scope: "Supportability condition rating from obsolescence horizons (Equation 7, Figure 7)"
+    requiredColumns: [system_id, component_id, TSE_time, S_years]
+    declaredColumn: SCR
+    routeWhen: "TSE_time and S_years questionnaire output columns present"
+  systemPerformanceScoring:
+    scope: "System performance condition rating from failure event streams (Equations 8 to 12, Table 12)"
+    requiredColumns: [group, t]
+    alternateColumns: [start_test_time, failure_time]
+    declaredColumn: SPCR
+    routeWhen: "Failure timestamps or failure ages per system grouping present"
+methodBySubclassKind:
+  # Generic subclass kind to ACR method mapping, per the method selection logic
+  # in the MDR standard (Section 4.5.1): small single configuration assets use
+  # the Simple method; assets decomposed into elements use the Complex method.
+  smallSingleConfigurationAsset: simple
+  elementDecomposedAsset: complex
+notImplemented:
+  statisticalDerivation: "Continuous measurement subclasses (MDR standard Sections 8.2 and 8.3) derive condition statistically from measurement streams; no engine ships in this pack version — declared in coverageManifest.yaml."

@@ -1,0 +1,10 @@
+scenario_id,description,components,expected_TTI,expected_SCR,expected_binding,expected_excluded
+EX01,Three components - middle binds the system,"LED,12,5;LCD,4.5,1.5;PCB,8,3",6.0,4,LCD,0
+EX02,Single component well above 20 years - SCR 1,"A,10,11",21.0,1,A,0
+EX03,Boundary 20 years - right inclusive into SCR 2,"A,15,5",20.0,2,A,0
+EX04,Boundary 14 years - right inclusive into SCR 3,"A,9,5",14.0,3,A,0
+EX05,Boundary 8 years - right inclusive into SCR 4,"A,5,3",8.0,4,A,0
+EX06,Boundary 3 years - right inclusive into SCR 5,"A,1,2",3.0,5,A,0
+EX07,Zero TTI - SCR 5,"A,0,0",0.0,5,A,0
+EX08,Min binding component drives SCR (others healthy),"A,30,10;B,2,1;C,15,5",3.0,5,B,0
+EX09,Excluded component with no questionnaire data,"A,12,5;B,,",17.0,2,A,1

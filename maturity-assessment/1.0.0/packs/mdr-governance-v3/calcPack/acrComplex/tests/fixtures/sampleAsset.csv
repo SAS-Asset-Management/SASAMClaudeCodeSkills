@@ -1,0 +1,10 @@
+defect_survey_id,asset_survey_id,authority_asset_id,element_id,element_inspected,component_id,defect_type,DCR_raw,CC,RMC,DCR_cc,DCR_adjust,AECR,ACR
+ACME-2026-b1_e1_d1,ACME-2026-b1,ACME-0011,element_1,Yes,component_1,Corrosion,3,4,3,4,4,4,3
+ACME-2026-b1_e1_d2,ACME-2026-b1,ACME-0011,element_1,Yes,component_1,Cracking,2,2,3,2,2,4,3
+ACME-2026-b1_e2_d1,ACME-2026-b1,ACME-0011,element_2,Yes,component_2,Wear,2,4,3,3,3,3,3
+ACME-2026-b1_e3_d1,ACME-2026-b1,ACME-0011,element_3,Yes,component_3,Spalling,1,4,3,2,2,2,3
+ACME-2026-b1_e4,ACME-2026-b1,ACME-0011,element_4,Yes,,,,,,,,1,3
+ACME-2026-b1_e5,ACME-2026-b1,ACME-0011,element_5,Yes,,,,,,,,1,3
+ACME-2026-b1_e6,ACME-2026-b1,ACME-0011,element_6,No,,,,,,,,-1,3
+ACME-2026-b2_e1_d1,ACME-2026-b2,ACME-0012,element_1,Yes,component_1,Corrosion,4,4,3,5,5,5,5
+ACME-2026-b2_e2,ACME-2026-b2,ACME-0012,element_2,Yes,,,,,,,,1,5

@@ -1,0 +1,8 @@
+system_id,asset_subclass,component_id,TSE_time,S_years,SCR
+ACME-DSP-01,Passenger displays,display_panel,12,5,4
+ACME-DSP-01,Passenger displays,backlight_module,4.5,1.5,4
+ACME-DSP-01,Passenger displays,controller_pcb,8,3,4
+ACME-DSP-02,Passenger displays,signal_processor,10,2,2
+ACME-DSP-02,Passenger displays,power_supply,4,1,2
+ACME-SIG-01,Signalling relays,relay,18,5,1
+ACME-SIG-01,Signalling relays,bulb_array,25,7,1
