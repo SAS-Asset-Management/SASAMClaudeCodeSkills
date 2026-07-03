@@ -112,6 +112,63 @@ def test_summaryCarriesSectionsDatesAndTagline(builtEngagement):
     assert "Acme Rail" in html
 
 
+def test_summaryIsLightAndPlotlyFree(builtEngagement):
+    repoRoot, _ = builtEngagement
+    path = os.path.join(repoRoot, "deliverable", "summary.html")
+    assert os.path.getsize(path) < 100 * 1024
+    with open(path, encoding="utf-8") as handle:
+        html = handle.read()
+    assert "vendorPlotlyBegin" not in html
+    assert "Plotly.newPlot" not in html
+
+
+def test_summaryRendersInlineSvgRadar(builtEngagement):
+    repoRoot, _ = builtEngagement
+    with open(
+        os.path.join(repoRoot, "deliverable", "summary.html"), encoding="utf-8"
+    ) as handle:
+        html = handle.read()
+    assert "<svg" in html
+    assert "<polygon" in html
+    assert "Mean maturity score by domain" in html
+    assert "Strategy and Planning" in html
+    assert "Lowest domain" in html
+    assert 'stroke-dasharray="4 4"' in html
+
+
+def test_dashboardStillEmbedsPlotly(builtEngagement):
+    repoRoot, _ = builtEngagement
+    with open(
+        os.path.join(repoRoot, "deliverable", "dashboard.html"), encoding="utf-8"
+    ) as handle:
+        html = handle.read()
+    assert "vendorPlotlyBegin" in html
+
+
+def test_singleSourceCiRendersAsLabel(builtEngagement):
+    repoRoot, _ = builtEngagement
+    with open(
+        os.path.join(repoRoot, "deliverable", "dashboard.html"), encoding="utf-8"
+    ) as handle:
+        html = handle.read()
+    # 02_planningDiscipline has one evidence record and a degenerate
+    # CI of [1, 1] — no false precision.
+    assert "single source" in html
+    assert "[1.0, 1.0]" not in html
+    # 01_strategyAlignment has two records — the real CI still renders.
+    assert "[2.7, 3.3]" in html
+
+
+def test_gateRequiresReconciledFindings(builtEngagement):
+    _, result = builtEngagement
+    # The fixture engagement carries no findings/ tree, so the gate
+    # names every unwaived taxonomy subject.
+    assert any(
+        "no findings run directory" in reason
+        for reason in result["gate"]["reasons"]
+    )
+
+
 def test_peerPercentileOmittedWithoutBenchmark(builtEngagement):
     repoRoot, _ = builtEngagement
     with open(

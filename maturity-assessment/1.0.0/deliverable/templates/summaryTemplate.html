@@ -13,6 +13,9 @@
     {engagementCode}    engagement.code
     {documentControl}   document control table HTML
     {headline}          headline maturity position HTML
+    {domainRadar}       domain radar plot block — a small inline SVG the
+                          builder generates in Python; the summary carries
+                          NO Plotly (the dashboard keeps the full bundle)
     {sections}          domain narrative blocks — the builder loops the
                           sectionTemplate comment below over every draft at
                           <repo>/deliverable/draft/NN_*.md, binding {sectionNN}
@@ -21,9 +24,6 @@
     {keyFindings}       key findings HTML with say versus do provenance
     {roadmap}           improvement roadmap placeholder HTML
     {footerTagline}     SAS Asset Management footer tagline
-    {plotlyJs}          vendored Plotly bundle, inlined between vendor markers
-    {ledgerJson}        verbatim scoreLedger.json embed
-    {metaJson}          pack metadata embed: domains, minimumSustained, scale levels
 
   sectionTemplate (extracted by the builder, one instance per NN draft):
   sectionTemplateBegin
@@ -60,10 +60,7 @@
 
   <h2>Headline maturity position</h2>
 {{headline}}
-  <div class="plot-block">
-    <div id="plot-domainRadar" class="plot-container" aria-label="Radar chart of mean maturity score per domain against the minimum sustained level"></div>
-    <p class="plot-caption" id="caption-domainRadar"></p>
-  </div>
+{{domainRadar}}
 
   <h2>Domain narrative</h2>
 {{sections}}
@@ -80,65 +77,5 @@
 <footer class="report-footer">
   <p class="tagline">{{footerTagline}}</p>
 </footer>
-
-<script id="ledger-data" type="application/json">{{ledgerJson}}</script>
-<script id="meta-data" type="application/json">{{metaJson}}</script>
-
-<script>
-/* vendorPlotlyBegin — vendored Plotly bundle (MIT), inlined for offline use */
-{{plotlyJs}}
-/* vendorPlotlyEnd */
-</script>
-
-<script>
-"use strict";
-var ledger = JSON.parse(document.getElementById("ledger-data").textContent);
-var meta = JSON.parse(document.getElementById("meta-data").textContent);
-var SAS_GREEN = "#69BE28";
-
-function renderDomainRadar() {
-  var el = document.getElementById("plot-domainRadar");
-  if (!el) { return; }
-  var names = [], means = [];
-  (meta.domains || []).forEach(function (d) {
-    var scores = (d.subjects || []).map(function (s) {
-      var rec = (ledger.subjects || {})[s];
-      return rec && rec.final ? rec.final.score : null;
-    }).filter(function (v) { return v !== null && v !== undefined; });
-    if (scores.length === 0) { return; }
-    names.push(d.name);
-    means.push(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length);
-  });
-  if (names.length === 0) { return; }
-  var theta = names.concat([names[0]]);
-  var r = means.concat([means[0]]);
-  var ring = theta.map(function () { return meta.minimumSustained; });
-  var lowestIdx = means.indexOf(Math.min.apply(null, means));
-  Plotly.newPlot(el, [
-    { type: "scatterpolar", r: ring, theta: theta, mode: "lines",
-      line: { color: "#9AA4B2", dash: "dot", width: 1.5 },
-      name: "Minimum sustained (" + meta.minimumSustained + ")" },
-    { type: "scatterpolar", r: r, theta: theta, fill: "toself",
-      fillcolor: "rgba(0,34,68,0.2)", line: { color: SAS_GREEN, width: 2 },
-      name: "Domain mean" }
-  ], {
-    font: { family: "Arial, Helvetica, sans-serif", size: 13, color: "#0B1A2E" },
-    paper_bgcolor: "rgba(0,0,0,0)",
-    title: { text: "Mean maturity score by domain" },
-    polar: { radialaxis: { range: [0, 5], tickvals: [0, 1, 2, 3, 4, 5], title: { text: "Score" } } },
-    showlegend: true,
-    annotations: [{ text: "Lowest domain — " + names[lowestIdx] + ": " +
-      means[lowestIdx].toFixed(1), showarrow: false, x: 0, y: 1.12,
-      xref: "paper", yref: "paper", font: { size: 12, color: "#B83232" } }]
-  }, { displaylogo: false, responsive: true, staticPlot: true });
-  var cap = document.getElementById("caption-domainRadar");
-  if (cap) {
-    cap.textContent = "Mean maturity score by domain against the minimum sustained level of " +
-      meta.minimumSustained + ". " + names[lowestIdx] + " sits furthest below the ring.";
-  }
-}
-
-renderDomainRadar();
-</script>
 </body>
 </html>
