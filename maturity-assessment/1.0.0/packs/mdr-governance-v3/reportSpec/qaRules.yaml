@@ -1,0 +1,37 @@
+# QA battery for mdr-governance-v3 report assembly.
+# Concepts drive semantic checks; seedPatterns are literal strings the prose
+# gate also greps for. Engagement brand.bannedPhrasings extends this list.
+bannedPhrasings:
+  - concept: "Delivery horizon language in recommendations"
+    rationale: "The assessor names the action and the owner; the delivery programme is the client's to build."
+    seedPatterns: ["within 3 months", "within 6 months", "within 12 months", "by Q1", "by Q2", "by Q3", "by Q4", "delivery horizon", "roadmap timeline", "target date of"]
+  - concept: "Unowned recommendations"
+    rationale: "Every recommendation names a responsible client function."
+    seedPatterns: ["it is recommended that consideration", "someone should", "the organisation may wish to consider"]
+  - concept: "Assessor overreach into design"
+    rationale: "The reviewer assesses maturity; it does not design the client's programme or select vendors."
+    seedPatterns: ["we will implement", "we recommend procuring", "the preferred vendor"]
+  - concept: "Score synthesis in prose"
+    rationale: "Every numeric figure binds to scoreLedger.json; prose never computes or adjusts a score."
+    seedPatterns: ["approximately 2.5 out of 5", "roughly a level", "call it a"]
+citationFormat: "MDR §{clause} (p{page})"
+requiredSections:
+  - 01_executiveSummary
+  - 02_introduction
+  - 03_methodology
+  - 04_overallMaturity
+  - 05_subjectSections
+  - 06_appendices
+proseRules:
+  language: "Australian English"
+  hyphens: "None in prose; em dashes or rephrasing; hyphens permitted only inside identifiers and file names"
+  displayDates: "DD/MM/YYYY"
+  maxSentenceWords: 40
+  maxParagraphSentences: 6
+  rubricCitations: "Verbatim rubric sentence, never a paraphrase"
+plotIntegrity:
+  allowedPlots: [domainRadar, subjectConfidence, runTrend, peerPercentile]
+  captionsMandatory: true
+  benchmarkRule: "peerPercentile only when benchmark data exists; omit rather than fabricate"
+  colourRule: "Score ramp red at 0, amber at 2, green at 4 and above; confidence never encoded by colour alone"
+  dataBinding: "Every plotted value reads from scoreLedger.json"

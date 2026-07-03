@@ -1,0 +1,18 @@
+# Coverage declaration for mdr-governance-v3.
+# The plugin surfaces knownGaps at engagement start so a coverage hole is a
+# stated caveat, never a silent omission.
+coverage:
+  subjects: complete
+  calcEngines:
+    defectScoring: implemented
+    acrSimple: implemented
+    acrComplex: implemented
+    supportabilityScoring: implemented
+    systemPerformanceScoring: implemented
+    statisticalDerivation: not-implemented
+  standardChunked: false
+  questionBank: complete
+knownGaps:
+  - "The statistical derivation engine for the continuous measurement subclasses (MDR standard Sections 8.2 and 8.3) is deferred; score those subjects narratively."
+  - "Standard chunks are generated locally per engagement from the licensed MDR document with engine/chunker.py and are not shipped in this pack; see standard/README.md."
+  - "minimumSustained is set to 3 (Competent) by derivation, not by an explicit statement in the source framework: the source scoring skill defines Level 3 as documented, systematic, and meeting requirements, and flags subjects below 2 or above 4 as narrative outliers, so Competent is the sustained good threshold this framework asserts."

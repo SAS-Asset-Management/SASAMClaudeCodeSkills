@@ -1,0 +1,287 @@
+/*
+ * SAS Asset Management — Maturity Assessment Deliverable Theme
+ * Shared stylesheet for dashboard.html and summary.html.
+ * Inlined by buildDashboard.py via the {{styles}} token — never linked
+ * or fetched at runtime. All styling for both surfaces lives here;
+ * never inline new styles outside this file.
+ *
+ * Typography: Arial throughout (native everywhere, zero latency).
+ * Brand: SAS navy #002244 base, SAS green #69BE28 accent.
+ */
+
+:root {
+  /* Brand */
+  --sas-green: #69BE28;
+  --sas-green-deep: #5AA822;
+  --sas-navy: #002244;
+  --sas-navy-deep: #001530;
+
+  /* Surfaces */
+  --bg-page: #F7F5F0;
+  --bg-surface: #FFFFFF;
+  --bg-surface-alt: #FAF8F3;
+  --bg-inset: #EFECE3;
+
+  /* Text */
+  --text-primary: #0B1A2E;
+  --text-secondary: #3F4B60;
+  --text-muted: #6B7588;
+  --text-inverse: #FFFFFF;
+
+  /* Borders */
+  --border-subtle: rgba(11, 26, 46, 0.08);
+  --border-soft: rgba(11, 26, 46, 0.14);
+  --border-strong: rgba(11, 26, 46, 0.28);
+
+  /* Score ramp (0 to 5) — red at 0, amber at 2, green at 4 and above */
+  --score-0: #B83232;
+  --score-1: #C96B2B;
+  --score-2: #D99424;
+  --score-3: #A5A126;
+  --score-4: #69BE28;
+  --score-5: #4F8B1D;
+  --score-na: #9AA4B2;
+
+  /* Draft badge */
+  --draft-bg: #C33B3B;
+
+  --font-sans: Arial, 'Helvetica Neue', 'Liberation Sans', sans-serif;
+  --font-mono: 'SF Mono', Menlo, Consolas, monospace;
+
+  --content-max: 1100px;
+  --r-md: 6px;
+  --r-lg: 10px;
+  --elev-1: 0 1px 2px rgba(11, 26, 46, 0.05), 0 2px 6px rgba(11, 26, 46, 0.05);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  line-height: 1.55;
+}
+
+main {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 24px 32px 64px;
+}
+
+h1, h2, h3, h4 { line-height: 1.2; color: var(--sas-navy); }
+h1 { font-size: 34px; margin: 0 0 4px; }
+h2 { font-size: 24px; margin: 40px 0 12px; border-bottom: 2px solid var(--sas-green); padding-bottom: 6px; }
+h3 { font-size: 18px; margin: 24px 0 8px; }
+
+a { color: #1C60C7; }
+
+/* ── Header ─────────────────────────────────────────── */
+.report-header {
+  background: var(--sas-navy);
+  color: var(--text-inverse);
+  padding: 28px 32px;
+}
+.report-header .header-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.report-header h1 { color: var(--text-inverse); }
+.brand-mark {
+  background: var(--sas-green);
+  color: var(--sas-navy);
+  font-weight: bold;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.header-meta {
+  margin-left: auto;
+  text-align: right;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+}
+.header-meta .meta-row strong { color: var(--sas-green); }
+
+/* ── Draft badge ────────────────────────────────────── */
+.draft-badge {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--draft-bg);
+  color: var(--text-inverse);
+  padding: 10px 24px;
+  font-size: 14px;
+  box-shadow: var(--elev-1);
+}
+.draft-badge strong {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-right: 12px;
+}
+.draft-badge ul { margin: 6px 0 0; padding-left: 22px; font-size: 12.5px; }
+body.has-draft-badge { padding-top: 0; }
+body.has-draft-badge .report-header { margin-top: 0; }
+body.has-draft-badge main, body.has-draft-badge .report-header { position: relative; }
+body.has-draft-badge { border-top: 6px solid var(--draft-bg); }
+.draft-spacer { height: 84px; }
+
+/* ── KPI strip ──────────────────────────────────────── */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 28px 0;
+}
+.kpi-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  box-shadow: var(--elev-1);
+  padding: 16px 18px;
+}
+.kpi-card .kpi-value {
+  font-size: 30px;
+  font-weight: bold;
+  color: var(--sas-navy);
+  font-family: var(--font-mono);
+}
+.kpi-card .kpi-label {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Plots ──────────────────────────────────────────── */
+.plot-block {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  box-shadow: var(--elev-1);
+  padding: 18px;
+  margin: 24px 0;
+}
+.plot-container { width: 100%; min-height: 320px; }
+.plot-caption {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 8px 4px 0;
+  font-style: italic;
+}
+
+/* ── Subject drill down table ───────────────────────── */
+.table-wrap { overflow-x: auto; }
+table.subject-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-surface);
+  font-size: 13.5px;
+}
+table.subject-table th {
+  background: var(--sas-navy);
+  color: var(--text-inverse);
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+}
+table.subject-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: top;
+}
+table.subject-table tr:nth-child(even) td { background: var(--bg-surface-alt); }
+.score-chip {
+  display: inline-block;
+  min-width: 28px;
+  text-align: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: var(--text-inverse);
+  font-weight: bold;
+  font-family: var(--font-mono);
+}
+.conf-High { opacity: 1; }
+.conf-Medium { opacity: 0.7; }
+.conf-Low { opacity: 0.45; }
+.flag-pill {
+  display: inline-block;
+  font-size: 11.5px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+}
+.evidence-list { margin: 0; padding-left: 18px; font-size: 12.5px; color: var(--text-secondary); }
+.history-note { font-size: 12px; color: var(--text-muted); }
+
+/* ── Summary (print oriented) surfaces ──────────────── */
+.document-control table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  background: var(--bg-surface);
+}
+.document-control td, .document-control th {
+  border: 1px solid var(--border-soft);
+  padding: 7px 10px;
+  text-align: left;
+}
+.document-control th { background: var(--bg-inset); width: 220px; }
+.headline-card {
+  background: var(--bg-surface);
+  border-left: 6px solid var(--sas-green);
+  border-radius: var(--r-md);
+  box-shadow: var(--elev-1);
+  padding: 18px 22px;
+  margin: 20px 0;
+  font-size: 17px;
+}
+.summary-section {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: 20px 24px;
+  margin: 18px 0;
+  break-inside: avoid-page;
+}
+.placeholder-note {
+  color: var(--text-muted);
+  font-style: italic;
+  border: 1px dashed var(--border-soft);
+  border-radius: var(--r-md);
+  padding: 12px 16px;
+}
+.finding-say-do { font-size: 13px; color: var(--text-secondary); }
+
+/* ── Footer ─────────────────────────────────────────── */
+.report-footer {
+  background: var(--sas-navy);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12.5px;
+  padding: 20px 32px;
+  text-align: center;
+}
+.report-footer .tagline { max-width: 760px; margin: 0 auto; }
+
+/* ── Print ──────────────────────────────────────────── */
+@media print {
+  html, body { background: #FFFFFF; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  main { padding: 0 4mm; max-width: none; }
+  .draft-badge { position: static; }
+  .summary-section, .plot-block { box-shadow: none; break-inside: avoid-page; }
+  .report-header, .report-footer { -webkit-print-color-adjust: exact; }
+  @page { size: A4; margin: 18mm; }
+}

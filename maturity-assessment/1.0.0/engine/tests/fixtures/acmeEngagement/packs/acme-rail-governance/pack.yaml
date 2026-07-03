@@ -1,0 +1,27 @@
+# Wholly fictional test pack for the Acme Rail fixture engagement.
+id: acme-rail-governance
+title: "Acme Rail Governance Maturity"
+version: 1.0.0
+scale:
+  id: iam-0-5
+  levels:
+    0: Innocent
+    1: Aware
+    2: Developing
+    3: Competent
+    4: Optimising
+    5: Excellent
+taxonomy:
+  domains:
+    - id: D1
+      name: "Governance"
+      subjects: [01_governancePolicy, 02_riskRegister]
+    - id: D2
+      name: "Data Management"
+      subjects: [03_assetData]
+minimumSustained: 4
+calcPack: false
+complianceMatrix: false
+defaultWeights:
+  directOverIndirect: 2.0
+  highOverLow: 1.5

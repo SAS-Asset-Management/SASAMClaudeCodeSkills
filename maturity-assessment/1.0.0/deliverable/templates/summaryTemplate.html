@@ -1,0 +1,144 @@
+<!doctype html>
+<!--
+  summaryTemplate.html — fixed structural source for the print oriented
+  executive summary. buildDashboard.py binds these literal tokens
+  (never add styles outside reportStyles.css):
+
+    {styles}            inlined reportStyles.css
+    {bodyClass}         "has-draft-badge" when the gate is closed, else empty
+    {draftBadge}        DRAFT banner HTML when the gate is closed, else empty
+    {logoName}          brand mark text from engagement.yaml brand.logo
+    {reportTitle}       brand.reportTitle
+    {client}            engagement.client
+    {engagementCode}    engagement.code
+    {documentControl}   document control table HTML
+    {headline}          headline maturity position HTML
+    {sections}          domain narrative blocks — the builder loops the
+                          sectionTemplate comment below over every draft at
+                          <repo>/deliverable/draft/NN_*.md, binding {sectionNN}
+                          per draft; a placeholder note renders when none exist
+    {flaggedSubjects}   flagged outlier subjects HTML, auto surfaced from ledger flags
+    {keyFindings}       key findings HTML with say versus do provenance
+    {roadmap}           improvement roadmap placeholder HTML
+    {footerTagline}     SAS Asset Management footer tagline
+    {plotlyJs}          vendored Plotly bundle, inlined between vendor markers
+    {ledgerJson}        verbatim scoreLedger.json embed
+    {metaJson}          pack metadata embed: domains, minimumSustained, scale levels
+
+  sectionTemplate (extracted by the builder, one instance per NN draft):
+  sectionTemplateBegin
+  <section class="summary-section">
+{sectionNN}
+  </section>
+  sectionTemplateEnd
+-->
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{reportTitle}} — Executive Summary</title>
+<style>
+{{styles}}
+</style>
+</head>
+<body class="{{bodyClass}}">
+{{draftBadge}}
+<header class="report-header">
+  <div class="header-inner">
+    <div class="brand-mark">{{logoName}}</div>
+    <div>
+      <h1>{{reportTitle}}</h1>
+      <div>Executive summary — {{client}} ({{engagementCode}})</div>
+    </div>
+  </div>
+</header>
+<main>
+  <h2>Document control</h2>
+  <div class="document-control">
+{{documentControl}}
+  </div>
+
+  <h2>Headline maturity position</h2>
+{{headline}}
+  <div class="plot-block">
+    <div id="plot-domainRadar" class="plot-container" aria-label="Radar chart of mean maturity score per domain against the minimum sustained level"></div>
+    <p class="plot-caption" id="caption-domainRadar"></p>
+  </div>
+
+  <h2>Domain narrative</h2>
+{{sections}}
+
+  <h2>Flagged outlier subjects</h2>
+{{flaggedSubjects}}
+
+  <h2>Key findings</h2>
+{{keyFindings}}
+
+  <h2>Improvement roadmap</h2>
+{{roadmap}}
+</main>
+<footer class="report-footer">
+  <p class="tagline">{{footerTagline}}</p>
+</footer>
+
+<script id="ledger-data" type="application/json">{{ledgerJson}}</script>
+<script id="meta-data" type="application/json">{{metaJson}}</script>
+
+<script>
+/* vendorPlotlyBegin — vendored Plotly bundle (MIT), inlined for offline use */
+{{plotlyJs}}
+/* vendorPlotlyEnd */
+</script>
+
+<script>
+"use strict";
+var ledger = JSON.parse(document.getElementById("ledger-data").textContent);
+var meta = JSON.parse(document.getElementById("meta-data").textContent);
+var SAS_GREEN = "#69BE28";
+
+function renderDomainRadar() {
+  var el = document.getElementById("plot-domainRadar");
+  if (!el) { return; }
+  var names = [], means = [];
+  (meta.domains || []).forEach(function (d) {
+    var scores = (d.subjects || []).map(function (s) {
+      var rec = (ledger.subjects || {})[s];
+      return rec && rec.final ? rec.final.score : null;
+    }).filter(function (v) { return v !== null && v !== undefined; });
+    if (scores.length === 0) { return; }
+    names.push(d.name);
+    means.push(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length);
+  });
+  if (names.length === 0) { return; }
+  var theta = names.concat([names[0]]);
+  var r = means.concat([means[0]]);
+  var ring = theta.map(function () { return meta.minimumSustained; });
+  var lowestIdx = means.indexOf(Math.min.apply(null, means));
+  Plotly.newPlot(el, [
+    { type: "scatterpolar", r: ring, theta: theta, mode: "lines",
+      line: { color: "#9AA4B2", dash: "dot", width: 1.5 },
+      name: "Minimum sustained (" + meta.minimumSustained + ")" },
+    { type: "scatterpolar", r: r, theta: theta, fill: "toself",
+      fillcolor: "rgba(0,34,68,0.2)", line: { color: SAS_GREEN, width: 2 },
+      name: "Domain mean" }
+  ], {
+    font: { family: "Arial, Helvetica, sans-serif", size: 13, color: "#0B1A2E" },
+    paper_bgcolor: "rgba(0,0,0,0)",
+    title: { text: "Mean maturity score by domain" },
+    polar: { radialaxis: { range: [0, 5], tickvals: [0, 1, 2, 3, 4, 5], title: { text: "Score" } } },
+    showlegend: true,
+    annotations: [{ text: "Lowest domain — " + names[lowestIdx] + ": " +
+      means[lowestIdx].toFixed(1), showarrow: false, x: 0, y: 1.12,
+      xref: "paper", yref: "paper", font: { size: 12, color: "#B83232" } }]
+  }, { displaylogo: false, responsive: true, staticPlot: true });
+  var cap = document.getElementById("caption-domainRadar");
+  if (cap) {
+    cap.textContent = "Mean maturity score by domain against the minimum sustained level of " +
+      meta.minimumSustained + ". " + names[lowestIdx] + " sits furthest below the ring.";
+  }
+}
+
+renderDomainRadar();
+</script>
+</body>
+</html>

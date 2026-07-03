@@ -1,0 +1,32 @@
+engagement:
+  client: "Acme Rail"
+  code: "ACME-CYBER-2026"
+  reviewer: "SAS Asset Management"
+  start: 2026-08-03
+  weeks: 6
+  interviewCeiling: 8
+  pluginVersion: "1.0.0"
+
+framework:
+  pack: "mdr-governance-v3"
+  scale: "iam-0-5"
+  aggregationWeights:
+    directOverIndirect: 2.0
+    highOverLow: 1.5
+  rounding: "from-0.7"
+
+brand:
+  logo: "sas-am"
+  reportTitle: "Governance Maturity Assessment"
+  bannedPhrasings: ["owner", "delivery horizon"]
+  citationFormat: "{standard} §{clause} (p{page})"
+
+data:
+  sovereignty: "local-only"
+  api: "zdr-no-training"
+  captureTool: "granola"
+
+deliverable:
+  dashboard: true
+  pdfSummary: true
+  benchmark: "cohort"
