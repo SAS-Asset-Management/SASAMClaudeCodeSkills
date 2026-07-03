@@ -126,7 +126,7 @@
             },
             "history": {
               "type": "array",
-              "description": "Appended ONLY by engine/aggregate.py, one entry per run; the driver text carries the delta direction (lifts, holds, lowers).",
+              "description": "Appended ONLY by engine/aggregate.py, one entry per run; the driver text carries the delta direction (lifts, holds, lowers, reverts to unscored). Score and confidence are null only on a revert to unscored entry.",
               "items": {
                 "type": "object",
                 "required": ["run", "score", "confidence", "driver"],
@@ -137,12 +137,12 @@
                     "minimum": 1
                   },
                   "score": {
-                    "type": "integer",
+                    "type": ["integer", "null"],
                     "minimum": 0,
                     "maximum": 5
                   },
                   "confidence": {
-                    "type": "string"
+                    "type": ["string", "null"]
                   },
                   "driver": {
                     "type": "string"

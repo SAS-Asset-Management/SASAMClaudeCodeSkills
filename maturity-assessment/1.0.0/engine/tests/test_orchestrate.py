@@ -62,7 +62,7 @@ def test_plan_pending_findings_uses_latest_run(orchestrate, aggregate, acmeRepo)
 def test_plan_pending_sections(orchestrate, acmeRepo):
     plan = orchestrate.cmdPlan(acmeRepo)
     assert plan["pendingSections"] == ["01_executiveSummary.md", "02_methodology.md"]
-    draftsDir = os.path.join(acmeRepo, "deliverable", "sections")
+    draftsDir = os.path.join(acmeRepo, "deliverable", "draft")
     os.makedirs(draftsDir)
     open(os.path.join(draftsDir, "01_executiveSummary.md"), "w").write("# Draft\n")
     plan = orchestrate.cmdPlan(acmeRepo)
@@ -155,6 +155,34 @@ def test_check_validates_conformance_enum(orchestrate, aggregate, acmeRepo):
     _writeCsv(acmeRepo, "matrix.csv", ["requirementId,conformance", "REQ-04.7-01,Out of scope"])
     ok, reasons = orchestrate.cmdCheck(acmeRepo)
     assert ok is True
+
+
+def _setEngagementComplianceMatrix(repo, value):
+    path = os.path.join(repo, "engagement.yaml")
+    text = open(path).read().replace(
+        "  rounding: from-0.7",
+        f"  rounding: from-0.7\n  complianceMatrix: {value}",
+    )
+    open(path, "w").write(text)
+
+
+def test_check_engagement_overrides_pack_compliance_on(orchestrate, aggregate, acmeRepo):
+    # Pack says false; engagement.yaml switches the matrix track on.
+    _scoreEverything(acmeRepo, aggregate)
+    _setEngagementComplianceMatrix(acmeRepo, "true")
+    ok, reasons = orchestrate.cmdCheck(acmeRepo)
+    assert ok is False
+    assert any("complianceMatrix is enabled" in reason for reason in reasons)
+
+
+def test_check_engagement_overrides_pack_compliance_off(orchestrate, aggregate, acmeRepo):
+    # Pack says true; engagement.yaml switches the matrix track off, so the
+    # gate opens with no compliance files at all.
+    _scoreEverything(acmeRepo, aggregate)
+    _enableComplianceMatrix(acmeRepo)
+    _setEngagementComplianceMatrix(acmeRepo, "false")
+    ok, reasons = orchestrate.cmdCheck(acmeRepo)
+    assert ok is True and reasons == []
 
 
 # ---- status ---------------------------------------------------------------------
