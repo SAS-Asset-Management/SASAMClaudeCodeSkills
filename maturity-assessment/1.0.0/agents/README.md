@@ -25,6 +25,12 @@ This index is generated from the directory listing, so it can never drift from w
 
 Model tiering is a default; an engagement may override per agent.
 
+## Availability and fallback
+
+These agents register as invocable subagent types only when the plugin is installed through the marketplace (`/plugin install maturity-assessment@SASAMClaudeCodeSkills`). Claude Code auto discovers them from this `agents/` directory on an installed plugin; no manifest declaration is needed. The `register-commands.sh` path — which copies each SKILL.md into `~/.claude/commands/` — surfaces the skills only and never the agents, so a session driven by command copies alone will not see any of the fourteen delegation targets. Every skill carries the standard fallback for that case: execute the relevant agent instruction file from this directory inline and record in the output that it ran inline.
+
+**Intake directory workaround.** The machine wide camelCase naming hook refuses `mkdir` on hyphenated pack directory names (pack ids such as `mdr-governance-v3` keep hyphens by plugin convention). When the intake skill or an agent needs to create pack directories in an engagement repo, create them via file writes (the Write tool creates parent directories) or a single full path `mkdir -p` of the terminal file's parent, rather than a bare `mkdir` of the hyphenated directory.
+
 ## Workflow choreography
 
 ```

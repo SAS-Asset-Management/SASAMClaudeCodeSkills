@@ -66,6 +66,7 @@ If the artefact is a calculation CSV, route it to maturity-validate instead of m
 - Never assume the subject count — enumerate subjects from the resolved pack's taxonomy every time.
 - Severity calls use exactly Critical, High, Medium — no synonyms, no half grades.
 - Australian English throughout. No hyphens in prose — use em dashes or rephrase. No emojis. DD/MM/YYYY for displayed dates.
+- **Agent fallback.** If a named delegate agent is not an available subagent type in this session, execute its instruction file from the plugin's `agents/` directory inline and record in the output that it ran inline.
 
 ## Invocation
 

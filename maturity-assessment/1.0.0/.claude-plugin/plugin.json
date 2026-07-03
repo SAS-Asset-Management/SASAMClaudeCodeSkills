@@ -1,7 +1,7 @@
 {
   "name": "maturity-assessment",
   "description": "Framework agnostic maturity assessment suite — intake, parse, score, interview, reconcile, report — driven by framework packs and an engagement config.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "SAS-AM"
   },
