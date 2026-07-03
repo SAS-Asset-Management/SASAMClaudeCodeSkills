@@ -1,0 +1,154 @@
+# Evidence types that count as Direct evidence per subject.
+# Consumed by the tag step: an artefact matching one of these types for a
+# subject is a candidate Direct tag; related but secondary material tags Indirect.
+
+01_scheduleAdherence:
+  - Submission dates, deadlines, or due dates tied to the data supply plan
+  - Deliverable trackers or submission receipts
+  - Correspondence with the receiving authority varying supply dates
+  - Internal schedules, Gantt charts, or programmes for MDR deliverables
+  - Retrospective reporting of actual versus planned submission dates
+02_dataFormatCompliance:
+  - Interface definition document or data schema
+  - CSV, XML, or JSON schema definitions
+  - Pre submission validation routines or scripts
+  - Rejection notices or format feedback from the receiving authority
+  - Interface mapping between source systems and the MDR specification
+03_submissionCompleteness:
+  - Data supply plan scope lists covering fields, subclasses, and datasets
+  - Submission receipts or package manifests
+  - Completeness reports or null field analyses
+  - Gap registers showing what was not supplied and why
+  - Correspondence with the receiving authority about missing submissions
+04_reportingFrequency:
+  - Stated submission frequencies per dataset
+  - Submission logs showing actual cadence against plan
+  - Data capture frequency and forecast document
+  - Event driven or real time feed specifications
+  - Evidence of varied frequency by asset class or criticality
+05_procedureDocumentation:
+  - Named procedures, work instructions, inspection and test plans, or task cards
+  - Document control metadata including revision, issue date, owner, and review date
+  - A procedure register or index
+  - Explicit mapping from procedures to MDR standard requirements
+  - Asset subclass specific condition assessment manuals
+06_assessorCompetency:
+  - Named assessors with linked qualifications, tickets, or certificates
+  - A competency matrix mapping personnel to asset subclasses and inspection levels
+  - Authorisation or sign off register for assessors
+  - Training records with completion dates and validity periods
+  - Refresher, reassessment, or revalidation schedule
+07_ratingScaleCalibration:
+  - A defined condition rating scale with written criteria per level
+  - Photographic or illustrated exemplars per rating
+  - Cross walk or mapping between internal scales and the MDR condition scale
+  - Inter rater calibration exercises or consistency check results
+  - Calibration training records or assessor briefings
+08_evidenceCapture:
+  - Photograph capture protocol covering angle, lighting, scale reference, and minimum count
+  - Measurement standards with tolerances and units
+  - Tool or instrument calibration records
+  - Positional, chainage, or asset identifier tagging rules
+  - Evidence storage location, naming convention, or retention rule
+09_qaProcesses:
+  - QA checklist or inspection verification form
+  - Sampling plan with frequency, coverage, and selection basis
+  - Re inspection or peer review records
+  - Internal audit reports on assessment activities
+  - Non conformance register with corrective actions and closure
+10_completeness:
+  - A defined expected population by asset count, defect type, and period
+  - Actual submitted record count against that population
+  - Field fill rates per column within a submitted dataset
+  - Documented reasons for missing records or fields
+  - A reconciliation between source systems and the MDR submission
+11_uniqueness:
+  - Primary key definition for each record type
+  - Deduplication rules or procedures
+  - Duplicate detection reports and counts
+  - A rule set distinguishing duplicates from legitimate recurrences
+  - Reconciliation records where duplicates were identified and resolved
+12_consistency:
+  - A reference data dictionary or controlled value list
+  - Unit of measure standard applied across fields
+  - Cross system reconciliation of code sets between the asset management system and field capture tools
+  - Audit of code usage across submissions
+  - Change control records for reference data updates
+13_validity:
+  - A schema or data dictionary with allowed types, ranges, and code sets
+  - Validation rules or scripts applied to submitted data
+  - Validation report or exception log with counts
+  - Referential integrity checks against master asset lists
+  - Remediation records where invalid values were corrected
+14_uncertainty:
+  - A confidence or certainty field on records
+  - Data quality flag columns such as estimated, derived, or sampled
+  - A documented limitation or caveat statement accompanying a dataset
+  - Methodology notes that declare assumptions made during capture
+  - Remediation log showing which records are known to be provisional
+15_timeliness:
+  - Record level capture date or observed date
+  - Submission date or extract date
+  - A computed or published lag between capture and submission
+  - Documented target lag for each data type
+  - Reporting on lag outliers or stale records
+16_investmentLinkage:
+  - Business cases that cite condition data as the justification
+  - Investment papers or forward programmes referencing MDR outputs
+  - Decision logs linking condition findings to funded actions
+  - Maintenance work orders triggered by condition assessment findings
+  - Post investment review comparing outcome to the condition driver
+17_prioritisationMethod:
+  - A documented prioritisation algorithm, scoring matrix, or ranking rule set
+  - Criticality or consequence inputs such as safety, service, and cost
+  - Worked examples applying the method to real records
+  - Version control on the method with change history
+  - Outputs showing the prioritised list with reasoning per item
+18_thresholdDefinition:
+  - Defined intervention or renewal thresholds per asset subclass
+  - Engineering justification or reference standard for each threshold
+  - Mapping between MDR condition ratings and threshold trigger points
+  - Review or ratification record by the engineering authority
+  - Evidence of threshold application driving action
+19_renewalAlignment:
+  - Recommended renewal list with dates and quantities
+  - Funded forward renewal programme
+  - Reconciliation showing matched, deferred, and dropped items
+  - Variance reports with reasons
+  - Governance record showing deferral decisions and accountability
+20_stakeholderConfidence:
+  - Meeting minutes, forums, or governance records citing assessment outputs
+  - Stakeholder surveys or feedback on the assessment framework
+  - Briefings prepared for decision making bodies
+  - Written concurrence with assessment findings from engineering or finance
+  - Patterns of use visible in investment and maintenance decisions
+21_assetSubclassCoverage:
+  - A list of in scope asset subclasses
+  - A status flag per subclass covering assessed, partial, and not assessed
+  - Evidence of active assessments for each asset subclass
+  - Gap statement for subclasses not yet covered
+  - A plan and timeline to close coverage gaps
+22_geographicSpread:
+  - Spatial references on records such as coordinates, chainage, route, depot, or zone
+  - A map or distribution analysis of assessments across the network
+  - Coverage statistics per route, section, or depot
+  - Identification of under represented areas
+  - A plan to achieve representative spread
+23_assessmentFrequency:
+  - A defined assessment interval per asset class
+  - Justification for the interval based on criticality, deterioration rate, or standard
+  - Assessment schedule or plan
+  - Records of actual assessment dates against plan
+  - Review record where the interval is reconsidered against outcome data
+24_dataCurrency:
+  - Last assessed date per asset
+  - Target interval per asset class
+  - Age distribution of condition records
+  - Count or proportion of assets with stale records
+  - Remediation plan for assets with expired records
+25_gapIdentification:
+  - A gap register listing unassessed or under assessed assets and subclasses
+  - Categorisation of gaps by cause such as scope, access, resource, or data
+  - Prioritisation of gaps
+  - Closure actions with owners and dates
+  - Governance reporting on gap closure progress

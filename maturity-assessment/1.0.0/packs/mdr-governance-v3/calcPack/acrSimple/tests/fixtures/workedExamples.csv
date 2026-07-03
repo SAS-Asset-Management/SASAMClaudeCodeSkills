@@ -1,0 +1,11 @@
+scenario_id,description,defects,expected_ACR,expected_n_defects,expected_n_drivers
+EX01,Equation 1 - asset with no defects,,1,0,0
+EX02,All defects on low criticality components - simple zeroes them,"4,1,3;3,2,3",1,2,0
+EX03,Single high CC defect drives ACR,"2,4,3",3,1,1
+EX04,Mix of high and low CC - high wins (low zeroed),"4,1,3;1,4,3;2,4,2",2,3,2
+EX05,Worst case - DCR_raw 4 CC 4 RMC 3,"4,4,3",5,1,1
+EX06,RMC=1 zeroes all defects regardless of severity,"4,4,1;3,3,1",1,2,0
+EX07,Component with no CC defaults to DCR_raw+1,"3,,3",4,1,1
+EX08,Tied drivers reported in n_drivers,"2,4,3;1,3,3;2,3,3",3,3,2
+EX09,Single defect RMC 2 - mid table,"3,4,2",2,1,1
+EX10,All defects RMC 3 high CC - max wins,"1,4,3;3,4,3;2,4,3",4,3,1

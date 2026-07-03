@@ -1,0 +1,37 @@
+# mdr-governance-v3 — framework pack manifest
+# The plugin is framework blind; this manifest makes it an MDR governance review.
+id: mdr-governance-v3
+title: "MDR Governance Maturity"
+version: 1.0.0
+scale:
+  id: iam-0-5
+  levels:
+    0: Innocent
+    1: Aware
+    2: Developing
+    3: Competent
+    4: Optimising
+    5: Excellent
+taxonomy:
+  domains:
+    - id: D1
+      name: "Data Supply Plan Alignment"
+      subjects: [01_scheduleAdherence, 02_dataFormatCompliance, 03_submissionCompleteness, 04_reportingFrequency]
+    - id: D2
+      name: "Procedure Compliance"
+      subjects: [05_procedureDocumentation, 06_assessorCompetency, 07_ratingScaleCalibration, 08_evidenceCapture, 09_qaProcesses]
+    - id: D3
+      name: "Defect Data Quality"
+      subjects: [10_completeness, 11_uniqueness, 12_consistency, 13_validity, 14_uncertainty, 15_timeliness]
+    - id: D4
+      name: "ACA Framework Efficacy"
+      subjects: [16_investmentLinkage, 17_prioritisationMethod, 18_thresholdDefinition, 19_renewalAlignment, 20_stakeholderConfidence]
+    - id: D5
+      name: "Network Coverage"
+      subjects: [21_assetSubclassCoverage, 22_geographicSpread, 23_assessmentFrequency, 24_dataCurrency, 25_gapIdentification]
+minimumSustained: 3
+calcPack: true
+complianceMatrix: true
+defaultWeights:
+  directOverIndirect: 2.0
+  highOverLow: 1.5
