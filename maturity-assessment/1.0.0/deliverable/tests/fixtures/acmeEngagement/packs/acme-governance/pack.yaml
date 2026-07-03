@@ -1,0 +1,26 @@
+id: acme-governance
+title: Acme Governance Pack
+version: 1.0.0
+scale:
+  id: iam-0-5
+  levels:
+    0: Innocent
+    1: Aware
+    2: Developing
+    3: Competent
+    4: Optimising
+    5: Excellent
+taxonomy:
+  domains:
+    - id: D1
+      name: Strategy and Planning
+      subjects: [01_strategyAlignment, 02_planningDiscipline]
+    - id: D2
+      name: Delivery Assurance
+      subjects: [03_deliveryControl, 04_assuranceReview]
+minimumSustained: 3
+calcPack: false
+complianceMatrix: false
+defaultWeights:
+  directOverIndirect: 2.0
+  highOverLow: 1.5
