@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sas-am.com/schemas/maturity-assessment/packSchema.json",
+  "title": "pack.yaml",
+  "description": "Contract for a framework pack manifest at packs/<id>/pack.yaml. A pack carries one assessment framework as data: rubrics, evidence types, question bank, optional calc pack, report spec and coverage manifest.",
+  "type": "object",
+  "required": ["id", "title", "version", "scale", "taxonomy"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Pack id, e.g. mdr-governance-v3. Matches the packs/<id>/ directory name and framework.pack in engagement.yaml."
+    },
+    "title": {
+      "type": "string",
+      "description": "Human readable framework title."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semver. Packs version independently of the plugin."
+    },
+    "scale": {
+      "type": "object",
+      "required": ["id", "levels"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Scale identifier, e.g. iam-0-5. framework.scale in engagement.yaml must equal this."
+        },
+        "levels": {
+          "type": "object",
+          "description": "Map of integer level 0..5 to its label. Default ladder: 0 Innocent, 1 Aware, 2 Developing, 3 Competent, 4 Optimising, 5 Excellent.",
+          "patternProperties": {
+            "^[0-5]$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "taxonomy": {
+      "type": "object",
+      "required": ["domains"],
+      "additionalProperties": false,
+      "properties": {
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "subjects"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^D[0-9]+$",
+                "description": "Domain id, e.g. D1."
+              },
+              "name": {
+                "type": "string",
+                "description": "Domain display name."
+              },
+              "subjects": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9]{2}_[a-z][a-zA-Z0-9]*$",
+                  "description": "subjectId in NN_camelCaseName form, e.g. 01_scheduleAdherence. Ledger keys, rubric file names and all NN_ prefixed engagement files use it."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "minimumSustained": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5,
+      "description": "The minimum sustained maturity level the framework expects."
+    },
+    "calcPack": {
+      "type": "boolean",
+      "description": "Whether the pack ships calculation engines under calcPack/."
+    },
+    "complianceMatrix": {
+      "type": "boolean",
+      "description": "Whether the compliance matrix track applies to this framework."
+    },
+    "defaultWeights": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "directOverIndirect": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Default weight multiplier for Direct over Indirect evidence, overridable by framework.aggregationWeights."
+        },
+        "highOverLow": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Default weight multiplier for High over Medium confidence; Low weighs the reciprocal."
+        }
+      }
+    }
+  }
+}

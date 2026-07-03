@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sas-am.com/schemas/maturity-assessment/scoreLedgerSchema.json",
+  "title": "scoreLedger.json",
+  "description": "Contract for the structured score ledger at the engagement repo root — the single source of truth from which all narrative, dashboard, PDF and benchmark outputs render. WRITE DISCIPLINE: only engine/aggregate.py writes final, ci, history and flag. Skills and agents append evidence records, sayScore, doScore and disputes. Nothing downstream recomputes scores from prose. Serialised as JSON with 2 space indentation.",
+  "type": "object",
+  "required": ["engagement", "pack", "scale", "runs", "subjects"],
+  "additionalProperties": false,
+  "properties": {
+    "engagement": {
+      "type": "string",
+      "description": "The engagement code (engagement.code from engagement.yaml)."
+    },
+    "pack": {
+      "type": "string",
+      "description": "Pack id and version in the form <pack id>@<pack version>, e.g. mdr-governance-v3@1.0.0."
+    },
+    "scale": {
+      "type": "string",
+      "description": "The scale id, e.g. iam-0-5."
+    },
+    "runs": {
+      "type": "array",
+      "description": "One entry per aggregation run, appended by engine/aggregate.py.",
+      "items": {
+        "type": "object",
+        "required": ["run", "date", "trigger"],
+        "additionalProperties": false,
+        "properties": {
+          "run": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO 8601 (YYYY-MM-DD)."
+          },
+          "trigger": {
+            "type": "string",
+            "description": "What caused the run, e.g. the --run-trigger text."
+          }
+        }
+      }
+    },
+    "subjects": {
+      "type": "object",
+      "description": "Keyed by subjectId in NN_camelCaseName form.",
+      "patternProperties": {
+        "^[0-9]{2}_[a-z][a-zA-Z0-9]*$": {
+          "type": "object",
+          "required": ["final", "sayScore", "doScore", "evidence", "history", "flag", "disputes"],
+          "additionalProperties": false,
+          "properties": {
+            "final": {
+              "type": "object",
+              "description": "Written ONLY by engine/aggregate.py.",
+              "required": ["score", "confidence", "ci"],
+              "additionalProperties": false,
+              "properties": {
+                "score": {
+                  "type": ["integer", "null"],
+                  "minimum": 0,
+                  "maximum": 5,
+                  "description": "Final rounded score under the from-0.7 rule; null until aggregated."
+                },
+                "confidence": {
+                  "type": ["string", "null"],
+                  "enum": ["Low", "Medium", "High", null]
+                },
+                "ci": {
+                  "type": ["array", "null"],
+                  "description": "95 percent confidence interval clamped to [0, 5]; a single evidence record gives [mean, mean].",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                }
+              }
+            },
+            "sayScore": {
+              "type": ["integer", "null"],
+              "minimum": 0,
+              "maximum": 5,
+              "description": "What they say they do — appended by skills and agents."
+            },
+            "doScore": {
+              "type": ["integer", "null"],
+              "minimum": 0,
+              "maximum": 5,
+              "description": "What they actually do — appended by skills and agents."
+            },
+            "evidence": {
+              "type": "array",
+              "description": "Evidence records appended by skills and agents; the aggregation input.",
+              "items": {
+                "type": "object",
+                "required": ["artefact", "tag", "rubricLevel", "rubricQuote", "confidence"],
+                "additionalProperties": false,
+                "properties": {
+                  "artefact": {
+                    "type": "string",
+                    "description": "Engagement relative path, e.g. reviews/04_iamPolicy_review.md."
+                  },
+                  "tag": {
+                    "type": "string",
+                    "enum": ["None", "Indirect", "Direct"],
+                    "description": "Evidence relevance tag. None is excluded from aggregation entirely."
+                  },
+                  "rubricLevel": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5
+                  },
+                  "rubricQuote": {
+                    "type": "string",
+                    "description": "Verbatim rubric sentence the evidence was scored against."
+                  },
+                  "confidence": {
+                    "type": "string",
+                    "enum": ["Low", "Medium", "High"]
+                  }
+                }
+              }
+            },
+            "history": {
+              "type": "array",
+              "description": "Appended ONLY by engine/aggregate.py, one entry per run; the driver text carries the delta direction (lifts, holds, lowers).",
+              "items": {
+                "type": "object",
+                "required": ["run", "score", "confidence", "driver"],
+                "additionalProperties": false,
+                "properties": {
+                  "run": {
+                    "type": "integer",
+                    "minimum": 1
+                  },
+                  "score": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5
+                  },
+                  "confidence": {
+                    "type": "string"
+                  },
+                  "driver": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "flag": {
+              "type": ["string", "null"],
+              "enum": [null, "lowOutlier", "highOutlier"],
+              "description": "Written ONLY by engine/aggregate.py: lowOutlier when the final score is below 2, highOutlier when above 4."
+            },
+            "disputes": {
+              "type": "array",
+              "description": "Appended by skills and agents; the auditor's read always wins.",
+              "items": {
+                "type": "object",
+                "required": ["id", "raised", "description", "status", "resolution"],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "raised": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "ISO 8601 (YYYY-MM-DD)."
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["open", "resolved"]
+                  },
+                  "resolution": {
+                    "type": ["string", "null"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

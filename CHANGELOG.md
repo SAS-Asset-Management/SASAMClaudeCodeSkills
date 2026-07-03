@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.28.0] - 2026-07-03
+
+### Added
+- **maturity-assessment** New plugin (1.0.0) — a framework agnostic maturity assessment suite that generalises the proven evidence based method (intake, parse, score, interview, reconcile, validate, compliance matrix, report) across any assessment framework. Three tier architecture: the plugin holds the method (eight skills, fourteen specialist agents, config driven hooks, a deterministic scoring engine with aggregation and CI maths, a dashboard plus PDF deliverable pipeline); framework packs hold each framework as data (rubrics, evidence types, question bank, optional calc pack, report spec, coverage manifest); the engagement repo holds `engagement.yaml` and all client evidence — the only place client evidence ever lives, with Claude API reasoning under zero data retention terms. This release ships the plugin scaffold: `.claude-plugin/plugin.json`, the progressive disclosure `CLAUDE.md`, the plugin `README.md`, `pytest.ini`, and the three binding JSON Schemas (`engagementSchema.json`, `packSchema.json`, `scoreLedgerSchema.json`) plus a fictional worked example `engagementExample.yaml`.
+
 ## [1.24.0] - 2026-07-03
 
 Uprev from the 02/07/2026 comprehensive skills review (full findings in `test-reports/skillsOptimisationReview.md`).

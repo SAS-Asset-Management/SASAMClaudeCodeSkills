@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sas-am.com/schemas/maturity-assessment/engagementSchema.json",
+  "title": "engagement.yaml",
+  "description": "Contract for the per engagement configuration file at the engagement repo root. Parsed by engine/configLoader.py, which supports a YAML subset: two space indentation, nested maps, block lists, inline lists, scalar strings, numbers, booleans and dates — no anchors, no multiline scalars.",
+  "type": "object",
+  "required": ["engagement", "framework"],
+  "additionalProperties": false,
+  "properties": {
+    "engagement": {
+      "type": "object",
+      "required": ["client", "code", "start", "weeks"],
+      "additionalProperties": false,
+      "properties": {
+        "client": {
+          "type": "string",
+          "description": "Client organisation name."
+        },
+        "code": {
+          "type": "string",
+          "description": "Engagement code, e.g. ACME-CYBER-2026."
+        },
+        "reviewer": {
+          "type": "string",
+          "description": "The reviewing organisation, normally SAS Asset Management."
+        },
+        "start": {
+          "type": "string",
+          "format": "date",
+          "description": "Engagement start date, ISO 8601 (YYYY-MM-DD) at rest, rendered DD/MM/YYYY."
+        },
+        "weeks": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Engagement duration in weeks."
+        },
+        "interviewCeiling": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Budget ceiling for the interview roster."
+        },
+        "pluginVersion": {
+          "type": "string",
+          "description": "Plugin version pinned at init, e.g. 1.0.0. The engagement runs against this version for its whole life unless deliberately upgraded."
+        }
+      }
+    },
+    "framework": {
+      "type": "object",
+      "required": ["pack"],
+      "additionalProperties": false,
+      "properties": {
+        "pack": {
+          "type": "string",
+          "description": "Pack id, resolved against the engagement's local packs/<id>/ overlay first, then the plugin's packs/<id>/."
+        },
+        "scale": {
+          "type": "string",
+          "description": "Must equal the pack's scale.id, e.g. iam-0-5."
+        },
+        "aggregationWeights": {
+          "type": "object",
+          "description": "Optional override of the pack's defaultWeights.",
+          "additionalProperties": false,
+          "properties": {
+            "directOverIndirect": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Weight multiplier for Direct over Indirect evidence."
+            },
+            "highOverLow": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Weight multiplier for High over Medium confidence; Low weighs the reciprocal."
+            }
+          }
+        },
+        "rounding": {
+          "type": "string",
+          "enum": ["from-0.7"],
+          "description": "Rounding rule for final scores: floor unless the fractional part is strictly greater than 0.7, in which case ceil. Only supported value."
+        }
+      }
+    },
+    "brand": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "logo": {
+          "type": "string",
+          "description": "Logo identifier for the deliverable surfaces."
+        },
+        "reportTitle": {
+          "type": "string",
+          "description": "Title rendered on the deliverable."
+        },
+        "bannedPhrasings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Assessor lane guardrails enforced by the proseRules hook."
+        },
+        "citationFormat": {
+          "type": "string",
+          "description": "Citation template, e.g. {standard} §{clause} (p{page})."
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sovereignty": {
+          "type": "string",
+          "enum": ["local-only"],
+          "description": "Evidence never leaves the engagement repo."
+        },
+        "api": {
+          "type": "string",
+          "enum": ["zdr-no-training"],
+          "description": "Asserts the Claude API runs under zero data retention and no training terms."
+        },
+        "captureTool": {
+          "type": "string",
+          "default": "granola",
+          "description": "Transcript capture source; defaults to granola."
+        }
+      }
+    },
+    "deliverable": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dashboard": {
+          "type": "boolean",
+          "description": "Render the interactive dashboard."
+        },
+        "pdfSummary": {
+          "type": "boolean",
+          "description": "Render the PDF executive summary."
+        },
+        "benchmark": {
+          "type": "string",
+          "enum": ["cohort", "none"],
+          "description": "Peer benchmarking mode. When benchmark.json is absent the peerPercentile plot is omitted, never faked."
+        }
+      }
+    }
+  }
+}
