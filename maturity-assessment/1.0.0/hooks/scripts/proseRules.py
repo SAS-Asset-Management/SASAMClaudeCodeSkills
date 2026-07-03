@@ -3,15 +3,19 @@
 
 Mechanical, config driven checks: US to AU spelling, the hyphen ban in
 prose (code spans, URLs, CLI flags, and identifiers exempt), paragraph
-length (2 to 4 sentences), display date format (DD/MM/YYYY in prose),
-plus banned phrasings from engagement.yaml brand.bannedPhrasings and the
-pack's reportSpec/qaRules.yaml.
+length (maximum sentences from the pack qaRules proseRules, default 4),
+display date format (DD/MM/YYYY in prose), plus banned phrasings from
+engagement.yaml brand.bannedPhrasings and the pack's
+reportSpec/qaRules.yaml (flat strings or entries carrying nested
+seedPatterns).
 
 Non blocking: violations return as additionalContext. Semantic
 enforcement (banned concepts expressed as synonyms) lives in the
 report-qa agent, not here.
 
-Exits 0 silently when the session is not an engagement.
+The engagement root is resolved by walking up from the target file path
+to the nearest engagement.yaml, falling back to CLAUDE_PROJECT_DIR.
+Exits 0 silently when neither resolves to an engagement.
 """
 from __future__ import annotations
 
@@ -43,7 +47,7 @@ HYPHEN_RX = re.compile(r"\b[A-Za-z]{2,}-[A-Za-z]{2,}\b")
 # Month first or day first ambiguity: flag ISO dates appearing in prose
 # (they belong in frontmatter and data at rest, not display text).
 ISO_DATE_RX = re.compile(r"\b\d{4}-\d{2}-\d{2}\b")
-MIN_SENTENCES, MAX_SENTENCES = 2, 4
+MAX_SENTENCES = 4  # fallback when the pack qaRules declares no maximum
 
 
 def readEvent() -> dict:
@@ -53,7 +57,16 @@ def readEvent() -> dict:
         sys.exit(0)
 
 
-def engagementRoot() -> str:
+def engagementRoot(fromPath: str = "") -> str:
+    if fromPath and os.path.isabs(fromPath):
+        current = os.path.dirname(os.path.abspath(fromPath))
+        while True:
+            if os.path.isfile(os.path.join(current, "engagement.yaml")):
+                return current
+            parent = os.path.dirname(current)
+            if parent == current:
+                break
+            current = parent
     root = os.environ.get("CLAUDE_PROJECT_DIR") or ""
     if not root or not os.path.isfile(os.path.join(root, "engagement.yaml")):
         sys.exit(0)
@@ -74,15 +87,31 @@ def loadConfigLoader():
         return None
 
 
-def bannedPhrasings(root: str) -> list[str]:
-    """Banned phrasings from engagement.yaml plus the pack qaRules.yaml."""
+def collectPhrases(value) -> list[str]:
+    """Walk flat strings, lists, and maps carrying nested seedPatterns."""
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, list):
+        out: list[str] = []
+        for item in value:
+            out += collectPhrases(item)
+        return out
+    if isinstance(value, dict):
+        return collectPhrases(value.get("seedPatterns"))
+    return []
+
+
+def qaSettings(root: str) -> tuple[list[str], int]:
+    """Banned phrasings and the paragraph sentence maximum, from
+    engagement.yaml plus the pack qaRules.yaml."""
+    phrases: list[str] = []
+    maxSentences = MAX_SENTENCES
     loader = loadConfigLoader()
     if loader is None:
-        return []
-    phrases: list[str] = []
+        return phrases, maxSentences
     try:
         engagement = loader.loadEngagement(root)
-        phrases += list(((engagement.get("brand") or {}).get("bannedPhrasings")) or [])
+        phrases += collectPhrases(((engagement.get("brand") or {}).get("bannedPhrasings")) or [])
     except Exception:
         pass
     try:
@@ -92,11 +121,14 @@ def bannedPhrasings(root: str) -> list[str]:
         if os.path.isfile(qaPath):
             qa = loader.loadYaml(qaPath) or {}
             for key, value in qa.items():
-                if isinstance(value, list) and ("banned" in key.lower() or "phras" in key.lower()):
-                    phrases += [v for v in value if isinstance(v, str)]
+                if "banned" in key.lower() or "phras" in key.lower():
+                    phrases += collectPhrases(value)
+            declared = ((qa.get("proseRules") or {}).get("maxParagraphSentences"))
+            if isinstance(declared, int) and declared > 0:
+                maxSentences = declared
     except Exception:
         pass
-    return phrases
+    return phrases, maxSentences
 
 
 def stripExempt(text: str) -> str:
@@ -133,7 +165,7 @@ def paragraphs(text: str) -> list[str]:
     return out
 
 
-def findViolations(text: str, phrases: list[str]) -> list[str]:
+def findViolations(text: str, phrases: list[str], maxSentences: int = MAX_SENTENCES) -> list[str]:
     cleaned = stripExempt(text)
     out: list[str] = []
 
@@ -157,9 +189,9 @@ def findViolations(text: str, phrases: list[str]) -> list[str]:
 
     for para in paragraphs(text):
         n = countSentences(para)
-        if n and (n < MIN_SENTENCES or n > MAX_SENTENCES):
+        if n > maxSentences:
             snippet = para[:80]
-            out.append(f"paragraph length: {n} sentence(s) — prose paragraphs run 2 to 4 sentences: '{snippet}…'")
+            out.append(f"paragraph length: {n} sentences — prose paragraphs run at most {maxSentences} sentences: '{snippet}…'")
 
     seen: set[str] = set()
     unique = []
@@ -182,7 +214,7 @@ def main() -> None:
     if not any(f"/{d}" in f"/{path}" for d in SCOPED_DIRS):
         sys.exit(0)
 
-    root = engagementRoot()
+    root = engagementRoot(toolInput.get("file_path") or "")
 
     if tool == "Write":
         text = toolInput.get("content") or ""
@@ -193,7 +225,8 @@ def main() -> None:
     if not text:
         sys.exit(0)
 
-    violations = findViolations(text, bannedPhrasings(root))
+    phrases, maxSentences = qaSettings(root)
+    violations = findViolations(text, phrases, maxSentences)
     if not violations:
         sys.exit(0)
 

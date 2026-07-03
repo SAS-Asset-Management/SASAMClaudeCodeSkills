@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 """PreToolUse gate on writes to findings/.
 
-A finding needs both sides of the evidence base: the say input (at least
-one review matching the subject's numeric prefix under reviews/) and the
-do input (interview notes matching interviews/NN_*_notes.md). Denies the
-write when either is missing, and reminds every allowed write that only
-the finding-synthesiser agent may author findings.
+A finding needs both sides of the evidence base, read from the subject's
+scoreLedger.json entry (findings are numbered by SUBJECT while reviews
+are numbered by ARTEFACT intake order, so file prefixes never join the
+two — the ledger does): the say input (a reviews/ path among the
+subject's evidence records) and the do input (an interviews/ path among
+the evidence, or sayScore and doScore both set). Denies the write when
+either is missing, and reminds every allowed write that only the
+finding-synthesiser agent may author findings.
 
-Exits 0 silently when the session is not an engagement.
+The engagement root is resolved by walking up from the target file path
+to the nearest engagement.yaml, falling back to CLAUDE_PROJECT_DIR.
+Exits 0 silently when neither resolves to an engagement.
 """
 from __future__ import annotations
 
-import glob
 import json
 import os
 import re
@@ -25,11 +29,36 @@ def readEvent() -> dict:
         sys.exit(0)
 
 
-def engagementRoot() -> str:
+def engagementRoot(fromPath: str = "") -> str:
+    if fromPath and os.path.isabs(fromPath):
+        current = os.path.dirname(os.path.abspath(fromPath))
+        while True:
+            if os.path.isfile(os.path.join(current, "engagement.yaml")):
+                return current
+            parent = os.path.dirname(current)
+            if parent == current:
+                break
+            current = parent
     root = os.environ.get("CLAUDE_PROJECT_DIR") or ""
     if not root or not os.path.isfile(os.path.join(root, "engagement.yaml")):
         sys.exit(0)
     return root
+
+
+def ledgerSubject(root: str, prefix: str) -> dict | None:
+    """The scoreLedger.json subject entry whose key starts with NN_."""
+    ledgerPath = os.path.join(root, "scoreLedger.json")
+    if not os.path.isfile(ledgerPath):
+        return None
+    try:
+        with open(ledgerPath, encoding="utf-8") as fh:
+            ledger = json.load(fh)
+    except Exception:
+        return None
+    for key, entry in (ledger.get("subjects") or {}).items():
+        if key.startswith(prefix + "_") and isinstance(entry, dict):
+            return entry
+    return None
 
 
 def main() -> None:
@@ -41,7 +70,7 @@ def main() -> None:
     if "/findings/" not in normalised and not normalised.startswith("findings/"):
         sys.exit(0)
 
-    root = engagementRoot()
+    root = engagementRoot(path)
 
     m = re.match(r"^(\d{2})_", os.path.basename(normalised))
     if not m:
@@ -62,19 +91,42 @@ def main() -> None:
         sys.exit(0)
     prefix = m.group(1)
 
-    notes = glob.glob(os.path.join(root, "interviews", f"{prefix}_*_notes.md"))
-    reviews = glob.glob(os.path.join(root, "reviews", f"{prefix}_*.md"))
+    entry = ledgerSubject(root, prefix)
+    evidence = [
+        e for e in ((entry or {}).get("evidence") or [])
+        if isinstance(e, dict)
+    ]
+    artefacts = [
+        str(e.get("artefact") or "").replace("\\", "/") for e in evidence
+    ]
+    hasSay = any(a.startswith("reviews/") for a in artefacts)
+    hasDo = any(a.startswith("interviews/") for a in artefacts) or (
+        entry is not None
+        and entry.get("sayScore") is not None
+        and entry.get("doScore") is not None
+    )
 
     missing = []
-    if not notes:
+    if not evidence:
         missing.append(
-            f"do input: interviews/{prefix}_*_notes.md (run transcript-extractor "
-            "on the interview transcript first)"
+            f"ledger evidence: subject {prefix} has no evidence records in "
+            "scoreLedger.json (score the subject from its reviewed "
+            "artefacts first)"
         )
-    if not reviews:
-        missing.append(
-            f"say input: reviews/{prefix}_*.md (file the artefact review first)"
-        )
+    else:
+        if not hasSay:
+            missing.append(
+                f"say input: no reviews/ path among subject {prefix} evidence "
+                "in scoreLedger.json (file the artefact review and record "
+                "its evidence first)"
+            )
+        if not hasDo:
+            missing.append(
+                f"do input: no interviews/ path among subject {prefix} "
+                "evidence in scoreLedger.json, and sayScore/doScore are not "
+                "both set (run transcript-extractor on the interview "
+                "transcript first)"
+            )
 
     if missing:
         bullets = "\n".join(f"  - {item}" for item in missing)

@@ -38,7 +38,16 @@ def readEvent() -> dict:
         sys.exit(0)
 
 
-def engagementRoot() -> str:
+def engagementRoot(fromPath: str = "") -> str:
+    if fromPath and os.path.isabs(fromPath):
+        current = os.path.dirname(os.path.abspath(fromPath))
+        while True:
+            if os.path.isfile(os.path.join(current, "engagement.yaml")):
+                return current
+            parent = os.path.dirname(current)
+            if parent == current:
+                break
+            current = parent
     root = os.environ.get("CLAUDE_PROJECT_DIR") or ""
     if not root or not os.path.isfile(os.path.join(root, "engagement.yaml")):
         sys.exit(0)
@@ -69,7 +78,7 @@ def main() -> None:
     if "/deliverable/" not in f"/{path}":
         sys.exit(0)
 
-    engagementRoot()
+    engagementRoot(toolInput.get("file_path") or "")
 
     if tool == "Write":
         text = toolInput.get("content") or ""
