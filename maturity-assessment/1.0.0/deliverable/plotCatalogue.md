@@ -21,13 +21,13 @@ Canonical list of every chart permitted in a maturity assessment deliverable. A 
 | --- | --- |
 | Purpose | Immediate shape read of maturity across the pack's taxonomy domains. |
 | Data binding | `scoreLedger.json → subjects.<subjectId>.final.score`, grouped by `pack.yaml → taxonomy.domains` — one axis per domain, value = mean of the non null subject finals in that domain. |
-| Type | Plotly `scatterpolar` with filled area. |
+| Type | Dashboard: Plotly `scatterpolar` with filled area. Summary: inline SVG polygon generated in Python by `buildDomainRadar` (the summary carries no Plotly). |
 | Colour rule | SAS navy `#002244` fill at 20 percent opacity, SAS green `#69BE28` line at 2px. Minimum sustained ring in muted grey dotted line. |
 | Annotation requirement | A dotted reference ring at the pack `minimumSustained` level, plus a callout on the domain furthest below that ring: "{Domain name}: {mean}". |
 | Where it appears | Dashboard (full size, top of scorecard); summary (compact, headline section). |
 | Caption pattern | "Mean maturity score by domain against the minimum sustained level of {minimumSustained}. {Lowest domain} sits furthest below the ring." |
 
-Render function: `renderDomainRadar`.
+Render function: `renderDomainRadar` (dashboard); `buildDomainRadar` in `buildDashboard.py` (summary).
 
 ### 2. subjectConfidence
 

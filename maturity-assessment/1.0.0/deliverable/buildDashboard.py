@@ -14,9 +14,12 @@ contained HTML files into <repo>/deliverable/:
                    outliers, key findings, roadmap placeholder)
 
 One source of truth: every number binds to the ledger or is omitted.
-Nothing is synthesised. Plotly is inlined from vendor/plotly.min.js —
-the build fails loudly if the vendor file is missing. No fetch(), no
-CDN URL at runtime; both surfaces work offline from file://.
+Nothing is synthesised. The dashboard inlines Plotly from
+vendor/plotly.min.js — the build fails loudly if the vendor file is
+missing. The summary carries NO Plotly: its domain radar is a small
+inline SVG generated here in Python, keeping summary.html light. No
+fetch(), no CDN URL at runtime; both surfaces work offline from
+file://.
 
 The report gate (reportGate.evaluateGate) decides whether a fixed
 position DRAFT banner is stamped on both surfaces.
@@ -26,6 +29,7 @@ import argparse
 import html
 import importlib.util
 import json
+import math
 import os
 import re
 import sys
@@ -253,12 +257,16 @@ def buildSubjectTable(ledger, pack):
             if score is not None
             else "—"
         )
-        ciCell = (
-            "[{:.1f}, {:.1f}]".format(ci[0], ci[1]) if ci else "—"
-        )
+        evidenceRecords = rec.get("evidence", []) or []
+        if ci and len(evidenceRecords) == 1 and ci[0] == ci[1]:
+            ciCell = "single source"
+        elif ci:
+            ciCell = "[{:.1f}, {:.1f}]".format(ci[0], ci[1])
+        else:
+            ciCell = "—"
         tagCounts = {"Direct": 0, "Indirect": 0, "None": 0}
         artefacts = []
-        for evidence in rec.get("evidence", []) or []:
+        for evidence in evidenceRecords:
             tag = evidence.get("tag")
             if tag in tagCounts:
                 tagCounts[tag] += 1
@@ -369,6 +377,130 @@ def buildHeadline(ledger, pack):
         "position is <strong>{:.1f}{}</strong> across {} of {} subjects "
         "scored, against a minimum sustained level of {}.</div>"
     ).format(mean, escape(bandText), scored, len(taxonomy), escape(pack.get("minimumSustained", "—")))
+
+
+def buildDomainRadar(ledger, pack):
+    """Render the summary's domain radar as a small inline SVG.
+
+    Pure stdlib polygon maths — the summary deliberately carries no
+    Plotly so it stays print light. Domains without any scored subject
+    are omitted, matching the dashboard's radar."""
+    subjects = ledger.get("subjects", {}) or {}
+    names, means = [], []
+    for domain in (pack.get("taxonomy", {}) or {}).get("domains", []) or []:
+        scores = [
+            (subjects.get(sid) or {}).get("final", {}).get("score")
+            for sid in domain.get("subjects", []) or []
+        ]
+        scores = [s for s in scores if s is not None]
+        if not scores:
+            continue
+        names.append(domain.get("name", domain.get("id", "—")))
+        means.append(sum(scores) / len(scores))
+    if not names:
+        return (
+            '<p class="placeholder-note">The domain radar renders once at '
+            "least one domain carries a scored subject in the ledger.</p>"
+        )
+
+    width, height = 640, 460
+    cx, cy, radius = 320.0, 245.0, 150.0
+    count = len(names)
+
+    def point(axis, value):
+        angle = -math.pi / 2 + 2 * math.pi * axis / count
+        r = radius * value / 5.0
+        return cx + r * math.cos(angle), cy + r * math.sin(angle)
+
+    def ringPoints(value):
+        return " ".join(
+            "{:.1f},{:.1f}".format(*point(i, value)) for i in range(count)
+        )
+
+    parts = []
+    parts.append(
+        '<text x="{:.0f}" y="28" text-anchor="middle" font-size="16" '
+        'fill="#0B1A2E" font-weight="bold">Mean maturity score by '
+        "domain</text>".format(cx)
+    )
+    for level in range(1, 6):
+        parts.append(
+            '<circle cx="{:.1f}" cy="{:.1f}" r="{:.1f}" fill="none" '
+            'stroke="#E3E7ED" stroke-width="1"/>'.format(
+                cx, cy, radius * level / 5.0
+            )
+        )
+        parts.append(
+            '<text x="{:.1f}" y="{:.1f}" font-size="10" fill="#9AA4B2">'
+            "{}</text>".format(cx + 4, cy - radius * level / 5.0 - 2, level)
+        )
+    for i, name in enumerate(names):
+        ex, ey = point(i, 5)
+        parts.append(
+            '<line x1="{:.1f}" y1="{:.1f}" x2="{:.1f}" y2="{:.1f}" '
+            'stroke="#E3E7ED" stroke-width="1"/>'.format(cx, cy, ex, ey)
+        )
+        lx, ly = point(i, 5.65)
+        anchor = "middle"
+        if lx - cx > 12:
+            anchor = "start"
+        elif cx - lx > 12:
+            anchor = "end"
+        parts.append(
+            '<text x="{:.1f}" y="{:.1f}" text-anchor="{}" font-size="12" '
+            'fill="#0B1A2E">{}</text>'.format(lx, ly + 4, anchor, escape(name))
+        )
+    minimumSustained = pack.get("minimumSustained")
+    if minimumSustained is not None:
+        parts.append(
+            '<circle cx="{:.1f}" cy="{:.1f}" r="{:.1f}" fill="none" '
+            'stroke="#9AA4B2" stroke-width="1.5" stroke-dasharray="4 4"/>'
+            .format(cx, cy, radius * float(minimumSustained) / 5.0)
+        )
+    parts.append(
+        '<polygon points="{}" fill="rgba(0,34,68,0.2)" stroke="#69BE28" '
+        'stroke-width="2"/>'.format(
+            " ".join(
+                "{:.1f},{:.1f}".format(*point(i, means[i]))
+                for i in range(count)
+            )
+        )
+    )
+    for i in range(count):
+        px, py = point(i, means[i])
+        parts.append(
+            '<circle cx="{:.1f}" cy="{:.1f}" r="3.5" fill="#69BE28"/>'
+            .format(px, py)
+        )
+    lowestIdx = means.index(min(means))
+    parts.append(
+        '<text x="{:.0f}" y="50" text-anchor="middle" font-size="12" '
+        'fill="#B83232">Lowest domain — {}: {:.1f}</text>'.format(
+            cx, escape(names[lowestIdx]), means[lowestIdx]
+        )
+    )
+
+    caption = (
+        "Mean maturity score by domain against the minimum sustained level "
+        "of {}. {} sits furthest below the ring.".format(
+            escape(minimumSustained if minimumSustained is not None else "—"),
+            escape(names[lowestIdx]),
+        )
+    )
+    ariaLabel = (
+        "Radar chart of mean maturity score per domain against the minimum "
+        "sustained level"
+    )
+    return (
+        '<div class="plot-block">\n'
+        '<svg viewBox="0 0 {w} {h}" width="100%" role="img" '
+        'aria-label="{aria}" '
+        'font-family="Arial, Helvetica, sans-serif">\n{body}\n</svg>\n'
+        '<p class="plot-caption">{caption}</p>\n</div>'
+    ).format(
+        w=width, h=height, aria=ariaLabel,
+        body="\n".join(parts), caption=caption,
+    )
 
 
 def buildSections(sectionTemplate, repoRoot):
@@ -511,7 +643,7 @@ def build(repoRoot):
         with open(benchmarkPath, "r", encoding="utf-8") as handle:
             benchmark = json.load(handle)
 
-    gate = reportGate.evaluateGate(ledger, pack)
+    gate = reportGate.evaluateGate(ledger, pack, repoRoot)
     draftBadge, bodyClass = buildDraftBadge(gate)
 
     plotlyJs = _loadVendorPlotly()
@@ -572,14 +704,14 @@ def build(repoRoot):
         "client": escape(eng.get("client", "—")),
         "engagementCode": escape(eng.get("code", "—")),
         "footerTagline": escape(FOOTER_TAGLINE),
-        "plotlyJs": plotlyJs,
-        "ledgerJson": ledgerJson,
-        "metaJson": metaJson,
     }
 
     dashboardTokens = dict(common)
     dashboardTokens.update(
         {
+            "plotlyJs": plotlyJs,
+            "ledgerJson": ledgerJson,
+            "metaJson": metaJson,
             "startDate": isoToDisplay(eng.get("start", "—")),
             "buildDate": buildDate,
             "kpiStrip": buildKpiStrip(ledger, pack),
@@ -605,6 +737,7 @@ def build(repoRoot):
                 engagement, ledger, pack, gate, buildDate
             ),
             "headline": buildHeadline(ledger, pack),
+            "domainRadar": buildDomainRadar(ledger, pack),
             "sections": buildSections(sectionTemplate, repoRoot),
             "flaggedSubjects": buildFlaggedSubjects(ledger),
             "keyFindings": buildKeyFindings(ledger),
