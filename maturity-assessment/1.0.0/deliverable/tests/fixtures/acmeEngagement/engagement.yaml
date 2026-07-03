@@ -1,0 +1,25 @@
+engagement:
+  client: Acme Rail
+  code: ACME-CYBER-2026
+  reviewer: SAS Asset Management
+  start: 2026-05-04
+  weeks: 8
+  interviewCeiling: 12
+  pluginVersion: "1.0.0"
+framework:
+  pack: acme-governance
+  scale: iam-0-5
+  rounding: from-0.7
+brand:
+  logo: SAS AM
+  reportTitle: Acme Rail Governance Maturity Assessment
+  bannedPhrasings: []
+  citationFormat: "{standard} §{clause} (p{page})"
+data:
+  sovereignty: local-only
+  api: zdr-no-training
+  captureTool: granola
+deliverable:
+  dashboard: true
+  pdfSummary: true
+  benchmark: none

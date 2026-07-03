@@ -1,0 +1,319 @@
+<!doctype html>
+<!--
+  dashboardTemplate.html — fixed structural source for the interactive scorecard.
+  buildDashboard.py binds these literal tokens (never add styles outside reportStyles.css):
+
+    {styles}               inlined reportStyles.css
+    {bodyClass}            "has-draft-badge" when the gate is closed, else empty
+    {draftBadge}           DRAFT banner HTML when the gate is closed, else empty
+    {logoName}             brand mark text from engagement.yaml brand.logo
+    {reportTitle}          brand.reportTitle
+    {client}               engagement.client
+    {engagementCode}       engagement.code
+    {startDate}            engagement start, displayed DD/MM/YYYY
+    {buildDate}            build date, displayed DD/MM/YYYY
+    {kpiStrip}             KPI cards HTML
+    {runTrendSection}      runTrend plot block, or empty when no subject qualifies
+    {peerPercentileSection} peerPercentile plot block, or empty when benchmark.json is absent
+    {subjectTable}         per subject drill down table HTML
+    {footerTagline}        SAS Asset Management footer tagline
+    {plotlyJs}             vendored Plotly bundle, inlined between vendor markers
+    {ledgerJson}           verbatim scoreLedger.json embed
+    {benchmarkJson}        verbatim benchmark.json embed, or null
+    {metaJson}             pack metadata embed: domains, minimumSustained, scale levels
+-->
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{reportTitle}} — Dashboard</title>
+<style>
+{{styles}}
+</style>
+</head>
+<body class="{{bodyClass}}">
+{{draftBadge}}
+<header class="report-header">
+  <div class="header-inner">
+    <div class="brand-mark">{{logoName}}</div>
+    <div>
+      <h1>{{reportTitle}}</h1>
+      <div>Interactive maturity scorecard</div>
+    </div>
+    <div class="header-meta">
+      <div class="meta-row">Client: <strong>{{client}}</strong></div>
+      <div class="meta-row">Engagement: <strong>{{engagementCode}}</strong></div>
+      <div class="meta-row">Commenced: {{startDate}} · Built: {{buildDate}}</div>
+    </div>
+  </div>
+</header>
+<main>
+  <section class="kpi-strip" aria-label="Key engagement indicators">
+{{kpiStrip}}
+  </section>
+
+  <h2>Maturity by domain</h2>
+  <div class="plot-block">
+    <div id="plot-domainRadar" class="plot-container" aria-label="Radar chart of mean maturity score per domain against the minimum sustained level"></div>
+    <p class="plot-caption" id="caption-domainRadar"></p>
+  </div>
+
+  <h2>Subject scores and confidence</h2>
+  <div class="plot-block">
+    <div id="plot-subjectConfidence" class="plot-container" aria-label="Horizontal bar chart of final score per subject with 95 percent confidence intervals; bar opacity signals evidence confidence"></div>
+    <p class="plot-caption" id="caption-subjectConfidence"></p>
+  </div>
+
+{{runTrendSection}}
+
+{{peerPercentileSection}}
+
+  <h2>Subject drill down</h2>
+  <div class="table-wrap">
+{{subjectTable}}
+  </div>
+</main>
+<footer class="report-footer">
+  <p class="tagline">{{footerTagline}}</p>
+</footer>
+
+<script id="ledger-data" type="application/json">{{ledgerJson}}</script>
+<script id="benchmark-data" type="application/json">{{benchmarkJson}}</script>
+<script id="meta-data" type="application/json">{{metaJson}}</script>
+
+<script>
+/* vendorPlotlyBegin — vendored Plotly bundle (MIT), inlined for offline use */
+{{plotlyJs}}
+/* vendorPlotlyEnd */
+</script>
+
+<script>
+"use strict";
+var ledger = JSON.parse(document.getElementById("ledger-data").textContent);
+var benchmark = JSON.parse(document.getElementById("benchmark-data").textContent);
+var meta = JSON.parse(document.getElementById("meta-data").textContent);
+
+var SAS_NAVY = "#002244";
+var SAS_GREEN = "#69BE28";
+var RAMP = [[0, "#B83232"], [2, "#D99424"], [4, "#69BE28"], [5, "#4F8B1D"]];
+
+function mixHex(a, b, t) {
+  function ch(h, i) { return parseInt(h.slice(i, i + 2), 16); }
+  function px(v) { return ("0" + Math.round(v).toString(16)).slice(-2); }
+  return "#" + px(ch(a, 1) + (ch(b, 1) - ch(a, 1)) * t)
+             + px(ch(a, 3) + (ch(b, 3) - ch(a, 3)) * t)
+             + px(ch(a, 5) + (ch(b, 5) - ch(a, 5)) * t);
+}
+
+function rampColour(score) {
+  if (score === null || score === undefined) { return "#9AA4B2"; }
+  var s = Math.max(0, Math.min(5, score));
+  for (var i = 0; i < RAMP.length - 1; i++) {
+    var lo = RAMP[i], hi = RAMP[i + 1];
+    if (s <= hi[0]) { return mixHex(lo[1], hi[1], (s - lo[0]) / (hi[0] - lo[0])); }
+  }
+  return RAMP[RAMP.length - 1][1];
+}
+
+function confOpacity(conf) {
+  if (conf === "High") { return 1.0; }
+  if (conf === "Medium") { return 0.7; }
+  if (conf === "Low") { return 0.45; }
+  return 0.7;
+}
+
+function subjectName(id) {
+  var raw = id.replace(/^\d+_/, "");
+  var words = raw.replace(/([A-Z])/g, " $1").toLowerCase();
+  return id.split("_")[0] + " " + words.charAt(0).toUpperCase() + words.slice(1);
+}
+
+function subjectIds() {
+  var ids = [];
+  (meta.domains || []).forEach(function (d) {
+    (d.subjects || []).forEach(function (s) { ids.push(s); });
+  });
+  Object.keys(ledger.subjects || {}).forEach(function (s) {
+    if (ids.indexOf(s) < 0) { ids.push(s); }
+  });
+  return ids;
+}
+
+var BASE_LAYOUT = {
+  font: { family: "Arial, Helvetica, sans-serif", size: 13, color: "#0B1A2E" },
+  paper_bgcolor: "rgba(0,0,0,0)",
+  plot_bgcolor: "rgba(0,0,0,0)",
+  margin: { t: 56, r: 30, b: 60, l: 90 }
+};
+
+function setCaption(id, text) {
+  var el = document.getElementById("caption-" + id);
+  if (el) { el.textContent = text; }
+}
+
+function renderDomainRadar() {
+  var el = document.getElementById("plot-domainRadar");
+  if (!el) { return; }
+  var names = [], means = [];
+  (meta.domains || []).forEach(function (d) {
+    var scores = (d.subjects || []).map(function (s) {
+      var rec = (ledger.subjects || {})[s];
+      return rec && rec.final ? rec.final.score : null;
+    }).filter(function (v) { return v !== null && v !== undefined; });
+    if (scores.length === 0) { return; }
+    names.push(d.name);
+    means.push(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length);
+  });
+  if (names.length === 0) { return; }
+  var theta = names.concat([names[0]]);
+  var r = means.concat([means[0]]);
+  var ring = theta.map(function () { return meta.minimumSustained; });
+  var lowestIdx = means.indexOf(Math.min.apply(null, means));
+  Plotly.newPlot(el, [
+    { type: "scatterpolar", r: ring, theta: theta, mode: "lines",
+      line: { color: "#9AA4B2", dash: "dot", width: 1.5 },
+      name: "Minimum sustained (" + meta.minimumSustained + ")" },
+    { type: "scatterpolar", r: r, theta: theta, fill: "toself",
+      fillcolor: "rgba(0,34,68,0.2)", line: { color: SAS_GREEN, width: 2 },
+      name: "Domain mean" }
+  ], Object.assign({}, BASE_LAYOUT, {
+    title: { text: "Mean maturity score by domain" },
+    polar: { radialaxis: { range: [0, 5], tickvals: [0, 1, 2, 3, 4, 5], title: { text: "Score" } } },
+    showlegend: true,
+    annotations: [{ text: "Lowest domain — " + names[lowestIdx] + ": " +
+      means[lowestIdx].toFixed(1), showarrow: false, x: 0, y: 1.12,
+      xref: "paper", yref: "paper", font: { size: 12, color: "#B83232" } }]
+  }), { displaylogo: false, responsive: true });
+  setCaption("domainRadar", "Mean maturity score by domain against the minimum sustained level of " +
+    meta.minimumSustained + ". " + names[lowestIdx] + " sits furthest below the ring.");
+}
+
+function renderSubjectConfidence() {
+  var el = document.getElementById("plot-subjectConfidence");
+  if (!el) { return; }
+  var ids = subjectIds().filter(function (s) {
+    var rec = (ledger.subjects || {})[s];
+    return rec && rec.final && rec.final.score !== null && rec.final.score !== undefined;
+  });
+  if (ids.length === 0) { return; }
+  ids = ids.slice().reverse();
+  var scores = [], colours = [], opacities = [], plus = [], minus = [], labels = [];
+  ids.forEach(function (s) {
+    var f = ledger.subjects[s].final;
+    labels.push(subjectName(s));
+    scores.push(f.score);
+    colours.push(rampColour(f.score));
+    opacities.push(confOpacity(f.confidence));
+    var ci = f.ci || [f.score, f.score];
+    plus.push(Math.max(0, ci[1] - f.score));
+    minus.push(Math.max(0, f.score - ci[0]));
+  });
+  var minScore = Math.min.apply(null, scores);
+  var minIdx = scores.indexOf(minScore);
+  Plotly.newPlot(el, [{
+    type: "bar", orientation: "h", x: scores, y: labels,
+    marker: { color: colours, opacity: opacities },
+    error_x: { type: "data", array: plus, arrayminus: minus, color: SAS_NAVY, thickness: 1.2 },
+    name: "Final score"
+  }], Object.assign({}, BASE_LAYOUT, {
+    title: { text: "Final score per subject with 95 percent confidence interval" },
+    height: Math.max(320, 34 * ids.length + 120),
+    xaxis: { range: [0, 5.4], title: { text: "Score (0 to 5)" }, dtick: 1 },
+    yaxis: { title: { text: "Subject" }, automargin: true },
+    margin: { t: 56, r: 30, b: 60, l: 220 },
+    annotations: [{ text: "Lowest: " + labels[minIdx] + " (" + minScore + ")",
+      x: minScore, y: labels[minIdx], ax: 60, ay: 0,
+      font: { size: 12, color: "#B83232" } }]
+  }), { displaylogo: false, responsive: true });
+  setCaption("subjectConfidence", "Final score per subject with 95 percent confidence interval. " +
+    "Bar opacity signals evidence confidence; " + labels[minIdx] +
+    " carries the lowest score at " + minScore + ".");
+}
+
+function renderRunTrend() {
+  var el = document.getElementById("plot-runTrend");
+  if (!el) { return; }
+  var traces = [], annotations = [], captionBits = [];
+  subjectIds().forEach(function (s) {
+    var rec = (ledger.subjects || {})[s];
+    if (!rec) { return; }
+    var hist = rec.history || [];
+    var distinct = {};
+    hist.forEach(function (h) { distinct[h.score] = true; });
+    var changed = Object.keys(distinct).length > 1;
+    if (!rec.flag && !changed) { return; }
+    var runs = hist.map(function (h) { return h.run; });
+    var scores = hist.map(function (h) { return h.score; });
+    if (runs.length === 0) { return; }
+    var last = hist[hist.length - 1];
+    var direction = "holds";
+    if (hist.length > 1) {
+      var prev = hist[hist.length - 2];
+      direction = last.score > prev.score ? "lifts" : (last.score < prev.score ? "lowers" : "holds");
+    }
+    traces.push({
+      type: "scatter", mode: "lines+markers", x: runs, y: scores,
+      name: subjectName(s), line: { color: rampColour(last.score), width: 2 },
+      marker: { size: 8 }
+    });
+    annotations.push({ text: direction, x: runs[runs.length - 1], y: scores[scores.length - 1],
+      ax: 28, ay: -18, font: { size: 11, color: "#3F4B60" } });
+    captionBits.push(subjectName(s) + " " + direction);
+  });
+  if (traces.length === 0) { return; }
+  Plotly.newPlot(el, traces, Object.assign({}, BASE_LAYOUT, {
+    title: { text: "Score movement across runs (flagged or changed subjects)" },
+    xaxis: { title: { text: "Scoring run" }, dtick: 1 },
+    yaxis: { title: { text: "Score (0 to 5)" }, range: [0, 5.2], dtick: 1 },
+    showlegend: true,
+    annotations: annotations
+  }), { displaylogo: false, responsive: true });
+  setCaption("runTrend", "Score movement across runs for flagged or changed subjects: " +
+    captionBits.join("; ") + ".");
+}
+
+function renderPeerPercentile() {
+  var el = document.getElementById("plot-peerPercentile");
+  if (!el || !benchmark) { return; }
+  var ids = subjectIds().filter(function (s) {
+    var rec = (ledger.subjects || {})[s];
+    return benchmark[s] && rec && rec.final && rec.final.score !== null && rec.final.score !== undefined;
+  });
+  if (ids.length === 0) { return; }
+  var labels = ids.map(subjectName);
+  var engagementScores = ids.map(function (s) { return ledger.subjects[s].final.score; });
+  function pct(key) { return ids.map(function (s) { return benchmark[s][key]; }); }
+  var medians = pct("p50");
+  var deltas = engagementScores.map(function (v, i) { return v - medians[i]; });
+  var maxIdx = 0;
+  deltas.forEach(function (d, i) { if (Math.abs(d) > Math.abs(deltas[maxIdx])) { maxIdx = i; } });
+  var cohortSize = Math.max.apply(null, ids.map(function (s) { return benchmark[s].cohortSize || 0; }));
+  Plotly.newPlot(el, [
+    { type: "bar", name: "Cohort p25", x: labels, y: pct("p25"), marker: { color: "#8095AA" } },
+    { type: "bar", name: "Cohort p50", x: labels, y: medians, marker: { color: "#406080" } },
+    { type: "bar", name: "Cohort p75", x: labels, y: pct("p75"), marker: { color: SAS_NAVY } },
+    { type: "bar", name: "This engagement", x: labels, y: engagementScores, marker: { color: SAS_GREEN } }
+  ], Object.assign({}, BASE_LAYOUT, {
+    title: { text: "Engagement score against cohort percentiles" },
+    barmode: "group",
+    xaxis: { title: { text: "Subject" }, automargin: true },
+    yaxis: { title: { text: "Score (0 to 5)" }, range: [0, 5.2], dtick: 1 },
+    showlegend: true,
+    annotations: [{ text: "Cohort of " + cohortSize, showarrow: false, x: 1, y: 1.1,
+      xref: "paper", yref: "paper", font: { size: 12, color: "#3F4B60" } },
+      { text: (deltas[maxIdx] >= 0 ? "+" : "") + deltas[maxIdx].toFixed(1) + " vs median",
+        x: labels[maxIdx], y: engagementScores[maxIdx], ax: 0, ay: -28,
+        font: { size: 11, color: "#3F4B60" } }]
+  }), { displaylogo: false, responsive: true });
+  setCaption("peerPercentile", "Engagement score against cohort percentiles per subject. " +
+    labels[maxIdx] + " sits " + (deltas[maxIdx] >= 0 ? "above" : "below") +
+    " the cohort median by " + Math.abs(deltas[maxIdx]).toFixed(1) + " points.");
+}
+
+renderDomainRadar();
+renderSubjectConfidence();
+renderRunTrend();
+renderPeerPercentile();
+</script>
+</body>
+</html>

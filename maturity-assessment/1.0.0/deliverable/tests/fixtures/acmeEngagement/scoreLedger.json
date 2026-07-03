@@ -1,0 +1,50 @@
+{
+  "engagement": "ACME-CYBER-2026",
+  "pack": "acme-governance@1.0.0",
+  "scale": "iam-0-5",
+  "runs": [
+    { "run": 1, "date": "2026-05-18", "trigger": "initial artefact sweep" },
+    { "run": 2, "date": "2026-06-08", "trigger": "interview evidence landed" }
+  ],
+  "subjects": {
+    "01_strategyAlignment": {
+      "final": { "score": 3, "confidence": "High", "ci": [2.7, 3.3] },
+      "sayScore": 2,
+      "doScore": 3,
+      "evidence": [
+        { "artefact": "reviews/01_strategyFramework_review.md", "tag": "Direct", "rubricLevel": 3, "rubricQuote": "Strategic objectives cascade to asset plans on a defined cycle.", "confidence": "High" },
+        { "artefact": "reviews/03_boardMinutes_review.md", "tag": "Indirect", "rubricLevel": 2, "rubricQuote": "Objectives exist but the cascade is informal.", "confidence": "Medium" }
+      ],
+      "history": [
+        { "run": 1, "score": 2, "confidence": "Low", "driver": "policy only, unevidenced" },
+        { "run": 2, "score": 3, "confidence": "High", "driver": "lifts — interview confirmed the cascade runs" }
+      ],
+      "flag": null,
+      "disputes": []
+    },
+    "02_planningDiscipline": {
+      "final": { "score": 1, "confidence": "Low", "ci": [1, 1] },
+      "sayScore": 1,
+      "doScore": null,
+      "evidence": [
+        { "artefact": "reviews/02_planningProcedure_review.md", "tag": "Indirect", "rubricLevel": 1, "rubricQuote": "Planning activity is reactive and undocumented.", "confidence": "Low" }
+      ],
+      "history": [
+        { "run": 1, "score": 1, "confidence": "Low", "driver": "holds — single indirect source" }
+      ],
+      "flag": "lowOutlier",
+      "disputes": []
+    },
+    "03_deliveryControl": {
+      "final": { "score": null, "confidence": null, "ci": null },
+      "sayScore": null,
+      "doScore": null,
+      "evidence": [],
+      "history": [],
+      "flag": null,
+      "disputes": [
+        { "id": "DSP-01", "raised": "2026-06-10", "description": "Assessor and client disagree on the evidence weighting for delivery control.", "status": "open", "resolution": null }
+      ]
+    }
+  }
+}
