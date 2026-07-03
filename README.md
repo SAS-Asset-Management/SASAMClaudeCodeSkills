@@ -75,6 +75,17 @@ Generate on-brand Word, PowerPoint and Excel documents from a company's own temp
 
 > Requires Python ≥ 3.10 (`pip install -r sasdocx/0.10.0/requirements.txt`). Optional LibreOffice + Poppler enable the visual QA gate. Run `python sasdocx/0.10.0/scripts/cli.py doctor` to check.
 
+### maturity-assessment
+
+Run evidence based maturity assessments against any framework — an internal SAS-AM delivery accelerator:
+
+- **Eight method skills**: `/maturity-intake`, `/maturity-parse`, `/maturity-score`, `/maturity-interview`, `/maturity-reconcile`, `/maturity-validate`, `/maturity-compliance-matrix`, `/maturity-report`
+- **Framework packs**: each assessment framework ships as data (rubrics, evidence types, question bank, optional calc pack, report spec) — swapping frameworks is a one line config change
+- **Fourteen specialist agents**: artefact triage, rubric tagging, calc validation, interview prep, transcript extraction, finding synthesis, section writing, QA, citations, and the three phase compliance matrix
+- **Deterministic scoring engine**: weighted aggregation, confidence intervals, and outlier flags computed by code from a structured score ledger — never by the model
+- **Dashboard plus PDF deliverable**: rendered from the ledger with a closed plot catalogue and optional peer benchmarking
+- **Data sovereignty**: client evidence lives only in the engagement repo on SAS-AM controlled disk; API reasoning runs under zero data retention terms
+
 ## Installation
 
 ### Quick Setup (Recommended)
@@ -139,6 +150,10 @@ Or reference the skill directly:
 ```
 /linkedin-post-generator Write a post about AI readiness for asset managers
 /linkedin-post-generator Promote this article: [paste URL]
+```
+
+```
+/maturity-parse Parse the asset management policy that just landed in evidence/
 ```
 
 ## Skill Structure

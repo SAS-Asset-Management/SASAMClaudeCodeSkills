@@ -196,6 +196,16 @@
       "keywords": ["sas", "sas-am", "document-generator", "on-brand-documents", "docx", "pptx", "xlsx", "word", "powerpoint", "excel", "template", "brand", "ooxml"],
       "category": "productivity",
       "tags": ["documents", "docx", "pptx", "xlsx", "brand", "templates"]
+    },
+    {
+      "name": "maturity-assessment",
+      "source": "./maturity-assessment/1.0.0",
+      "description": "Framework agnostic maturity assessment suite for SAS-AM engagements — intake, parse, score, interview, reconcile, validate, compliance matrix, and report, driven by framework packs and a per engagement engagement.yaml. Eight skills, fourteen specialist agents, config driven hooks, a deterministic scoring engine with CI maths, and a dashboard plus PDF deliverable rendered from a structured score ledger.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": ["maturity", "assessment", "governance", "audit", "scoring", "framework-packs", "evidence", "sas-am"],
+      "category": "engineering",
+      "tags": ["maturity", "assessment", "governance", "audit", "scoring"]
     }
   ]
 }
