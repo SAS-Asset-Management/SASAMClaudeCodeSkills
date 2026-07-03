@@ -1,0 +1,77 @@
+{
+  "engagement": "ACME-CYBER-2026",
+  "pack": "acme-rail-governance@1.0.0",
+  "scale": "iam-0-5",
+  "runs": [],
+  "subjects": {
+    "01_governancePolicy": {
+      "final": {
+        "score": null,
+        "confidence": null,
+        "ci": null
+      },
+      "sayScore": 2,
+      "doScore": 3,
+      "evidence": [
+        {
+          "artefact": "reviews/01_governancePolicy_review.md",
+          "tag": "Direct",
+          "rubricLevel": 3,
+          "rubricQuote": "Governance policy is applied consistently across the organisation.",
+          "confidence": "High"
+        },
+        {
+          "artefact": "reviews/02_riskFramework_review.md",
+          "tag": "Indirect",
+          "rubricLevel": 2,
+          "rubricQuote": "A documented policy exists but its application is inconsistent.",
+          "confidence": "Medium"
+        }
+      ],
+      "history": [],
+      "flag": null,
+      "disputes": []
+    },
+    "02_riskRegister": {
+      "final": {
+        "score": null,
+        "confidence": null,
+        "ci": null
+      },
+      "sayScore": null,
+      "doScore": null,
+      "evidence": [
+        {
+          "artefact": "reviews/03_riskRegisterExtract_review.md",
+          "tag": "Indirect",
+          "rubricLevel": 1,
+          "rubricQuote": "Risks are recorded informally with no review cycle.",
+          "confidence": "Low"
+        },
+        {
+          "artefact": "reviews/04_boardMinutes_review.md",
+          "tag": "None",
+          "rubricLevel": 4,
+          "rubricQuote": "Not relevant to this subject.",
+          "confidence": "High"
+        }
+      ],
+      "history": [],
+      "flag": null,
+      "disputes": []
+    },
+    "03_assetData": {
+      "final": {
+        "score": null,
+        "confidence": null,
+        "ci": null
+      },
+      "sayScore": null,
+      "doScore": null,
+      "evidence": [],
+      "history": [],
+      "flag": null,
+      "disputes": []
+    }
+  }
+}
