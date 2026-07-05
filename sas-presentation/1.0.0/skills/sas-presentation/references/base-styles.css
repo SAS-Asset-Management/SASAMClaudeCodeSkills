@@ -37,9 +37,9 @@
   --footer-border: #ededed;
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 34, 68, 0.08);
-  --shadow-md: 0 4px 16px rgba(0, 34, 68, 0.12);
-  --shadow-lg: 0 8px 24px rgba(0, 34, 68, 0.15);
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
 
   /* Focus */
   --focus-ring: 0 0 0 3px rgba(105, 190, 40, 0.5);
@@ -92,9 +92,9 @@
   --footer-border: #1e2a3d;
 
   /* Shadows */
-  --shadow-sm: 0 2px 8px rgba(0, 10, 28, 0.3);
-  --shadow-md: 0 4px 16px rgba(0, 10, 28, 0.4);
-  --shadow-lg: 0 14px 30px rgba(0, 10, 28, 0.5);
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
 
   /* Focus */
   --focus-ring: 0 0 0 3px rgba(105, 190, 40, 0.4);
@@ -159,9 +159,9 @@
   --footer-border: rgba(0, 34, 68, 0.55);
 
   /* Shadows - doubled alpha so they survive compression */
-  --shadow-sm: 0 2px 8px rgba(0, 34, 68, 0.22);
-  --shadow-md: 0 4px 16px rgba(0, 34, 68, 0.3);
-  --shadow-lg: 0 8px 24px rgba(0, 34, 68, 0.38);
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
 
   /* Focus */
   --focus-ring: 0 0 0 3px rgba(79, 154, 30, 0.6);
