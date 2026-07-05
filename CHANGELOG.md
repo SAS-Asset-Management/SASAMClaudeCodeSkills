@@ -5,6 +5,18 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.0] - 2026-07-05
+
+Uprev from the usage remediation build (WP1/WP2/WP3/WP5), targeting artefacts reported done unseen, a broken download gate, and a missing send and log workflow. Rebased onto origin/main 1.29.0; supersedes the withdrawn 1.28.0 label from the first build attempt.
+
+### Added
+- **sas-presentation, htmlStandards, reportStandards — Render Verify Gate.** A mandatory, non optional Render Verify Gate requiring an actual screenshot or headless render check (logos, figures, plots, console errors all confirmed present) before any HTML or presentation deliverable can be reported done. A hard base64 data URI only rule for embedded images was added to `htmlStandards.md` and `reportStandards.md` (sas-presentation's CDN logo convention carved out as a documented exception). A hardened `@media print` block (`box-shadow: none !important`, `page-break-inside: avoid` on cards, figures and tables) extends the existing print styles to kill recurring PDF export shadow artefacts. The htmlStandards.md and reportStandards.md edits live in ~/.claude/standards (personal global config, outside this repo).
+- **webflow-content-creator — post publish smoke test.** `~/.claude/hooks/deploy-smoke-test.sh` curls a URL and asserts an HTTP 2xx response plus a minimum byte count, printing a clear PASS or FAIL line. A new mandatory post publish smoke test step requires the agent to run this against both the published page URL and any gated download link after every publish, reporting the PASS or FAIL line verbatim rather than a bare "published". Targets the download gate twice serving 0 KB files while deploys were reported done unchecked.
+- **sasam-core — sendAndLog skill.** New skill at `sasam-core/1.0.0/skills/sendAndLog/SKILL.md` that drafts an email, pushes it to Outlook drafts, and waits for explicit "sent" confirmation before logging the outcome against a BEAM opportunity, an Ensemble task, or the engagement hub. Hard rule up front: only ever pushes a draft, never calls send. Configurable per recipient routing rule list.
+
+### Operational (no repo changes)
+- **Server automations (WP5).** Scheduled jobs installed directly on cortext4 (outside this repo): a LinkedIn performance export ingest job and a read only weekly inbox hygiene report. The weekly gate DB lead digest was found already built and running in production since 21/03/2026 and left untouched. Out of office and departed contact detection remain documented TODOs pending a mailbox access and enrichment API budget decision.
+
 ## [1.29.0] - 2026-07-04
 
 ### Changed

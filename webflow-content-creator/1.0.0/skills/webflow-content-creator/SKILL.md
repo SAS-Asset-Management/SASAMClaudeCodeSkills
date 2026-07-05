@@ -604,14 +604,47 @@ If user approves:
 5. Await user confirmation
 6. Publish live (if confirmed)
 
+### Step 7: Post Publish Smoke Test (MANDATORY — No "Done" Without It)
+
+A publish call returning success does not mean the page is actually serving. The gate and CMS endpoints have broken silently before — 0 KB files, and 400/401/404 responses on cortex/gate endpoints — while the tool call itself reported success. Never report "published" or "done" on the strength of the API response alone.
+
+After any publish or deploy that touches a live endpoint (page publish, gate URL, or gated download link), run `~/.claude/hooks/deploy-smoke-test.sh` against every affected URL:
+
+```bash
+~/.claude/hooks/deploy-smoke-test.sh <live-URL>
+~/.claude/hooks/deploy-smoke-test.sh <gated-download-URL>
+```
+
+If the hook isn't available in the environment, run the inline equivalent: `curl -s -o /dev/null -w '%{http_code} %{size_download}\n' <URL>` and confirm a 2xx status with a non zero body size yourself.
+
+Checks required before reporting completion:
+
+- The published page URL returns 2xx with a non zero body
+- Any gated download link behind the article (the email gate PDF/artefact) returns 2xx with a non zero body — not just the gate form itself
+- Both PASS lines are captured and shown to the user
+
 ```
 === PUBLISHED ===
 
 Status: Live
 URL: [live URL]
+Smoke test — page: PASS [live URL] — HTTP 200, [N] bytes
+Smoke test — download: PASS [download URL] — HTTP 200, [N] bytes
 Preview took: [X] seconds
 
 Content is now visible on www.sas-am.com/resources
+```
+
+If either check fails, do not report "published" — report the failing PASS/FAIL line verbatim, hold the status as "published, unverified", and escalate to the user before moving on.
+
+```
+=== PUBLISH ISSUE ===
+
+Status: Live (smoke test FAILED)
+URL: [live URL]
+Smoke test — page: FAIL [live URL] — HTTP 200, 0 bytes
+
+This needs investigation before it goes to the user as "done".
 ```
 
 ---
