@@ -1,6 +1,6 @@
 {
-  "version": "1.29.0",
-  "generated_at": "2026-07-03T23:14:48Z",
+  "version": "1.30.0",
+  "generated_at": "2026-07-05T05:12:03Z",
   "files": {
     ".claude-plugin/marketplace.json": "98cdef93923e76605d81e68e7869553f0065024d0809beedcd580f96f0d6c780",
     "analytics/1.0.0/.claude-plugin/plugin.json": "02c6f918cfabf42695e37462c65b43882c09a2c0d9b085115e3d061e65ea8bb0",
@@ -30,7 +30,7 @@
     "beam-selling/1.0.0/skills/beam-selling/references/spin-question-bank.md": "8fe56e103ad59d2befb8ada3913e688ada3ff41b2cd9dc48798cb8c4cbbf747b",
     "beam-selling/1.0.0/skills/beam-selling/references/stage-gate-checklist.md": "f8de80bbbefceb1014ca430e01d7f5c746b1a9fe525d147e73d87e970992dcc6",
     "beam-selling/1.0.0/skills/beam-selling/SKILL.md": "2a3793bbfed64592681614c3c627bf8263b538debfcd380fb28b831d83e0493f",
-    "CHANGELOG.md": "b0cdbf802cc05e660436384543b5baa6b8f21ae3d95cc3a8665694e90147c1aa",
+    "CHANGELOG.md": "c8a62d915e94c4b9afd1d4beb5b8189a2c1c6c95bd26af0f4863a142814ea442",
     "CLAUDE.md": "61f0376756e7934c23e602fbb707fb3b4619176d317aa645fa0565047af8a85b",
     "data-quality-analysis/1.0.0/.claude-plugin/plugin.json": "f623c4e8216e3e7712571c753df635b0ea2f521f8d59a3a007cf16e9a560a45e",
     "data-quality-analysis/1.0.0/README.md": "dd4c5e37b03c2554f84fe6c7cc88a2e17b81b95b14879ca100414fccbab3af0d",
@@ -258,10 +258,11 @@
     "sas-presentation/1.0.0/skills/sas-presentation/references/case-study-template.md": "ebd47b95959e0e0bd47713966d4a09efc462ddbbe6a4a0c114784cd8c8f88bb1",
     "sas-presentation/1.0.0/skills/sas-presentation/references/presentation-types.md": "30cf36c3e53d06b1fa91f1693a97fc71e359cdcb64c48063e60ed5adfe0f66ce",
     "sas-presentation/1.0.0/skills/sas-presentation/references/winston-prompts.md": "87d780cb7fe2186e52f60afb7637f593e2b6af78174497d4b6d79b0f477631bc",
-    "sas-presentation/1.0.0/skills/sas-presentation/SKILL.md": "a38838f6683e5c586f94f53fb14af96d078a3321d5ff4c58d6c98a6f927ce8de",
+    "sas-presentation/1.0.0/skills/sas-presentation/SKILL.md": "80dad4b9f76c56e0223d58d819aa37070ee81c2cc0fc10a6101034063f50acc8",
     "sasam-core/1.0.0/.claude-plugin/plugin.json": "dd88f3f6bc99eb6fb4a10d83045650babfa10dc73eafda07b0b2751194af90ab",
     "sasam-core/1.0.0/skills/loopBuilder/SKILL.md": "d63fe0356de3ce439b37c7b28773aa04987c6a92c29cfb220bdd2be46e40f338",
     "sasam-core/1.0.0/skills/sasam-update/SKILL.md": "2c88b9b65cd580d667686616a465215317100a674aa9862621062f33c18f7ab5",
+    "sasam-core/1.0.0/skills/sendAndLog/SKILL.md": "3f8a55af0548365544153cb90fdc3c3c67915cc49cc09dfd542a0d1754a650d5",
     "sasdocx/0.10.0/.claude-plugin/plugin.json": "7da9644146bdac7eebe80ae7da7be01f1f60fbcf318bdc4c82d2193fd7d95b67",
     "sasdocx/0.10.0/CHANGELOG.md": "9efbc2313c76bc0df817054858bda3ba713052534de646b5c5130391b1ba1d4e",
     "sasdocx/0.10.0/commands/sasdocx-extract.md": "68473f795e39196c73bacd30bd86c6a0077fcbe2d972dc3ebfd821bcc437f676",
@@ -315,6 +316,6 @@
     "webflow-content-creator/1.0.0/skills/webflow-content-creator/references/cms-schema.json": "a4a10bdfcac088e2985a5a1e840811242cb5281edd3e6e5883cbbf2b4496607a",
     "webflow-content-creator/1.0.0/skills/webflow-content-creator/references/sector-guidelines.md": "25d5b2b0c980eb086c5da6d5a41afc881d47f187651c95cbf6af1778e87e05e5",
     "webflow-content-creator/1.0.0/skills/webflow-content-creator/references/seo-checklist.md": "e9a98fb46af5577b014a500699bcea8187f104a9e59d371201f60b96b5e70fa0",
-    "webflow-content-creator/1.0.0/skills/webflow-content-creator/SKILL.md": "5582378b56e68121c43fac1262bb41fec5828863870b86cb1dcc89ed92b0c22e"
+    "webflow-content-creator/1.0.0/skills/webflow-content-creator/SKILL.md": "392945b13bc5f9b2edaf714c1d5c21becd0a7f6346e5cf8e7344a37a48c55e70"
   }
 }

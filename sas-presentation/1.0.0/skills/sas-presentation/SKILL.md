@@ -95,6 +95,22 @@ For full type definitions including sections, components, and Reveal.js override
 
 > **Case Study → downloadable PDF?** If the user wants a client-facing PDF artefact (website download, email attachment), use the print-first template at `references/case-study-template.md` instead of a Reveal.js deck. Reveal decks are 1760×990 landscape and do not export cleanly to A4 via Chrome headless. The case-study-template delivers an 8-page A4 portrait print document with a full component library (cover, stat tiles, timeline, before/after grid, testimonial card, lessons grid, CTA back cover) and the correct Chrome export command. Logo alignment rules (SVG aspect preservation, `currentColor` client wordmarks, no white-box logo wrappers) are documented there.
 
+## RENDER VERIFY GATE (MANDATORY — NON OPTIONAL)
+
+**A presentation is not done until it has been seen.** This gate applies to every HTML deliverable this skill produces, including single slide exports and PDF conversions. Do not report the artefact as complete, do not hand it to the user, and do not mark a todo item done until this gate has passed.
+
+1. After writing (or rewriting) `presentation.html`, open it — use the `claude-in-chrome` MCP tools, or a headless capture command such as `chrome --headless --disable-gpu --screenshot=render-check.png --window-size=1760,990 "presentation.html"` (or `npx decktape` for a PDF check).
+2. Capture a screenshot of the title slide and at least one slide from each act (situation, complication, evidence, decisions, recommendation).
+3. Visually confirm, slide by slide, in the captured output:
+   - Both logo variants render (no broken image icon, no blank box)
+   - Every chart, figure, and hero image is actually present and not blank
+   - No JavaScript console errors printed during load (check the console output if using claude-in-chrome)
+   - Text is not truncated or overflowing its container
+4. If anything is missing, broken, or throws a console error, fix it and repeat the render check before proceeding. Do not skip to the next slide type or declare victory on the strength of the source code alone.
+5. Only after the render check passes may the artefact be reported as complete to the user.
+
+This is the single highest priority rule in this skill. Six recorded "hero image failed to load" cycles and one shipped JavaScript TypeError were caused by skipping this step. Reading the HTML source and reasoning that it "should render" is not verification — only an actual rendered screenshot is.
+
 ## Discovery Process (CRITICAL)
 
 **Before creating any presentation, you MUST conduct a discovery interview. The goal is to identify the right presentation type and gather content requirements.**
@@ -1217,11 +1233,25 @@ When building each slide, choose the type based on what the slide needs to achie
 
 ## Print Styles
 
+Hardened print block — mandatory for any PDF export path (decktape, print to PDF, or a standalone print rendered copy of the deck). Box shadows appearing as grey halos in exported PDFs is the single most common recurring correction; strip them unconditionally, with no per component exceptions.
+
 ```css
 @media print {
+  * {
+    box-shadow: none !important;
+  }
+
   .static-footer { display: none; }
   .binary-background { display: none; }
   .reveal .slides section { page-break-after: always; }
+
+  .card,
+  .slide-fullbleed img,
+  .chart-bar,
+  .chart-line,
+  figure {
+    page-break-inside: avoid;
+  }
 }
 ```
 
