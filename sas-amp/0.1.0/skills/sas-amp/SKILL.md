@@ -54,7 +54,7 @@ The skill ships with a 183 node knowledge graph (`references/amp-knowledge-graph
 - **ISO 55000:2024** definitions (AMP, SAMP, AMS, LoS, AM objectives)
 - **ISO 55002:2014** guidance for AMP development (Clause 6.2.2 detail)
 - **AMAF** mandatory requirements mapped to ISO 55001 equivalents
-- **IAM Anatomy v4** (6 Groups, 39 Subjects) mapped to AMP content areas
+- **IAM Anatomy v4** (10 Capabilities / 10-box model, July 2024) mapped to AMP content areas
 - **GFMAM Landscape v3.0** (7 Subject Areas) mapped to AMP inputs
 - **GFMAM Maintenance Framework** (9 Areas) mapped to maintenance planning
 - **Downer AMS** AMP guide, template, lifecycle plan methodology
@@ -91,7 +91,7 @@ Then for each section, run the queries specified in `references/graph-queries.md
 Run these once at the start of any AMP engagement:
 
 - **AMAF compliance matrix** — query all `amaf_mandatory_*` nodes to build a requirements checklist
-- **IAM 39 Subjects coverage** — query IAM subject group nodes to verify the AMP addresses all relevant subjects
+- **IAM 10-box coverage matrix** — query the ten `iam_group*` capability nodes and, for each of the ten boxes (Purpose & Context, Leadership & Governance, Strategy & Planning, Decision Making, Life Cycle Delivery, Organisation & People, Information Management, Risk Management, Review & Continual Improvement, Value & Outcomes), report coverage as **well covered**, **thin**, or **missing** across the drafted AMP sections. Run this at engagement start alongside the AMAF compliance matrix and re-run before finalisation so no capability is left unaddressed. See `references/iam-10box-mapping.md` for the box to section mapping and the line of sight logic.
 - **GFMAM Landscape alignment** — query `gfmam_sa*` nodes for subject area coverage
 - **Maintenance Framework alignment** — query `maint_fw_area*` nodes for Section 5 coverage
 
@@ -251,6 +251,8 @@ Adapt the plan to any sector. Adjust terminology, benchmarks, and emphasis based
 | Health | Clinical outcomes, safety, compliance | Building services, medical equipment |
 | Defence | Capability, readiness, security | Platforms, weapons systems, facilities |
 
+**Sector conditional capabilities:** Some IAM Anatomy v4 sub subjects apply only in certain sectors. In particular, **Shutdown and Outage Strategy and Planning** (Strategy & Planning sub subject 7.5.5) is required for process and network sectors — Water/Wastewater, Transport, Resources/Mining — where planned shutdowns and outages drive lifecycle activity, and is generally not applicable to buildings or roads. Include it where the asset base has scheduled shutdowns or outages; note it as not applicable otherwise rather than forcing generic content.
+
 ## Additional Resources
 
 ### Reference Files
@@ -260,6 +262,7 @@ Adapt the plan to any sector. Adjust terminology, benchmarks, and emphasis based
 - **`references/client-integration.md`** — How to merge client documents and data with the standards graph for gap analysis and context enrichment
 - **`references/amp-template-structure.md`** — Full section by section AMP structure with guidance notes
 - **`references/iso55001-amp-mapping.md`** — ISO 55001:2024 clause summaries and AMP section mapping
+- **`references/iam-10box-mapping.md`** — IAM Anatomy v4 (10-box model, July 2024) capability to AMP section mapping with sub subjects and line of sight; basis for the 10-box coverage matrix
 - **`references/data-analysis-patterns.md`** — LCC, NPV, renewal modelling, chart specifications
 - **`references/interview-methodology.md`** — Adaptive, graph informed interview process and question bank
 
