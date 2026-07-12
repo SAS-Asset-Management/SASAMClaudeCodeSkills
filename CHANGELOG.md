@@ -5,6 +5,17 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.35.0] - 2026-07-12
+
+### Added
+- **sas-presentation — screen-share hardening, shipped logo, nav rail, PDF export, resources showcase (plugin 1.1.0 → 1.2.0).** Second augmentation lifting patterns from a finished reference deck, preserving the SAS brand and marcov-revealjs-standards v1.0.0. Five changes:
+  - **Compression-safe typography (mandatory rule).** New explicit rule: no 300/light weights anywhere, base body weight 600, headings 800–900, labels/kickers 700–900, higher-contrast muted ink. Made real in `references/base-styles.css` (body → 600, all six `font-weight:300` → 600, light-mode `--text-muted` `#6b7280` → `#42566a`) and the font imports in `SKILL.md` + `references/scaffold-template.html` (dropped `wght@300`, added `900`). Typography table and colour-system muted value updated to match. Thin strokes and pale greys are the first casualties of Zoom/Teams 4:2:0 chroma subsampling; heavier type survives it.
+  - **Ship the SAS logos with the skill.** New `references/assets/sasLogoPrimary.svg` (navy+green, for light slides) and `references/assets/sasLogoReversed.svg` (white+green, for dark slides), plus new `references/logos.md` carrying both base64 data-URI strings, usage guidance (navy on light, white on dark, never a text-only wordmark), and the `currentColor` self-recolour trick. The `Logo Assets` section now leads with the ship-with-deck path (offline safe, works in the zero-dependency deck) ahead of the CDN option.
+  - **Subtle right-side navigation rail.** New `references/nav-rail.md`: a very subtle vertical progress rail — current section green + labelled, past filled + dimmed, upcoming faint hollow rings — showing where we are and where we are going. Light/dark aware, `aria-hidden`, hidden in PDF. New `Navigation Rail` subsection in `SKILL.md`.
+  - **Headless-Chromium PDF export mode.** New `references/pdf-export.md`: the `chrome --headless --print-to-pdf` flow with `@page{size:1920px 1080px}` and the grey-box/shadow guardrails (`print-color-adjust:exact`, `box-shadow:none`, reveal all slides, un-fade stagger, force bar fills, panels to white-with-border never grey, hide nav rail/controls). Step 6 export section updated; the RENDER VERIFY GATE now includes a mandatory PDF check for grey boxes and shadow halos.
+  - **Resources showcase.** New `references/resources-showcase.md` and a `Phase 3b` discovery step: search `sas-am.com/resources` (Webflow blog/case-study CMS via the Webflow MCP CMS tools, or WebFetch/WebSearch) for pages matching the deck's subject/sector, and showcase the 2–4 best as a "Further reading" slide or inline callouts (title + URL). Honesty rules: only cite pages whose URL resolves; never fabricate.
+  - Verified with a zero-dependency sample deck exercising all five features, render-checked at desktop (1280×720) and phone (390×844) and as a headless-Chromium PDF — heavy type, correct logo variant per background, nav rail state, and a PDF with no grey boxes or shadows and furniture hidden. Existing Reveal.js generation path otherwise unchanged.
+
 ## [1.34.0] - 2026-07-12
 
 ### Added
