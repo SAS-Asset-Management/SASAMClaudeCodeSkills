@@ -3,8 +3,9 @@ name: sas-content-hub
 description: >
   SAS-AM unified content hub. Use when the user says "content hub", "sas content hub", "run a content campaign",
   "create a campaign", "build a content pipeline", "artefact to article to LinkedIn", "end-to-end content",
-  "publish a campaign", or wants to orchestrate the full SAS-AM content pipeline. Routes to the appropriate
-  sub-skill: content-campaign (orchestrator), email-gate, webflow-content-creator, or linkedin-post-generator.
+  "publish a campaign", "spot trends", "what's working on LinkedIn", "find viral hooks", "competitor trend scan", or wants to
+  orchestrate the full SAS-AM content pipeline. Routes to the appropriate sub-skill: trend-spotter (front of funnel — what to
+  say), content-campaign (orchestrator), email-gate, webflow-content-creator, or linkedin-post-generator.
 ---
 
 # SAS-AM Content Hub
@@ -15,6 +16,7 @@ Unified entry point for SAS-AM content workflows. Choose a workflow below or des
 
 | Command | Skill | What it does |
 |---------|-------|-------------|
+| `/trend-spotter` | trend-spotter | Front of funnel: scan creators/topics, flag outliers, reverse-engineer winning hooks |
 | `/content-campaign` | content-campaign | Full pipeline: artefact → gate → article → LinkedIn |
 | `/webflow-content-creator` | webflow-content-creator | Publish a blog article or case study to Webflow |
 | `/linkedin-post-generator` | linkedin-post-generator | Create a LinkedIn post in SAS-AM brand voice |
@@ -28,11 +30,13 @@ A) Run a full content campaign (artefact → article → LinkedIn)
 B) Publish an article or case study to Webflow
 C) Create a LinkedIn post
 D) Set up an email-gated download
-E) Something else — describe your content need
+E) Spot trends — scan creators or a topic for outlier posts and winning hooks before you write
+F) Something else — describe your content need
 
 Wait for the user's selection, then invoke the corresponding skill:
 - A → Follow the `/content-campaign` workflow
 - B → Follow the `/webflow-content-creator` workflow
 - C → Follow the `/linkedin-post-generator` workflow
 - D → Follow the `/email-gate` workflow
-- E → Ask a clarifying question, then route accordingly
+- E → Follow the `/trend-spotter` workflow (hands its brief into C or A)
+- F → Ask a clarifying question, then route accordingly

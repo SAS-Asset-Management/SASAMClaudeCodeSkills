@@ -1,6 +1,6 @@
 ---
 name: sas-presentation
-description: Create polished marcov / SAS-AM branded Reveal.js presentations. Use when the user asks to create slides, a presentation, a deck, or a slideshow. Supports 18 presentation types — from standard narrative decks to dashboards, proposals, and meeting minutes. Implements SAS brand guidelines with light/dark mode and professional layouts. Generates standalone HTML + CSS with no build step required. Complies with marcov-revealjs-standards v1.0.0.
+description: Create polished marcov / SAS-AM branded Reveal.js presentations. Use when the user asks to create slides, a presentation, a deck, or a slideshow. Supports 18 presentation types — from standard narrative decks to dashboards, proposals, and meeting minutes. Implements SAS brand guidelines with light/dark mode and professional layouts. Generates standalone HTML + CSS with no build step required. Offers speaker-led and reading-first density modes and an optional zero-dependency single-file export mode. Complies with marcov-revealjs-standards v1.0.0.
 ---
 
 # SAS-AM Presentation Skill
@@ -50,6 +50,18 @@ Do not memorise word for word — you will sound like a robot reading a teleprom
 ### Sensory Storytelling
 
 Do not say "it was a difficult situation." Say "it was 2am, the control room smelled of burnt coffee, and every phone in the building was ringing at once." Sensory detail is the difference between a fact and a memory. During discovery, always ask: "Can you describe a specific moment — time, place, what you saw or heard?"
+
+### Distinctive by Default (Anti-Generic Directives)
+
+Left unchecked, generated decks drift toward a bland, forgettable "AI slop" look: evenly spaced centred cards, timid palettes, decoration for its own sake. Within the fixed SAS brand these directives keep every deck feeling deliberately designed:
+
+- **Commit to the brand palette.** SAS Blue `#002244` and SAS Green `#69BE28` only. Green is the single accent — one strong green mark per slide, not green sprinkled everywhere. Never introduce an off brand accent colour to "add interest".
+- **Atmosphere over dead fills.** A slide that feels empty gets brand tinted depth — a low alpha navy/green gradient mesh, a subtle navy grid, or a green focal halo (see `references/animation-library.md`) — not a flat grey rectangle and not more text. This stays flat design: atmosphere comes from gradients, borders, and background contrast, never a `box-shadow`.
+- **Vary the slide types.** A deck that is ten identical split layouts is slop regardless of colour. Alternate: question, stat, full bleed, breather, split, card grid. The Slide Selection Guide exists to force this variety.
+- **Hold one feeling.** Pick a single feeling from the effect-to-feeling guide (`references/animation-library.md`) and hold it across the whole deck. Mixing cinematic, techy, and playful in one deck is the fastest route to incoherence.
+- **Earn every element.** No decorative shape, icon, or animation that does not carry meaning. If removing it changes nothing, remove it.
+- **Real over stock.** The user's own site photos and real diagrams beat generic stock every time. If stock is unavoidable, apply a brand colour overlay so it reads as ours.
+- **No off the shelf typography drift.** Type is fixed to Source Sans Pro / Source Code Pro. Do not substitute generic system fonts; the committed type is part of the brand signature.
 
 ---
 
@@ -101,13 +113,19 @@ For full type definitions including sections, components, and Reveal.js override
 
 1. After writing (or rewriting) `presentation.html`, open it — use the `claude-in-chrome` MCP tools, or a headless capture command such as `chrome --headless --disable-gpu --screenshot=render-check.png --window-size=1760,990 "presentation.html"` (or `npx decktape` for a PDF check).
 2. Capture a screenshot of the title slide and at least one slide from each act (situation, complication, evidence, decisions, recommendation).
-3. Visually confirm, slide by slide, in the captured output:
+3. **Multi viewport (MANDATORY).** The fixed stage guarantees uniform scaling, but verify it holds. Capture every checked slide at **two** viewports:
+   - **Desktop** — 1280×720 (or 1760×990). Primary fidelity check.
+   - **Phone** — a narrow portrait viewport such as 390×844. Confirm the whole stage letterboxes/pillarboxes as one unit — bars are fine — and that content did NOT reflow, shrink illegibly, or spill outside the stage.
+4. Visually confirm, slide by slide, in the captured output at BOTH viewports:
    - Both logo variants render (no broken image icon, no blank box)
    - Every chart, figure, and hero image is actually present and not blank
    - No JavaScript console errors printed during load (check the console output if using claude-in-chrome)
    - Text is not truncated or overflowing its container
-4. If anything is missing, broken, or throws a console error, fix it and repeat the render check before proceeding. Do not skip to the next slide type or declare victory on the strength of the source code alone.
-5. Only after the render check passes may the artefact be reported as complete to the user.
+   - **Panel overlap check.** No card, panel, image, or text block visually covers another. A `scrollHeight` / overflow check alone is NOT sufficient — absolutely positioned or grid panels can overlap while reporting no overflow. Inspect the rendered pixels: every panel occupies its own space with visible separation (border or background contrast, never a shadow).
+5. If anything is missing, broken, overlapping, or throws a console error, fix it and repeat the render check at both viewports before proceeding. Do not skip to the next slide type or declare victory on the strength of the source code alone.
+6. Only after the render check passes at both viewports may the artefact be reported as complete to the user.
+
+This gate is mode agnostic — it applies identically to the Reveal.js build and the zero dependency single file export (see `references/rendering-modes.md`).
 
 This is the single highest priority rule in this skill. Six recorded "hero image failed to load" cycles and one shipped JavaScript TypeError were caused by skipping this step. Reading the HTML source and reasoning that it "should render" is not verification — only an actual rendered screenshot is.
 
@@ -152,6 +170,23 @@ Ask these questions to determine the best type:
    - Timeline / phases → **Roadmap / Timeline**
 
 Once the type is determined, confirm with the user: _"Based on what you've described, I'd recommend a **[Type]** format — it uses [key characteristic]. Does that sound right?"_
+
+### Phase 1b: Content Density Mode (ask early, right after the type is confirmed)
+
+Ask ONE more question before gathering content, because the answer changes typography scale, slide count, words per slide, and layout density for the whole build:
+
+_"Is this a **speaker-led** deck you will present live, or a **reading-first** deck people will read on their own?"_
+
+| Density mode | Best for | Build behaviour |
+|--------------|----------|-----------------|
+| **Speaker-led (low density)** — DEFAULT | Conference talks, pitch decks, executive briefings, workshops delivered live | The full presentation philosophy applies as written: one idea per slide, 10 words or fewer, no bullet lists, large type, generous negative space, more slides rather than denser slides. |
+| **Reading-first (high density)** | Reports, one pagers, dashboards, comparison matrices, meeting minutes, proposals circulated for async review | Slides become more self-contained. Structured grids, comparison tables, annotated diagrams, captions, and 4–8 concise points or 4–6 cards are allowed **where they stay readable**. Strong hierarchy so it reads as designed, not as a document pasted onto a slide. |
+
+**Reconciling with the 10 word rule:** the 10 word rule is a *speaker-led* rule (Rule 03) and remains mandatory for speaker-led decks. Reading-first mode relaxes it — a reading-first slide may carry more text — but the hard limits never move: no scrolling, no overflow, no overlapping panels, and no text below comfortable reading size (24px on slides). If a reading-first slide starts to overflow or clutter, split it into more slides; do not shrink type until it is cramped.
+
+**Choosing when the answer is mixed:** default to the closer of the two rather than inventing a middle. Live persuasion → speaker-led. Async circulation or detailed review → reading-first. The type usually implies it: Presentation / Pitch Deck / Executive Briefing lean speaker-led; Report / Dashboard / One Pager / Comparison Matrix / Meeting Minutes lean reading-first.
+
+Remember the chosen mode — it governs slide count, type scale, words per slide, and layout density through Steps 2–4 of the Workflow and the Word Count Audit.
 
 ### Phase 2: Gather Content Details
 
@@ -388,6 +423,16 @@ See `references/scaffold-template.html` for the complete scaffold including Java
 - **Flat design — no box shadows.** SAS decks are flat. The `--shadow-sm/md/lg` variables are set to `none` in `base-styles.css`; never add a `box-shadow` to any element, and never redefine those variables to a shadow value in a deck's inline styles. Shadows also degrade badly under Teams/Zoom chroma subsampling. Use borders and background contrast for separation instead.
 - All JS at bottom of `<body>`
 - No build step — open-in-browser ready
+- **Fixed stage — never reflow, never `display:none` a slide.** The deck is authored at one fixed canvas (1760×990 under Reveal.js, 1920×1080 in zero dependency mode) and the whole canvas scales uniformly to the viewport, letterboxing on narrow screens rather than rearranging slide content. Do not add responsive rules that rewrap or restack slide *content* per device — scale the stage, not the slide. Switch whole slides only via the framework (Reveal) or an `.active`/`.visible` class toggling `visibility`/`opacity`/`pointer-events`; **never** switch a `<section>` with `display:none`/`display:block` (a later `display:flex` layout rule will override it and show every slide at once). This rule targets slide switching only — the dual theme image swap that uses `display` on `.logo-light`/`.logo-dark` is unaffected. Full detail and the zero dependency scaffold: `references/rendering-modes.md`.
+
+### Rendering Modes (Reveal.js default, zero dependency optional)
+
+Two render targets, same brand and same fixed stage discipline. See `references/rendering-modes.md` for the full comparison, the fixed stage CSS, and the vanilla scaler + switcher.
+
+| Mode | When | Canvas | Notes |
+|------|------|--------|-------|
+| **Reveal.js** (default) | Almost always. Live presenting, speaker view, fragments, hash links. | 1760×990 | The build described throughout this skill. Reveal provides the fixed stage scaler. |
+| **Zero dependency single file** | The deck must run offline, on an air gapped machine, or on a client site that blocks external CDNs; or the user wants "one file that always works". | 1920×1080 | One self contained HTML, all CSS/JS inline, no Reveal/Font Awesome/CDN. Loses speaker view, fragments, and hash routing; keeps brand, themes, flat design, accessibility, and the fixed stage. Offer it, do not default to it. |
 
 ### Reveal.js Configuration
 
@@ -486,284 +531,22 @@ Share mode applies the following codec survival tactics:
 
 ## Slide Types
 
-### 1. Title Slide
+The ten core slide recipes — Title, Standard Content, Question, Full Bleed Image, Breather, Stat, Contributions, Content + SVG Diagram, Step Animation, and Closing/CTA — with copy ready HTML and typography specs, now live in **`references/slide-recipes.md`** (progressive disclosure — read it when you are actually laying out slides). The quick chooser below and the Slide Selection Guide further down stay inline so you rarely need to open the recipes file just to pick a type.
 
-Bold heading, green subtitle, audience line. No agenda.
+| # | Slide type | CSS class | Use for |
+|---|-----------|-----------|---------|
+| 1 | Title | `.title-slide` | Orient the audience. Bold heading, green subtitle, audience line. No agenda. |
+| 2 | Standard content | `.slide-layout .split` | Explain with a visual. Content left, image right. 10 words max on content. |
+| 3 | Question | `.slide-question` | Open with tension. Provocative question, centred. Tease with slide, tell with voice. |
+| 4 | Full bleed image | `.slide-fullbleed` | One powerful image, edge to edge, optional bottom overlay. |
+| 5 | Breather (dark blank) | `.slide-breather` | Pause between acts. Focus returns to the speaker. |
+| 6 | Stat / single number | `.slide-stat` | Land a shocking number with a context label. |
+| 7 | Contributions (final) | `.slide-contributions` | Close. What was accomplished. Stays visible during Q&A. Never "Thank You". |
+| 8 | Content + SVG diagram | `.slide-layout .split` | Explain a concept with an inline, theme aware SVG. |
+| 9 | Step animation | Reveal fragments | Progressive reveal, one step per arrow press. |
+| 10 | Closing / CTA | `.slide-layout.closing` | Direct next step with a QR code instead of a summary. |
 
-```html
-<section id="title" class="title-slide" data-section="title">
-  <div class="title-content">
-    <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg" alt="SAS Logo" class="title-logo logo-light">
-    <img src="https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png" alt="SAS Logo" class="title-logo logo-dark">
-    <h1>Roster & Payroll Risk</h1>
-    <h2>Current State, Exposure & Transition Roadmap</h2>
-    <p class="author">Prepared for RS Leadership — GM, Directors & Depot Managers</p>
-    <p class="tagline">At SAS-AM we help organisations understand their strengths and weaknesses...</p>
-  </div>
-  <aside class="notes">
-    Do NOT introduce yourself here. Let the title speak. Move to the hook immediately.
-    Timing: ~15 seconds on the title before advancing.
-  </aside>
-</section>
-```
-
-**Typography:**
-- `<h1>`: 96px, weight 700, text-primary colour, letter-spacing -1px
-- `<h2>`: 40px, weight 500, accent colour (SAS Green)
-- `.author`: 24px, text-muted colour
-
----
-
-### 2. Standard Content Slide
-
-Two-column split layout. Content left, visual right. 10 words max on the content side.
-
-```html
-<section id="unique-id" data-section="situation">
-  <div class="slide-layout with-image">
-    <img src="[CDN_LOGO_LIGHT]" alt="SAS Logo" class="slide-logo logo-light">
-    <img src="[CDN_LOGO_DARK]" alt="SAS Logo" class="slide-logo logo-dark">
-    <div class="slide-header">
-      <span class="section-tag">SITUATION</span>
-    </div>
-    <div class="slide-body split">
-      <div class="slide-content">
-        <h2 class="slide-title">REFRAMING ASSET DATA</h2>
-        <p class="slide-subtitle">Your EAM Is A Filing Cabinet</p>
-      </div>
-      <div class="slide-image">
-        <img src="assets/visual-blue.png" alt="Description" class="logo-light">
-        <img src="assets/visual-green.png" alt="Description" class="logo-dark">
-      </div>
-    </div>
-  </div>
-  <aside class="notes">
-    Transition: "Let me show you what we found..."
-    Key stat: [stat to deliver verbally]
-    Timing: ~3 minutes
-  </aside>
-</section>
-```
-
-**Typography:**
-- `.section-tag`: 14px, weight 600, uppercase, letter-spacing 2px, accent colour
-- `.slide-title`: 72px, weight 700, uppercase, letter-spacing -1px
-- `.slide-subtitle`: 36px, weight 300, text-secondary colour
-
----
-
-### 3. Question Slide
-
-Provocative question, centred. The slide teases; the speaker tells. Use for complication slides.
-
-```html
-<section id="complication-1" class="slide-question" data-section="complication">
-  <div class="question-text">What happens when <em>every sensor reading</em> is a missed opportunity?</div>
-  <aside class="notes">
-    Transition: "But here is where it breaks down..."
-    Pause after showing the question. Let the audience read it. Then answer verbally.
-    Timing: ~3 minutes.
-  </aside>
-</section>
-```
-
-**Typography:**
-- `.question-text`: 72px, weight 700, text-primary colour
-- `em` within question: accent colour (SAS Green), no italic
-
----
-
-### 4. Full Bleed Image Slide
-
-Single powerful image filling the screen. Optional text overlay at bottom.
-
-```html
-<section id="fullbleed-1" class="slide-fullbleed" data-section="evidence">
-  <img src="assets/site-visit.jpg" alt="Control room at 2am during the incident">
-  <div class="fullbleed-overlay">
-    <h2>The Night It Failed</h2>
-    <p>Depot 3, February 2024</p>
-  </div>
-  <aside class="notes">
-    Let this image sit for 5 seconds before speaking.
-    Tell the story of what happened that night — sensory detail.
-    Timing: ~2 minutes.
-  </aside>
-</section>
-```
-
----
-
-### 5. Breather Slide (Dark Blank)
-
-Pure dark background. All focus returns to the speaker. Use between acts.
-
-```html
-<section id="breather-1" class="slide-breather" data-section="evidence">
-  <div class="breather-text">So what changed?</div>
-  <aside class="notes">
-    This is a pause slide. Slow down. Make eye contact.
-    Deliver the transition to your resolution verbally.
-    Timing: ~30 seconds of silence before moving on.
-  </aside>
-</section>
-```
-
----
-
-### 6. Stat / Single Number Slide
-
-One bold number with context. Use for impact data points.
-
-```html
-<section id="stat-1" class="slide-stat" data-section="evidence">
-  <div>
-    <div class="stat-number">$4.2M</div>
-    <div class="stat-label">Preventable Cost in 2023</div>
-  </div>
-  <aside class="notes">
-    Let the number land. Pause 3 seconds.
-    Then explain: "That is what a single undetected fault cost across the fleet last year."
-    Timing: ~1 minute.
-  </aside>
-</section>
-```
-
----
-
-### 7. Contributions Slide (Final)
-
-What you accomplished. Stays visible during Q&A. Never "Thank You" or "Questions?"
-
-```html
-<section id="closing" class="slide-contributions" data-section="recommendation">
-  <h2>What We Covered</h2>
-  <ol class="contributions-list">
-    <li>Identified $4.2M in preventable roster exposure</li>
-    <li>Mapped three high risk transition points</li>
-    <li>Proposed a phased remediation roadmap</li>
-  </ol>
-  <div class="closing-branding" style="margin-top: auto;">
-    <img src="[CDN_LOGO_LIGHT]" alt="SAS Logo" class="closing-logo logo-light">
-    <img src="[CDN_LOGO_DARK]" alt="SAS Logo" class="closing-logo logo-dark">
-  </div>
-  <aside class="notes">
-    Close with a salute, not thanks: "And with that, I will conclude."
-    This slide stays up during Q&A. The audience will stare at it for 10+ minutes.
-    If you lose your place during Q&A, repeat your last point — it acts as a memory jogger.
-  </aside>
-</section>
-```
-
----
-
-### 8. Standard Content Slide with SVG Diagram
-
-For conceptual diagrams, use inline SVG with CSS variables for theme support.
-
-```html
-<section id="concept" data-section="decisions">
-  <div class="slide-layout">
-    <div class="slide-header">
-      <span class="section-tag">DECISIONS</span>
-    </div>
-    <div class="slide-body split">
-      <div class="slide-content">
-        <h2 class="slide-title">EDGE FEDERATED ML</h2>
-        <p class="slide-subtitle">Intelligence On The Asset</p>
-      </div>
-      <div class="slide-image">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
-          <rect fill="var(--bg-tertiary)" stroke="var(--card-border)" .../>
-          <circle fill="var(--accent)" .../>
-          <text fill="var(--text-primary)" font-family="Arial, sans-serif">...</text>
-        </svg>
-      </div>
-    </div>
-  </div>
-  <aside class="notes">
-    Walk through the diagram verbally. Do not turn to look at the screen.
-    Timing: ~3 minutes.
-  </aside>
-</section>
-```
-
----
-
-### 9. Step Animation Slide (Fragment Transitions)
-
-Progressive reveal using Reveal.js fragments.
-
-```html
-<section id="process" data-section="decisions">
-  <div class="slide-layout">
-    <div class="slide-header">
-      <span class="section-tag">DECISIONS</span>
-    </div>
-    <div class="slide-body split">
-      <div class="slide-content">
-        <h2 class="slide-title">THREE PHASES</h2>
-      </div>
-      <div class="slide-image diagram-container">
-        <div class="federated-diagram step-1 fragment fade-out" data-fragment-index="1">
-          <img src="assets/step-1-blue.png" class="logo-light">
-          <img src="assets/step-1-green.png" class="logo-dark">
-        </div>
-        <div class="federated-diagram step-2 fragment fade-in-then-out" data-fragment-index="1">
-          <img src="assets/step-2-blue.png" class="logo-light">
-          <img src="assets/step-2-green.png" class="logo-dark">
-        </div>
-        <div class="federated-diagram step-3 fragment fade-in" data-fragment-index="2">
-          <img src="assets/step-3-blue.png" class="logo-light">
-          <img src="assets/step-3-green.png" class="logo-dark">
-        </div>
-      </div>
-    </div>
-  </div>
-  <aside class="notes">
-    Advance fragments with arrow keys. Each step builds on the last.
-    Timing: ~1 minute per step.
-  </aside>
-</section>
-```
-
----
-
-### 10. Closing/CTA Slide (Alternative to Contributions)
-
-Call to action with QR code. Use when the presentation needs a direct next step rather than a summary.
-
-```html
-<section id="closing" data-section="recommendation">
-  <div class="slide-layout closing">
-    <div class="slide-header">
-      <span class="section-tag">RECOMMENDATION</span>
-    </div>
-    <div class="slide-body centered">
-      <h2 class="closing-headline">Ready To Make Your Assets Intelligent?</h2>
-      <div class="qr-wrapper">
-        <div class="qr-container">
-          <div class="qr-glow"></div>
-          <img src="assets/qr-code.png" alt="QR Code" class="qr-code">
-        </div>
-        <div class="qr-cta">
-          <span class="qr-action">SCAN TO CONNECT</span>
-          <p class="qr-label">Learn more about Edge AI in Asset Management</p>
-        </div>
-      </div>
-      <div class="closing-branding">
-        <img src="[CDN_LOGO_LIGHT]" alt="SAS Logo" class="closing-logo logo-light">
-        <img src="[CDN_LOGO_DARK]" alt="SAS Logo" class="closing-logo logo-dark">
-        <p class="closing-search"><i class="fas fa-search"></i> EDGE AI ASSET MANAGEMENT</p>
-      </div>
-    </div>
-  </div>
-  <aside class="notes">
-    Close with a salute: "And with that, I will conclude."
-    Keep this slide up during Q&A.
-  </aside>
-</section>
-```
+For the zero dependency single file mode, the same markup goes inside `.deck-stage` with `class="slide"` (see `references/rendering-modes.md`).
 
 ---
 
@@ -943,6 +726,8 @@ For images that work in both themes (photos, memes):
 ---
 
 ## Animation Features
+
+For a full **effect-to-feeling** guide — a mood → animation table plus copy ready, brand rebranded (navy `#002244` / lime `#69BE28`), flat design safe snippets for entrance reveals, atmospheric backgrounds, data motion, and stat count-ups — see **`references/animation-library.md`**. Read it when choosing how a deck should feel. Pick one feeling and hold it across the whole deck. The three primitives below (binary background, QR pulse, SVG data flow) remain the inline quick reference.
 
 ### Binary Background
 
