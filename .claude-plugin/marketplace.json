@@ -10,8 +10,8 @@
     {
       "name": "sas-presentation",
       "source": "./sas-presentation/1.0.0",
-      "description": "Create polished SAS-AM branded Reveal.js presentations with light/dark mode, narrative structure, and professional layouts. Adds a fixed 16:9 scaled stage, density modes, an animation library, zero-dependency export, compression-safe typography, a shipped SAS logo, a navigation rail, headless-Chromium PDF export, and a sas-am.com/resources showcase.",
-      "version": "1.2.0",
+      "description": "Create polished SAS-AM branded Reveal.js presentations with light/dark mode, narrative structure, and professional layouts. Adds a fixed 16:9 scaled stage, density modes, an animation library, zero-dependency export, compression-safe typography, a shipped SAS logo, a navigation rail with a right gutter, headless-Chromium PDF export, and a sas-am.com/resources showcase (two hero + QR cards).",
+      "version": "1.3.0",
       "license": "MIT",
       "keywords": ["sas", "presentation", "reveal.js", "slides", "asset-management"],
       "category": "productivity",

@@ -61,6 +61,17 @@ function updateRail(i){
 // call updateRail(i) inside show(n), alongside the slide .active toggle
 ```
 
+## Right gutter for wide content (MANDATORY when the rail is present)
+
+The rail lives in a 300px column pinned to the right edge. Any **edge-to-edge wide content** — KPI rows, bar charts, column grids, resource card rows — must reserve a right gutter so it never slides under or crowds the rail. Reserve ~172px:
+
+```css
+/* keep wide content clear of the right nav rail */
+.kpis, .bars, .cols, .resrow { margin-right: 172px; }
+```
+
+Add any other full-width block class you introduce to this rule. Narrow content (headings, single statements, question text, stat blocks) does not need the gutter — only content that would otherwise run to the right edge. If a deck has no nav rail, the gutter is optional.
+
 ## Reveal.js note
 
 The reference implementation is the zero dependency single file deck (see `references/rendering-modes.md`), where `show(n)` already exists. In a Reveal.js deck, drive the rail from the `slidechanged` event instead: `Reveal.on('slidechanged', e => updateRail(e.indexh))`. The existing footer section nav still applies; the rail complements it, it does not replace it.
