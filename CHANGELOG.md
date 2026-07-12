@@ -5,6 +5,14 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.36.0] - 2026-07-12
+
+### Changed
+- **sas-presentation — resources showcase as hero + QR cards, and a nav-rail gutter (plugin 1.2.0 → 1.3.0).** Refinement lifting the updated reference deck's two changes, preserving everything from 1.35.0:
+  - **Resources showcase = max TWO, both hero + QR cards (no text-list variant).** `references/resources-showcase.md` and the `SKILL.md` Phase 3b rule now cap the showcase at two resources on one slide, each rendered as a white card with the article hero image on top, the title below, and a navy QR code (encoding the article URL) overlapping the hero's bottom-right with a "Scan to read" label. The old 2–4 text-list/callout variant is removed. Added the QR-generation recipe (`qrencode -t SVG -m 2 --foreground=002244 --background=ffffff`, with a python `qrcode`/`segno` fallback and base64-embedding), the hero fetch-and-downscale recipe (`curl` + `sips -Z 760` + base64), and the exact card CSS (`.resrow`, `.rescard`, `.reshero`, `.resqr` absolute bottom-right overlap, `.restitle` with 214px right padding to clear the QR, `.resmeta`).
+  - **Nav-rail gutter for wide content.** `references/nav-rail.md` and the `SKILL.md` structural rules now require edge-to-edge blocks (KPI rows, bar charts, column grids, resource card rows) to reserve a ~172px right gutter — `.kpis,.bars,.cols,.resrow{margin-right:172px}` — so wide content never crowds or slides under the right navigation rail.
+  - Verified with a zero-dependency sample deck rendered at desktop (1280×720), phone (390×844), and as a headless-Chromium PDF: two hero + QR cards render with sharp navy QR codes, KPI row and card row clear the nav rail, and the PDF shows no grey boxes or shadows with furniture hidden. `base-styles.css` was not touched (its CRLF line endings preserved).
+
 ## [1.35.0] - 2026-07-12
 
 ### Added

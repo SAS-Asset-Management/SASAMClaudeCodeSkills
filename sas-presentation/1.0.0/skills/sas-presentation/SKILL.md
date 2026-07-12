@@ -311,12 +311,14 @@ Every chart MUST include a source attribution, either:
 
 ### Phase 3b: Resources Showcase (cite our own content)
 
-Once the deck's subject and sector are known, search the SAS-AM website's `/resources` section (the Webflow blog + case-study CMS at `sas-am.com/resources`) for the two to four most relevant published pages, and showcase them in the deck — a "Further reading" slide, or inline resource callouts on related slides. This turns the deck into a funnel and demonstrates depth without crowding the slides.
+Once the deck's subject and sector are known, search the SAS-AM website's `/resources` section (the Webflow blog + case-study CMS at `sas-am.com/resources`) for the most relevant published pages, and showcase the **two best** on a single slide. This turns the deck into a funnel and demonstrates depth without crowding the slides.
 
-- **How to search:** prefer the Webflow MCP CMS tools (`collections_list` → `collections_items_list_items` on the Resources collection); fall back to `WebFetch` of `sas-am.com/resources` or `WebSearch` for `site:sas-am.com/resources <subject keywords>`.
-- **Match** on sector first (Water, Transport, Local Government, Resources & Minerals, Health, Defence), then subject, then recency. Keep 2–4.
-- **Honesty:** only cite pages that exist and whose URL resolves — confirm before putting a link on a slide; never fabricate titles or slugs. If nothing fits, omit the showcase and say so.
-- Full method, matching heuristic, and brand-safe slide/callout markup: **`references/resources-showcase.md`**.
+- **Maximum TWO resources, both rendered as hero + QR cards.** Each card is a white card with the article's hero image on top, the title below, and a navy QR code (encoding the article URL) overlapping the hero's bottom-right with a "Scan to read" label. **There is no text-list variant** — never fall back to a list of links. Show one card if only one strong match exists; omit the slide if none fit.
+- **Prepare each card's assets:** fetch the hero image, downscale (`sips -Z 760`) and base64-embed it; generate the QR **locally** encoding the exact URL (`qrencode -t SVG -m 2 --foreground=002244 --background=ffffff`, or a python `qrcode`/`segno` fallback) and base64-embed it. Never call a remote QR service.
+- **How to search:** prefer the Webflow MCP CMS tools (`collections_list` → `collections_items_list_items` on the Resources collection — pull the hero image URL too); fall back to `WebFetch` of `sas-am.com/resources` or `WebSearch` for `site:sas-am.com/resources <subject keywords>`.
+- **Match** on sector first (Water, Transport, Local Government, Resources & Minerals, Health, Defence), then subject, then recency. Keep the top two.
+- **Honesty:** only cite pages that exist and whose URL resolves — confirm before putting a card (and its QR) on a slide; never fabricate titles or slugs. If nothing fits, omit the showcase and say so.
+- Full method, the QR-generation recipe, and the exact card CSS: **`references/resources-showcase.md`**.
 
 Skip this for internal-only decks (meeting minutes, project status) where external reading would be noise.
 
@@ -444,6 +446,7 @@ See `references/scaffold-template.html` for the complete scaffold including Java
 - All JS at bottom of `<body>`
 - No build step — open-in-browser ready
 - **Fixed stage — never reflow, never `display:none` a slide.** The deck is authored at one fixed canvas (1760×990 under Reveal.js, 1920×1080 in zero dependency mode) and the whole canvas scales uniformly to the viewport, letterboxing on narrow screens rather than rearranging slide content. Do not add responsive rules that rewrap or restack slide *content* per device — scale the stage, not the slide. Switch whole slides only via the framework (Reveal) or an `.active`/`.visible` class toggling `visibility`/`opacity`/`pointer-events`; **never** switch a `<section>` with `display:none`/`display:block` (a later `display:flex` layout rule will override it and show every slide at once). This rule targets slide switching only — the dual theme image swap that uses `display` on `.logo-light`/`.logo-dark` is unaffected. Full detail and the zero dependency scaffold: `references/rendering-modes.md`.
+- **Nav-rail gutter for wide content.** When the right navigation rail is present, every edge-to-edge block (KPI rows, bar charts, column grids, resource card rows) must reserve a ~172px right gutter so it never crowds or slides under the rail: `.kpis, .bars, .cols, .resrow { margin-right: 172px; }`. Add any new full-width block class to that rule. See `references/nav-rail.md`.
 
 ### Rendering Modes (Reveal.js default, zero dependency optional)
 
@@ -550,6 +553,8 @@ Share mode applies the following codec survival tactics:
 ### Navigation Rail (subtle right-side progress rail)
 
 An optional very subtle vertical rail pinned to the right edge, showing section labels with nodes — current section green and labelled, past sections filled and dimmed, upcoming sections faint hollow rings. It tells the audience where we are and where we are going without competing with the slide. Light/dark aware, `aria-hidden`, and hidden in PDF export. Recommended for decks of 5+ sections; skip on 1–3 slide one-pagers. Full CSS, markup, and JS wiring: **`references/nav-rail.md`**. It complements the footer nav, it does not replace it.
+
+**Reserve a right gutter for wide content when the rail is present.** Any edge-to-edge block — KPI rows, bar charts, column grids, resource card rows — must reserve ~172px on the right so it never crowds or slides under the rail: `.kpis, .bars, .cols, .resrow { margin-right: 172px; }`. Add any new full-width block class you introduce to that rule. Narrow content (headings, single statements, stats) does not need the gutter.
 
 ---
 
