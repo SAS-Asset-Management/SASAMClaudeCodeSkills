@@ -1,6 +1,6 @@
 ---
 name: sas-presentation
-description: Create polished marcov / SAS-AM branded Reveal.js presentations. Use when the user asks to create slides, a presentation, a deck, or a slideshow. Supports 18 presentation types — from standard narrative decks to dashboards, proposals, and meeting minutes. Implements SAS brand guidelines with light/dark mode and professional layouts. Generates standalone HTML + CSS with no build step required. Offers speaker-led and reading-first density modes and an optional zero-dependency single-file export mode. Complies with marcov-revealjs-standards v1.0.0.
+description: Create polished marcov / SAS-AM branded Reveal.js presentations. Use when the user asks to create slides, a presentation, a deck, or a slideshow. Supports 18 presentation types — from standard narrative decks to dashboards, proposals, and meeting minutes. Implements SAS brand guidelines with light/dark mode and professional layouts. Generates standalone HTML + CSS with no build step required. Offers speaker-led and reading-first density modes and an optional zero-dependency single-file export mode. Ships the SAS logo with the deck, compression-safe typography for Zoom/Teams screen share, a subtle right-side navigation rail, headless-Chromium PDF export, and a showcase of relevant sas-am.com/resources pages. Complies with marcov-revealjs-standards v1.0.0.
 ---
 
 # SAS-AM Presentation Skill
@@ -122,8 +122,12 @@ For full type definitions including sections, components, and Reveal.js override
    - No JavaScript console errors printed during load (check the console output if using claude-in-chrome)
    - Text is not truncated or overflowing its container
    - **Panel overlap check.** No card, panel, image, or text block visually covers another. A `scrollHeight` / overflow check alone is NOT sufficient — absolutely positioned or grid panels can overlap while reporting no overflow. Inspect the rendered pixels: every panel occupies its own space with visible separation (border or background contrast, never a shadow).
-5. If anything is missing, broken, overlapping, or throws a console error, fix it and repeat the render check at both viewports before proceeding. Do not skip to the next slide type or declare victory on the strength of the source code alone.
-6. Only after the render check passes at both viewports may the artefact be reported as complete to the user.
+5. **PDF export check (MANDATORY when a PDF is produced or offered).** Export the deck to PDF (see `references/pdf-export.md`) and screenshot at least one content page. Confirm specifically:
+   - **No grey boxes** — every panel is white with a border or a genuine brand fill, never a flat grey rectangle.
+   - **No shadow halos** around cards, tiles, or text (flat design; shadows print as grey smears).
+   - Brand colour intact (navy backgrounds navy, green marks green — not washed pale), every slide present one per page, bars/charts drawn at full value, no half-faded stagger, nav rail and controls absent.
+6. If anything is missing, broken, overlapping, greyed, or throws a console error, fix it and repeat the render check (both viewports, and the PDF if applicable) before proceeding. Do not skip to the next slide type or declare victory on the strength of the source code alone.
+7. Only after the render check passes at both viewports (and the PDF check, if a PDF is produced) may the artefact be reported as complete to the user.
 
 This gate is mode agnostic — it applies identically to the Reveal.js build and the zero dependency single file export (see `references/rendering-modes.md`).
 
@@ -305,6 +309,17 @@ Every chart MUST include a source attribution, either:
 | Published / external | "Source: [Publication/org], [year]" |
 | Mixed | Cite each series separately in a footnote |
 
+### Phase 3b: Resources Showcase (cite our own content)
+
+Once the deck's subject and sector are known, search the SAS-AM website's `/resources` section (the Webflow blog + case-study CMS at `sas-am.com/resources`) for the two to four most relevant published pages, and showcase them in the deck — a "Further reading" slide, or inline resource callouts on related slides. This turns the deck into a funnel and demonstrates depth without crowding the slides.
+
+- **How to search:** prefer the Webflow MCP CMS tools (`collections_list` → `collections_items_list_items` on the Resources collection); fall back to `WebFetch` of `sas-am.com/resources` or `WebSearch` for `site:sas-am.com/resources <subject keywords>`.
+- **Match** on sector first (Water, Transport, Local Government, Resources & Minerals, Health, Defence), then subject, then recency. Keep 2–4.
+- **Honesty:** only cite pages that exist and whose URL resolves — confirm before putting a link on a slide; never fabricate titles or slugs. If nothing fits, omit the showcase and say so.
+- Full method, matching heuristic, and brand-safe slide/callout markup: **`references/resources-showcase.md`**.
+
+Skip this for internal-only decks (meeting minutes, project status) where external reading would be noise.
+
 ### Default Narrative Structure (for "Presentation" type)
 
 The default **Presentation** type uses the Situation → Complication → Resolution arc, structured as three acts with a bold close:
@@ -341,14 +356,19 @@ presentation-folder/
 
 > **Note:** SAS logos are loaded from the Webflow CDN — no local logo files needed.
 
-## Logo Assets (CDN)
+## Logo Assets
 
-SAS-AM logos are hosted on the Webflow CDN. **No local logo files are required.**
+The SAS logo **ships with the deck** — never fall back to a text-only "SAS Asset Management" wordmark. Two ways to source it:
+
+1. **Ship-with-deck SVG / data-URI (preferred — offline safe).** The skill bundles both brand variants as SVGs at `references/assets/sasLogoPrimary.svg` (navy+green, for light slides) and `references/assets/sasLogoReversed.svg` (white+green, for dark slides), plus their base64 data-URI strings and a self-recolouring `currentColor` inline-SVG option. Full usage — navy on light, white on dark, the data-URIs, and the `currentColor` trick — is in **`references/logos.md`**. This is the only logo path that works in the zero dependency single file deck and survives with no network.
+2. **Webflow CDN (Reveal.js online decks).** Convenient when the deck will always have network:
 
 | Mode | URL | Description |
 |------|-----|-------------|
 | **Light mode** | `https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a77a2f0e9f223c5f196bd3_sas-logo.jpg` | Full SAS wordmark (dual arrows + "SAS" text, dark navy on white) |
 | **Dark mode** | `https://cdn.prod.website-files.com/653497186047abfdf821b2fc/69a777cb2f01269a5c7f073e_sas-logo-lightmode.png` | Green arrow brandmark on transparent background |
+
+**Rule: navy logo on light slides, white (reversed) logo on dark slides. Never render the brand as plain text.**
 
 ### Logo Behaviour
 
@@ -400,7 +420,7 @@ Every presentation MUST include these required elements:
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;500;600;700;900&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- marcov Styles -->
   <link rel="stylesheet" href="styles.css">
@@ -527,6 +547,10 @@ Share mode applies the following codec survival tactics:
 - Keyboard accessible: `tabindex="0"`, `role="button"`, Enter/Space activation
 - Footer positioned `fixed` outside Reveal container
 
+### Navigation Rail (subtle right-side progress rail)
+
+An optional very subtle vertical rail pinned to the right edge, showing section labels with nodes — current section green and labelled, past sections filled and dimmed, upcoming sections faint hollow rings. It tells the audience where we are and where we are going without competing with the slide. Light/dark aware, `aria-hidden`, and hidden in PDF export. Recommended for decks of 5+ sections; skip on 1–3 slide one-pagers. Full CSS, markup, and JS wiring: **`references/nav-rail.md`**. It complements the footer nav, it does not replace it.
+
 ---
 
 ## Slide Types
@@ -569,7 +593,7 @@ For the zero dependency single file mode, the same markup goes inside `.deck-sta
   /* Text - ALL text is SAS Blue in light mode */
   --text-primary: #002244;
   --text-secondary: #334466;
-  --text-muted: #6b7280;
+  --text-muted: #42566a;  /* compression-safe: darker than the old #6b7280 so it survives screen-share */
 
   /* Accent */
   --accent: #69BE28;
@@ -645,21 +669,34 @@ For the zero dependency single file mode, the same markup goes inside `.deck-sta
 
 ## Typography Specifications
 
+### Compression-Safe Typography (MANDATORY)
+
+SAS decks are built to be shared over Zoom and Teams, where 4:2:0 chroma subsampling and adaptive bitrate smear thin strokes and low-contrast greys into mush. Typography is therefore **weighted up** as a hard rule — it is not a stylistic choice:
+
+- **No 300 / light weights anywhere.** Thin type is the first thing the codec destroys. This rule has no exceptions.
+- **Base body weight 600**, not 400. Set `font-weight:600` on `body` so every unstyled run of text is already codec-robust.
+- **Headings 800–900.** `h1`/`h2`/hero numbers use weight 900; slide titles and card headings 800–900.
+- **Labels, kickers, captions, footer nav 700–900.** Small text needs the most weight because it has the least ink to survive compression.
+- **Higher-contrast muted ink.** `base-styles.css` sets light-mode `--text-muted` to the darker `#42566a` (was the pale `#6b7280`) — pale greys vanish against white after quantisation. Keep contrast ≥ 4.5:1; do not lighten it back.
+- `base-styles.css` now sets base body weight to **600** and carries **no 300 weights**, and the font import loads `400;500;600;700;900` (no 300). Apply the heading weights (800–900) from the table below when authoring, and never override a weight downward toward light in a deck's inline styles.
+
+The table below reflects the compression-safe minimums. Where a slide type historically used a lighter weight, use the value here instead.
+
 | Element | Font Size | Weight | Colour | Other |
 |---------|-----------|--------|--------|-------|
-| Title Slide h1 | 96px | 700 | text-primary | line-height 1.1, letter-spacing -1px |
-| Title Slide h2 | 40px | 500 | accent | — |
-| Author | 24px | 400 | text-muted | — |
-| Section Tag | 14px | 600 | accent | uppercase, letter-spacing 2px |
-| Slide Title | 72px | 700 | text-primary | uppercase, letter-spacing -1px |
-| Slide Subtitle | 36px | 300 | text-secondary | line-height 1.4 |
-| Question Text | 72px | 700 | text-primary | em = accent colour |
-| Stat Number | 160px | 700 | accent | line-height 1 |
-| Stat Label | 36px | 300 | text-secondary | uppercase, letter-spacing 3px |
+| Title Slide h1 | 96px | 900 | text-primary | line-height 1.1, letter-spacing -1px |
+| Title Slide h2 | 40px | 600 | accent | — |
+| Author | 24px | 600 | text-muted (darker `#42566a`) | — |
+| Section Tag / Kicker | 14px | 900 | accent | uppercase, letter-spacing 2px |
+| Slide Title | 72px | 900 | text-primary | uppercase, letter-spacing -1px |
+| Slide Subtitle | 36px | 600 | text-secondary | line-height 1.4 (never 300) |
+| Question Text | 72px | 900 | text-primary | em = accent colour |
+| Stat Number | 160px | 900 | accent | line-height 1 |
+| Stat Label | 36px | 700 | text-secondary | uppercase, letter-spacing 3px (never 300) |
 | Footer Nav | 13px | 700 | text-secondary | uppercase, letter-spacing 2px |
 
 **Font Families:**
-- Source Sans Pro (300, 400, 500, 600, 700 weights) — body text, headings
+- Source Sans Pro (**400, 500, 600, 700, 900** weights — do not load or use 300) — body text, headings
 - Source Code Pro (400, 600 weights) — code blocks, inline code, keyboard badges
 
 ---
@@ -912,7 +949,15 @@ Before finalising, audit every slide against the 10 word rule:
 
 ### Step 6: Export (Optional)
 
-For PDF export:
+For PDF export, two paths:
+
+**Headless Chromium `--print-to-pdf` (preferred — most faithful brand colour):**
+```bash
+chrome --headless --disable-gpu --no-pdf-header-footer --print-to-pdf="output.pdf" "presentation.html"
+```
+This relies on the hardened `@page`/`@media print` guardrail block (`@page{size:1920px 1080px}`, `print-color-adjust:exact`, `box-shadow:none`, reveal all slides, un-fade stagger, force bar fills, panels to white-with-border, hide nav rail/controls). The guardrails exist to eliminate the two recurring PDF defects — **grey boxes and shadow halos**. Full flow and the copy-paste CSS: **`references/pdf-export.md`**. Always run the PDF export check in the RENDER VERIFY GATE afterwards.
+
+**decktape (alternative for Reveal decks):**
 ```bash
 npx decktape reveal "presentation.html" output.pdf
 ```

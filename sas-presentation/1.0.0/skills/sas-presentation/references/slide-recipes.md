@@ -81,7 +81,7 @@ Two-column split layout. Content left, visual right. 10 words max on the content
 **Typography:**
 - `.section-tag`: 14px, weight 600, uppercase, letter-spacing 2px, accent colour
 - `.slide-title`: 72px, weight 700, uppercase, letter-spacing -1px
-- `.slide-subtitle`: 36px, weight 300, text-secondary colour
+- `.slide-subtitle`: 36px, weight 600, text-secondary colour (never 300 — see the compression-safe typography rule in `SKILL.md`)
 
 ---
 
