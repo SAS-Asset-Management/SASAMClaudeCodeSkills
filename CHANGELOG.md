@@ -5,6 +5,13 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.37.0] - 2026-07-14
+
+### Added
+- **Microsoft 365 email tooling bundled into sasam-core (plugin 1.1.0 to 1.2.0).** The Outlook and M365 toolchain is now one harmonious plugin. The `microsoft365` hub (the `outlook` CLI reference plus the mandatory composition rules) and the new `emailVoice` sub skill join the existing `sendAndLog` under `sasam-core/skills`, so the three ship and version together.
+  - **`microsoft365` skill** moved from a hand authored slash command into the plugin. It now carries two mandatory composition rules on top of the existing HTML and approval before send rules: **Always Arial** (every outbound body wrapped in an Arial container that matches the signature) and **Voice** (read `~/.outlook-cli/voiceProfile.md` before composing and match the user's writing voice).
+  - **`emailVoice` skill (new)** samples roughly 100 of the user's sent messages via the `outlook` CLI, classifies their writing voice (register, openings, closings, rhythm, punctuation, idiom, tone by recipient) and captures it in `~/.outlook-cli/voiceProfile.md`, which the `microsoft365` hub reads before every draft. `sendAndLog` inherits the voice automatically because it drafts through the hub. The profile stays local and personal; only the mechanism ships. After writing the profile the skill drafts a sample email in the captured voice and calibrates it against the user's feedback, folding any corrections back into the profile (skill 1.0.0 to 1.1.0).
+
 ## [1.36.0] - 2026-07-12
 
 ### Changed
