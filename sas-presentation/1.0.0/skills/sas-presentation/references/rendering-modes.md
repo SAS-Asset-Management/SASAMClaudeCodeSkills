@@ -1,6 +1,8 @@
 # Rendering Modes — Fixed Stage & Zero Dependency Export
 
-Two ways to render a SAS-AM deck. Reveal.js is the default. Zero dependency is an opt in mode for offline, air gapped, or CDN blocked delivery. Both obey the same fixed stage discipline.
+> **v2 update:** the **default engine is now `deck-stage`** (see `deckStageRecipes.md`) — a standalone 1920×1080 fixed-stage web component with an icon rail, count-ups, a presenter camera cameo, and native one-page-per-slide print. The Reveal.js material below is retained as the **legacy** path (existing decks and the print-first case-study / A4 / proposal templates). Both engines share the fixed-stage discipline described here.
+
+Two ways to render a SAS-AM deck. Reveal.js is the legacy engine. Zero dependency (now the deck-stage single-file variant) is for offline, air gapped, or CDN blocked delivery. Both obey the same fixed stage discipline.
 
 marcov-revealjs-standards v1.0.0 compliance is preserved in both modes: brand colours (SAS Blue `#002244`, SAS Green `#69BE28`), flat design (no box shadows), light/dark theming via CSS variables, WCAG 2.1 AA, and the presentation philosophy rules all still apply.
 

@@ -10,10 +10,10 @@
     {
       "name": "sas-presentation",
       "source": "./sas-presentation/1.0.0",
-      "description": "Create polished SAS-AM branded Reveal.js presentations with light/dark mode, narrative structure, and professional layouts. Adds a fixed 16:9 scaled stage, density modes, an animation library, zero-dependency export, compression-safe typography, a shipped SAS logo, a navigation rail with a right gutter, headless-Chromium PDF export, and a sas-am.com/resources showcase (two hero + QR cards).",
-      "version": "1.3.0",
+      "description": "Create polished SAS-AM branded presentations. The default v2 engine is the standalone deck-stage web component — a fixed 1920×1080 auto-scaling stage with keyboard/touch nav, a 22-template gallery, animated count-ups, an icon navigation rail, a draggable presenter camera cameo for live delivery, and native one-page-per-slide print-to-PDF — with Reveal.js kept as a legacy path. Includes light/dark themes, density modes, compression-safe typography, a shipped SAS logo, and a sas-am.com/resources showcase.",
+      "version": "2.0.0",
       "license": "MIT",
-      "keywords": ["sas", "presentation", "reveal.js", "slides", "asset-management"],
+      "keywords": ["sas", "presentation", "deck-stage", "reveal.js", "slides", "asset-management"],
       "category": "productivity",
       "tags": ["presentations", "slides", "reveal.js", "sas"]
     },
