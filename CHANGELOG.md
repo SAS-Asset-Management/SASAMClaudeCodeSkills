@@ -5,6 +5,16 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.38.0] - 2026-07-15
+
+### Added
+- **sas-presentation — new default v2 rendering engine: `deck-stage` (plugin 1.3.0 → 2.0.0).** New decks now build on a standalone vanilla web component instead of Reveal.js. Reveal.js is retained as a documented legacy path (existing decks and the print-first case-study / A4 / proposal templates). Everything engine-agnostic — the presentation philosophy, discovery interview, density modes, chart selection, resources showcase, colour system, and compression-safe typography — is unchanged and applies to both engines.
+  - **`references/engine/deckStage.js`** — the `<deck-stage>` component (shipped verbatim): fixed 1920×1080 auto-scaling stage that letterboxes rather than reflows, keyboard + touch navigation, built-in per-slide `data-speaker-notes`, and native `@media print` one-page-per-slide export (Chrome `--print-to-pdf`, no guardrail block needed).
+  - **`references/engine/deckChrome.css` + `deckChrome.js`** — ported to vanilla from the source template's framework runtime: light/dark theme tokens, entrance-animation classes (`a-up`/`a-scale`/`a-blur`/`a-fade`/`grow-x`/`grow-y`/`draw` with `d1`…`d8` stagger), animated number **count-ups** (`data-count`), a generic **icon navigation rail** built from each slide's `data-label`/`data-nav-icon`, and a draggable/resizable **presenter camera cameo** (crop shape, zoom, blur, mirror, camera-swap, pin; position persisted).
+  - **Presenter camera cameo — secure-context handling** grafted in from the Mainstream 2026 spineDeck: `getUserMedia` needs a secure context, and Safari (unlike Chrome) treats `http://localhost` as insecure. The cameo now runs a preflight, shows a diagnostic (protocol/host + "serve over https / use Chrome") instead of failing silently, and maps permission/hardware errors to plain messages. New **`references/engine/serveDeck.py`** serves the deck over HTTP (Chrome) or `--https` with an mkcert cert (Safari).
+  - **`references/deckStageTemplates.html`** — a 22-template gallery (title, contents, price-anchor cognitive frame, divider, question, hero-stat with count-up, KPI wall + sparklines, bar/trend/donut/stacked/waterfall charts, split+flow, full-bleed, quote, before/after, RAG grid, roadmap, quadrant, article-reference with UTM QR, resources, contributions close). **`references/deckStageScaffold.html`** is the minimal skeleton and **`references/deckStageRecipes.md`** the engine guide + catalogue.
+  - **SKILL.md** gains a "Rendering Engine (v2 default: deck-stage)" section; the rendering-modes table, build-structure step, and PDF-export step now lead with deck-stage and mark Reveal.js legacy. `references/rendering-modes.md` carries a v2 pointer. Rendered and render-verified: all 22 gallery slides print one page each with brand colour intact, no grey-box or shadow-halo defects, and both desktop and phone viewports letterbox as one unit.
+
 ## [1.37.0] - 2026-07-14
 
 ### Added

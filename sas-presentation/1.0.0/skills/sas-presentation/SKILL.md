@@ -1,6 +1,6 @@
 ---
 name: sas-presentation
-description: Create polished marcov / SAS-AM branded Reveal.js presentations. Use when the user asks to create slides, a presentation, a deck, or a slideshow. Supports 18 presentation types — from standard narrative decks to dashboards, proposals, and meeting minutes. Implements SAS brand guidelines with light/dark mode and professional layouts. Generates standalone HTML + CSS with no build step required. Offers speaker-led and reading-first density modes and an optional zero-dependency single-file export mode. Ships the SAS logo with the deck, compression-safe typography for Zoom/Teams screen share, a subtle right-side navigation rail, headless-Chromium PDF export, and a showcase of relevant sas-am.com/resources pages. Complies with marcov-revealjs-standards v1.0.0.
+description: Create polished marcov / SAS-AM branded presentations. Use when the user asks to create slides, a presentation, a deck, or a slideshow. The default v2 engine is the standalone deck-stage web component — a fixed 1920×1080 auto-scaling stage with keyboard/touch nav, a 22-template gallery, animated count-ups, an icon navigation rail, a draggable presenter camera cameo for live delivery, native one-page-per-slide print-to-PDF, and light/dark themes — with Reveal.js kept as a legacy path. Supports 18 presentation types — from standard narrative decks to dashboards, proposals, and meeting minutes. Implements SAS brand guidelines, speaker-led and reading-first density modes, compression-safe typography for Zoom/Teams screen share, a shipped SAS logo, and a showcase of relevant sas-am.com/resources pages. Generates standalone HTML with no build step.
 ---
 
 # SAS-AM Presentation Skill
@@ -79,6 +79,19 @@ This skill creates presentations following the marcov / SAS-AM communication sty
 - **Speaker Notes with Presenter View**: Reveal.js Notes plugin with transition cues, timing, and recovery phrases (press S to open)
 - **WCAG 2.1 AA Compliance**: Focus indicators, reduced motion, screen reader support
 - **marcov Standards Compliant**: All output follows marcov-revealjs-standards v1.0.0
+
+## Rendering Engine (v2 default: deck-stage)
+
+**New decks use the standalone `deck-stage` engine by default.** It is a single vanilla web component — no Reveal.js, no Font Awesome, no CDN for the engine itself. Reveal.js is retained as a **legacy** path only (existing decks, and the print-first case-study / A4 / proposal templates); do not build new decks on it unless the user asks.
+
+Why it is the default: a fixed 1920×1080 auto-scaling stage that letterboxes rather than reflows, keyboard + touch navigation, native `@media print` one-page-per-slide export (Chrome `--print-to-pdf` — no guardrail hacks), built-in per-slide `data-speaker-notes`, plus the shipped chrome — an **icon navigation rail**, animated **count-ups**, a light/dark **theme toggle**, and a draggable **presenter camera cameo** for live delivery.
+
+- **Build from** `references/deckStageScaffold.html` (the skeleton) and copy layouts from `references/deckStageTemplates.html` (the 22-template gallery).
+- **Full engine guide** — per-slide attributes (`data-label`, `data-nav-icon`, `data-speaker-notes`), entrance-animation classes, count-up markup, theme tokens, the icon rail, and the **presenter camera cameo including its secure-context / serving requirements** — is in **`references/deckStageRecipes.md`**. Read it before building a v2 deck.
+- **Engine files** (`references/engine/`): `deckStage.js` (the component, copy verbatim), `deckChrome.css`, `deckChrome.js`, and `serveDeck.py` (serve locally for the camera). Copy `engine/` and `assets/` into the deck folder; or inline everything for a single-file offline deck.
+- **Presenter camera needs a secure context.** Chrome treats `http://localhost` as secure; Safari does not and needs `https://` (mkcert). The cameo shows a diagnostic instead of failing silently. Serve with `python3 engine/serveDeck.py` (Chrome) or `--https` (Safari). Details in `deckStageRecipes.md`.
+
+The philosophy, discovery interview, density modes, chart selection, resources showcase, colour system, and typography below are **engine-agnostic** and apply to both v2 and the legacy Reveal path.
 
 ## Supported Presentation Types
 
@@ -448,14 +461,15 @@ See `references/scaffold-template.html` for the complete scaffold including Java
 - **Fixed stage — never reflow, never `display:none` a slide.** The deck is authored at one fixed canvas (1760×990 under Reveal.js, 1920×1080 in zero dependency mode) and the whole canvas scales uniformly to the viewport, letterboxing on narrow screens rather than rearranging slide content. Do not add responsive rules that rewrap or restack slide *content* per device — scale the stage, not the slide. Switch whole slides only via the framework (Reveal) or an `.active`/`.visible` class toggling `visibility`/`opacity`/`pointer-events`; **never** switch a `<section>` with `display:none`/`display:block` (a later `display:flex` layout rule will override it and show every slide at once). This rule targets slide switching only — the dual theme image swap that uses `display` on `.logo-light`/`.logo-dark` is unaffected. Full detail and the zero dependency scaffold: `references/rendering-modes.md`.
 - **Nav-rail gutter for wide content.** When the right navigation rail is present, every edge-to-edge block (KPI rows, bar charts, column grids, resource card rows) must reserve a ~172px right gutter so it never crowds or slides under the rail: `.kpis, .bars, .cols, .resrow { margin-right: 172px; }`. Add any new full-width block class to that rule. See `references/nav-rail.md`.
 
-### Rendering Modes (Reveal.js default, zero dependency optional)
+### Rendering Modes (deck-stage default, Reveal.js legacy)
 
-Two render targets, same brand and same fixed stage discipline. See `references/rendering-modes.md` for the full comparison, the fixed stage CSS, and the vanilla scaler + switcher.
+Same brand and the same fixed-stage discipline across modes. See `references/rendering-modes.md` for the full comparison and `references/deckStageRecipes.md` for the v2 engine guide.
 
 | Mode | When | Canvas | Notes |
 |------|------|--------|-------|
-| **Reveal.js** (default) | Almost always. Live presenting, speaker view, fragments, hash links. | 1760×990 | The build described throughout this skill. Reveal provides the fixed stage scaler. |
-| **Zero dependency single file** | The deck must run offline, on an air gapped machine, or on a client site that blocks external CDNs; or the user wants "one file that always works". | 1920×1080 | One self contained HTML, all CSS/JS inline, no Reveal/Font Awesome/CDN. Loses speaker view, fragments, and hash routing; keeps brand, themes, flat design, accessibility, and the fixed stage. Offer it, do not default to it. |
+| **deck-stage** (default) | New decks. Live presenting (with the camera cameo), offline delivery, clean print-to-PDF. | 1920×1080 | The v2 engine. One vanilla web component + chrome, no Reveal/Font Awesome/CDN. Icon rail, count-ups, presenter cameo, native print. Build from `deckStageScaffold.html`. |
+| **deck-stage single file** | The deck must run fully offline or on a locked-down machine, or the user wants "one file that always works". | 1920×1080 | Same engine, everything inlined (scripts, CSS, base64 logos). Keeps brand, themes, flat design, accessibility, the fixed stage, and the cameo. |
+| **Reveal.js** (legacy) | Existing Reveal decks, or when the user specifically wants Reveal speaker-view/fragments/hash routing. | 1760×990 | The prior engine. Retained for continuity and for the print-first case-study / A4 / proposal templates. Not for new decks unless asked. |
 
 ### Reveal.js Configuration
 
@@ -910,12 +924,14 @@ Conduct the discovery interview to:
 8. **Gather remaining details** (delivery context, branding, assets, outline)
 9. **Plan data visualisations** using Phase 3 questions — for each data-driven slide, identify chart type, data source (file vs anecdotal), and confirm values before building
 
-### Step 2: Create Presentation Structure
+### Step 2: Create Presentation Structure (v2 deck-stage)
 
-1. Create a new directory for the presentation
-2. Copy `base-styles.css` from references as `styles.css`
-3. Create `presentation.html` using the scaffold template — adapt the sections and footer nav items to match the selected presentation type
-4. Create `assets/` directory for slide images (logos load from CDN automatically)
+1. Create a new directory for the presentation.
+2. Copy `references/engine/` (deckStage.js, deckChrome.css, deckChrome.js, serveDeck.py) and `references/assets/` (the two SVG logos) into the deck folder.
+3. Create `presentation.html` from `references/deckStageScaffold.html`; add one `<section>` per slide, copying layouts from `references/deckStageTemplates.html`. Give each slide `data-label`, `data-nav-icon`, and `data-speaker-notes`.
+4. For a single-file offline deck instead, inline the two scripts, the CSS, and base64 the logos.
+
+*(Legacy Reveal.js build: copy `base-styles.css` as `styles.css` and use `references/scaffold-template.html`.)*
 
 ### Step 3: Build Content Slides
 
@@ -954,23 +970,13 @@ Before finalising, audit every slide against the 10 word rule:
 
 ### Step 6: Export (Optional)
 
-For PDF export, two paths:
-
-**Headless Chromium `--print-to-pdf` (preferred — most faithful brand colour):**
+**v2 deck-stage decks — native print (preferred).** The engine's built-in `@media print` lays every slide out as its own page and hides the chrome (rail, cameo, toggles). No guardrail block needed:
 ```bash
-chrome --headless --disable-gpu --no-pdf-header-footer --print-to-pdf="output.pdf" "presentation.html"
+chrome --headless=new --disable-gpu --no-pdf-header-footer --print-to-pdf="output.pdf" "presentation.html"
 ```
-This relies on the hardened `@page`/`@media print` guardrail block (`@page{size:1920px 1080px}`, `print-color-adjust:exact`, `box-shadow:none`, reveal all slides, un-fade stagger, force bar fills, panels to white-with-border, hide nav rail/controls). The guardrails exist to eliminate the two recurring PDF defects — **grey boxes and shadow halos**. Full flow and the copy-paste CSS: **`references/pdf-export.md`**. Always run the PDF export check in the RENDER VERIFY GATE afterwards.
+One page per slide, brand colour faithful, no grey boxes and no shadow halos (the deck is flat by construction). If the deck references remote images (a `/resources` hero) or a remote QR, add `--virtual-time-budget=8000` and a `timeout` so a slow fetch cannot hang the export. Always run the PDF export check in the RENDER VERIFY GATE afterwards.
 
-**decktape (alternative for Reveal decks):**
-```bash
-npx decktape reveal "presentation.html" output.pdf
-```
-
-For screenshots:
-```bash
-npx decktape reveal "presentation.html" output.pdf --screenshots --screenshots-directory screenshots/
-```
+**Legacy Reveal.js decks** use the hardened `@page`/`@media print` guardrail block (`@page{size:1920px 1080px}`, `print-color-adjust:exact`, `box-shadow:none`, reveal all slides, un-fade stagger, force bar fills, panels to white-with-border, hide nav rail/controls) — full flow and copy-paste CSS in **`references/pdf-export.md`** — or `npx decktape reveal "presentation.html" output.pdf`.
 
 ---
 

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en-AU" data-default-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SAS-AM deck-stage v2 presentation.">
+  <meta name="author" content="SAS Asset Management">
+  <title>Presentation Title | SAS-AM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700;900&family=Source+Code+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="engine/deckChrome.css">
+</head>
+<body>
+  <!-- Chrome: theme toggle, presenter camera, icon nav rail (wired by deckChrome.js) -->
+  <button data-theme-toggle type="button">◐&nbsp;&nbsp;Theme</button>
+  <button data-cameo-toggle type="button">◉&nbsp;&nbsp;Camera</button>
+  <nav data-nav-rail aria-label="Slide navigation"></nav>
+
+  <!-- The deck. Fixed 1920x1080 stage; auto-scales + letterboxes. no-rail hides
+       the engine's authoring thumbnail rail (we present with the icon rail above). -->
+  <deck-stage width="1920" height="1080" no-rail>
+    <!-- 01 TITLE — replace copy. data-label feeds the nav rail; data-nav-icon
+         picks its glyph; data-speaker-notes is the presenter note for this slide. -->
+    <section data-label="Title" data-nav-icon="home"
+             data-speaker-notes="Do not introduce yourself. Let the title land ~15s, then move to the hook."
+             style="background:linear-gradient(155deg,#043056 0%,#001a34 60%,#00152b 100%);color:#fff;padding:110px 130px;display:flex;flex-direction:column;justify-content:center">
+      <img src="assets/sasLogoReversed.svg" alt="SAS Asset Management" class="a-up d1" style="width:300px;height:auto;margin-bottom:64px">
+      <p class="a-up d2" style="font-family:'Source Code Pro',monospace;font-size:20px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#8FE04D;margin:0">Kicker · one line</p>
+      <h1 class="a-up d3" style="font-size:112px;font-weight:900;letter-spacing:-2.5px;line-height:1.0;margin:22px 0 0;max-width:1250px">Your one-idea headline</h1>
+      <p class="a-up d4" style="font-size:40px;font-weight:600;color:#cfe0ee;margin:30px 0 0;max-width:1000px">The subtitle the speaker will expand on.</p>
+    </section>
+
+    <!-- 02 HERO STAT — [data-count] count-ups animate on slide entry. -->
+    <section data-label="Hero stat" data-nav-icon="target"
+             data-speaker-notes="Let the number land 3 seconds before you speak."
+             style="background:var(--bg);color:var(--ink);padding:84px 100px 64px;display:flex;flex-direction:column">
+      <p class="a-up d1" style="font-family:'Source Code Pro',monospace;font-size:19px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green-ink);margin:0">Evidence</p>
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+        <div class="a-scale d2" style="font-size:300px;font-weight:900;line-height:.86;letter-spacing:-8px;color:var(--green-ink);font-variant-numeric:tabular-nums"><span data-count="4.2" data-decimals="1" data-prefix="$" data-suffix="M">$4.2M</span></div>
+        <p class="a-up d3" style="font-size:44px;font-weight:700;color:var(--ink2);margin:26px 0 0;max-width:1100px">The one-line context for that number.</p>
+      </div>
+    </section>
+  </deck-stage>
+
+  <script src="engine/deckStage.js"></script>
+  <script src="engine/deckChrome.js"></script>
+</body>
+</html>

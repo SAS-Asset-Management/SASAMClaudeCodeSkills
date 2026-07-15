@@ -1,0 +1,114 @@
+/* ============================================================================
+ * deckChrome.css — SAS-AM deck-stage v2 chrome + theme tokens
+ * Pairs with engine/deckStage.js and engine/deckChrome.js.
+ *
+ * Provides:
+ *   - Light/dark theme tokens (SAS navy #002244 + SAS green #69BE28)
+ *   - Compression-safe base typography (600 body, 900 headings)
+ *   - Entrance animation classes (a-up / a-scale / a-blur / a-fade / grow-x/y /
+ *     draw) gated on [data-deck-active] + prefers-reduced-motion, delays d1..d8
+ *   - Theme toggle + camera toggle buttons
+ *   - Icon navigation rail (right edge)
+ *   - Presenter camera cameo (draggable / resizable / zoom / blur / mirror / pin)
+ *   - Print hides for all chrome
+ *
+ * All chrome is theme-aware and hidden in print. Flat design — no box-shadows on
+ * slide content (shadows are used only on the floating cameo/rail chrome, which
+ * never appears in the exported PDF).
+ * ==========================================================================*/
+
+:root, :root[data-theme="light"]{
+  --bg:#ffffff; --bg2:#f4f6f8; --bg3:#e9edf1;
+  --ink:#002244; --ink2:#33465c; --ink3:#66788c;
+  --line:rgba(0,34,68,0.14); --grid:rgba(0,34,68,0.06);
+  --green:#69BE28; --green-ink:#4F9A1E; --green-soft:rgba(105,190,40,0.14);
+  --rag-r:#C4462F; --rag-a:#D08A12; --rag-g:#4F9A1E;
+}
+:root[data-theme="dark"]{
+  --bg:#0a0f1a; --bg2:#131c29; --bg3:#1c2838;
+  --ink:#f4fbff; --ink2:#c6d5e0; --ink3:#89a0b2;
+  --line:rgba(255,255,255,0.12); --grid:rgba(255,255,255,0.05);
+  --green:#7AD33B; --green-ink:#8FE04D; --green-soft:rgba(122,211,59,0.16);
+  --rag-r:#E86A52; --rag-a:#E6AE3A; --rag-g:#7AD33B;
+}
+
+html,body{margin:0;padding:0;background:#000;}
+body{font-family:'Source Sans 3','Helvetica Neue',Arial,sans-serif;font-weight:600;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+a{color:var(--green-ink);text-decoration:none;}
+a:hover{color:var(--green);}
+
+/* Dual-theme logo swap (navy wordmark on light, reversed on dark) */
+[data-theme="light"] .l-light{display:block;} [data-theme="light"] .l-dark{display:none;}
+[data-theme="dark"] .l-light{display:none;} [data-theme="dark"] .l-dark{display:block;}
+
+/* ---- Entrance animations (gated on the active slide) --------------------- */
+@keyframes a-up{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes a-scale{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:none}}
+@keyframes a-blur{from{opacity:0;filter:blur(14px)}to{opacity:1;filter:blur(0)}}
+@keyframes a-fade{from{opacity:0}to{opacity:1}}
+@keyframes grow-y{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes grow-x{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes draw{from{stroke-dashoffset:var(--len,1200)}to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:no-preference){
+  [data-deck-active] .a-up{animation:a-up .62s cubic-bezier(.16,1,.3,1) both}
+  [data-deck-active] .a-scale{animation:a-scale .72s cubic-bezier(.16,1,.3,1) both}
+  [data-deck-active] .a-blur{animation:a-blur .85s ease both}
+  [data-deck-active] .a-fade{animation:a-fade .7s ease both}
+  [data-deck-active] .grow-y{animation:grow-y .9s cubic-bezier(.16,1,.3,1) both}
+  [data-deck-active] .grow-x{animation:grow-x .95s cubic-bezier(.16,1,.3,1) both}
+  [data-deck-active] .draw{animation:draw 1.15s ease both}
+  [data-deck-active] .d1{animation-delay:.05s} [data-deck-active] .d2{animation-delay:.13s}
+  [data-deck-active] .d3{animation-delay:.21s} [data-deck-active] .d4{animation-delay:.29s}
+  [data-deck-active] .d5{animation-delay:.37s} [data-deck-active] .d6{animation-delay:.45s}
+  [data-deck-active] .d7{animation-delay:.53s} [data-deck-active] .d8{animation-delay:.61s}
+}
+[data-no-motion] *{animation:none!important;transition:none!important}
+
+/* ---- Theme + camera toggle buttons -------------------------------------- */
+[data-theme-toggle],[data-cameo-toggle]{
+  position:fixed;z-index:80;display:flex;align-items:center;gap:9px;
+  padding:10px 15px;border-radius:999px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--ink);font-family:'Source Code Pro',monospace;
+  font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;
+}
+[data-theme-toggle]{top:18px;left:18px;}
+[data-cameo-toggle]{top:64px;left:18px;}
+[data-cameo-toggle][data-on="1"]{background:var(--green);border-color:var(--green);color:#04121f;}
+
+/* ---- Icon navigation rail (right edge) ---------------------------------- */
+[data-nav-rail]{position:fixed;top:0;bottom:0;right:14px;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}
+[data-nav-rail]::before{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:2px;height:calc(100% - 200px);background:var(--line);border-radius:2px}
+[data-nav-rail] .nav-dot{position:relative;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink3);opacity:.55;transition:transform .25s ease,opacity .25s ease,color .25s ease,background .25s ease,border-color .25s ease;padding:0}
+[data-nav-rail] .nav-dot svg{width:15px;height:15px}
+[data-nav-rail] .nav-dot:hover{opacity:1;color:var(--ink);border-color:var(--ink3)}
+[data-nav-rail] .nav-dot.passed{opacity:1;color:var(--green-ink);border-color:var(--green-soft)}
+[data-nav-rail] .nav-dot.current{opacity:1;color:#04121f;background:var(--green);border-color:var(--green);transform:scale(1.16)}
+[data-nav-rail] .pill{position:absolute;right:40px;top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;background:var(--ink);color:var(--bg);font-family:'Source Code Pro',monospace;font-size:12px;font-weight:700;letter-spacing:1px;padding:6px 11px;border-radius:7px;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+[data-nav-rail] .nav-dot:hover .pill,[data-nav-rail] .nav-dot.current .pill{opacity:1;transform:translateY(-50%) translateX(0)}
+
+/* ---- Presenter camera cameo --------------------------------------------- */
+[data-cameo]{position:fixed;z-index:85;touch-action:none;display:none}
+[data-cameo] .cam-frame{position:relative;width:100%;height:100%;overflow:hidden;background:#05070c;border:3px solid var(--green);cursor:grab}
+[data-cameo].dragging .cam-frame{cursor:grabbing}
+[data-cameo] video{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center}
+[data-cameo] .cam-resize{position:absolute;right:-7px;bottom:-7px;width:20px;height:20px;border-radius:50%;background:var(--green);border:2px solid #fff;cursor:nwse-resize;z-index:4}
+/* Secure-context / permission diagnostic (shown when the camera cannot start) */
+[data-cameo] .cam-diag{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px;text-align:center;background:#05070c;color:#dbe7f0;font-family:'Source Code Pro',monospace;font-size:13px;font-weight:600;line-height:1.35}
+[data-cameo] .cam-diag b{color:var(--green)}
+[data-cameo] .cam-diag .hint{opacity:.62;font-size:11px}
+[data-cameo].diag .cam-diag{display:flex}
+[data-cameo].diag video{display:none}
+[data-cameo] .cam-bar{position:absolute;left:50%;bottom:-16px;transform:translate(-50%,100%);display:flex;align-items:center;gap:9px;background:var(--ink);padding:9px 11px;border-radius:13px;opacity:0;pointer-events:none;transition:opacity .18s ease;white-space:nowrap}
+[data-cameo]:hover .cam-bar,[data-cameo].pinned .cam-bar{opacity:1;pointer-events:auto}
+[data-cameo] .cam-bar button{background:rgba(255,255,255,.14);color:#fff;border:none;width:34px;height:34px;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+[data-cameo] .cam-bar button:hover{background:var(--green);color:#04121f}
+[data-cameo] .cam-bar button svg{width:17px;height:17px}
+[data-cameo] .cam-bar .sld{display:flex;flex-direction:column;gap:3px}
+[data-cameo] .cam-bar .sld span{font-family:'Source Code Pro',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6)}
+[data-cameo] .cam-bar input[type=range]{width:78px;accent-color:var(--green);cursor:pointer}
+[data-cameo] .cam-bar .div{width:1px;height:26px;background:rgba(255,255,255,.16)}
+
+/* ---- Print: strip all chrome ------------------------------------------- */
+@media print{
+  [data-theme-toggle],[data-nav-rail],[data-cameo-toggle],[data-cameo]{display:none!important}
+}
