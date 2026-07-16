@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.39.0] - 2026-07-16
+
+### Added
+- **handoff-proposal — consultant attribution via `X-Acting-Principal` (plugin 1.0.0 → 1.1.0).** `handoff_proposal.py` now resolves an acting principal — precedence `--acting` flag > `$ENSEMBLE_ACTING_PRINCIPAL` > `git config user.email` (what a consultant machine reliably has; all git failures swallowed) — and, when non-empty, sends it as the `X-Acting-Principal` request header. The Ensemble backend (`POST /api/import/proposal`) stamps it into the opportunity's activity trail ("Proposal handed off: <title>", by=<principal>, fallback `unknown`) so the import is attributed to a person, not just the shared import key. The `--dry-run` preview now shows the resolved header (or its omission), and `SKILL.md` documents the identity precedence and attribution semantics. Closes the skills-repo half of IssueFlag `e1b7eadf` (the theEnsembles half — `import-beam-leads` workflow attribution — ships separately).
+
 ## [1.38.0] - 2026-07-15
 
 ### Added

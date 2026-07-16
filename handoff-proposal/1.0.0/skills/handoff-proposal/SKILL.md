@@ -29,6 +29,11 @@ intake over **Tailscale** (not the GitHub task-packet `/handoff` channel).
     `/api/import/proposal`).
   - `ENSEMBLE_IMPORT_KEY` — the shared import key (sent as `X-Import-Key`).
 - `python3` (the script is stdlib-only — no pip install).
+- Optional — **who to attribute the import to** (`X-Acting-Principal` header). Identity
+  precedence: `--acting` flag > `$ENSEMBLE_ACTING_PRINCIPAL` > `git config user.email`.
+  On a normal consultant machine nothing needs setting — the git email is used
+  automatically. If none resolves, the header is omitted and the backend records the
+  import as by `unknown`.
 
 ## How to run it
 
@@ -80,3 +85,11 @@ approval/Resend flow (this skill does **not** email the client).
   proposal still attaches (no PDF until someone renders it).
 - **Errors** surface verbatim: a `401` means a bad/missing key, `422` means no company,
   `503` means the intake isn't configured on the server.
+- **Attribution (`X-Acting-Principal`).** The import key is a **shared secret**, never an
+  identity — the header is what names *who* handed the proposal off. The backend stamps it
+  into the opportunity's activity trail ("Proposal handed off: <title>", by=<principal>)
+  and falls back to `unknown` when it is absent. Precedence: `--acting` >
+  `$ENSEMBLE_ACTING_PRINCIPAL` > `git config user.email` (the git email is what a
+  consultant machine reliably has; the engagement registry is not guaranteed present in
+  this skill's context). The `--dry-run` preview shows the resolved header so the
+  consultant can confirm attribution before sending.
