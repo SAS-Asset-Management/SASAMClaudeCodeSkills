@@ -13,6 +13,9 @@ Config (env vars, overridable by flags):
   ENSEMBLE_API_URL    base URL of the Ensemble API, e.g. https://<tailscale-host>:8181
                       (the script appends /api/import/proposal)
   ENSEMBLE_IMPORT_KEY the shared import key (sent as the X-Import-Key header)
+  ENSEMBLE_ACTING_PRINCIPAL
+                      who is performing the import (sent as X-Acting-Principal;
+                      precedence: --acting > this env var > git config user.email)
 
 Artifact — supply at least one of --pdf / --html / --sections-json. They compose:
 a PDF is uploaded as-is; HTML is rendered to PDF server-side; structured JSON
@@ -32,9 +35,32 @@ import argparse
 import base64
 import json
 import os
+import subprocess
 import sys
 import urllib.error
 import urllib.request
+
+
+def resolve_acting_principal(explicit: str | None) -> str:
+    """Resolve the consultant identity for the X-Acting-Principal header.
+
+    Precedence: --acting flag > $ENSEMBLE_ACTING_PRINCIPAL > git config user.email.
+    We derive from `git config user.email` because that is what a consultant
+    machine reliably has configured — the engagement registry is not guaranteed
+    to be present in this skill's context. All git failures (git absent,
+    unconfigured, not a repo) are swallowed: an empty result simply omits the
+    header and the backend attributes the import as 'unknown'.
+    """
+    if explicit:
+        return explicit.strip()
+    try:
+        proc = subprocess.run(
+            ["git", "config", "user.email"],
+            capture_output=True, text=True, timeout=10,
+        )
+        return proc.stdout.strip() if proc.returncode == 0 else ""
+    except Exception:
+        return ""
 
 
 def _read_bytes(path: str) -> bytes:
@@ -80,12 +106,18 @@ def build_body(args: argparse.Namespace) -> dict:
     return body
 
 
-def post(api_url: str, key: str, body: dict) -> dict:
+def post(api_url: str, key: str, body: dict, acting: str = "") -> dict:
     url = api_url.rstrip("/") + "/api/import/proposal"
+    headers = {"Content-Type": "application/json", "X-Import-Key": key}
+    if acting:
+        # Attributes the import on the opportunity's activity trail — the
+        # import key is a shared secret, not an identity. Backend falls back
+        # to 'unknown' when this header is absent.
+        headers["X-Acting-Principal"] = acting
     req = urllib.request.Request(
         url,
         data=json.dumps(body).encode(),
-        headers={"Content-Type": "application/json", "X-Import-Key": key},
+        headers=headers,
         method="POST",
     )
     try:
@@ -116,14 +148,22 @@ def main() -> None:
                    help="Ensemble API base URL (default: $ENSEMBLE_API_URL)")
     p.add_argument("--key", default=os.environ.get("ENSEMBLE_IMPORT_KEY"),
                    help="import key (default: $ENSEMBLE_IMPORT_KEY)")
+    p.add_argument("--acting", default=os.environ.get("ENSEMBLE_ACTING_PRINCIPAL"),
+                   help="acting principal (consultant identity) sent as X-Acting-Principal "
+                        "(default: $ENSEMBLE_ACTING_PRINCIPAL, else git config user.email)")
     p.add_argument("--dry-run", action="store_true", help="build + print the body, don't POST")
     args = p.parse_args()
 
     body = build_body(args)
+    acting = resolve_acting_principal(args.acting)
 
     if args.dry_run:
         preview = {k: (f"<{len(v)} chars>" if isinstance(v, str) and len(v) > 200 else v)
                    for k, v in body.items()}
+        preview["_headers"] = (
+            {"X-Acting-Principal": acting} if acting
+            else "(X-Acting-Principal omitted — no identity resolved)"
+        )
         print(json.dumps(preview, indent=2))
         return
 
@@ -132,7 +172,7 @@ def main() -> None:
     if not args.key:
         sys.exit("error: no import key — set ENSEMBLE_IMPORT_KEY or pass --key")
 
-    result = post(args.api_url, args.key, body)
+    result = post(args.api_url, args.key, body, acting=acting)
     print(json.dumps(result, indent=2))
     if result.get("opportunity_id"):
         verb = "created" if result.get("created") else "updated"
