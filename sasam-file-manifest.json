@@ -1,6 +1,6 @@
 {
   "version": "1.39.0",
-  "generated_at": "2026-07-16T09:53:10Z",
+  "generated_at": "2026-07-16T10:01:21Z",
   "files": {
     "analytics/1.0.0/agents/analytics-advisor.md": "dffecd33dabbb9017a35447e7d1031f0974d826cc48eeaf72cebffc4231cc059",
     "analytics/1.0.0/.claude-plugin/plugin.json": "02c6f918cfabf42695e37462c65b43882c09a2c0d9b085115e3d061e65ea8bb0",
@@ -31,7 +31,7 @@
     "beam-selling/1.0.0/skills/beam-selling/SKILL.md": "2a3793bbfed64592681614c3c627bf8263b538debfcd380fb28b831d83e0493f",
     "CHANGELOG.md": "dba8ce42f8f30472d178002f1e9b1844fac93cc05e215410f14b0c96cb410254",
     "CLAUDE.md": "61f0376756e7934c23e602fbb707fb3b4619176d317aa645fa0565047af8a85b",
-    ".claude-plugin/marketplace.json": "47301f5dcb2822fda94e488783534acb483ccdb5df734b5e98328a42d99e924c",
+    ".claude-plugin/marketplace.json": "45ae47a56e7b9939742a0523d6ae367a78c91c8ffd5fab3c826f23b0c1f0b21f",
     "data-quality-analysis/1.0.0/.claude-plugin/plugin.json": "f623c4e8216e3e7712571c753df635b0ea2f521f8d59a3a007cf16e9a560a45e",
     "data-quality-analysis/1.0.0/README.md": "dd4c5e37b03c2554f84fe6c7cc88a2e17b81b95b14879ca100414fccbab3af0d",
     "data-quality-analysis/1.0.0/skills/data-quality-analysis/references/report-template.md": "06a8c7ed1796e73525bfa138c4bc9ca6471b7662db9f9c7010087e75791feffe",
