@@ -10,12 +10,23 @@
     {
       "name": "sas-presentation",
       "source": "./sas-presentation/1.0.0",
-      "description": "Create polished SAS-AM branded presentations. The default v2 engine is the standalone deck-stage web component — a fixed 1920×1080 auto-scaling stage with keyboard/touch nav, a 22-template gallery, animated count-ups, an icon navigation rail, a draggable presenter camera cameo for live delivery, and native one-page-per-slide print-to-PDF — with Reveal.js kept as a legacy path. Includes light/dark themes, density modes, compression-safe typography, a shipped SAS logo, and a sas-am.com/resources showcase.",
-      "version": "2.0.0",
+      "description": "Create polished SAS-AM branded Reveal.js presentations with light/dark mode, narrative structure, and professional layouts.",
+      "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["sas", "presentation", "deck-stage", "reveal.js", "slides", "asset-management"],
+      "keywords": [
+        "sas",
+        "presentation",
+        "reveal.js",
+        "slides",
+        "asset-management"
+      ],
       "category": "productivity",
-      "tags": ["presentations", "slides", "reveal.js", "sas"]
+      "tags": [
+        "presentations",
+        "slides",
+        "reveal.js",
+        "sas"
+      ]
     },
     {
       "name": "data-quality-analysis",
@@ -23,9 +34,20 @@
       "description": "Analyse raw data quality using the ABS Data Quality Framework. Assesses seven dimensions (institutional environment, relevance, timeliness, accuracy, coherence, interpretability, accessibility) and produces a structured markdown report with ratings and recommendations.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["data-quality", "abs", "quality-framework", "data-analysis", "data-profiling"],
+      "keywords": [
+        "data-quality",
+        "abs",
+        "quality-framework",
+        "data-analysis",
+        "data-profiling"
+      ],
       "category": "data-analysis",
-      "tags": ["data-quality", "abs-framework", "reporting", "data-profiling"]
+      "tags": [
+        "data-quality",
+        "abs-framework",
+        "reporting",
+        "data-profiling"
+      ]
     },
     {
       "name": "b2b-research-agent",
@@ -33,9 +55,23 @@
       "description": "Research and identify B2B engagement opportunities. Conducts structured web research to build prospect intelligence dossiers, map decision-makers, surface buying signals, and produce actionable outreach strategies.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["b2b", "research", "sales", "prospecting", "outreach", "business-development", "pipeline"],
+      "keywords": [
+        "b2b",
+        "research",
+        "sales",
+        "prospecting",
+        "outreach",
+        "business-development",
+        "pipeline"
+      ],
       "category": "business-development",
-      "tags": ["b2b", "research", "prospecting", "outreach", "sales"]
+      "tags": [
+        "b2b",
+        "research",
+        "prospecting",
+        "outreach",
+        "sales"
+      ]
     },
     {
       "name": "beam-selling",
@@ -43,9 +79,25 @@
       "description": "Guide sales engagements through the marcov.BEAM evidence-gated lifecycle. Integrates with b2b-research-agent output to form scope, build SPIN-based engagement strategy, and advance deals stage by stage with local progress saving and session-to-session resumption.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["sales", "beam", "spin-selling", "pipeline", "b2b", "engagement", "proposal", "markov", "bayesian"],
+      "keywords": [
+        "sales",
+        "beam",
+        "spin-selling",
+        "pipeline",
+        "b2b",
+        "engagement",
+        "proposal",
+        "markov",
+        "bayesian"
+      ],
       "category": "business-development",
-      "tags": ["sales", "beam", "spin-selling", "pipeline", "engagement"]
+      "tags": [
+        "sales",
+        "beam",
+        "spin-selling",
+        "pipeline",
+        "engagement"
+      ]
     },
     {
       "name": "linkedin-post-generator",
@@ -53,19 +105,43 @@
       "description": "Generate LinkedIn posts for SAS-AM in brand voice. Supports pillar promotion posts (driving traffic to website articles) and quick insight posts (standalone thought leadership). Applies SAS-AM tone, Australian English, and content strategy for asset management professionals.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["linkedin", "content", "social-media", "asset-management", "thought-leadership", "copywriting"],
+      "keywords": [
+        "linkedin",
+        "content",
+        "social-media",
+        "asset-management",
+        "thought-leadership",
+        "copywriting"
+      ],
       "category": "content-marketing",
-      "tags": ["linkedin", "content", "social-media", "thought-leadership"]
+      "tags": [
+        "linkedin",
+        "content",
+        "social-media",
+        "thought-leadership"
+      ]
     },
     {
       "name": "tender-assessment",
       "source": "./vicTenders/tender-assessment/1.0.0",
-      "description": "Scrape Victorian government tenders, score alignment to marcov capabilities using weighted matrix, and generate full pursuit packages for opportunities with ≥80% fit.",
+      "description": "Scrape Victorian government tenders, score alignment to marcov capabilities using weighted matrix, and generate full pursuit packages for opportunities with \u226580% fit.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["tenders", "procurement", "bid-no-bid", "opportunity-assessment", "government", "victorian-tenders"],
+      "keywords": [
+        "tenders",
+        "procurement",
+        "bid-no-bid",
+        "opportunity-assessment",
+        "government",
+        "victorian-tenders"
+      ],
       "category": "business-development",
-      "tags": ["tenders", "procurement", "pursuit", "assessment"]
+      "tags": [
+        "tenders",
+        "procurement",
+        "pursuit",
+        "assessment"
+      ]
     },
     {
       "name": "push-notifications",
@@ -73,19 +149,45 @@
       "description": "Send push notifications via Microsoft Teams webhook and macOS desktop notifications. Use when workflows complete, errors occur, tasks need attention, or other skills finish.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["notifications", "teams", "webhook", "alerts", "desktop", "terminal-notifier", "workflow"],
+      "keywords": [
+        "notifications",
+        "teams",
+        "webhook",
+        "alerts",
+        "desktop",
+        "terminal-notifier",
+        "workflow"
+      ],
       "category": "productivity",
-      "tags": ["notifications", "teams", "desktop", "alerts", "workflow"]
+      "tags": [
+        "notifications",
+        "teams",
+        "desktop",
+        "alerts",
+        "workflow"
+      ]
     },
     {
       "name": "nano-banana-2",
       "source": "./nano-banana-2/1.1.0",
       "description": "Generate images using Google's Nano Banana 2 model (gemini-3.1-flash-image-preview) with web search grounding for real-world context. Creates optimised 1000px images under 200KB with SAS watermark.",
-      "version": "1.3.0",
+      "version": "1.1.0",
       "license": "MIT",
-      "keywords": ["image-generation", "gemini", "nano-banana", "google-ai", "text-to-image", "ai-art"],
+      "keywords": [
+        "image-generation",
+        "gemini",
+        "nano-banana",
+        "google-ai",
+        "text-to-image",
+        "ai-art"
+      ],
       "category": "productivity",
-      "tags": ["image-generation", "gemini", "ai-art", "visual-content"]
+      "tags": [
+        "image-generation",
+        "gemini",
+        "ai-art",
+        "visual-content"
+      ]
     },
     {
       "name": "sasam-core",
@@ -93,19 +195,51 @@
       "description": "Core utilities for SASAMClaudeCodeSkills - update management, loop design, version tracking, and marketplace maintenance.",
       "version": "1.1.0",
       "license": "MIT",
-      "keywords": ["sasam", "update", "version", "management", "core", "utilities", "loop", "automation"],
+      "keywords": [
+        "sasam",
+        "update",
+        "version",
+        "management",
+        "core",
+        "utilities",
+        "loop",
+        "automation"
+      ],
       "category": "utilities",
-      "tags": ["update", "version", "management", "core", "loop"]
+      "tags": [
+        "update",
+        "version",
+        "management",
+        "core",
+        "loop"
+      ]
     },
     {
       "name": "sas-content-hub",
       "source": "./sas-content-hub/1.0.0",
-      "description": "SAS-AM content campaign orchestrator. Spot trends, draft articles, generate LinkedIn posts, create gated download artefacts, and publish to Webflow. Orchestrates the full pipeline: trend spotting → artefact creation → email-gated download → Webflow article publishing → LinkedIn promotion.",
-      "version": "1.1.0",
+      "description": "SAS-AM content campaign orchestrator. Draft articles, generate LinkedIn posts, create gated download artefacts, and publish to Webflow. Orchestrates the full pipeline: artefact creation \u2192 email-gated download \u2192 Webflow article publishing \u2192 LinkedIn promotion.",
+      "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["content", "webflow", "linkedin", "marketing", "email-gate", "lead-capture", "campaign", "cms", "publishing", "asset-management", "trends", "trend-spotting", "viral-hooks", "competitor-scan"],
+      "keywords": [
+        "content",
+        "webflow",
+        "linkedin",
+        "marketing",
+        "email-gate",
+        "lead-capture",
+        "campaign",
+        "cms",
+        "publishing",
+        "asset-management"
+      ],
       "category": "content-marketing",
-      "tags": ["content", "campaign", "webflow", "publishing", "lead-capture", "trends"]
+      "tags": [
+        "content",
+        "campaign",
+        "webflow",
+        "publishing",
+        "lead-capture"
+      ]
     },
     {
       "name": "webflow-content-creator",
@@ -113,9 +247,24 @@
       "description": "Create and publish SAS-AM branded blog articles and case studies to Webflow CMS. Integrates with b2b-research-agent for research, nano-banana-2 for hero images, and the Webflow MCP for direct publishing.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["webflow", "cms", "content", "blog", "case-study", "article", "asset-management", "publishing"],
+      "keywords": [
+        "webflow",
+        "cms",
+        "content",
+        "blog",
+        "case-study",
+        "article",
+        "asset-management",
+        "publishing"
+      ],
       "category": "content-marketing",
-      "tags": ["webflow", "cms", "blog", "publishing", "content"]
+      "tags": [
+        "webflow",
+        "cms",
+        "blog",
+        "publishing",
+        "content"
+      ]
     },
     {
       "name": "analytics",
@@ -123,9 +272,23 @@
       "description": "Website Analytics system integration for SAS-AM. Provides access to GA4 and Search Console data via Grafana dashboards, data collection scripts, and database queries.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["analytics", "ga4", "search-console", "grafana", "website", "seo", "reporting"],
+      "keywords": [
+        "analytics",
+        "ga4",
+        "search-console",
+        "grafana",
+        "website",
+        "seo",
+        "reporting"
+      ],
       "category": "data-analysis",
-      "tags": ["analytics", "ga4", "grafana", "seo", "reporting"]
+      "tags": [
+        "analytics",
+        "ga4",
+        "grafana",
+        "seo",
+        "reporting"
+      ]
     },
     {
       "name": "fmeca",
@@ -133,9 +296,24 @@
       "description": "Analyse, author, review, generate, and extract context for FMEA and FMECA documents for asset-intensive organisations. Supports 5 workflows, 4 sector taxonomies, and standards-aligned scoring scales.",
       "version": "1.0.0",
       "license": "MIT",
-      "keywords": ["fmea", "fmeca", "failure-mode", "reliability", "rcm", "criticality", "risk", "asset-management"],
+      "keywords": [
+        "fmea",
+        "fmeca",
+        "failure-mode",
+        "reliability",
+        "rcm",
+        "criticality",
+        "risk",
+        "asset-management"
+      ],
       "category": "engineering",
-      "tags": ["fmea", "fmeca", "reliability", "risk", "asset-management"]
+      "tags": [
+        "fmea",
+        "fmeca",
+        "reliability",
+        "risk",
+        "asset-management"
+      ]
     },
     {
       "name": "sas-amp",
@@ -143,69 +321,82 @@
       "description": "Develop comprehensive, ISO 55001:2024-aligned Asset Management Plans through adaptive interviews, data analysis, and autonomous research. Produces both interactive HTML presentations and branded DOCX documents. Sector-agnostic with LCC analysis, D3.js charts, and per-section quality review.",
       "version": "0.1.0",
       "license": "MIT",
-      "keywords": ["asset-management", "AMP", "ISO-55001", "lifecycle-costing", "data-analysis", "presentation", "docx"],
+      "keywords": [
+        "asset-management",
+        "AMP",
+        "ISO-55001",
+        "lifecycle-costing",
+        "data-analysis",
+        "presentation",
+        "docx"
+      ],
       "category": "engineering",
-      "tags": ["asset-management", "AMP", "ISO-55001", "lifecycle-costing", "planning"]
+      "tags": [
+        "asset-management",
+        "AMP",
+        "ISO-55001",
+        "lifecycle-costing",
+        "planning"
+      ]
     },
     {
       "name": "ensemble",
       "source": "./ensemble/1.0.0",
-      "description": "SAS-AM Ensemble consultant workflow — stand up a new engagement, tether to it, hand work off to the autonomous Ensemble via task packets, sync, collect results, submit your own work, check status, and publish conference decks to the team portal. Eight commands (/init-engagement /tether /handoff /submit /sync /collect /status /publish-presentation) plus a read-only SessionStart greeter.",
-      "version": "1.3.0",
+      "description": "SAS-AM Ensemble consultant workflow \u2014 stand up a new engagement, tether to it, hand work off to the autonomous Ensemble via task packets, sync, collect results, check status, and publish conference decks to the team portal. Seven commands (/init-engagement /tether /handoff /sync /collect /status /publish-presentation) plus a read-only SessionStart greeter.",
+      "version": "1.3.1",
       "license": "MIT",
-      "keywords": ["ensemble", "sas-am", "consultant", "handoff", "engagement", "agents", "workflow", "tether", "packet", "presentation", "publish"],
+      "keywords": [
+        "ensemble",
+        "sas-am",
+        "consultant",
+        "handoff",
+        "engagement",
+        "agents",
+        "workflow",
+        "tether",
+        "packet",
+        "presentation",
+        "publish"
+      ],
       "category": "business-development",
-      "tags": ["ensemble", "consultant", "handoff", "engagement", "agents"]
-    },
-    {
-      "name": "sas-am-docs",
-      "source": "./sas-am-docs/1.0.0",
-      "description": "SAS-AM asset-management document suite — a composable hub that authors the full ISO 55001 document family (SAMP, AMP, TMP, RCM) over a shared, code-grounded analytics engine. Strategic-to-tactical line of sight: SAMP → AMP → TMP, with RCM + FMECA feeding maintenance tactics.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "keywords": ["asset-management", "ISO-55001", "SAMP", "AMP", "TMP", "RCM", "line-of-sight", "lifecycle-costing", "reliability-centred-maintenance"],
-      "category": "engineering",
-      "tags": ["asset-management", "ISO-55001", "SAMP", "TMP", "RCM"]
-    },
-    {
-      "name": "handoff-proposal",
-      "source": "./handoff-proposal/1.0.0",
-      "description": "Hand an externally-authored proposal into the Ensemble opportunities pipeline. POSTs a proposal (PDF, HTML, or structured fields) to the Ensemble's /api/import/proposal intake over Tailscale: finds-or-creates the opportunity by company, advances it to the BEAM 'Propose' stage, and attaches the proposal for founder approval.",
-      "version": "1.1.0",
-      "license": "MIT",
-      "keywords": ["ensemble", "sas-am", "proposal", "handoff", "beam", "opportunity", "pipeline", "import"],
-      "category": "business-development",
-      "tags": ["ensemble", "proposal", "handoff", "beam", "pipeline"]
-    },
-    {
-      "name": "project-manager",
-      "source": "./project-manager/1.0.0",
-      "description": "marcov.GATE project delivery framework. Stage-gated hybrid methodology for advisory and software projects with visual dashboards, portfolio sweep, and BEAM integration.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "keywords": ["project", "delivery", "gate", "portfolio", "dashboard", "status", "advisory", "marcov"],
-      "category": "business-development",
-      "tags": ["project", "delivery", "gate", "portfolio", "dashboard"]
+      "tags": [
+        "ensemble",
+        "consultant",
+        "handoff",
+        "engagement",
+        "agents"
+      ]
     },
     {
       "name": "sasdocx",
       "source": "./sasdocx/0.10.0",
-      "description": "SASdocX — SAS-AM on-brand document generator. Learn a company's Word, PowerPoint or Excel template once into a reusable Brand Profile, then generate unlimited on-brand .docx/.pptx/.xlsx — off-brand output impossible by construction. Three skills (sasdocx / saspptx / sasxlsx) over one shared OOXML engine. Based on the MIT-licensed brand-docs engine by Ferdinando Bonsegna.",
+      "description": "SASdocX \u2014 SAS-AM on-brand document generator. Learn a company's Word, PowerPoint or Excel template once into a reusable Brand Profile, then generate unlimited on-brand .docx/.pptx/.xlsx \u2014 off-brand output impossible by construction. Three skills (sasdocx / saspptx / sasxlsx) over one shared OOXML engine. Based on the MIT-licensed brand-docs engine by Ferdinando Bonsegna.",
       "version": "0.10.0",
       "license": "MIT",
-      "keywords": ["sas", "sas-am", "document-generator", "on-brand-documents", "docx", "pptx", "xlsx", "word", "powerpoint", "excel", "template", "brand", "ooxml"],
+      "keywords": [
+        "sas",
+        "sas-am",
+        "document-generator",
+        "on-brand-documents",
+        "docx",
+        "pptx",
+        "xlsx",
+        "word",
+        "powerpoint",
+        "excel",
+        "template",
+        "brand",
+        "ooxml"
+      ],
       "category": "productivity",
-      "tags": ["documents", "docx", "pptx", "xlsx", "brand", "templates"]
-    },
-    {
-      "name": "maturity-assessment",
-      "source": "./maturity-assessment/1.0.0",
-      "description": "Framework agnostic maturity assessment suite for SAS-AM engagements — intake, parse, score, interview, reconcile, validate, compliance matrix, and report, driven by framework packs and a per engagement engagement.yaml. Eight skills, fourteen specialist agents, config driven hooks, a deterministic scoring engine with CI maths, and a dashboard plus PDF deliverable rendered from a structured score ledger.",
-      "version": "1.0.0",
-      "license": "MIT",
-      "keywords": ["maturity", "assessment", "governance", "audit", "scoring", "framework-packs", "evidence", "sas-am"],
-      "category": "engineering",
-      "tags": ["maturity", "assessment", "governance", "audit", "scoring"]
+      "tags": [
+        "documents",
+        "docx",
+        "pptx",
+        "xlsx",
+        "brand",
+        "templates"
+      ]
     }
   ]
 }

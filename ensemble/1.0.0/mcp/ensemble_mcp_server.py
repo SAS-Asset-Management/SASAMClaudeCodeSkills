@@ -323,15 +323,46 @@ def ensemble_create_project(name: str, project_type: str = "advisory", tier: str
 
 
 @mcp.tool()
-def ensemble_create_project_task(project_id: str, title: str, description: str = "") -> Any:
-    """Add a task to a project. Engagement-scoped. CONFIRM first. [needs hardened-auth backend]"""
-    return _call("POST", f"/projects/{project_id}/tasks", json_body={"title": title, "description": description})
+def ensemble_create_project_task(
+    project_id: str,
+    name: str,
+    description: str = "",
+    workstream_id: str = "",
+    phase_no: int | None = None,
+) -> Any:
+    """Add a task to a project. Pass workstream_id (from ensemble_get_project) so the task lands
+    inside a workstream — without it the task is created unassigned. Engagement-scoped.
+    CONFIRM first. [needs hardened-auth backend]"""
+    return _call(
+        "POST",
+        f"/projects/{project_id}/tasks",
+        json_body=_clean({
+            "name": name,
+            "description": description,
+            "workstream_id": workstream_id,
+            "phase_no": phase_no,
+        }),
+    )
 
 
 @mcp.tool()
-def ensemble_update_project_task(project_id: str, task_id: str, status: str = "") -> Any:
-    """Update a project task (e.g. status). Engagement-scoped. [needs hardened-auth backend]"""
-    return _call("PATCH", f"/projects/{project_id}/tasks/{task_id}", json_body={"status": status})
+def ensemble_update_project_task(
+    project_id: str,
+    task_id: str,
+    status: str = "",
+    name: str = "",
+    description: str = "",
+) -> Any:
+    """Update a project task (status, name and/or description). Only the fields you pass are
+    changed — empty fields are omitted from the update. Engagement-scoped. [needs hardened-auth backend]"""
+    body = _clean({"status": status, "name": name, "description": description})
+    if not body:
+        return {
+            "ok": False,
+            "error": "no_fields",
+            "detail": "Pass at least one of status, name or description to update.",
+        }
+    return _call("PATCH", f"/projects/{project_id}/tasks/{task_id}", json_body=body)
 
 
 @mcp.tool()

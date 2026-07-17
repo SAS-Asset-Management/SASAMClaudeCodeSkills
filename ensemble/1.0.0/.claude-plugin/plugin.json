@@ -1,7 +1,7 @@
 {
   "name": "ensemble",
   "description": "SAS-AM Ensemble consultant workflow — stand up a new engagement, tether to it, hand work off to the autonomous Ensemble via task packets, sync, collect results, check status, and publish conference decks to the team portal. Seven commands (/init-engagement /tether /handoff /sync /collect /status /publish-presentation) plus a read-only SessionStart greeter. Also ships a local-stdio Ensemble MCP server (mcp/ensemble_mcp_server.py) that gives a tethered session first-class read+write ensemble_* tools, declared per-engagement via the template's .mcp.json.",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "author": {
     "name": "SAS-AM"
   },
