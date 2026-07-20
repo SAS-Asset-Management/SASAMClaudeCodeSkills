@@ -494,22 +494,54 @@ def ensemble_update_issue_flag(flag_id: str, status: str = "") -> Any:
 # =========================================================================== #
 @mcp.tool()
 def ensemble_import_beam_lead(
-    company: str, sector: str = "", current_stage: str = "", primary_contact_email: str = "", notes: str = ""
+    company: str,
+    sector: str = "",
+    current_stage: str = "",
+    stage_name: str = "",
+    status: str = "",
+    primary_contact_email: str = "",
+    client_name: str = "",
+    source: str = "",
+    win_probability: str = "",
+    fit_score: str = "",
+    timing_score: str = "",
+    deal_estimate: str = "",
+    gates: dict | list | None = None,
+    stakeholders: list | None = None,
+    evidence: list | None = None,
+    next_steps: list | None = None,
+    notes: str = "",
 ) -> Any:
     """Import a BEAM lead into the opportunities pipeline (upsert client + Opportunity by company).
-    WORKS TODAY (X-Import-Key). Liberal: only `company` is required. CONFIRM with the consultant first.
+    Pass the full developed BEAM; confirm with the consultant first. X-Import-Key. Liberal: only
+    `company` is required — everything else (gates, stakeholders, evidence, next_steps, scores,
+    stage_name/status/client_name/source) is optional and passed through untouched; the backend
+    coercers own the shape. Empty/None fields are dropped before sending, so a re-commit (upsert
+    by company) enriches rather than blanking previously-set fields.
     """
     return _call(
         "POST",
         "/import/beam-lead",
         import_key=True,
-        json_body={
+        json_body=_clean({
             "company": company,
             "sector": sector,
             "current_stage": current_stage,
+            "stage_name": stage_name,
+            "status": status,
             "primary_contact_email": primary_contact_email,
+            "client_name": client_name,
+            "source": source,
+            "win_probability": win_probability,
+            "fit_score": fit_score,
+            "timing_score": timing_score,
+            "deal_estimate": deal_estimate,
+            "gates": gates,
+            "stakeholders": stakeholders,
+            "evidence": evidence,
+            "next_steps": next_steps,
             "notes": notes,
-        },
+        }),
     )
 
 
