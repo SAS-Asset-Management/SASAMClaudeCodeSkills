@@ -5,6 +5,12 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.40.0] - 2026-07-21
+
+### Added
+- **ensemble MCP: `ensemble_import_beam_lead`** now accepts the full developed BEAM — `gates`, `stakeholders`, `evidence`, `next_steps`, `win_probability`, `fit_score`, `timing_score`, `deal_estimate`, `stage_name`, `status`, `client_name`, `source` — forwarding the structured payload the backend `/import/beam-lead` route already accepts. Previously only `company/sector/current_stage/primary_contact_email/notes` were sent, discarding the gates and evidence (the evidence-gated substance of a BEAM). Empty/None fields are dropped so a re-commit (upsert by company) enriches rather than blanking prior data. Ensemble plugin bumped 1.3.1 → 1.4.0.
+- **beam-selling: "Commit to Ensemble" step** — a confirm-first action (on demand, and suggested at first save / each stage advance) that maps the developed `.beam/engagements/<company>.json` onto `ensemble_import_beam_lead` and writes the returned `opportunity_id` back for idempotent upsert. A BEAM developed in the cockpit now lands as a first-class Opportunity with gates/evidence/stakeholders/scores intact. beam-selling bumped 1.0.0 → 1.1.0.
+
 ## [1.20.2] - 2026-07-17
 
 ### Fixed
