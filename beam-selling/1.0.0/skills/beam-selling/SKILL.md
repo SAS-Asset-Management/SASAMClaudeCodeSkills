@@ -17,6 +17,7 @@ This skill helps you:
 - **SPIN-integrated selling**: Apply Situation, Problem, Implication, and Need-payoff questioning at every stage
 - **Evidence-gated progression**: No stage-skipping — earn the gate or exit
 - **Build proposals**: Generate tailored proposals from diagnostic findings
+- **Commit to the Ensemble**: Push the developed BEAM into the Ensemble as a first-class `Opportunity` (gates, stakeholders, evidence and all) — on demand or suggested at first save and each stage advance (see "Commit to Ensemble" under Save Behaviour)
 
 ## BEAM Acronym
 
@@ -441,6 +442,73 @@ To resume next time, run: /beam-selling [Company Name]
 
 **To save manually**: The user says "save" or "save progress" at any time.
 
+### Commit to Ensemble
+
+Local `.beam/` saves are private to this session and machine. **Committing to the Ensemble** pushes the developed BEAM into the live pipeline as a first-class `Opportunity` — visible in the HMI, tracked by `agnarBergstrom`/`eirikSolheim`, and durable beyond this session — via the `ensemble_import_beam_lead` MCP tool.
+
+**Trigger phrases** — on demand, any time after Stage 1 has a company name saved:
+- "commit to the Ensemble"
+- "push to pipeline"
+- "push this to the Ensemble"
+
+**Suggested** (not forced) at two points — offer it, let the user decline:
+- After the **first save** of a new engagement (Step 1: Initialise)
+- After every **stage transition** (Step 5: Stage Transition)
+
+This is available from Stage 1 onward — early-stage tracking (a qualifying lead with no gates passed yet) is a valid reason to commit; do not gate this behind a late stage.
+
+**Flow**:
+
+1. **Read** the current `.beam/engagements/<company>.json`.
+2. **Map** the state to `ensemble_import_beam_lead` tool args (table below).
+3. **Confirm first** — show the consultant exactly what will be written before calling the tool:
+
+```
+--- Commit to Ensemble ---
+
+Company:         [company_name]
+Stage:            [current_stage] — [stage_name]
+Status:           [status]
+Win Probability:  [win_probability]%
+Fit / Timing:     [fit_score] / [timing_score]
+Deal Estimate:    [estimated_deal_value]
+Stakeholders:     [N] (e.g. Jane Smith — CTO)
+Gates:            [N] stage(s) of gate criteria
+Evidence items:   [N]
+Next steps:       [N]
+
+This will create or update the Opportunity for [company_name] in the Ensemble
+pipeline (upsert by company — existing fields not sent here are left alone).
+
+Commit this? (yes / no / edit first)
+```
+
+4. **On confirm**, call `ensemble_import_beam_lead` with the mapped args.
+5. **Record the returned `opportunity_id`** back into `.beam/engagements/<company>.json` (e.g. `engagement.ensemble_opportunity_id`) so a later re-commit upserts the same Opportunity rather than creating a duplicate.
+6. **Report the result** — link/ID returned, or the error body verbatim (e.g. a 403 scope rejection, or `no_import_key`) with a plain-English next step.
+
+**Mapping — `.beam` engagement JSON → `ensemble_import_beam_lead` args**:
+
+| tool arg | `.beam` source |
+|---|---|
+| `company` (required) | `engagement.company_name` |
+| `client_name` | `engagement.company_name` (or a distinct client name if one is on record) |
+| `current_stage` | `engagement.current_stage` |
+| `status` | `engagement.status` |
+| `source` | `engagement.source` |
+| `win_probability` | `engagement.win_probability` |
+| `fit_score` / `timing_score` | `b2b_research.fit_score` / `b2b_research.timing_score` |
+| `deal_estimate` | `timeline.estimated_deal_value` |
+| `sector` | dossier/research sector if available, else omit |
+| `primary_contact_email` | the primary (or first) `stakeholders[].email` |
+| `stakeholders` | top-level `stakeholders[]`, passed through as-is |
+| `gates` | **all** `stages.<n>_<name>.gate_criteria`, reshaped to `{ "<n>": { stage_name, criteria: [ {gate: <criterion, humanised>, met, evidence, missing: <assessment_rationale when not met>} ] } }` |
+| `evidence` | concatenation of every `stages.*.evidence[]`, tagged with its stage |
+| `next_steps` | concatenation of every `stages.*.next_steps[]` |
+| `notes` | a short human summary: `engagement.deal_name`, the seller value proposition, the dossier path |
+
+Fields with no `.beam` value are simply omitted from the call — `ensemble_import_beam_lead` drops empty/None fields itself, so a re-commit **enriches** the Opportunity rather than blanking previously-set fields.
+
 ### State File Structure
 
 Each engagement is saved as a JSON file (see `references/beam-state-template.json`). The state includes:
@@ -557,6 +625,7 @@ This is the core interactive workflow. The skill guides the user through each st
 4. Check for b2b-research-agent output (HTML report or Markdown dossier)
 5. If found: ingest the research as the Stage 1 foundation
 6. If not found: offer to run b2b-research-agent first, or proceed with manual input
+7. After the first save of a new engagement, offer: "Want me to commit this to the Ensemble now so it's tracked in the pipeline?" (see "Commit to Ensemble" above) — proceed either way
 
 ### Step 2: Gather Seller Context (First Time Only)
 
@@ -641,6 +710,7 @@ When advancing:
 2. Recalculate win probability
 3. Present the next stage overview
 4. Generate preparation materials (SPIN questions, templates, checklists)
+5. Offer: "Want me to push this stage advance to the Ensemble?" (see "Commit to Ensemble" above) — proceed either way
 
 ### Step 6: Output Generation
 
@@ -958,6 +1028,7 @@ The skill responds to these commands within a session:
 | `close` | Close the engagement (won, lost, or disqualified) |
 | `list` | List all active engagements in `.beam/` |
 | `export` | Export engagement as Markdown summary |
+| `commit-ensemble` | Push the current engagement to the Ensemble as an `Opportunity` (see "Commit to Ensemble") — distinct from Stage 5 "Commit", which is a BEAM pipeline stage, not this command |
 
 ---
 
@@ -1126,3 +1197,4 @@ Before saving or advancing, verify:
 - [ ] State file saved to `.beam/engagements/`
 - [ ] Kanban dashboard regenerated to `.beam/engagements/<company>-kanban.html`
 - [ ] Activity log updated
+- [ ] (Optional) Committed to the Ensemble — offered at first save and stage advance, see "Commit to Ensemble"

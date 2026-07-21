@@ -1,7 +1,7 @@
 {
   "name": "beam-selling",
   "description": "Guide sales engagements through the marcov.BEAM evidence-gated lifecycle. Integrates with b2b-research-agent output to form scope, build SPIN-based engagement strategy, and advance deals stage by stage with local progress saving and session-to-session resumption.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "SAS-AM"
   },
