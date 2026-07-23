@@ -386,18 +386,20 @@
       <li>Access to the SAS-AM Webflow site</li>
     </ul>
 
-    <h3>Available MCP Tools</h3>
+    <h3>Available MCP Tools (Webflow MCP v2.x — hosted <code>claude_ai_Webflow</code>)</h3>
+    <p><strong>Tooling changed in Webflow MCP v2.</strong> The old one-tool-per-operation
+    names are retired; v2 exposes multi-operation <em>data tools</em> that take an
+    <code>operation</code>. Always call <code>mcp__claude_ai_Webflow__webflow_guide_tool</code>
+    once first to load the current operation names.</p>
     <table>
       <thead>
-        <tr><th>Tool</th><th>Purpose</th></tr>
+        <tr><th>v2 Tool</th><th>Operations</th><th>Replaces (v1)</th></tr>
       </thead>
       <tbody>
-        <tr><td><code>sites_list</code></td><td>List available Webflow sites</td></tr>
-        <tr><td><code>collections_list</code></td><td>List CMS collections for a site</td></tr>
-        <tr><td><code>collections_items_list_items</code></td><td>List existing items in a collection</td></tr>
-        <tr><td><code>collections_items_create_item</code></td><td>Create new CMS item (draft)</td></tr>
-        <tr><td><code>collections_items_create_item_live</code></td><td>Create and publish immediately</td></tr>
-        <tr><td><code>assets</code></td><td>Upload images and media</td></tr>
+        <tr><td><code>mcp__claude_ai_Webflow__data_sites_tool</code></td><td>list sites / site details → site_id</td><td><code>sites_list</code></td></tr>
+        <tr><td><code>mcp__claude_ai_Webflow__data_cms_tool</code></td><td>get_collection_list, get_collection_details, list/create/publish items</td><td><code>collections_list</code>, <code>collections_items_*</code></td></tr>
+        <tr><td><code>mcp__claude_ai_Webflow__data_assets_tool</code></td><td>create_asset, list_assets, get_asset</td><td><code>assets</code></td></tr>
+        <tr><td><code>mcp__claude_ai_Webflow__asset_tool</code></td><td>upload_image_by_url (hero → asset id + URL)</td><td><code>assets</code> (upload)</td></tr>
       </tbody>
     </table>
 
@@ -428,11 +430,12 @@
         <tr><th>Phase</th><th>Action</th></tr>
       </thead>
       <tbody>
-        <tr><td><span class="badge badge-blue">1</span> Site Discovery</td><td>Call <code>sites_list</code> to find sas-am.com, extract site_id</td></tr>
-        <tr><td><span class="badge badge-blue">2</span> Collection Discovery</td><td>Call <code>collections_list</code>, identify Resources collection, note schema</td></tr>
-        <tr><td><span class="badge badge-blue">3</span> Asset Upload</td><td>Upload hero image, retrieve asset URL</td></tr>
-        <tr><td><span class="badge badge-blue">4</span> Create Draft</td><td>Call <code>create_item</code> with <code>isDraft: true</code>, return preview URL</td></tr>
-        <tr><td><span class="badge badge-green">5</span> Publish</td><td>After user confirmation, call <code>publish_items</code>, confirm live URL</td></tr>
+        <tr><td><span class="badge badge-blue">0</span> Guide</td><td>Call <code>webflow_guide_tool</code> once to load v2 operation names</td></tr>
+        <tr><td><span class="badge badge-blue">1</span> Site Discovery</td><td><code>data_sites_tool</code> → find sas-am.com, extract site_id</td></tr>
+        <tr><td><span class="badge badge-blue">2</span> Collection Discovery</td><td><code>data_cms_tool</code> get_collection_list + get_collection_details (schema)</td></tr>
+        <tr><td><span class="badge badge-blue">3</span> Asset Upload</td><td><code>asset_tool</code> upload_image_by_url → asset id + URL</td></tr>
+        <tr><td><span class="badge badge-blue">4</span> Create Draft</td><td><code>data_cms_tool</code> create item with <code>isDraft: true</code>, return preview URL</td></tr>
+        <tr><td><span class="badge badge-green">5</span> Publish</td><td>After user confirmation, <code>data_cms_tool</code> publish item, confirm live URL</td></tr>
       </tbody>
     </table>
 

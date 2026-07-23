@@ -391,46 +391,56 @@ H3: Subsections within H2s
 
 Before publishing, verify:
 
-1. **WEBFLOW_TOKEN** environment variable is set
-2. **Webflow MCP** is enabled in Claude Code settings
-3. Access to the SAS-AM Webflow site
+1. The **hosted Webflow MCP** (`claude_ai_Webflow`, v2.x) is connected to the
+   session — its tools appear as `mcp__claude_ai_Webflow__*`. (Authorised via the
+   Webflow MCP connector, not a local `WEBFLOW_TOKEN` env var.)
+2. Access to the SAS-AM Webflow site (you will confirm `site_id` in Phase 1).
+3. Note: the Ensemble's **autonomous** publish path does NOT use this MCP — it
+   calls the Webflow Data API v2 SDK directly (`integrations/webflow.py`, gated on
+   `WEBFLOW_API_TOKEN`). This skill is the **interactive** authoring/publishing path.
 
-### Available MCP Tools
+### Available MCP Tools (Webflow MCP v2.x — hosted `claude_ai_Webflow`)
 
-| Tool | Purpose |
-|------|---------|
-| `mcp__webflow__sites_list` | List available Webflow sites |
-| `mcp__webflow__collections_list` | List CMS collections for a site |
-| `mcp__webflow__collections_items_list_items` | List existing items in a collection |
-| `mcp__webflow__collections_items_create_item` | Create new CMS item (draft) |
-| `mcp__webflow__collections_items_create_item_live` | Create and publish immediately |
-| `mcp__webflow__assets` | Upload images/media |
+> **Tooling changed in Webflow MCP v2.** The old one-tool-per-operation names
+> (`mcp__webflow__sites_list`, `…collections_items_create_item`, …) are **retired**.
+> The v2 server exposes a few **multi-operation "data tools"**, each taking an
+> `operation` (and its args). **Always call `mcp__claude_ai_Webflow__webflow_guide_tool`
+> once first** — it returns the current operation names + arg shapes for your session.
+
+| v2 Tool | Operations you need | Replaces (v1) |
+|---------|--------------------|----------------|
+| `mcp__claude_ai_Webflow__data_sites_tool` | list sites / get site details → `site_id` | `sites_list` |
+| `mcp__claude_ai_Webflow__data_cms_tool` | `get_collection_list`, `get_collection_details` (field schema), list items, **create item (draft)**, **publish item** | `collections_list`, `collections_items_list_items`, `collections_items_create_item`, `collections_items_create_item_live` |
+| `mcp__claude_ai_Webflow__data_assets_tool` | `create_asset` (metadata), `list_assets`, `get_asset` | `assets` |
+| `mcp__claude_ai_Webflow__asset_tool` | `upload_image_by_url` (hero image → asset id + URL) | `assets` (upload) |
 
 ### Publishing Workflow
 
 ```
+Phase 0: Guide (once per session)
+0. Call webflow_guide_tool to load the current v2 operation names + arg shapes.
+
 Phase 1: Site Discovery
-1. Call sites_list to find sas-am.com site
-2. Extract site_id
+1. data_sites_tool → list sites, find sas-am.com, extract site_id.
 
 Phase 2: Collection Discovery
-1. Call collections_list with site_id
-2. Identify the Resources collection (for articles/case studies)
-3. Note field schema for validation
+1. data_cms_tool > get_collection_list (pass site_id).
+2. Identify the Resources collection (articles/case studies); note collection_id.
+3. data_cms_tool > get_collection_details for the field schema (validation).
 
 Phase 3: Asset Upload (if hero image generated)
-1. Upload hero image via assets endpoint
-2. Retrieve asset URL for CMS item
+1. asset_tool > upload_image_by_url (public image URL) → asset id + hosted URL.
+2. Use the returned URL for the CMS item's featured-image field.
 
-Phase 4: Create Content Item
-1. Prepare CMS payload with all required fields
-2. Call collections_items_create_item with isDraft: true
-3. Return item_id and preview URL for review
+Phase 4: Create Content Item (draft)
+1. Prepare the CMS payload with all required fields (see mapping below).
+2. data_cms_tool create item with isDraft: true (pass collection_id).
+3. Return item_id and preview URL for review.
 
 Phase 5: Publish (after user review)
-1. User confirms content is ready
-2. Call collections_items_publish_items
-3. Confirm live URL
+1. User confirms content is ready.
+2. data_cms_tool publish the item (or create-live in one step).
+3. Confirm live URL.
 ```
 
 ### CMS Field Mapping

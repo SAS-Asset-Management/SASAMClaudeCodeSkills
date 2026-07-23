@@ -5,6 +5,11 @@ All notable changes to SASAMClaudeCodeSkills will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.40.1] - 2026-07-23
+
+### Fixed
+- **webflow-content-creator — reconcile tool names to Webflow MCP v2.** The skill still named the retired v1 one-tool-per-operation tools (`mcp__webflow__sites_list`, `collections_list`, `collections_items_list_items`, `collections_items_create_item(_live)`, `assets`), which no longer exist. Webflow's hosted MCP moved to **v2.0.1**, consolidating those into multi-operation *data tools* — `mcp__claude_ai_Webflow__data_sites_tool`, `data_cms_tool` (get_collection_list / get_collection_details / list-create-publish items), `data_assets_tool`, and `asset_tool` (upload_image_by_url) — fronted by `webflow_guide_tool` (call once first). Updated the Available-MCP-Tools table, the Publishing Workflow (added Phase 0 "load the guide"), and prerequisites (hosted MCP connector, not a local `WEBFLOW_TOKEN`) in both `SKILL.md` and the rendered `webflow-content-creator.wiki.html`. Also clarifies that the Ensemble's **autonomous** publish path uses the Webflow Data API v2 SDK directly (`integrations/webflow.py`), not this MCP — this skill is the **interactive** authoring path.
+
 ## [1.40.0] - 2026-07-21
 
 ### Added
